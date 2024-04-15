@@ -71,7 +71,10 @@ const calculateForces = (bodies: Thing[]): Thing[] => {
 };
 
 const draw = (bodies: Thing[]): void => {
+  console.log(bodies, ctx);
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   bodies.forEach((body) => {
     ctx.beginPath();
     ctx.arc(body.position.x, body.position.y, 10, 0, Math.PI * 2);
