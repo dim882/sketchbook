@@ -1,11 +1,5 @@
-## To scaffold a new sketch
+## To scaffold a new sketch and start the TypeScript watcher
 
 ```
-$ node scaffold.js my-sketch
-```
-
-## To compile TypeScript
-
-```
-$ cd ./sketches/my-sketch && yarn watch
+$ ./scaffold.js my-sketch
 ```
