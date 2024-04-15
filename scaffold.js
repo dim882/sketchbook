@@ -13,7 +13,10 @@ function copyDirectory(source, target) {
   // Iterate through each file/directory
   files.forEach((file) => {
     const sourcePath = path.join(source, file);
-    const targetPath = path.join(target, file);
+
+    // Replace base.html with ${dirName}.html and base.ts with ${dirName}.ts
+    let targetFileName = file.replace(/^base(\.html|\.ts)$/, `${dirName}$1`);
+    const targetPath = path.join(target, targetFileName);
 
     // Exclude dist, node_modules, and yarn.lock
     if (file !== 'dist' && file !== 'node_modules' && file !== 'yarn.lock') {
