@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const excludedFiles = ['dist', 'node_modules', 'yarn.lock'];
 
@@ -12,6 +13,14 @@ const targetDir = path.join(__dirname, 'sketches', dirName);
 copyDirectory(sourceDir, targetDir);
 
 console.log(`Sketch './sketches/${dirName}' created.`);
+
+try {
+  // Execute the shell command
+  execSync(`cd ./sketches/${dirName} && yarn watch`, { stdio: 'inherit' });
+} catch (error) {
+  // Handle any errors
+  console.error('Error executing shell command:', error);
+}
 
 function copyDirectory(source, target) {
   if (!fs.existsSync(target)) {
