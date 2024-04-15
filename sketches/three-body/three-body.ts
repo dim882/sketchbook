@@ -1,5 +1,5 @@
-const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-const ctx = canvas.getContext("2d");
+let canvas: HTMLCanvasElement;
+let ctx: CanvasRenderingContext2D;
 
 const G = 6.6743e-11; // gravitational constant
 const timestep = 3600; // seconds per frame
@@ -14,25 +14,29 @@ interface Velocity {
   y: number;
 }
 
-interface Body {
+interface Thing {
   mass: number;
   position: Position;
   velocity: Velocity;
 }
 
-const createBody = (
+const createThing = (
   mass: number,
   x: number,
   y: number,
   vx: number,
   vy: number
-): Body => ({
+): Thing => ({
   mass,
   position: { x, y },
   velocity: { x: vx, y: vy },
 });
 
-const updatePosition = (body: Body, forceX: number, forceY: number): Body => ({
+const updatePosition = (
+  body: Thing,
+  forceX: number,
+  forceY: number
+): Thing => ({
   ...body,
   velocity: {
     x: body.velocity.x + (forceX / body.mass) * timestep,
@@ -44,16 +48,16 @@ const updatePosition = (body: Body, forceX: number, forceY: number): Body => ({
   },
 });
 
-const calculateForces = (bodies: Body[]): Body[] => {
+const calculateForces = (bodies: Thing[]): Thing[] => {
   return bodies.map((body, index) => {
     const otherBodies = bodies.filter((_, i) => i !== index);
     const { x, y } = otherBodies.reduce(
-      (acc, otherBody) => {
-        const dx = otherBody.position.x - body.position.x;
-        const dy = otherBody.position.y - body.position.y;
+      (acc, otherThing) => {
+        const dx = otherThing.position.x - body.position.x;
+        const dy = otherThing.position.y - body.position.y;
         const distanceSquared = dx * dx + dy * dy;
         const forceMagnitude =
-          (G * body.mass * otherBody.mass) / distanceSquared;
+          (G * body.mass * otherThing.mass) / distanceSquared;
         const angle = Math.atan2(dy, dx);
         return {
           x: acc.x + Math.cos(angle) * forceMagnitude,
@@ -66,26 +70,45 @@ const calculateForces = (bodies: Body[]): Body[] => {
   });
 };
 
-const draw = (bodies: Body[]): void => {
+const draw = (bodies: Thing[]): void => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   bodies.forEach((body) => {
     ctx.beginPath();
     ctx.arc(body.position.x, body.position.y, 10, 0, Math.PI * 2);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "black";
     ctx.fill();
   });
 };
 
-let bodies: Body[] = [
-  createBody(5.972e24, canvas.width / 2, canvas.height / 2, 0, -29780), // Earth
-  createBody(7.34767309e22, canvas.width / 2 + 384400, canvas.height / 2, 0, 0), // Moon
-  createBody(1000, canvas.width / 2 - 384400, canvas.height / 2, 0, 1022.23), // Third body
-];
+let bodies: Thing[];
 
-const animate = (): void => {
+export const animate = (): void => {
   bodies = calculateForces(bodies);
+  // console.log(bodies);
+
   draw(bodies);
   requestAnimationFrame(animate);
 };
 
-animate();
+document.body.onload = () => {
+  console.log("loaded");
+
+  canvas = document.getElementById("canvas") as HTMLCanvasElement;
+
+  ctx = canvas.getContext("2d");
+  console.log({ canvas, ctx });
+
+  bodies = [
+    createThing(5.972e24, canvas.width / 2, canvas.height / 2, 0, -29780), // Earth
+    createThing(
+      7.34767309e22,
+      canvas.width / 2 + 384400,
+      canvas.height / 2,
+      0,
+      0
+    ), // Moon
+    createThing(1000, canvas.width / 2 - 384400, canvas.height / 2, 0, 1022.23), // Third body
+  ];
+
+  animate();
+};
