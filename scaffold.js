@@ -24,8 +24,7 @@ function copyDirectory(source, target) {
     const sourcePath = path.join(source, file);
 
     // Replace base.html with ${dirName}.html and base.ts with ${dirName}.ts
-    let targetFileName = file.replace(/^base(\.html|\.ts)$/, `${dirName}$1`);
-    const targetPath = path.join(target, targetFileName);
+    const targetPath = createTargetPath(file, target);
 
     if (!excludedFiles.includes(file)) {
       if (fs.statSync(sourcePath).isDirectory()) {
@@ -35,4 +34,10 @@ function copyDirectory(source, target) {
       }
     }
   });
+}
+
+function createTargetPath(file, target) {
+  let targetFileName = file.replace(/^base(\.html|\.ts)$/, `${dirName}$1`);
+
+  return path.join(target, targetFileName);
 }
