@@ -60,11 +60,7 @@ function drawEquilateralTriangle(context: CanvasRenderingContext2D, cx: number, 
   context.beginPath();
 
   vertices.forEach((vertex, index) => {
-    if (index === 0) {
-      context.moveTo(vertex.x, vertex.y);
-    } else {
-      context.lineTo(vertex.x, vertex.y);
-    }
+    index === 0 ? context.moveTo(vertex.x, vertex.y) : context.lineTo(vertex.x, vertex.y);
   });
 
   context.closePath();
