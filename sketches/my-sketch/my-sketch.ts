@@ -42,7 +42,8 @@ function stroke(context: CanvasRenderingContext2D) {
 }
 
 function fill(context: CanvasRenderingContext2D, hue: number) {
-  context.fillStyle = `hsla(${hue}, 70%, 70%, .1)`;
+  const color = `lch(60% 60% ${hue} / .1)`;
+  context.fillStyle = color;
   context.fill();
 }
 
