@@ -24,16 +24,13 @@ function render(context: CanvasRenderingContext2D) {
   R.range(0, 25).forEach((i) => {
     const val = 25 - i;
 
-    context.save();
-    {
+    saveAndRestore(context, () => {
       context.translate(...center);
       context.rotate(val * 0.2);
       traceEquilateralTriangle(context, 0, 0, val * 40);
       fill(context, hue);
       stroke(context);
-    }
-
-    context.restore();
+    });
   });
 }
 
@@ -63,4 +60,10 @@ function tracePath(context: CanvasRenderingContext2D, points: IPointTuple[]) {
   context.beginPath();
   points.forEach(([x, y], index) => (index === 0 ? context.moveTo(x, y) : context.lineTo(x, y)));
   context.closePath();
+}
+
+function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
+  context.save();
+  callback();
+  context.restore();
 }
