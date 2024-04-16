@@ -23,9 +23,7 @@ function render(context: CanvasRenderingContext2D) {
   const fillColor = `lch(60% 30% ${formHue} / .1)`;
   const strokeColor = 'rgba(255, 255, 255, .1)';
 
-  R.range(0, 25).forEach((i) => {
-    const val = 25 - i;
-
+  range(25, 0).forEach((val) => {
     saveAndRestore(context, () => {
       context.translate(...center);
       context.rotate(val * 0.2);
@@ -61,3 +59,25 @@ function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void)
   callback();
   context.restore();
 }
+
+type Range = (start: number, end: number, step?: number) => number[];
+
+const range: Range = (start, end, step = 1) => {
+  const result: number[] = [];
+
+  if (start > end && step > 0) {
+    step = -step;
+  }
+
+  if (step > 0) {
+    for (let i = start; i <= end; i += step) {
+      result.push(i);
+    }
+  } else {
+    for (let i = start; i >= end; i += step) {
+      result.push(i);
+    }
+  }
+
+  return result;
+};
