@@ -1,7 +1,8 @@
 import * as R from 'ramda';
 import { getInteger, makeFuzzer } from './utils.js';
 
-type IPoint = [number, number];
+type IPointTuple = [number, number];
+
 document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const ctx = canvas.getContext('2d');
@@ -11,7 +12,7 @@ document.body.onload = () => {
 
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
-  const center: IPoint = [width / 2, height / 2];
+  const center: IPointTuple = [width / 2, height / 2];
 
   context.fillStyle = '#000';
   context.fillRect(0, 0, width, height);
@@ -50,13 +51,13 @@ function drawEquilateralTriangle(context: CanvasRenderingContext2D, cx: number, 
   const verticalOffset = (2 / 3) * height;
 
   tracePath(context, () => {
-    const vertices = [
-      { x: cx, y: cy - verticalOffset },
-      { x: cx + sideLength / 2, y: cy + (1 / 3) * height },
-      { x: cx - sideLength / 2, y: cy + (1 / 3) * height },
+    const vertices: IPointTuple[] = [
+      [cx, cy - verticalOffset],
+      [cx + sideLength / 2, cy + (1 / 3) * height],
+      [cx - sideLength / 2, cy + (1 / 3) * height],
     ];
 
-    vertices.forEach(({ x, y }, index) => (index === 0 ? context.moveTo(x, y) : context.lineTo(x, y)));
+    vertices.forEach(([x, y], index) => (index === 0 ? context.moveTo(x, y) : context.lineTo(x, y)));
   });
 }
 
