@@ -14,12 +14,11 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  context.fillStyle = '#000';
+  context.fillStyle = 'lch(10% 10% 10)';
   context.fillRect(0, 0, width, height);
 
-  // makeFuzzer({ context, radius: 200, iterations: 30 })(...center, 'green');
-
-  const hue = getInteger(Math.random, 0, 270);
+  const fillColor = makeRandomColor();
+  const strokeColor = 'rgba(255, 255, 255, .1)';
 
   R.range(0, 25).forEach((i) => {
     const val = 25 - i;
@@ -28,21 +27,18 @@ function render(context: CanvasRenderingContext2D) {
       context.translate(...center);
       context.rotate(val * 0.2);
       traceEquilateralTriangle(context, 0, 0, val * 40);
-      fill(context, hue);
-      stroke(context);
+      context.fillStyle = fillColor;
+      context.fill();
+      context.strokeStyle = strokeColor;
+      context.stroke();
     });
   });
 }
 
-function stroke(context: CanvasRenderingContext2D) {
-  context.strokeStyle = 'rgba(255, 255, 255, .1)';
-  context.stroke();
-}
+function makeRandomColor() {
+  const hue = getInteger(Math.random, 0, 270);
 
-function fill(context: CanvasRenderingContext2D, hue: number) {
-  const color = `lch(60% 60% ${hue} / .1)`;
-  context.fillStyle = color;
-  context.fill();
+  return `lch(60% 60% ${hue} / .1)`;
 }
 
 function traceEquilateralTriangle(context: CanvasRenderingContext2D, cx: number, cy: number, sideLength: number): void {
