@@ -20,7 +20,7 @@ function render(context: CanvasRenderingContext2D) {
   context.fillStyle = `lch(20% 10% ${backgroundHue})`;
   context.fillRect(0, 0, width, height);
 
-  const fillColor = `lch(60% 60% ${formHue} / .1)`;
+  const fillColor = `lch(60% 30% ${formHue} / .1)`;
   const strokeColor = 'rgba(255, 255, 255, .1)';
 
   R.range(0, 25).forEach((i) => {
