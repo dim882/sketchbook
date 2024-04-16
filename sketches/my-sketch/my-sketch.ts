@@ -45,19 +45,28 @@ function fill(context: CanvasRenderingContext2D, hue: number) {
   context.fill();
 }
 
-function drawEquilateralTriangle(ctx: CanvasRenderingContext2D, cx: number, cy: number, sideLength: number): void {
+function drawEquilateralTriangle(context: CanvasRenderingContext2D, cx: number, cy: number, sideLength: number): void {
   const height = (sideLength * Math.sqrt(3)) / 2;
 
   // The vertical offset from the centroid to the top vertex is 2/3 of the height
   const verticalOffset = (2 / 3) * height;
 
-  const vertex1 = { x: cx, y: cy - verticalOffset };
-  const vertex2 = { x: cx + sideLength / 2, y: cy + (1 / 3) * height };
-  const vertex3 = { x: cx - sideLength / 2, y: cy + (1 / 3) * height };
+  const vertex1 = {
+    x: cx,
+    y: cy - verticalOffset,
+  };
+  const vertex2 = {
+    x: cx + sideLength / 2,
+    y: cy + (1 / 3) * height,
+  };
+  const vertex3 = {
+    x: cx - sideLength / 2,
+    y: cy + (1 / 3) * height,
+  };
 
-  ctx.beginPath();
-  ctx.moveTo(vertex1.x, vertex1.y);
-  ctx.lineTo(vertex2.x, vertex2.y);
-  ctx.lineTo(vertex3.x, vertex3.y);
-  ctx.closePath();
+  context.beginPath();
+  context.moveTo(vertex1.x, vertex1.y);
+  context.lineTo(vertex2.x, vertex2.y);
+  context.lineTo(vertex3.x, vertex3.y);
+  context.closePath();
 }
