@@ -19,7 +19,10 @@ function render(context: CanvasRenderingContext2D) {
   makeFuzz(width / 2, height / 2, 'green');
 
   R.range(0, 20).forEach((i) => {
+    context.save();
+    context.rotate(i);
     drawEquilateralTriangle(context, width / 2, height / 2, i * 10);
+    context.restore();
   });
 }
 
