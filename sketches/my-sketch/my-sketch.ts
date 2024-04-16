@@ -55,9 +55,13 @@ function drawEquilateralTriangle(context: CanvasRenderingContext2D, cx: number, 
     { x: cx - sideLength / 2, y: cy + (1 / 3) * height },
   ];
 
+  makePath(context, () =>
+    vertices.forEach(({ x, y }, index) => (index === 0 ? context.moveTo(x, y) : context.lineTo(x, y)))
+  );
+}
+
+function makePath(context: CanvasRenderingContext2D, callback: () => void) {
   context.beginPath();
-
-  vertices.forEach(({ x, y }, index) => (index === 0 ? context.moveTo(x, y) : context.lineTo(x, y)));
-
+  callback();
   context.closePath();
 }
