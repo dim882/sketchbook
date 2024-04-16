@@ -5,9 +5,9 @@ type IPointTuple = [number, number];
 
 document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-  const ctx = canvas.getContext('2d');
+  const context = canvas.getContext('2d');
 
-  render(ctx);
+  render(context);
 };
 
 function render(context: CanvasRenderingContext2D) {
