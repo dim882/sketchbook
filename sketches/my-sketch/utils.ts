@@ -15,7 +15,6 @@ export function makeFuzzer({ context, radius, iterations, lengthRange = [0.4, 0.
   // The returned fuzzer function:
   //  - Finds points random distance from the given point using a Gaussian distribution
   //  - Draws lines at those points with random lengths at random angles
-  // prettier-ignore
   return function makeFuzz(x: number, y: number, strokeStyle?: string) {
     for (let i = 0; i < iterations; i++) {
       const center: I2DTuple = [(Math.random() * radius) / 2, (Math.random() * radius) / 2];
