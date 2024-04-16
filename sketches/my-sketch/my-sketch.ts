@@ -23,25 +23,32 @@ function render(context: CanvasRenderingContext2D) {
   R.range(0, 20).forEach((i) => {
     context.save();
     context.translate(...center);
-    context.rotate(i * 0.4);
-    drawEquilateralTriangle(context, 0, 0, i * 10);
+    context.rotate(i * 0.2);
+    drawEquilateralTriangle(context, 0, 0, i * 40);
     context.restore();
   });
 }
 
-function drawEquilateralTriangle(ctx: CanvasRenderingContext2D, x: number, y: number, sideLength: number): void {
+function drawEquilateralTriangle(ctx: CanvasRenderingContext2D, cx: number, cy: number, sideLength: number): void {
+  // Height of the triangle
   const height = (sideLength * Math.sqrt(3)) / 2;
 
-  const vertex1 = { x: x, y: y };
-  const vertex2 = { x: x + sideLength / 2, y: y + height };
-  const vertex3 = { x: x - sideLength / 2, y: y + height };
+  // The vertical offset from the centroid to the top vertex is 2/3 of the height
+  const verticalOffset = (2 / 3) * height;
 
+  // The vertices are now defined in terms of the centroid (cx, cy)
+  const vertex1 = { x: cx, y: cy - verticalOffset };
+  const vertex2 = { x: cx + sideLength / 2, y: cy + (1 / 3) * height };
+  const vertex3 = { x: cx - sideLength / 2, y: cy + (1 / 3) * height };
+
+  // Drawing the triangle
   ctx.beginPath();
   ctx.moveTo(vertex1.x, vertex1.y);
   ctx.lineTo(vertex2.x, vertex2.y);
   ctx.lineTo(vertex3.x, vertex3.y);
   ctx.closePath();
 
+  // Styling
   ctx.strokeStyle = 'white';
   ctx.stroke();
 }
