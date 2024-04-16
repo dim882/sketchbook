@@ -20,17 +20,18 @@ function render(context: CanvasRenderingContext2D) {
   // makeFuzzer({ context, radius: 200, iterations: 30 })(...center, 'green');
 
   const hue = getInteger(Math.random, 0, 270);
+
   R.range(0, 25).forEach((i) => {
     const val = 25 - i;
+
     context.save();
-    context.translate(...center);
-    context.rotate(val * 0.2);
-
-    traceEquilateralTriangle(context, 0, 0, val * 40);
-
-    fill(context, hue);
-
-    stroke(context);
+    {
+      context.translate(...center);
+      context.rotate(val * 0.2);
+      traceEquilateralTriangle(context, 0, 0, val * 40);
+      fill(context, hue);
+      stroke(context);
+    }
 
     context.restore();
   });
