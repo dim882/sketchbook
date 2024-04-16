@@ -19,8 +19,8 @@ function render(context: CanvasRenderingContext2D) {
   // makeFuzzer({ context, radius: 200, iterations: 30 })(...center, 'green');
 
   const hue = getInteger(Math.random, 0, 270);
-  R.range(0, 20).forEach((i) => {
-    const val = 20 - i;
+  R.range(0, 25).forEach((i) => {
+    const val = 25 - i;
     context.save();
     context.translate(...center);
     context.rotate(val * 0.2);
