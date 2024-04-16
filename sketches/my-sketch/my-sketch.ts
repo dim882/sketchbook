@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { getInteger, makeFuzzer } from './utils.js';
+import { getInteger } from './utils.js';
 
 type IPointTuple = [number, number];
 
