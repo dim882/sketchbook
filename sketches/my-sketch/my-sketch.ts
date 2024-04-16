@@ -50,19 +50,15 @@ function drawEquilateralTriangle(context: CanvasRenderingContext2D, cx: number, 
   const height = (sideLength * Math.sqrt(3)) / 2;
   const verticalOffset = (2 / 3) * height;
 
-  tracePath(context, () => {
-    const vertices: IPointTuple[] = [
-      [cx, cy - verticalOffset],
-      [cx + sideLength / 2, cy + (1 / 3) * height],
-      [cx - sideLength / 2, cy + (1 / 3) * height],
-    ];
-
-    vertices.forEach(([x, y], index) => (index === 0 ? context.moveTo(x, y) : context.lineTo(x, y)));
-  });
+  tracePath(context, [
+    [cx, cy - verticalOffset],
+    [cx + sideLength / 2, cy + (1 / 3) * height],
+    [cx - sideLength / 2, cy + (1 / 3) * height],
+  ]);
 }
 
-function tracePath(context: CanvasRenderingContext2D, callback: () => void) {
+function tracePath(context: CanvasRenderingContext2D, points: IPointTuple[]) {
   context.beginPath();
-  callback();
+  points.forEach(([x, y], index) => (index === 0 ? context.moveTo(x, y) : context.lineTo(x, y)));
   context.closePath();
 }
