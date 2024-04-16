@@ -48,3 +48,47 @@ export const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower: n
 export const getBoolean = (generateNumber: PseudoRandomNumberGenerator, probabilityTrue: number = 0.5) => {
   return generateNumber() < probabilityTrue;
 };
+
+type Range = (start: number, end: number, step?: number) => number[];
+
+export const range: Range = (start, end, step = 1) => {
+  const result: number[] = [];
+
+  if (start > end && step > 0) {
+    step = -step;
+  }
+
+  if (step > 0) {
+    for (let i = start; i <= end; i += step) {
+      result.push(i);
+    }
+  } else {
+    for (let i = start; i >= end; i += step) {
+      result.push(i);
+    }
+  }
+
+  return result;
+};
+
+type PRNG = () => number;
+
+export const createPRNG = (seed: number): PRNG => {
+  // Constants for the LCG. These are common values used in numerical recipes
+  const a = 1664525;
+  const c = 1013904223;
+  const m = 2 ** 32;
+
+  // Current state of the generator
+  let state = seed;
+
+  // The PRNG function that computes the next pseudorandom number
+  const prng: PRNG = () => {
+    // Update the state with the LCG formula
+    state = (a * state + c) % m;
+    // Normalize to the range 0 to 1 (exclusive)
+    return state / m;
+  };
+
+  return prng;
+};

@@ -1,7 +1,9 @@
-import * as R from 'ramda';
-import { getInteger } from './utils.js';
+import { range, getInteger, createPRNG } from './utils.js';
 
 type IPointTuple = [number, number];
+
+// const prng = createPRNG(40502);
+const prng = Math.random;
 
 document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -14,7 +16,7 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const formHue = getInteger(Math.random, 0, 270);
+  const formHue = getInteger(prng, 0, 270);
   const backgroundHue = formHue + 180;
 
   context.fillStyle = `lch(20% 10% ${backgroundHue})`;
@@ -59,25 +61,3 @@ function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void)
   callback();
   context.restore();
 }
-
-type Range = (start: number, end: number, step?: number) => number[];
-
-const range: Range = (start, end, step = 1) => {
-  const result: number[] = [];
-
-  if (start > end && step > 0) {
-    step = -step;
-  }
-
-  if (step > 0) {
-    for (let i = start; i <= end; i += step) {
-      result.push(i);
-    }
-  } else {
-    for (let i = start; i >= end; i += step) {
-      result.push(i);
-    }
-  }
-
-  return result;
-};
