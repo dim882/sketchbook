@@ -26,7 +26,7 @@ function render(context: CanvasRenderingContext2D) {
     context.translate(...center);
     context.rotate(val * 0.2);
 
-    drawEquilateralTriangle(context, 0, 0, val * 40);
+    traceEquilateralTriangle(context, 0, 0, val * 40);
 
     fill(context, hue);
 
@@ -46,7 +46,7 @@ function fill(context: CanvasRenderingContext2D, hue: number) {
   context.fill();
 }
 
-function drawEquilateralTriangle(context: CanvasRenderingContext2D, cx: number, cy: number, sideLength: number): void {
+function traceEquilateralTriangle(context: CanvasRenderingContext2D, cx: number, cy: number, sideLength: number): void {
   const height = (sideLength * Math.sqrt(3)) / 2;
   const verticalOffset = (2 / 3) * height;
 
