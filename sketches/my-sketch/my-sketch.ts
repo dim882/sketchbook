@@ -47,8 +47,6 @@ function fill(context: CanvasRenderingContext2D, hue: number) {
 
 function drawEquilateralTriangle(context: CanvasRenderingContext2D, cx: number, cy: number, sideLength: number): void {
   const height = (sideLength * Math.sqrt(3)) / 2;
-
-  // The vertical offset from the centroid to the top vertex is 2/3 of the height
   const verticalOffset = (2 / 3) * height;
 
   const vertices = [
