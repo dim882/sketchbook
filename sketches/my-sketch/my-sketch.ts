@@ -21,23 +21,31 @@ function render(context: CanvasRenderingContext2D) {
   const hue = getInteger(Math.random, 0, 270);
   R.range(0, 20).forEach((i) => {
     const val = 20 - i;
-    context.strokeStyle = 'rgba(255, 255, 255, .5)';
     context.save();
     context.translate(...center);
     context.rotate(val * 0.2);
 
-    drawEquilateralTriangle(context, 0, 0, val * 40, hue);
+    drawEquilateralTriangle(context, 0, 0, val * 40);
+
+    fill(context, hue);
+
+    stroke(context);
+
     context.restore();
   });
 }
 
-function drawEquilateralTriangle(
-  ctx: CanvasRenderingContext2D,
-  cx: number,
-  cy: number,
-  sideLength: number,
-  hue: number
-): void {
+function stroke(context: CanvasRenderingContext2D) {
+  context.strokeStyle = 'rgba(255, 255, 255, .1)';
+  context.stroke();
+}
+
+function fill(context: CanvasRenderingContext2D, hue: number) {
+  context.fillStyle = `hsla(${hue}, 70%, 70%, .1)`;
+  context.fill();
+}
+
+function drawEquilateralTriangle(ctx: CanvasRenderingContext2D, cx: number, cy: number, sideLength: number): void {
   const height = (sideLength * Math.sqrt(3)) / 2;
 
   // The vertical offset from the centroid to the top vertex is 2/3 of the height
@@ -52,8 +60,4 @@ function drawEquilateralTriangle(
   ctx.lineTo(vertex2.x, vertex2.y);
   ctx.lineTo(vertex3.x, vertex3.y);
   ctx.closePath();
-  ctx.fillStyle = `hsla(${hue}, 70%, 70%, .1)`;
-  ctx.fill();
-
-  // ctx.stroke();
 }
