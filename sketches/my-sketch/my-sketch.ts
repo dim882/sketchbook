@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import { makeFuzzer } from './utils.js';
 
 document.body.onload = () => {
@@ -17,7 +18,9 @@ function render(context: CanvasRenderingContext2D) {
 
   makeFuzz(width / 2, height / 2, 'green');
 
-  drawEquilateralTriangle(context, width / 2, height / 2, 100);
+  R.range(0, 20).forEach((i) => {
+    drawEquilateralTriangle(context, width / 2, height / 2, i * 10);
+  });
 }
 
 function drawEquilateralTriangle(ctx: CanvasRenderingContext2D, x: number, y: number, sideLength: number): void {

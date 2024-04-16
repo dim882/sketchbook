@@ -7,6 +7,10 @@
     "watch": "tsc -w"
   },
   "devDependencies": {
+    "@types/ramda": "^0.29.12",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "ramda": "^0.29.1"
   }
 }
