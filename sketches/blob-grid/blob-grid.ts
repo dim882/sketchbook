@@ -20,29 +20,29 @@ function render(context: CanvasRenderingContext2D) {
   const backgroundColor = `lch(95% 1% ${backgroundHue})`;
   const fillColor = `lch(20% 80% ${formHue})`;
 
-  const blur = 10;
-  const alphaTransform = 100;
-  const cellSize = 100;
-  const circleOffset = 28;
-  const radius = 35;
+  const BLUR = 10;
+  const ALPHA_TRANSFORM = 100;
+  const CELL_SIZE = 100;
+  const CIRCLE_OFFSET = 28;
+  const RADIUS = 35;
 
   // prettier-ignore
-  const grid = createGrid(width, height, cellSize)
-    .map((point) => randomOffset(point, circleOffset));
+  const grid = createGrid(width, height, CELL_SIZE)
+    .map((point) => randomOffset(point, CIRCLE_OFFSET));
 
   // context.fillStyle = backgroundColor;
   // context.fillRect(0, 0, width, height);
 
-  context.filter = `blur(${blur}px)`;
+  context.filter = `blur(${BLUR}px)`;
 
-  drawGrid(context, grid, radius, fillColor);
+  drawGrid(context, grid, RADIUS, fillColor);
 
   // prettier-ignore
   const flattenMatrix = [
     [1, 0, 0, 0,    0], // R 
     [0, 1, 0, 0,    0], // G
     [0, 0, 1, 0,    0], // B
-    [0, 0, 0, alphaTransform, -15], // A
+    [0, 0, 0, ALPHA_TRANSFORM, -15], // A
   ];
 
   applyColorMatrix(context, flattenMatrix);
