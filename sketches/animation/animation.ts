@@ -38,6 +38,6 @@ function render(context: CanvasRenderingContext2D, t: number) {
 
   context.beginPath();
   context.arc(...center, radius, 0, 2 * Math.PI);
-  context.strokeStyle = 'red';
-  context.stroke();
+  context.fillStyle = 'red';
+  context.fill();
 }
