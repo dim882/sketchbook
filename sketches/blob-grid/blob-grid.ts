@@ -24,6 +24,7 @@ function render(context: CanvasRenderingContext2D) {
   const alphaTransform = 100;
   const cellSize = 100;
   const circleOffset = 28;
+  const radius = 35;
 
   // prettier-ignore
   const grid = createGrid(width, height, cellSize)
@@ -34,7 +35,7 @@ function render(context: CanvasRenderingContext2D) {
 
   context.filter = `blur(${blur}px)`;
 
-  drawGrid(context, grid, 35, fillColor);
+  drawGrid(context, grid, radius, fillColor);
 
   // prettier-ignore
   const flattenMatrix = [
