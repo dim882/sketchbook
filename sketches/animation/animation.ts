@@ -14,6 +14,7 @@ document.body.onload = () => {
   let t = 0;
   function animate(time: number) {
     requestAnimationFrame(animate);
+
     if (time - lastFrameTime < frameDuration) return;
     lastFrameTime = time;
 
@@ -28,13 +29,15 @@ function render(context: CanvasRenderingContext2D, t: number) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const radius = Math.abs(Math.sin(t) * 100);
-  console.log(t, radius);
+  const radius = Math.floor(Math.abs(Math.sin(t * 0.01) * 100));
+  console.log(radius);
+  context.clearRect(0, 0, width, height);
 
   context.fillStyle = '#fff';
   context.fillRect(0, 0, width, height);
 
+  context.beginPath();
   context.arc(...center, radius, 0, 2 * Math.PI);
-  context.fillStyle = 'red';
-  context.fill();
+  context.strokeStyle = 'red';
+  context.stroke();
 }
