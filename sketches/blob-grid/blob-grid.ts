@@ -1,4 +1,4 @@
-import { range, getInteger, createPRNG, IPointTuple, tracePath } from './utils.js';
+import { range, getInteger, createPRNG, IPointTuple, tracePath, applyColorMatrix } from './utils.js';
 
 // const prng = createPRNG(40502);
 const prng = Math.random;
@@ -31,7 +31,21 @@ function render(context: CanvasRenderingContext2D) {
   context.shadowOffsetY = 0;
 
   drawGrid(context, grid, fillColor);
+  const invertMatrix = [
+    [-1, 0, 0, 0, 1], // Red channel
+    [0, -1, 0, 0, 1], // Green channel
+    [0, 0, -1, 0, 1], // Blue channel
+    [0, 0, 0, 1, 0], // Alpha channel (no change)
+  ];
 
+  const flattenMatrix = [
+    [1, 0, 0, 0, 0], // Red channel transformation
+    [0, 1, 0, 0, 0], // Green channel transformation
+    [0, 0, 1, 0, 0], // Blue channel transformation
+    [0, 0, 0, 18, -7], // Alpha channel transformation
+  ];
+
+  applyColorMatrix(context, flattenMatrix);
   console.log(grid);
 }
 
