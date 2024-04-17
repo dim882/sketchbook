@@ -20,20 +20,21 @@ function render(context: CanvasRenderingContext2D) {
   const backgroundColor = `lch(95% 1% ${backgroundHue})`;
   const fillColor = `lch(20% 80% ${formHue})`;
 
-  const grid = createGrid(width, height, 100);
+  const grid = createGrid(width, height, 200);
 
   // context.fillStyle = backgroundColor;
   // context.fillRect(0, 0, width, height);
 
-  context.filter = 'blur(11px)';
+  context.filter = 'blur(16px)';
 
   drawGrid(context, grid, fillColor);
 
+  // prettier-ignore
   const flattenMatrix = [
-    [1, 0, 0, 0, 0], // Red channel transformation
-    [0, 1, 0, 0, 0], // Green channel transformation
-    [0, 0, 1, 0, 0], // Blue channel transformation
-    [0, 0, 0, 87, -15], // Alpha channel transformation
+    [1, 0, 0, 0,    0], // R 
+    [0, 1, 0, 0,    0], // G
+    [0, 0, 1, 0,    0], // B
+    [0, 0, 0, 87, -15], // A
   ];
 
   applyColorMatrix(context, flattenMatrix);
@@ -47,7 +48,7 @@ function createGrid(width: number, height: number, size: number): IPointTuple[] 
 function drawGrid(context: CanvasRenderingContext2D, grid: IPointTuple[], fillColor: string) {
   grid.forEach((point: IPointTuple) => {
     context.beginPath();
-    context.arc(...randomOffset(point, 28), 35, 0, 2 * Math.PI);
+    context.arc(...randomOffset(point, 49), 60, 0, 2 * Math.PI);
     context.fillStyle = fillColor;
     context.fill();
   });
