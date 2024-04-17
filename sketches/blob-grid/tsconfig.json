@@ -5,7 +5,8 @@
     "target": "es6",
     "esModuleInterop": true,
     "noEmitOnError": false,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "lib": ["es2022", "DOM", "DOM.Iterable", "WebWorker"]
   },
   "include": ["./**/*.ts"],
   "exclude": ["./dist"]
