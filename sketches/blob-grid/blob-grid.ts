@@ -25,7 +25,7 @@ function render(context: CanvasRenderingContext2D) {
   // context.fillStyle = backgroundColor;
   // context.fillRect(0, 0, width, height);
 
-  context.filter = 'blur(24px)';
+  context.filter = 'blur(14px)';
 
   drawGrid(context, grid, fillColor);
 
@@ -33,7 +33,7 @@ function render(context: CanvasRenderingContext2D) {
     [1, 0, 0, 0, 0], // Red channel transformation
     [0, 1, 0, 0, 0], // Green channel transformation
     [0, 0, 1, 0, 0], // Blue channel transformation
-    [0, 0, 0, 18, -7], // Alpha channel transformation
+    [0, 0, 0, 35, -15], // Alpha channel transformation
   ];
 
   applyColorMatrix(context, flattenMatrix);
@@ -47,13 +47,13 @@ function createGrid(width: number, height: number, size: number): IPointTuple[] 
 function drawGrid(context: CanvasRenderingContext2D, grid: IPointTuple[], fillColor: string) {
   grid.forEach((point: IPointTuple) => {
     context.beginPath();
-    context.arc(...randomOffset(point), 35, 0, 2 * Math.PI);
+    context.arc(...randomOffset(point, 28), 35, 0, 2 * Math.PI);
     context.fillStyle = fillColor;
     context.fill();
   });
 }
 
-function randomOffset([x, y]: IPointTuple): IPointTuple {
-  const offsetRange = [-20, 20];
+function randomOffset([x, y]: IPointTuple, offset: number): IPointTuple {
+  const offsetRange = [-offset, offset];
   return [x + getInteger(Math.random, ...offsetRange), y + getInteger(Math.random, ...offsetRange)];
 }
