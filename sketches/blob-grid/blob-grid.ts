@@ -25,7 +25,7 @@ function render(context: CanvasRenderingContext2D) {
   // context.fillStyle = backgroundColor;
   // context.fillRect(0, 0, width, height);
 
-  context.filter = 'blur(14px)';
+  context.filter = 'blur(10px)';
 
   drawGrid(context, grid, fillColor);
 
@@ -34,7 +34,7 @@ function render(context: CanvasRenderingContext2D) {
     [1, 0, 0, 0,    0], // R 
     [0, 1, 0, 0,    0], // G
     [0, 0, 1, 0,    0], // B
-    [0, 0, 0, 42, -15], // A
+    [0, 0, 0, 100, -15], // A
   ];
 
   applyColorMatrix(context, flattenMatrix);
