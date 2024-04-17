@@ -25,14 +25,16 @@ function render(context: CanvasRenderingContext2D) {
   const cellSize = 100;
   const circleOffset = 28;
 
-  const grid = createGrid(width, height, cellSize);
+  // prettier-ignore
+  const grid = createGrid(width, height, cellSize)
+    .map((point) => randomOffset(point, circleOffset));
 
   // context.fillStyle = backgroundColor;
   // context.fillRect(0, 0, width, height);
 
   context.filter = `blur(${blur}px)`;
 
-  drawGrid(context, grid, fillColor);
+  drawGrid(context, grid, 35, fillColor);
 
   // prettier-ignore
   const flattenMatrix = [
@@ -46,13 +48,16 @@ function render(context: CanvasRenderingContext2D) {
 }
 
 function createGrid(width: number, height: number, size: number): IPointTuple[] {
-  return range(0, width, size).flatMap((x) => range(0, height, size).map((y) => [x, y] as IPointTuple));
+  // prettier-ignore
+  return range(0, width, size)
+    .flatMap((x) => range(0, height, size)
+    .map((y) => [x, y] as IPointTuple));
 }
 
-function drawGrid(context: CanvasRenderingContext2D, grid: IPointTuple[], fillColor: string) {
+function drawGrid(context: CanvasRenderingContext2D, grid: IPointTuple[], radius: number, fillColor: string) {
   grid.forEach((point: IPointTuple) => {
     context.beginPath();
-    context.arc(...randomOffset(point, 28), 35, 0, 2 * Math.PI);
+    context.arc(...point, radius, 0, 2 * Math.PI);
     context.fillStyle = fillColor;
     context.fill();
   });
