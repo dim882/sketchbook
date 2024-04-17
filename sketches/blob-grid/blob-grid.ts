@@ -33,7 +33,7 @@ function render(context: CanvasRenderingContext2D) {
   // context.fillStyle = backgroundColor;
   // context.fillRect(0, 0, width, height);
 
-  context.filter = `blur(${BLUR}px)`;
+  applyBlur(context, BLUR);
 
   drawGrid(context, grid, RADIUS, fillColor);
 
@@ -46,6 +46,10 @@ function render(context: CanvasRenderingContext2D) {
   ];
 
   applyColorMatrix(context, flattenMatrix);
+}
+
+function applyBlur(context: CanvasRenderingContext2D, BLUR: number) {
+  context.filter = `blur(${BLUR}px)`;
 }
 
 function createGrid(width: number, height: number, size: number): IPointTuple[] {
