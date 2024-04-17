@@ -1,4 +1,4 @@
-import { range, getInteger, createPRNG, IPointTuple, tracePath, applyColorMatrix } from './utils.js';
+import { range, getInteger, createPRNG, IPointTuple, tracePath, applyColorMatrix, createCanvas } from './utils.js';
 
 // const prng = createPRNG(40502);
 const prng = Math.random;
@@ -17,7 +17,7 @@ function render(context: CanvasRenderingContext2D) {
   const formHue = getInteger(prng, 0, 270);
   const backgroundHue = formHue + 180;
 
-  const backgroundColor = `lch(95% 1% ${backgroundHue})`;
+  const backgroundColor = `lch(95% 40% ${backgroundHue})`;
   const fillColor = `lch(40% 50% ${formHue})`;
 
   const BLUR = 30;
@@ -30,12 +30,13 @@ function render(context: CanvasRenderingContext2D) {
   const grid = createGrid(width, height, CELL_SIZE)
     .map((point) => randomOffset(point, CIRCLE_OFFSET));
 
-  // context.fillStyle = backgroundColor;
-  // context.fillRect(0, 0, width, height);
+  context.fillStyle = backgroundColor;
+  context.fillRect(0, 0, width, height);
 
-  applyBlur(context, BLUR);
+  const blobContext = createCanvas(width, height);
+  applyBlur(blobContext, BLUR);
 
-  drawGrid(context, grid, RADIUS, fillColor);
+  drawGrid(blobContext, grid, RADIUS, fillColor);
 
   // prettier-ignore
   const flattenMatrix = [
@@ -45,7 +46,9 @@ function render(context: CanvasRenderingContext2D) {
     [0, 0, 0, ALPHA_TRANSFORM, -15], // A
   ];
 
-  applyColorMatrix(context, flattenMatrix);
+  applyColorMatrix(blobContext, flattenMatrix);
+
+  context.drawImage(blobContext.canvas, 0, 0);
 }
 
 function applyBlur(context: CanvasRenderingContext2D, BLUR: number) {
