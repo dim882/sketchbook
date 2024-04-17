@@ -18,13 +18,13 @@ function render(context: CanvasRenderingContext2D) {
   const backgroundHue = formHue + 180;
 
   const backgroundColor = `lch(20% 10% ${backgroundHue})`;
-
   const fillColor = `lch(60% 30% ${formHue} / .1)`;
-  const size = 100;
-  const grid = range(0, width, size).flatMap((x) => {
-    return range(0, height, size).map((y) => {
-      return [x, y];
-    });
-  });
+
+  const grid = createGrid(width, height, 100);
+
   console.log(grid);
 }
+
+const createGrid = (width: number, height: number, size: number) => {
+  return range(0, width, size).flatMap((x) => range(0, height, size).map((y) => [x, y]));
+};
