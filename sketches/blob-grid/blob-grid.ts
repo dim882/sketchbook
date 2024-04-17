@@ -18,13 +18,13 @@ function render(context: CanvasRenderingContext2D) {
   const backgroundHue = formHue + 180;
 
   const backgroundColor = `lch(95% 1% ${backgroundHue})`;
-  const fillColor = `lch(20% 80% ${formHue})`;
+  const fillColor = `lch(40% 50% ${formHue})`;
 
-  const BLUR = 10;
-  const ALPHA_TRANSFORM = 100;
-  const CELL_SIZE = 100;
-  const CIRCLE_OFFSET = 28;
-  const RADIUS = 35;
+  const BLUR = 30;
+  const ALPHA_TRANSFORM = 300;
+  const CELL_SIZE = 250;
+  const CIRCLE_OFFSET = 80;
+  const RADIUS = 70;
 
   // prettier-ignore
   const grid = createGrid(width, height, CELL_SIZE)
