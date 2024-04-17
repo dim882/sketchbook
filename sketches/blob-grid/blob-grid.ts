@@ -30,11 +30,11 @@ function render(context: CanvasRenderingContext2D) {
   console.log(grid);
 }
 
-const createGrid = (width: number, height: number, size: number) => {
-  return range(0, width, size).flatMap((x) => range(0, height, size).map((y) => [x, y]));
-};
+function createGrid(width: number, height: number, size: number): IPointTuple[] {
+  return range(0, width, size).flatMap((x) => range(0, height, size).map((y) => [x, y] as IPointTuple));
+}
 
-function drawGrid(context: CanvasRenderingContext2D, grid: number[][], fillColor: string) {
+function drawGrid(context: CanvasRenderingContext2D, grid: IPointTuple[], fillColor: string) {
   grid.forEach((point: IPointTuple) => {
     context.beginPath();
     context.arc(...point, 30, 0, 2 * Math.PI);
