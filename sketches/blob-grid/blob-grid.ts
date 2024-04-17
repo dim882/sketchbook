@@ -34,6 +34,7 @@ function render(context: CanvasRenderingContext2D) {
   context.fillRect(0, 0, width, height);
 
   const blobContext = createCanvas(width, height);
+
   applyBlur(blobContext, BLUR);
 
   drawGrid(blobContext, grid, RADIUS, fillColor);
@@ -46,7 +47,9 @@ function render(context: CanvasRenderingContext2D) {
     [0, 0, 0, ALPHA_TRANSFORM, -15], // A
   ];
 
+  console.log('before matrix', performance.now());
   applyColorMatrix(blobContext, flattenMatrix);
+  console.log('after matrix', performance.now());
 
   context.drawImage(blobContext.canvas, 0, 0);
 }
