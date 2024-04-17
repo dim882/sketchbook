@@ -20,12 +20,17 @@ function render(context: CanvasRenderingContext2D) {
   const backgroundColor = `lch(95% 1% ${backgroundHue})`;
   const fillColor = `lch(20% 80% ${formHue})`;
 
-  const grid = createGrid(width, height, 100);
+  const blur = 10;
+  const alphaTransform = 100;
+  const cellSize = 100;
+  const circleOffset = 28;
+
+  const grid = createGrid(width, height, cellSize);
 
   // context.fillStyle = backgroundColor;
   // context.fillRect(0, 0, width, height);
 
-  context.filter = 'blur(10px)';
+  context.filter = `blur(${blur}px)`;
 
   drawGrid(context, grid, fillColor);
 
@@ -34,7 +39,7 @@ function render(context: CanvasRenderingContext2D) {
     [1, 0, 0, 0,    0], // R 
     [0, 1, 0, 0,    0], // G
     [0, 0, 1, 0,    0], // B
-    [0, 0, 0, 100, -15], // A
+    [0, 0, 0, alphaTransform, -15], // A
   ];
 
   applyColorMatrix(context, flattenMatrix);
