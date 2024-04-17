@@ -38,7 +38,6 @@ function render(context: CanvasRenderingContext2D) {
   ];
 
   applyColorMatrix(context, flattenMatrix);
-  console.log(grid);
 }
 
 function createGrid(width: number, height: number, size: number): IPointTuple[] {
