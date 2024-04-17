@@ -22,6 +22,13 @@ function render(context: CanvasRenderingContext2D) {
 
   const grid = createGrid(width, height, 100);
 
+  grid.forEach((point: IPointTuple) => {
+    context.beginPath();
+    context.arc(...point, 10, 0, 2 * Math.PI);
+    context.fillStyle = 'red';
+    context.fill();
+  });
+
   console.log(grid);
 }
 
