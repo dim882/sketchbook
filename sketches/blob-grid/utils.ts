@@ -111,3 +111,11 @@ export function applyColorMatrix(context: CanvasRenderingContext2D, matrix: numb
   // Apply the color matrix
   applyColorMatrix(context, invertMatrix);
 };
+
+export function createCanvas(width: number, height: number) {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  return canvas.getContext('2d', { willReadFrequently: true });
+}
