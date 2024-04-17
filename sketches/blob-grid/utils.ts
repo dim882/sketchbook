@@ -73,7 +73,8 @@ export function saveAndRestore(context: CanvasRenderingContext2D, callback: () =
 }
 
 export function applyColorMatrix(context: CanvasRenderingContext2D, matrix: number[][]) {
-  const imageData = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
+  const { width, height } = context.canvas;
+  const imageData = context.getImageData(0, 0, width, height);
   const data = imageData.data;
 
   for (let i = 0; i < data.length; i += 4) {
@@ -90,27 +91,6 @@ export function applyColorMatrix(context: CanvasRenderingContext2D, matrix: numb
 
   context.putImageData(imageData, 0, 0);
 }
-
-// Example usage:
-() => {
-  const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-  const context = canvas.getContext('2d');
-
-  // Your drawing logic here
-  context.fillStyle = 'red';
-  context.fillRect(10, 10, 100, 100);
-
-  // Define a simple color matrix that inverts colors
-  const invertMatrix = [
-    [-1, 0, 0, 0, 1], // Red channel
-    [0, -1, 0, 0, 1], // Green channel
-    [0, 0, -1, 0, 1], // Blue channel
-    [0, 0, 0, 1, 0], // Alpha channel (no change)
-  ];
-
-  // Apply the color matrix
-  applyColorMatrix(context, invertMatrix);
-};
 
 export function createCanvas(width: number, height: number) {
   const canvas = document.createElement('canvas');
