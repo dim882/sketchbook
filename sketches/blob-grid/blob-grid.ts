@@ -25,6 +25,11 @@ function render(context: CanvasRenderingContext2D) {
   context.fillStyle = backgroundColor;
   context.fillRect(0, 0, width, height);
 
+  context.shadowColor = fillColor;
+  context.shadowBlur = 40;
+  context.shadowOffsetX = 0;
+  context.shadowOffsetY = 0;
+
   drawGrid(context, grid, fillColor);
 
   console.log(grid);
@@ -41,4 +46,11 @@ function drawGrid(context: CanvasRenderingContext2D, grid: IPointTuple[], fillCo
     context.fillStyle = fillColor;
     context.fill();
   });
+}
+
+function drawWithShadow(context: CanvasRenderingContext2D) {
+  context.shadowOffsetX = 10; // Sets the horizontal distance of the shadow from the shape
+  context.shadowOffsetY = 10; // Sets the vertical distance of the shadow from the shape
+  context.shadowBlur = 5; // Sets the blur level of the shadow
+  context.shadowColor = 'rgba(0, 0, 0, 0.5)'; // Sets the color and transparency of the shadow
 }

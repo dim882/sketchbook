@@ -5,12 +5,12 @@ document.body.onload = () => {
   render(ctx);
 };
 
-function render(ctx: CanvasRenderingContext2D) {
-  const { width, height } = ctx.canvas;
-
-  ctx.fillStyle = 'red';
-  ctx.save();
-  ctx.translate(width / 4, height / 4);
-  ctx.fillRect(0, 0, width / 2, height / 2);
-  ctx.restore();
+function render(context: CanvasRenderingContext2D) {
+  const { width, height } = context.canvas;
+  //  Do work here
+  context.fillStyle = 'red';
+  context.save();
+  context.translate(width / 4, height / 4);
+  context.fillRect(0, 0, width / 2, height / 2);
+  context.restore();
 }
