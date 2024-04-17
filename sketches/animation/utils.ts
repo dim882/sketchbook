@@ -27,19 +27,29 @@ export function createCanvas(width: number, height: number) {
   return canvas.getContext('2d', { willReadFrequently: true });
 }
 
-export async function playAudio(url: string): Promise<void> {
-  try {
-    const audioContext = new AudioContext();
+async function fetchAudioFile(url: string): Promise<ArrayBuffer> {
+  const response = await fetch(url);
 
-    const response = await fetch(url);
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-    const source = audioContext.createBufferSource();
-    source.buffer = audioBuffer;
-    source.connect(audioContext.destination);
-    source.start();
-  } catch (error) {
-    console.error('Error playing audio:', error);
-  }
+  return await response.arrayBuffer();
 }
+
+async function setupAudio(arrayBuffer: ArrayBuffer, audioContext: AudioContext): Promise<AudioBufferSourceNode> {
+  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+  const source = audioContext.createBufferSource();
+  source.buffer = audioBuffer;
+  source.connect(audioContext.destination);
+
+  return source;
+}
+
+function playAudio(source: AudioBufferSourceNode): void {
+  source.start();
+}
+
+// Example usage
+// const audioContext = new AudioContext();
+
+// fetchAudioFile('path/to/your/audiofile.mp3')
+//   .then((arrayBuffer) => setupAudio(arrayBuffer, audioContext))
+//   .then((source) => playAudio(source))
+//   .catch((error) => console.error('Error in audio processing pipeline:', error));
