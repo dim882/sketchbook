@@ -20,4 +20,11 @@ function render(context: CanvasRenderingContext2D) {
   const backgroundColor = `lch(20% 10% ${backgroundHue})`;
 
   const fillColor = `lch(60% 30% ${formHue} / .1)`;
+  const size = 100;
+  const grid = range(0, width, size).flatMap((x) => {
+    return range(0, height, size).map((y) => {
+      return [x, y];
+    });
+  });
+  console.log(grid);
 }
