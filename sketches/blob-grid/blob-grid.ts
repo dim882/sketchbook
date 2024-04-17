@@ -25,12 +25,7 @@ function render(context: CanvasRenderingContext2D) {
   context.fillStyle = backgroundColor;
   context.fillRect(0, 0, width, height);
 
-  grid.forEach((point: IPointTuple) => {
-    context.beginPath();
-    context.arc(...point, 30, 0, 2 * Math.PI);
-    context.fillStyle = fillColor;
-    context.fill();
-  });
+  drawGrid(context, grid, fillColor);
 
   console.log(grid);
 }
@@ -38,3 +33,12 @@ function render(context: CanvasRenderingContext2D) {
 const createGrid = (width: number, height: number, size: number) => {
   return range(0, width, size).flatMap((x) => range(0, height, size).map((y) => [x, y]));
 };
+
+function drawGrid(context: CanvasRenderingContext2D, grid: number[][], fillColor: string) {
+  grid.forEach((point: IPointTuple) => {
+    context.beginPath();
+    context.arc(...point, 30, 0, 2 * Math.PI);
+    context.fillStyle = fillColor;
+    context.fill();
+  });
+}
