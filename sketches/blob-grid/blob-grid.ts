@@ -22,21 +22,12 @@ function render(context: CanvasRenderingContext2D) {
 
   const grid = createGrid(width, height, 100);
 
-  context.fillStyle = backgroundColor;
-  context.fillRect(0, 0, width, height);
+  // context.fillStyle = backgroundColor;
+  // context.fillRect(0, 0, width, height);
 
-  context.shadowColor = fillColor;
-  context.shadowBlur = 40;
-  context.shadowOffsetX = 0;
-  context.shadowOffsetY = 0;
+  context.filter = 'blur(24px)';
 
   drawGrid(context, grid, fillColor);
-  const invertMatrix = [
-    [-1, 0, 0, 0, 1], // Red channel
-    [0, -1, 0, 0, 1], // Green channel
-    [0, 0, -1, 0, 1], // Blue channel
-    [0, 0, 0, 1, 0], // Alpha channel (no change)
-  ];
 
   const flattenMatrix = [
     [1, 0, 0, 0, 0], // Red channel transformation
@@ -56,15 +47,13 @@ function createGrid(width: number, height: number, size: number): IPointTuple[] 
 function drawGrid(context: CanvasRenderingContext2D, grid: IPointTuple[], fillColor: string) {
   grid.forEach((point: IPointTuple) => {
     context.beginPath();
-    context.arc(...point, 30, 0, 2 * Math.PI);
+    context.arc(...randomOffset(point), 35, 0, 2 * Math.PI);
     context.fillStyle = fillColor;
     context.fill();
   });
 }
 
-function drawWithShadow(context: CanvasRenderingContext2D) {
-  context.shadowOffsetX = 10; // Sets the horizontal distance of the shadow from the shape
-  context.shadowOffsetY = 10; // Sets the vertical distance of the shadow from the shape
-  context.shadowBlur = 5; // Sets the blur level of the shadow
-  context.shadowColor = 'rgba(0, 0, 0, 0.5)'; // Sets the color and transparency of the shadow
+function randomOffset([x, y]: IPointTuple): IPointTuple {
+  const offsetRange = [-20, 20];
+  return [x + getInteger(Math.random, ...offsetRange), y + getInteger(Math.random, ...offsetRange)];
 }
