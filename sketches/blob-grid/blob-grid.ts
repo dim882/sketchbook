@@ -1,4 +1,13 @@
-import { range, getInteger, IPointTuple, createCanvas, applySVGFilterToCanvas } from './utils.js';
+import {
+  range,
+  getInteger,
+  IPointTuple,
+  createCanvas,
+  applySVGFilterToCanvas,
+  maximizeOpacity,
+  getAverageColorOfOpaquePixels,
+  flattenToColor,
+} from './utils.js';
 
 // const prng = createPRNG(40502);
 const prng = Math.random;
@@ -40,6 +49,11 @@ function render(context: CanvasRenderingContext2D) {
   drawGrid(blobContext, grid, RADIUS, fillColor);
 
   // TODO: apply flattener filter
+  const averageColor = getAverageColorOfOpaquePixels(blobContext.canvas);
+  console.log({ averageColor });
+
+  flattenToColor(blobContext.canvas, averageColor);
+  maximizeOpacity(blobContext.canvas);
 
   context.drawImage(blobContext.canvas, 0, 0);
 }

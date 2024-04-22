@@ -122,3 +122,79 @@ export function applySVGFilterToCanvas(canvas: HTMLCanvasElement, svgString: str
   };
   img.src = url;
 }
+
+export function maximizeOpacity(canvas: HTMLCanvasElement) {
+  const context = canvas.getContext('2d');
+  if (!context) return;
+
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data; // This is a Uint8ClampedArray
+
+  // Loop through each pixel's data
+  // Every pixel's data is in groups of four values: (R, G, B, A)
+  for (let i = 3; i < data.length; i += 4) {
+    // data[i] refers to the alpha component of each pixel
+    if (data[i] > 0) {
+      data[i] = 255;
+    }
+  }
+
+  // Place the modified ImageData back to the canvas
+  context.putImageData(imageData, 0, 0);
+}
+
+export function getAverageColorOfOpaquePixels(canvas: HTMLCanvasElement): { r: number; g: number; b: number } | null {
+  const context = canvas.getContext('2d');
+  if (!context) return null;
+
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+
+  let sumR = 0;
+  let sumG = 0;
+  let sumB = 0;
+  let count = 0;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const alpha = data[i + 3]; // Alpha channel
+
+    if (alpha > 200) {
+      // Check if the pixel is fully opaque
+      sumR += data[i]; // Sum red component
+      sumG += data[i + 1]; // Sum green component
+      sumB += data[i + 2]; // Sum blue component
+      count++;
+    }
+  }
+
+  if (count === 0) {
+    return null; // Return null if no opaque pixels are found
+  }
+
+  // Calculate average of each color component
+  return {
+    r: Math.round(sumR / count),
+    g: Math.round(sumG / count),
+    b: Math.round(sumB / count),
+  };
+}
+
+export function flattenToColor(canvas: HTMLCanvasElement, color: { r: number; g: number; b: number }) {
+  const context = canvas.getContext('2d');
+  if (!context) return;
+
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+
+  for (let i = 0; i < data.length; i += 4) {
+    if (data[i + 3] > 0) {
+      // Check if the pixel is not completely transparent
+      data[i] = color.r; // Set red component
+      data[i + 1] = color.g; // Set green component
+      data[i + 2] = color.b; // Set blue component
+      // Alpha component data[i + 3] remains unchanged
+    }
+  }
+
+  context.putImageData(imageData, 0, 0);
+}
