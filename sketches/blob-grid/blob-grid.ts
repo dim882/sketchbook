@@ -1,4 +1,13 @@
-import { range, getInteger, createPRNG, IPointTuple, tracePath, applyColorMatrix, createCanvas } from './utils.js';
+import {
+  getInteger,
+  IPointTuple,
+  createCanvas,
+  flattenColors,
+  drawGrid,
+  applyBlur,
+  randomOffset,
+  createGrid,
+} from './utils.js';
 
 // const prng = createPRNG(40502);
 const prng = Math.random;
@@ -46,40 +55,4 @@ function render(context: CanvasRenderingContext2D) {
   console.log('after matrix', performance.now());
 
   context.drawImage(blobContext.canvas, 0, 0);
-}
-
-function flattenColors(context: CanvasRenderingContext2D, ALPHA_TRANSFORM: number) {
-  const flattenMatrix = [
-    [1, 0, 0, 0, 0], // R
-    [0, 1, 0, 0, 0], // G
-    [0, 0, 1, 0, 0], // B
-    [0, 0, 0, ALPHA_TRANSFORM, -15], // A
-  ];
-
-  applyColorMatrix(context, flattenMatrix);
-}
-
-function applyBlur(context: CanvasRenderingContext2D, BLUR: number) {
-  context.filter = `blur(${BLUR}px)`;
-}
-
-function createGrid(width: number, height: number, size: number): IPointTuple[] {
-  // prettier-ignore
-  return range(0, width, size)
-    .flatMap((x) => range(0, height, size)
-    .map((y) => [x, y] as IPointTuple));
-}
-
-function drawGrid(context: CanvasRenderingContext2D, grid: IPointTuple[], radius: number, fillColor: string) {
-  grid.forEach((point: IPointTuple) => {
-    context.beginPath();
-    context.arc(...point, radius, 0, 2 * Math.PI);
-    context.fillStyle = fillColor;
-    context.fill();
-  });
-}
-
-function randomOffset([x, y]: IPointTuple, offset: number): IPointTuple {
-  const offsetRange = [-offset, offset];
-  return [x + getInteger(Math.random, ...offsetRange), y + getInteger(Math.random, ...offsetRange)];
 }
