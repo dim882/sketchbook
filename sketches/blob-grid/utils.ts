@@ -99,3 +99,26 @@ export function createCanvas(width: number, height: number) {
 
   return canvas.getContext('2d', { willReadFrequently: true });
 }
+
+export function applySVGFilterToCanvas(canvas: HTMLCanvasElement, svgString: string) {
+  const dataUrl = canvas.toDataURL();
+  console.log(dataUrl);
+
+  const fullSvgString = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}">
+      ${svgString}
+      <image filter="url(#svgFilter)" x="0" y="0" width="${canvas.width}" height="${canvas.height}" href="${dataUrl}"></svg>
+  `;
+
+  const blob = new Blob([fullSvgString], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+
+  const img = new Image();
+  img.onload = () => {
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(img, 0, 0);
+    URL.revokeObjectURL(url); // Clean up the blob URL
+  };
+  img.src = url;
+}

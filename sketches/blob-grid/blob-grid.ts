@@ -1,4 +1,4 @@
-import { range, getInteger, createPRNG, IPointTuple, tracePath, applyColorMatrix, createCanvas } from './utils.js';
+import { range, getInteger, IPointTuple, createCanvas, applySVGFilterToCanvas } from './utils.js';
 
 // const prng = createPRNG(40502);
 const prng = Math.random;
@@ -14,7 +14,7 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const formHue = getInteger(prng, 0, 270);
+  const formHue = 50; //getInteger(prng, 0, 270);
   const backgroundHue = formHue + 180;
 
   const backgroundColor = `lch(95% 40% ${backgroundHue})`;
@@ -39,17 +39,7 @@ function render(context: CanvasRenderingContext2D) {
 
   drawGrid(blobContext, grid, RADIUS, fillColor);
 
-  // prettier-ignore
-  const flattenMatrix = [
-    [1, 0, 0, 0,    0], // R 
-    [0, 1, 0, 0,    0], // G
-    [0, 0, 1, 0,    0], // B
-    [0, 0, 0, ALPHA_TRANSFORM, -15], // A
-  ];
-
-  console.log('before matrix', performance.now());
-  applyColorMatrix(blobContext, flattenMatrix);
-  console.log('after matrix', performance.now());
+  // TODO: apply flattener filter
 
   context.drawImage(blobContext.canvas, 0, 0);
 }
