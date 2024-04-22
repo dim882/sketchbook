@@ -7,7 +7,7 @@ import {
   applyBlur,
   randomOffset,
   createGrid,
-} from './utils.js';
+} from './blob-grid.utils.js';
 
 // const prng = createPRNG(40502);
 const prng = Math.random;
