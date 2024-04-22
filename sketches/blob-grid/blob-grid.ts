@@ -12,12 +12,12 @@ import {
 // const prng = createPRNG(40502);
 const prng = Math.random;
 
-document.body.onload = () => {
+window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
 
   render(context);
-};
+});
 
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
