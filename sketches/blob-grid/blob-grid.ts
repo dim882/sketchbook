@@ -48,11 +48,8 @@ function render(context: CanvasRenderingContext2D) {
 
   drawGrid(blobContext, grid, RADIUS, fillColor);
 
-  console.log('before matrix', performance.now());
-
   // prettier-ignore
   flattenColors(blobContext, ALPHA_TRANSFORM, );
-  console.log('after matrix', performance.now());
 
   context.drawImage(blobContext.canvas, 0, 0);
 }

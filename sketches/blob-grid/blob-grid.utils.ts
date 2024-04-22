@@ -108,7 +108,9 @@ export function flattenColors(context: CanvasRenderingContext2D, ALPHA_TRANSFORM
     [0, 0, 0, ALPHA_TRANSFORM, -15], // A
   ];
 
+  console.log('before matrix', performance.now());
   applyColorMatrix(context, flattenMatrix);
+  console.log('after matrix', performance.now());
 }
 
 export function applyBlur(context: CanvasRenderingContext2D, BLUR: number) {
