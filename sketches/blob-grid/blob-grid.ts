@@ -39,19 +39,24 @@ function render(context: CanvasRenderingContext2D) {
 
   drawGrid(blobContext, grid, RADIUS, fillColor);
 
-  // prettier-ignore
-  const flattenMatrix = [
-    [1, 0, 0, 0,    0], // R 
-    [0, 1, 0, 0,    0], // G
-    [0, 0, 1, 0,    0], // B
-    [0, 0, 0, ALPHA_TRANSFORM, -15], // A
-  ];
-
   console.log('before matrix', performance.now());
-  applyColorMatrix(blobContext, flattenMatrix);
+
+  // prettier-ignore
+  flattenColors(blobContext, ALPHA_TRANSFORM, );
   console.log('after matrix', performance.now());
 
   context.drawImage(blobContext.canvas, 0, 0);
+}
+
+function flattenColors(context: CanvasRenderingContext2D, ALPHA_TRANSFORM: number) {
+  const flattenMatrix = [
+    [1, 0, 0, 0, 0], // R
+    [0, 1, 0, 0, 0], // G
+    [0, 0, 1, 0, 0], // B
+    [0, 0, 0, ALPHA_TRANSFORM, -15], // A
+  ];
+
+  applyColorMatrix(context, flattenMatrix);
 }
 
 function applyBlur(context: CanvasRenderingContext2D, BLUR: number) {
