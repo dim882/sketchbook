@@ -15,16 +15,19 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const baseHue = getInteger(prng, 0, 270);
+  const formHue = getInteger(prng, 0, 270);
+  // const backgroundHue = formHue + 180;
+  // context.fillStyle = `lch(50% 10% ${backgroundHue})`;
+  // context.fillRect(0, 0, width, height);
 
   let radius = 50;
   while (radius < width / 2) {
     let arcStartAngle = 0;
-    const arcWidth = getFloat(prng, 10, 50);
+    const arcWidth = getFloat(prng, 10, 80);
 
     while (arcStartAngle < FULL_ROTATION) {
       const lightness = getInteger(prng, 10, 100);
-      const arcColor = `lch(${lightness}% 10% ${baseHue} / 1)`;
+      const arcColor = `lch(${lightness}% 10% ${formHue} / 1)`;
 
       const startAngle = getFloat(prng, arcStartAngle, arcStartAngle + Math.PI / 4);
       const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 3);
