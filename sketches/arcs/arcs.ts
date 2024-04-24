@@ -1,6 +1,7 @@
 import { IPointTuple, getBoolean, getFloat, getInteger } from './arcs.utils';
 
 const FULL_ROTATION = 2 * Math.PI;
+const PADDING = 80;
 
 const prng = Math.random;
 
@@ -20,14 +21,14 @@ function render(context: CanvasRenderingContext2D) {
   // context.fillStyle = `lch(50% 10% ${backgroundHue})`;
   // context.fillRect(0, 0, width, height);
 
-  let radius = 50;
-  while (radius < width / 2) {
+  let radius = 20;
+  while (radius < width / 2 - PADDING) {
     let arcStartAngle = 0;
     const arcWidth = getFloat(prng, 10, 80);
 
     while (arcStartAngle < FULL_ROTATION) {
       const lightness = getInteger(prng, 10, 100);
-      const arcColor = `lch(${lightness}% 10% ${formHue} / 1)`;
+      const arcColor = `lch(${lightness}% 0% ${formHue} / 1)`;
 
       const startAngle = getFloat(prng, arcStartAngle, arcStartAngle + Math.PI / 4);
       const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 3);
