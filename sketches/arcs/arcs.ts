@@ -20,7 +20,7 @@ function render(context: CanvasRenderingContext2D) {
   let radius = 50;
   while (radius < width / 2) {
     const startAngle = getFloat(prng, 0, FULL_ROTATION);
-    const endAngle = getFloat(prng, startAngle, FULL_ROTATION);
+    const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 2);
     const width = getFloat(prng, 10, 50);
     const lightness = getInteger(prng, 10, 100);
     const arcColor = `lch(${lightness}% 0% ${baseHue} / 1)`;
