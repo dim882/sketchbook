@@ -1,4 +1,4 @@
-import { IPointTuple, getInteger } from './arcs.utils';
+import { IPointTuple, getFloat, getInteger } from './arcs.utils';
 
 const prng = Math.random;
 
@@ -16,12 +16,15 @@ function render(context: CanvasRenderingContext2D) {
   let radius = 50;
   while (radius < width / 2) {
     radius += getInteger(prng, 5, 100);
+    const FULL_ROTATION = 2 * Math.PI;
+    const startAngle = getFloat(prng, 0, FULL_ROTATION);
+    const endAngle = getFloat(prng, startAngle, FULL_ROTATION);
     console.log(radius);
 
     context.strokeStyle = '#000';
     context.beginPath();
-    context.arc(...center, radius, 0, 2 * Math.PI);
-    context.lineWidth = 50;
+    context.arc(...center, radius, startAngle, endAngle);
+    context.lineWidth = 20;
     context.stroke();
   }
 }
