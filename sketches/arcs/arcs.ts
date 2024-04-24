@@ -1,6 +1,5 @@
 import { IPointTuple } from './base.utils';
 
-// const prng = createPRNG(40502);
 const prng = Math.random;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -14,10 +13,12 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  //  Do work here
-  context.fillStyle = 'red';
+  context.strokeStyle = 'black';
   context.save();
-  context.translate(width / 4, height / 4);
-  context.fillRect(0, 0, ...center);
+  context.moveTo(...center);
+  context.beginPath();
+  context.arc(...center, 100, 0, 2 * Math.PI);
+  context.lineWidth = 50;
+  context.stroke();
   context.restore();
 }
