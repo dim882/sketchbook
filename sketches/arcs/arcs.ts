@@ -21,15 +21,31 @@ function render(context: CanvasRenderingContext2D) {
   while (radius < width / 2) {
     const startAngle = getFloat(prng, 0, FULL_ROTATION);
     const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 2);
-    const width = getFloat(prng, 10, 50);
+    const arcWidth = getFloat(prng, 10, 50);
     const lightness = getInteger(prng, 10, 100);
     const arcColor = `lch(${lightness}% 0% ${baseHue} / 1)`;
 
     context.strokeStyle = arcColor;
+    context.lineWidth = 1;
+
+    // Start drawing the first arc (upper arc)
     context.beginPath();
     context.arc(...center, radius, startAngle, endAngle);
-    context.lineWidth = width;
+
+    // Draw line connecting the end of the first arc to the start of the second arc
+    const endX = center[0] + (radius + arcWidth) * Math.cos(endAngle);
+    const endY = center[1] + (radius + arcWidth) * Math.sin(endAngle);
+    context.lineTo(endX, endY);
+
+    // Draw the second arc (lower arc)
+    context.arc(...center, radius + arcWidth, endAngle, startAngle, true);
+
+    // Draw line closing the shape back to the start of the first arc
+    const startX = center[0] + radius * Math.cos(startAngle);
+    const startY = center[1] + radius * Math.sin(startAngle);
+    context.lineTo(startX, startY);
+
     context.stroke();
-    radius += width + 5;
+    radius += arcWidth + 5;
   }
 }
