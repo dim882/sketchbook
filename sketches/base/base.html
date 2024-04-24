@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Base Canvas Project</title>
-    <style>
-      canvas {
-        border: 1px solid black;
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="canvas" width="800" height="800"></canvas>
-    <script src="./dist/base.js" type="module"></script>
-  </body>
-</html>
+<head>
+  <title>A Sketch</title>
+  <style>
+    body {
+      display: grid;
+      place-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    canvas {
+      border: 1px solid black;
+      width: 1000px;
+      height: 1000px;
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas" width="1000" height="1000"></canvas>
+
+  <script src="./dist/bundle.js" type="module"></script>
+</body>
