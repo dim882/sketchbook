@@ -19,16 +19,22 @@ function render(context: CanvasRenderingContext2D) {
 
   let radius = 50;
   while (radius < width / 2) {
-    const lightness = getInteger(prng, 10, 100);
-    const arcColor = `lch(${lightness}% 0% ${baseHue} / 1)`;
-
-    const startAngle = getFloat(prng, 0, FULL_ROTATION);
-    const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 2);
+    let arcStartAngle = 0;
     const arcWidth = getFloat(prng, 10, 50);
 
-    traceArc(context, center, radius, startAngle, endAngle, arcWidth);
+    while (arcStartAngle < FULL_ROTATION) {
+      const lightness = getInteger(prng, 10, 100);
+      const arcColor = `lch(${lightness}% 0% ${baseHue} / 1)`;
 
-    getBoolean(prng, 0.3) ? stroke(context, arcColor) : fill(context, arcColor);
+      const startAngle = getFloat(prng, arcStartAngle, arcStartAngle + Math.PI / 4);
+      const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 2);
+
+      traceArc(context, center, radius, startAngle, endAngle, arcWidth);
+
+      getBoolean(prng, 0.3) ? stroke(context, arcColor) : fill(context, arcColor);
+      arcStartAngle = endAngle;
+      console.log({ radius, arcStartAngle });
+    }
 
     radius += arcWidth + 5;
   }
