@@ -32,7 +32,7 @@ function render(context: CanvasRenderingContext2D) {
       traceArc(context, center, radius, startAngle, endAngle, arcWidth);
 
       getBoolean(prng, 0.3) ? stroke(context, arcColor) : fill(context, arcColor);
-      arcStartAngle = endAngle;
+      arcStartAngle = endAngle + getFloat(prng, 0, Math.PI / 4);
       console.log({ radius, arcStartAngle });
     }
 
