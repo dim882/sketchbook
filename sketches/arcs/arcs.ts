@@ -19,33 +19,46 @@ function render(context: CanvasRenderingContext2D) {
 
   let radius = 50;
   while (radius < width / 2) {
-    const startAngle = getFloat(prng, 0, FULL_ROTATION);
-    const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 2);
-    const arcWidth = getFloat(prng, 10, 50);
     const lightness = getInteger(prng, 10, 100);
     const arcColor = `lch(${lightness}% 0% ${baseHue} / 1)`;
 
+    const startAngle = getFloat(prng, 0, FULL_ROTATION);
+    const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 2);
+    const arcWidth = getFloat(prng, 10, 50);
+
     context.strokeStyle = arcColor;
+    context.fillStyle = arcColor;
     context.lineWidth = 1;
 
-    // Start drawing the first arc (upper arc)
-    context.beginPath();
-    context.arc(...center, radius, startAngle, endAngle);
+    traceArc(context, center, radius, startAngle, endAngle, arcWidth);
 
-    // Draw line connecting the end of the first arc to the start of the second arc
-    const endX = center[0] + (radius + arcWidth) * Math.cos(endAngle);
-    const endY = center[1] + (radius + arcWidth) * Math.sin(endAngle);
-    context.lineTo(endX, endY);
-
-    // Draw the second arc (lower arc)
-    context.arc(...center, radius + arcWidth, endAngle, startAngle, true);
-
-    // Draw line closing the shape back to the start of the first arc
-    const startX = center[0] + radius * Math.cos(startAngle);
-    const startY = center[1] + radius * Math.sin(startAngle);
-    context.lineTo(startX, startY);
-
+    context.fill();
     context.stroke();
     radius += arcWidth + 5;
   }
+}
+
+function traceArc(
+  context: CanvasRenderingContext2D,
+  center: IPointTuple,
+  radius: number,
+  startAngle: number,
+  endAngle: number,
+  arcWidth: number
+) {
+  context.beginPath();
+  context.arc(...center, radius, startAngle, endAngle);
+
+  // Draw line connecting the end of the first arc to the start of the second arc
+  const endX = center[0] + (radius + arcWidth) * Math.cos(endAngle);
+  const endY = center[1] + (radius + arcWidth) * Math.sin(endAngle);
+  context.lineTo(endX, endY);
+
+  // Draw the second arc (lower arc)
+  context.arc(...center, radius + arcWidth, endAngle, startAngle, true);
+
+  // Draw line closing the shape back to the start of the first arc
+  const startX = center[0] + radius * Math.cos(startAngle);
+  const startY = center[1] + radius * Math.sin(startAngle);
+  context.lineTo(startX, startY);
 }
