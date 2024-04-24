@@ -1,4 +1,4 @@
-import { IPointTuple } from './base.utils';
+import { IPointTuple, getInteger } from './arcs.utils';
 
 const prng = Math.random;
 
@@ -13,12 +13,15 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  context.strokeStyle = 'black';
-  context.save();
-  context.moveTo(...center);
-  context.beginPath();
-  context.arc(...center, 100, 0, 2 * Math.PI);
-  context.lineWidth = 50;
-  context.stroke();
-  context.restore();
+  let radius = 50;
+  while (radius < width / 2) {
+    radius += getInteger(prng, 5, 100);
+    console.log(radius);
+
+    context.strokeStyle = '#000';
+    context.beginPath();
+    context.arc(...center, radius, 0, 2 * Math.PI);
+    context.lineWidth = 50;
+    context.stroke();
+  }
 }
