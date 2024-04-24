@@ -9,6 +9,10 @@ export const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower: n
   return Math.floor(getFloat(generateNumber, lower, upper));
 };
 
+export const getBoolean = (generateNumber: PseudoRandomNumberGenerator, probabilityTrue: number = 0.5) => {
+  return generateNumber() < probabilityTrue;
+};
+
 type Range = (start: number, end: number, step?: number) => number[];
 
 export const range: Range = (start, end, step = 1) => {

@@ -1,4 +1,4 @@
-import { IPointTuple, getFloat, getInteger } from './arcs.utils';
+import { IPointTuple, getBoolean, getFloat, getInteger } from './arcs.utils';
 
 const FULL_ROTATION = 2 * Math.PI;
 
@@ -26,16 +26,23 @@ function render(context: CanvasRenderingContext2D) {
     const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 2);
     const arcWidth = getFloat(prng, 10, 50);
 
-    context.strokeStyle = arcColor;
-    context.fillStyle = arcColor;
-    context.lineWidth = 1;
-
     traceArc(context, center, radius, startAngle, endAngle, arcWidth);
 
-    context.fill();
-    context.stroke();
+    getBoolean(prng, 0.3) ? stroke(context, arcColor) : fill(context, arcColor);
+
     radius += arcWidth + 5;
   }
+}
+
+function fill(context: CanvasRenderingContext2D, arcColor: string) {
+  context.fillStyle = arcColor;
+  context.fill();
+}
+
+function stroke(context: CanvasRenderingContext2D, arcColor: string) {
+  context.strokeStyle = arcColor;
+  context.lineWidth = 1;
+  context.stroke();
 }
 
 function traceArc(
