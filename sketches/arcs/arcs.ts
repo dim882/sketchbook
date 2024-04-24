@@ -1,5 +1,7 @@
 import { IPointTuple, getFloat, getInteger } from './arcs.utils';
 
+const FULL_ROTATION = 2 * Math.PI;
+
 const prng = Math.random;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -13,11 +15,10 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const baseHue = getInteger(prng, 0, 270);
+  const baseHue = getInteger(prng, 0, 270); // Doesn't have an effect yet
 
   let radius = 50;
   while (radius < width / 2) {
-    const FULL_ROTATION = 2 * Math.PI;
     const startAngle = getFloat(prng, 0, FULL_ROTATION);
     const endAngle = getFloat(prng, startAngle, FULL_ROTATION);
     const width = getFloat(prng, 10, 50);
