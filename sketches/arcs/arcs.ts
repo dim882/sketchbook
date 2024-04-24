@@ -15,7 +15,7 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const baseHue = getInteger(prng, 0, 270); // Doesn't have an effect yet
+  const baseHue = getInteger(prng, 0, 270);
 
   let radius = 50;
   while (radius < width / 2) {
@@ -24,10 +24,10 @@ function render(context: CanvasRenderingContext2D) {
 
     while (arcStartAngle < FULL_ROTATION) {
       const lightness = getInteger(prng, 10, 100);
-      const arcColor = `lch(${lightness}% 0% ${baseHue} / 1)`;
+      const arcColor = `lch(${lightness}% 10% ${baseHue} / 1)`;
 
       const startAngle = getFloat(prng, arcStartAngle, arcStartAngle + Math.PI / 4);
-      const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 2);
+      const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 3);
 
       traceArc(context, center, radius, startAngle, endAngle, arcWidth);
 
