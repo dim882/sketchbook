@@ -18,7 +18,7 @@ console.log(`Sketch './sketches/${dirName}' created.`);
 
 try {
   // Execute the shell command
-  execSync(`cd ./sketches/${dirName} && yarn watch`, { stdio: 'inherit' });
+  execSync(`cd ./sketches/${dirName} && yarn install && yarn watch`, { stdio: 'inherit' });
 } catch (error) {
   // Handle any errors
   console.error('Error executing shell command:', error);
