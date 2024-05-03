@@ -7,18 +7,18 @@ const { execSync } = require('child_process');
 const excludedFiles = ['dist', 'node_modules', 'yarn.lock'];
 
 // Get directory name from command line argument
-const dirName = process.argv[2];
+const targetDirName = process.argv[2];
 
 const sourceDir = path.join(__dirname, 'sketches/base');
-const targetDir = path.join(__dirname, 'sketches', dirName);
+const targetDir = path.join(__dirname, 'sketches', targetDirName);
 
 copyDirectory(sourceDir, targetDir);
 
-console.log(`Sketch './sketches/${dirName}' created.`);
+console.log(`Sketch './sketches/${targetDirName}' created.`);
 
 try {
   // Execute the shell command
-  execSync(`cd ./sketches/${dirName} && yarn install && yarn watch`, { stdio: 'inherit' });
+  execSync(`cd ./sketches/${targetDirName} && yarn install && yarn watch`, { stdio: 'inherit' });
 } catch (error) {
   // Handle any errors
   console.error('Error executing shell command:', error);
@@ -48,7 +48,7 @@ function copyDirectory(source, target) {
 }
 
 function createTargetPath(file, target) {
-  let targetFileName = file.replace(/^base(\.html|\.ts)$/, `${dirName}$1`);
+  let targetFileName = file.replace(/^base(\.html|\.ts)$/, `${targetDirName}$1`);
 
   return path.join(target, targetFileName);
 }
