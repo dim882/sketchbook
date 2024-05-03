@@ -41,6 +41,7 @@ export function drawTriangleWithHole(
 
   context.fillStyle = 'white';
   context.fill('evenodd');
+  context.closePath();
 }
 
 export function drawRadiatingLines(context: CanvasRenderingContext2D, centerX, centerY, lineLength) {
