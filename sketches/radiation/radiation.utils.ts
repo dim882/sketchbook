@@ -22,18 +22,19 @@ export function tracePath(context: CanvasRenderingContext2D, points: IPointTuple
   context.closePath();
 }
 
-export function drawRadiatingLines(context: CanvasRenderingContext2D) {
+export function drawRadiatingLines(context: CanvasRenderingContext2D, centerX, centerY) {
   const numLines = 100;
   const angleIncrement = 360 / numLines;
+  const lineLength = 400;
 
   for (let i = 0; i < numLines; i++) {
     const angle = angleIncrement * i;
     const radians = (angle * Math.PI) / 180;
-    const x = Math.cos(radians) * 400; // Line length of 400 pixels
-    const y = Math.sin(radians) * 400;
+    const x = Math.cos(radians) * lineLength;
+    const y = Math.sin(radians) * lineLength;
 
     context.beginPath();
-    context.moveTo(0, 0);
+    context.moveTo(centerX, centerY);
     context.lineTo(x, y);
     context.strokeStyle = '#fff';
     context.stroke();

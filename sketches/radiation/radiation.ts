@@ -21,9 +21,9 @@ function render(context: CanvasRenderingContext2D) {
   traceEquilateralTriangle(context, 0, 0, 400);
   context.clip();
 
-  // context.beginPath();
-  // context.arc(0, 0, 300, 0, Math.PI * 2);
-  // context.fill();
-
-  drawRadiatingLines(context);
+  drawRadiatingLines(context, 0, 0);
 }
+
+// context.beginPath();
+// context.arc(0, 0, 300, 0, Math.PI * 2);
+// context.fill();
