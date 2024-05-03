@@ -18,10 +18,10 @@ function render(context: CanvasRenderingContext2D) {
 
   context.translate(...center);
 
-  traceEquilateralTriangle(context, 0, 0, 400);
+  traceEquilateralTriangle(context, 0, 0, 800);
   context.clip();
 
-  drawRadiatingLines(context, 0, 0, 400);
+  drawRadiatingLines(context, 0, 0, 600);
 }
 
 // context.beginPath();

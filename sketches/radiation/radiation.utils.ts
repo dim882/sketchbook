@@ -35,11 +35,14 @@ export function drawRadiatingLines(context: CanvasRenderingContext2D, centerX, c
   for (let i = 0; i < numLines; i++) {
     const angle = angleIncrement * i;
     const radians = (angle * Math.PI) / 180;
+
+    const startX = Math.cos(radians) * 30;
+    const startY = Math.sin(radians) * 30;
     const x = Math.cos(radians) * lineLength;
     const y = Math.sin(radians) * lineLength;
 
     context.beginPath();
-    context.moveTo(centerX, centerY);
+    context.moveTo(startX, startY);
     context.lineTo(x, y);
     context.strokeStyle = '#fff';
     context.stroke();
