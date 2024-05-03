@@ -26,6 +26,23 @@ export function tracePath(context: CanvasRenderingContext2D, points: IPointTuple
         : context.lineTo(...point)));
 }
 
+export function drawTriangleWithHole(
+  context: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  outerSideLength: number,
+  scale: number
+): void {
+  traceEquilateralTriangle(context, cx, cy, outerSideLength);
+
+  const innerSideLength = outerSideLength * scale;
+
+  traceEquilateralTriangle(context, cx, cy, innerSideLength);
+
+  context.fillStyle = 'white';
+  context.fill('evenodd');
+}
+
 export function drawRadiatingLines(context: CanvasRenderingContext2D, centerX, centerY, lineLength) {
   const numLines = 100;
   const angleIncrement = 360 / numLines;

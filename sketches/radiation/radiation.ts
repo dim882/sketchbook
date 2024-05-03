@@ -1,4 +1,4 @@
-import { IPointTuple, drawRadiatingLines, traceEquilateralTriangle } from './radiation.utils';
+import { IPointTuple, drawRadiatingLines, drawTriangleWithHole, traceEquilateralTriangle } from './radiation.utils';
 
 // const prng = createPRNG(40502);
 const prng = Math.random;
@@ -18,6 +18,7 @@ function render(context: CanvasRenderingContext2D) {
 
   context.translate(centerX, centerY + height / 9);
 
+  // drawTriangleWithHole(context, 0, 0, 800, 0.3);
   traceEquilateralTriangle(context, 0, 0, 800);
   context.clip();
 
