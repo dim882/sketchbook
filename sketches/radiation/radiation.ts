@@ -22,6 +22,23 @@ function render(context: CanvasRenderingContext2D) {
   traceEquilateralTriangle(context, 0, 0, 400);
   context.fillStyle = '#fff';
   context.fill();
+
+  const numLines = 100; // Total number of lines
+  const angleIncrement = 360 / numLines;
+
+  for (let i = 0; i < numLines; i++) {
+    const angle = angleIncrement * i;
+    const radians = (angle * Math.PI) / 180;
+    const x = Math.cos(radians) * 400; // Line length of 400 pixels
+    const y = Math.sin(radians) * 400;
+
+    context.beginPath();
+    context.moveTo(0, 0);
+    context.lineTo(x, y);
+    context.globalCompositeOperation = 'difference';
+    context.strokeStyle = '#fff';
+    context.stroke();
+  }
 }
 
 function traceEquilateralTriangle(context: CanvasRenderingContext2D, cx: number, cy: number, sideLength: number): void {
