@@ -13,6 +13,8 @@ window.addEventListener('DOMContentLoaded', () => {
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
+  context.fillStyle = `#000`;
+  context.fillRect(0, 0, width, height);
 
   context.translate(...center);
 
@@ -35,7 +37,7 @@ function render(context: CanvasRenderingContext2D) {
     context.beginPath();
     context.moveTo(0, 0);
     context.lineTo(x, y);
-    context.strokeStyle = '#000';
+    context.strokeStyle = '#fff';
     context.stroke();
   }
 }
