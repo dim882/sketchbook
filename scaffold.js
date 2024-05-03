@@ -6,10 +6,10 @@ const { execSync } = require('child_process');
 
 const excludedFiles = ['dist', 'node_modules', 'yarn.lock'];
 
-// Get directory name from command line argument
-const targetDirName = process.argv[2];
+const sourceDirName = process.argv[2];
+const targetDirName = process.argv[3];
 
-const sourceDir = path.join(__dirname, 'sketches/base');
+const sourceDir = path.join(__dirname, 'sketches', sourceDirName);
 const targetDir = path.join(__dirname, 'sketches', targetDirName);
 
 copyDirectory(sourceDir, targetDir);
@@ -17,10 +17,8 @@ copyDirectory(sourceDir, targetDir);
 console.log(`Sketch './sketches/${targetDirName}' created.`);
 
 try {
-  // Execute the shell command
   execSync(`cd ./sketches/${targetDirName} && yarn install && yarn watch`, { stdio: 'inherit' });
 } catch (error) {
-  // Handle any errors
   console.error('Error executing shell command:', error);
 }
 
