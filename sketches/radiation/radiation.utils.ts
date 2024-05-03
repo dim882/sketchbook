@@ -9,23 +9,21 @@ export function traceEquilateralTriangle(
   const height = (sideLength * Math.sqrt(3)) / 2;
   const verticalOffset = (2 / 3) * height;
 
+  context.beginPath();
   tracePath(context, [
     [cx, cy - verticalOffset],
     [cx + sideLength / 2, cy + (1 / 3) * height],
     [cx - sideLength / 2, cy + (1 / 3) * height],
   ]);
+  context.closePath();
 }
 
 export function tracePath(context: CanvasRenderingContext2D, points: IPointTuple[]) {
-  context.beginPath();
-
   // prettier-ignore
-  points.forEach(([x, y], index) => 
+  points.forEach((point, index) => 
     (index === 0 
-        ? context.moveTo(x, y) 
-        : context.lineTo(x, y)));
-
-  context.closePath();
+        ? context.moveTo(...point) 
+        : context.lineTo(...point)));
 }
 
 export function drawRadiatingLines(context: CanvasRenderingContext2D, centerX, centerY, lineLength) {
