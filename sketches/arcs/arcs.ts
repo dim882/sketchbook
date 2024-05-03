@@ -28,7 +28,7 @@ function render(context: CanvasRenderingContext2D) {
 
     while (arcStartAngle < FULL_ROTATION) {
       const lightness = getInteger(prng, 10, 100);
-      const arcColor = `lch(${lightness}% 0% ${formHue} / 1)`;
+      const arcColor = `lch(${lightness}% 20% ${formHue} / 1)`;
 
       const startAngle = getFloat(prng, arcStartAngle, arcStartAngle + Math.PI / 4);
       const endAngle = getFloat(prng, startAngle, startAngle + Math.PI / 3);
