@@ -18,7 +18,13 @@ export function traceEquilateralTriangle(
 
 export function tracePath(context: CanvasRenderingContext2D, points: IPointTuple[]) {
   context.beginPath();
-  points.forEach(([x, y], index) => (index === 0 ? context.moveTo(x, y) : context.lineTo(x, y)));
+
+  // prettier-ignore
+  points.forEach(([x, y], index) => 
+    (index === 0 
+        ? context.moveTo(x, y) 
+        : context.lineTo(x, y)));
+
   context.closePath();
 }
 
