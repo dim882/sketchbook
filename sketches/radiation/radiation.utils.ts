@@ -34,14 +34,16 @@ export function drawTriangleWithHole(
   scale: number
 ): void {
   traceEquilateralTriangle(context, cx, cy, outerSideLength);
+  context.fillStyle = 'black';
+  context.fill();
 
   const innerSideLength = outerSideLength * scale;
 
   traceEquilateralTriangle(context, cx, cy, innerSideLength);
 
+  context.globalCompositeOperation = 'xor';
   context.fillStyle = 'white';
-  context.fill('evenodd');
-  context.closePath();
+  context.fill();
 }
 
 export function drawRadiatingLines(context: CanvasRenderingContext2D, centerX, centerY, lineLength) {
