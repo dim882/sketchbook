@@ -12,11 +12,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
-  const center: IPointTuple = [width / 2, height / 2];
+  const [centerX, centerY]: IPointTuple = [width / 2, height / 2];
   context.fillStyle = `#000`;
   context.fillRect(0, 0, width, height);
 
-  context.translate(...center);
+  context.translate(centerX, centerY + height / 9);
 
   traceEquilateralTriangle(context, 0, 0, 800);
   context.clip();
