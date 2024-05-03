@@ -28,10 +28,9 @@ export function tracePath(context: CanvasRenderingContext2D, points: IPointTuple
   context.closePath();
 }
 
-export function drawRadiatingLines(context: CanvasRenderingContext2D, centerX, centerY) {
+export function drawRadiatingLines(context: CanvasRenderingContext2D, centerX, centerY, lineLength) {
   const numLines = 100;
   const angleIncrement = 360 / numLines;
-  const lineLength = 400;
 
   for (let i = 0; i < numLines; i++) {
     const angle = angleIncrement * i;
