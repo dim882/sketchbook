@@ -18,7 +18,7 @@ function render(context: CanvasRenderingContext2D) {
 
   context.translate(centerX, centerY + height / 9);
 
-  drawTriangleWithHole(context, 0, 0, 800, 500);
+  drawTriangleWithHole(context, 0, 0, 900, 500);
 
   drawRadiationTriangle(context);
 }
@@ -29,7 +29,7 @@ function addBackground(context: CanvasRenderingContext2D, width: number, height:
 }
 
 function drawRadiationTriangle(context: CanvasRenderingContext2D) {
-  traceEquilateralTriangle(context, 0, 0, 800);
+  traceEquilateralTriangle(context, 0, 0, 500);
   context.clip();
   drawRadiatingLines(context, 0, 0, 600);
 }
