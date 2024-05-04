@@ -44,7 +44,7 @@ export function drawTriangleWithHole(
   context.fill();
 }
 
-export function drawRadiatingLines(context: CanvasRenderingContext2D, centerX, centerY, lineLength) {
+export function drawRadiatingLines(context: CanvasRenderingContext2D, lineLength) {
   const numLines = 100;
   const angleIncrement = 360 / numLines;
 
