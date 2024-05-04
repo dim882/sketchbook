@@ -38,7 +38,7 @@ function render(context: CanvasRenderingContext2D) {
 }
 
 function drawOuterRadiatingTriangle(context: CanvasRenderingContext2D) {
-  drawTriangleWithHole(context, 0, 0, 900, 500);
+  drawTriangleWithHole(context, 0, 0, 900, 510);
   context.globalCompositeOperation = 'source-atop';
   drawRadiatingLines(context, 900, 2);
   context.globalCompositeOperation = 'source-over';
