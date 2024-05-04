@@ -18,9 +18,16 @@ function render(context: CanvasRenderingContext2D) {
 
   context.translate(centerX, centerY + height / 9);
 
-  drawTriangleWithHole(context, 0, 0, 900, 500);
+  drawOuterRadiatingTriangle(context);
 
   drawInnerRadiatingTriangle(context);
+}
+
+function drawOuterRadiatingTriangle(context: CanvasRenderingContext2D) {
+  drawTriangleWithHole(context, 0, 0, 900, 500);
+  context.globalCompositeOperation = 'source-atop';
+  drawRadiatingLines(context, 0, 0, 900);
+  context.globalCompositeOperation = 'source-over';
 }
 
 function addBackground(context: CanvasRenderingContext2D, width: number, height: number) {
