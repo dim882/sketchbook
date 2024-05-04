@@ -24,7 +24,11 @@ function render(context: CanvasRenderingContext2D) {
 
   const scratchContext = createCanvas(width, height);
 
-  drawOuterRadiatingTriangle(scratchContext);
+  saveAndRestore(scratchContext, () => {
+    scratchContext.translate(centerX, centerY + height / 9);
+    drawOuterRadiatingTriangle(scratchContext);
+  });
+
   context.drawImage(scratchContext.canvas, 0, 0);
   context.translate(centerX, centerY + height / 9);
 
@@ -47,4 +51,10 @@ function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D) {
   traceEquilateralTriangle(context, 0, 0, 500);
   context.clip();
   drawRadiatingLines(context, 600, -0.7);
+}
+
+function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
+  context.save();
+  callback();
+  context.restore();
 }
