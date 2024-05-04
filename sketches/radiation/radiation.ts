@@ -1,4 +1,10 @@
-import { IPointTuple, drawRadiatingLines, drawTriangleWithHole, traceEquilateralTriangle } from './radiation.utils';
+import {
+  IPointTuple,
+  createCanvas,
+  drawRadiatingLines,
+  drawTriangleWithHole,
+  traceEquilateralTriangle,
+} from './radiation.utils';
 
 // const prng = createPRNG(40502);
 const prng = Math.random;
@@ -14,11 +20,13 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const [centerX, centerY]: IPointTuple = [width / 2, height / 2];
 
-  // addBackground(context, width, height);
+  addBackground(context, width, height);
 
+  const scratchContext = createCanvas(width, height);
+
+  drawOuterRadiatingTriangle(scratchContext);
+  context.drawImage(scratchContext.canvas, 0, 0);
   context.translate(centerX, centerY + height / 9);
-
-  drawOuterRadiatingTriangle(context);
 
   drawInnerRadiatingTriangle(context);
 }
@@ -26,7 +34,7 @@ function render(context: CanvasRenderingContext2D) {
 function drawOuterRadiatingTriangle(context: CanvasRenderingContext2D) {
   drawTriangleWithHole(context, 0, 0, 900, 500);
   context.globalCompositeOperation = 'source-atop';
-  drawRadiatingLines(context, 900, 0.7);
+  drawRadiatingLines(context, 900, 2);
   context.globalCompositeOperation = 'source-over';
 }
 

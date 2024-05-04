@@ -1,5 +1,13 @@
 export type IPointTuple = [number, number];
 
+export function createCanvas(width: number, height: number) {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  return canvas.getContext('2d', { willReadFrequently: true });
+}
+
 export function traceEquilateralTriangle(
   context: CanvasRenderingContext2D,
   cx: number,
