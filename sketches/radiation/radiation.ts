@@ -18,9 +18,9 @@ function render(context: CanvasRenderingContext2D) {
 
   context.translate(centerX, centerY + height / 9);
 
-  drawTriangleWithHole(context, 0, 0, 800, 0.3);
+  drawTriangleWithHole(context, 0, 0, 800, 500);
 
-  // drawRadiationTriangle(context);
+  drawRadiationTriangle(context);
 }
 
 function addBackground(context: CanvasRenderingContext2D, width: number, height: number) {

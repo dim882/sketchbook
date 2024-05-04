@@ -31,13 +31,11 @@ export function drawTriangleWithHole(
   cx: number,
   cy: number,
   outerSideLength: number,
-  scale: number
+  innerSideLength: number
 ): void {
   traceEquilateralTriangle(context, cx, cy, outerSideLength);
   context.fillStyle = 'black';
   context.fill();
-
-  const innerSideLength = outerSideLength * scale;
 
   traceEquilateralTriangle(context, cx, cy, innerSideLength);
 
