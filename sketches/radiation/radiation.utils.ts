@@ -8,10 +8,10 @@ export function createCanvas(width: number, height: number) {
   return canvas.getContext('2d', { willReadFrequently: true });
 }
 
-function box<T>(x: T) {
-  map: (f: Function) => box(f(x));
-  fold: (f: Function) => f(x);
-}
+export const box = <T>(x: T) => ({
+  map: (f: Function) => box(f(x)),
+  fold: (f: Function) => f(x),
+});
 
 export function traceEquilateralTriangle(
   context: CanvasRenderingContext2D,
