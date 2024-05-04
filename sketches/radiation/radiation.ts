@@ -31,16 +31,31 @@ function render(context: CanvasRenderingContext2D) {
 
   saveAndRestore(scratchContext, () => {
     scratchContext.translate(centerX, centerY + height / 9);
-    drawOuterRadiatingTriangle(scratchContext);
+    drawOuterRadiatingTriangle(scratchContext, 510, 900, 1);
+  });
+
+  context.drawImage(scratchContext.canvas, 0, 0);
+
+  scratchContext.fillRect(0, 0, width, height);
+
+  saveAndRestore(scratchContext, () => {
+    scratchContext.translate(centerX, centerY + height / 9);
+    drawOuterRadiatingTriangle(scratchContext, 910, 1200, 4);
   });
 
   context.drawImage(scratchContext.canvas, 0, 0);
 }
 
-function drawOuterRadiatingTriangle(context: CanvasRenderingContext2D) {
-  drawTriangleWithHole(context, 0, 0, 900, 510);
+function drawOuterRadiatingTriangle(
+  context: CanvasRenderingContext2D,
+  innerSideLength: number,
+  outerSideLength: number,
+  angleOffset: number,
+  lineLength = 1000
+) {
+  drawTriangleWithHole(context, 0, 0, outerSideLength, innerSideLength);
   context.globalCompositeOperation = 'source-atop';
-  drawRadiatingLines(context, 900, 2);
+  drawRadiatingLines(context, lineLength, angleOffset);
   context.globalCompositeOperation = 'source-over';
 }
 

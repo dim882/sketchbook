@@ -48,7 +48,6 @@ export function drawTriangleWithHole(
   traceEquilateralTriangle(context, cx, cy, innerSideLength);
 
   context.globalCompositeOperation = 'xor';
-  context.fillStyle = 'white';
   context.fill();
 }
 
