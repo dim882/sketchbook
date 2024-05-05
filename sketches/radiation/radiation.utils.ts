@@ -8,10 +8,29 @@ export function createCanvas(width: number, height: number) {
   return canvas.getContext('2d', { willReadFrequently: true });
 }
 
+export function addBackground(context: CanvasRenderingContext2D, width: number, height: number) {
+  context.fillStyle = `#000`;
+  context.fillRect(0, 0, width, height);
+}
+
+export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
+  context.save();
+  callback();
+  context.restore();
+}
+
 export const box = <T>(x: T) => ({
   map: (f: Function) => box(f(x)),
   fold: (f: Function) => f(x),
 });
+
+export function tracePath(context: CanvasRenderingContext2D, points: IPointTuple[]) {
+  // prettier-ignore
+  points.forEach((point, index) => 
+    (index === 0 
+        ? context.moveTo(...point) 
+        : context.lineTo(...point)));
+}
 
 export function traceEquilateralTriangle(
   context: CanvasRenderingContext2D,
@@ -31,12 +50,25 @@ export function traceEquilateralTriangle(
   context.closePath();
 }
 
-export function tracePath(context: CanvasRenderingContext2D, points: IPointTuple[]) {
-  // prettier-ignore
-  points.forEach((point, index) => 
-    (index === 0 
-        ? context.moveTo(...point) 
-        : context.lineTo(...point)));
+export function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D) {
+  traceEquilateralTriangle(context, 0, 0, 500);
+  context.globalCompositeOperation = 'source-atop';
+  context.clip();
+  drawRadiatingLines(context, 600, -0.7);
+  context.globalCompositeOperation = 'source-over';
+}
+
+export function drawOuterRadiatingTriangle(
+  context: CanvasRenderingContext2D,
+  innerSideLength: number,
+  outerSideLength: number,
+  angleOffset: number,
+  lineLength = 1000
+) {
+  drawTriangleWithHole(context, 0, 0, outerSideLength, innerSideLength);
+  context.globalCompositeOperation = 'source-atop';
+  drawRadiatingLines(context, lineLength, angleOffset);
+  context.globalCompositeOperation = 'source-over';
 }
 
 export function drawTriangleWithHole(
@@ -75,36 +107,4 @@ export function drawRadiatingLines(context: CanvasRenderingContext2D, lineLength
     context.strokeStyle = '#fff';
     context.stroke();
   }
-}
-
-export function drawOuterRadiatingTriangle(
-  context: CanvasRenderingContext2D,
-  innerSideLength: number,
-  outerSideLength: number,
-  angleOffset: number,
-  lineLength = 1000
-) {
-  drawTriangleWithHole(context, 0, 0, outerSideLength, innerSideLength);
-  context.globalCompositeOperation = 'source-atop';
-  drawRadiatingLines(context, lineLength, angleOffset);
-  context.globalCompositeOperation = 'source-over';
-}
-
-export function addBackground(context: CanvasRenderingContext2D, width: number, height: number) {
-  context.fillStyle = `#000`;
-  context.fillRect(0, 0, width, height);
-}
-
-export function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D) {
-  traceEquilateralTriangle(context, 0, 0, 500);
-  context.globalCompositeOperation = 'source-atop';
-  context.clip();
-  drawRadiatingLines(context, 600, -0.7);
-  context.globalCompositeOperation = 'source-over';
-}
-
-export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
-  context.save();
-  callback();
-  context.restore();
 }
