@@ -1,8 +1,12 @@
 import {
   IPointTuple,
+  addBackground,
   createCanvas,
+  drawInnerRadiatingTriangle,
+  drawOuterRadiatingTriangle,
   drawRadiatingLines,
   drawTriangleWithHole,
+  saveAndRestore,
   traceEquilateralTriangle,
 } from './radiation.utils';
 
@@ -22,12 +26,12 @@ function render(context: CanvasRenderingContext2D) {
 
   addBackground(context, width, height);
 
+  const scratchContext = createCanvas(width, height);
+
   saveAndRestore(context, () => {
     context.translate(centerX, centerY + height / 9);
     drawInnerRadiatingTriangle(context);
   });
-
-  const scratchContext = createCanvas(width, height);
 
   saveAndRestore(scratchContext, () => {
     scratchContext.translate(centerX, centerY + height / 9);
@@ -44,34 +48,4 @@ function render(context: CanvasRenderingContext2D) {
   });
 
   context.drawImage(scratchContext.canvas, 0, 0);
-}
-
-function drawOuterRadiatingTriangle(
-  context: CanvasRenderingContext2D,
-  innerSideLength: number,
-  outerSideLength: number,
-  angleOffset: number,
-  lineLength = 1000
-) {
-  drawTriangleWithHole(context, 0, 0, outerSideLength, innerSideLength);
-  context.globalCompositeOperation = 'source-atop';
-  drawRadiatingLines(context, lineLength, angleOffset);
-  context.globalCompositeOperation = 'source-over';
-}
-
-function addBackground(context: CanvasRenderingContext2D, width: number, height: number) {
-  context.fillStyle = `#000`;
-  context.fillRect(0, 0, width, height);
-}
-
-function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D) {
-  traceEquilateralTriangle(context, 0, 0, 500);
-  context.clip();
-  drawRadiatingLines(context, 600, -0.7);
-}
-
-function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
-  context.save();
-  callback();
-  context.restore();
 }

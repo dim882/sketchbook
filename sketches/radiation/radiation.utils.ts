@@ -76,3 +76,35 @@ export function drawRadiatingLines(context: CanvasRenderingContext2D, lineLength
     context.stroke();
   }
 }
+
+export function drawOuterRadiatingTriangle(
+  context: CanvasRenderingContext2D,
+  innerSideLength: number,
+  outerSideLength: number,
+  angleOffset: number,
+  lineLength = 1000
+) {
+  drawTriangleWithHole(context, 0, 0, outerSideLength, innerSideLength);
+  context.globalCompositeOperation = 'source-atop';
+  drawRadiatingLines(context, lineLength, angleOffset);
+  context.globalCompositeOperation = 'source-over';
+}
+
+export function addBackground(context: CanvasRenderingContext2D, width: number, height: number) {
+  context.fillStyle = `#000`;
+  context.fillRect(0, 0, width, height);
+}
+
+export function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D) {
+  traceEquilateralTriangle(context, 0, 0, 500);
+  context.globalCompositeOperation = 'source-atop';
+  context.clip();
+  drawRadiatingLines(context, 600, -0.7);
+  context.globalCompositeOperation = 'source-over';
+}
+
+export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
+  context.save();
+  callback();
+  context.restore();
+}
