@@ -32,10 +32,10 @@ function render(contexts: CanvasRenderingContext2D[]) {
 
   saveAndRestore(scratchContexts[0], (ctx) => {
     ctx.translate(...offset(9));
-    drawTriangleWithHole(ctx, 0, 0, 510, 900);
+    drawTriangleWithHole(ctx, 0, 0, 530, 900);
   });
   saveAndRestore(scratchContexts[0], (ctx) => {
-    ctx.translate(centerX, centerY);
+    ctx.translate(...center);
     drawOuterRadiatingTriangle(ctx, 0);
   });
 
@@ -43,7 +43,10 @@ function render(contexts: CanvasRenderingContext2D[]) {
 
   saveAndRestore(scratchContexts[1], (ctx) => {
     ctx.translate(...offset(9));
-    drawTriangleWithHole(ctx, 0, 0, 910, 1200);
+    drawTriangleWithHole(ctx, 0, 0, 940, 1200);
+  });
+  saveAndRestore(scratchContexts[1], (ctx) => {
+    ctx.translate(...offset(6));
     drawOuterRadiatingTriangle(ctx, 0);
   });
 
