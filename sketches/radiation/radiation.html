@@ -16,12 +16,51 @@
       height: 1000px;
       margin: 0;
     }
+
+    /* Basic styling for tabs */
+    .tab-links li {
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .tab-links a {
+      padding: 5px 10px;
+      display: inline-block;
+      background: #eee;
+      color: #000;
+      text-decoration: none;
+    }
+
+    .tab-links a:hover {
+      background-color: #ddd;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+    }
+
+    :target {
+      display: block;
+    }
   </style>
 </head>
 
 <body>
-  <canvas class="main" width="1000" height="1000"></canvas>
-  <canvas class="scratch" width="1000" height="1000"></canvas>
+  <main class="tabs">
+    <nav class="tab-links">
+      <a href="#tab-main">main</a>
+      <a href="#tab-scratch">scratch</a>
+    </nav>
+    <div id="tab-main" class="tab-content">
+      <canvas class="main" width="1000" height="1000"></canvas>
+    </div>
+    <div id="tab-scratch" class="tab-content">
+      <canvas class="scratch" width="1000" height="1000"></canvas>
+    </div>
+  </main>
 
   <script src="./dist/bundle.js" type="module"></script>
 </body>
