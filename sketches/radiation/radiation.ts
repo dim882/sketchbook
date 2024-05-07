@@ -1,3 +1,4 @@
+import { curry } from 'ramda';
 import {
   IPointTuple,
   addBackground,
@@ -22,13 +23,15 @@ function render(contexts: CanvasRenderingContext2D[]) {
 
   addBackground(mainContext, width, height);
 
+  const offset = offsetCenter(centerX, centerY, height);
+
   saveAndRestore(mainContext, () => {
-    mainContext.translate(centerX, centerY + height / 9);
+    mainContext.translate(...offset(9));
     drawInnerRadiatingTriangle(mainContext);
   });
 
   saveAndRestore(scratchContexts[0], (ctx) => {
-    ctx.translate(centerX, centerY + height / 9);
+    ctx.translate(...offset(9));
     drawTriangleWithHole(ctx, 0, 0, 510, 900);
   });
   saveAndRestore(scratchContexts[0], (ctx) => {
@@ -39,7 +42,7 @@ function render(contexts: CanvasRenderingContext2D[]) {
   mainContext.drawImage(scratchContexts[0].canvas, 0, 0);
 
   saveAndRestore(scratchContexts[1], (ctx) => {
-    ctx.translate(centerX, centerY + height / 9);
+    ctx.translate(...offset(9));
     drawTriangleWithHole(ctx, 0, 0, 910, 1200);
     drawOuterRadiatingTriangle(ctx, 0);
   });
@@ -47,7 +50,7 @@ function render(contexts: CanvasRenderingContext2D[]) {
   mainContext.drawImage(scratchContexts[1].canvas, 0, 0);
 }
 
-const offsetCenter = (centerX: number, centerY: number, height: number, divisor: number) => [
-  centerX,
-  centerY + height / divisor,
-];
+const offsetCenter = curry(
+  (centerX: number, centerY: number, height: number, divisor: number) =>
+    [centerX, centerY + height / divisor] as IPointTuple
+);
