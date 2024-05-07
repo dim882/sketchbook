@@ -46,3 +46,8 @@ function render(contexts: CanvasRenderingContext2D[]) {
 
   mainContext.drawImage(scratchContexts[1].canvas, 0, 0);
 }
+
+const offsetCenter = (centerX: number, centerY: number, height: number, divisor: number) => [
+  centerX,
+  centerY + height / divisor,
+];
