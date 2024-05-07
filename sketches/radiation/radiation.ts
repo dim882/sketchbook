@@ -22,17 +22,17 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function render(contexts: CanvasRenderingContext2D[]) {
-  const context = contexts[0];
-  const { width, height } = context.canvas;
+  const [mainContext, scratchContext] = contexts;
+  const { width, height } = mainContext.canvas;
   const [centerX, centerY]: IPointTuple = [width / 2, height / 2];
 
-  addBackground(context, width, height);
+  addBackground(mainContext, width, height);
 
-  const scratchContext = createCanvas(width, height);
+  // const scratchContext = createCanvas(width, height);
 
-  saveAndRestore(context, () => {
-    context.translate(centerX, centerY + height / 9);
-    drawInnerRadiatingTriangle(context);
+  saveAndRestore(mainContext, () => {
+    mainContext.translate(centerX, centerY + height / 9);
+    drawInnerRadiatingTriangle(mainContext);
   });
 
   saveAndRestore(scratchContext, () => {
@@ -40,7 +40,7 @@ function render(contexts: CanvasRenderingContext2D[]) {
     drawOuterRadiatingTriangle(scratchContext, 510, 900, 1);
   });
 
-  context.drawImage(scratchContext.canvas, 0, 0);
+  mainContext.drawImage(scratchContext.canvas, 0, 0);
 
   scratchContext.fillRect(0, 0, width, height);
 
@@ -49,5 +49,5 @@ function render(contexts: CanvasRenderingContext2D[]) {
     drawOuterRadiatingTriangle(scratchContext, 910, 1200, 4);
   });
 
-  context.drawImage(scratchContext.canvas, 0, 0);
+  mainContext.drawImage(scratchContext.canvas, 0, 0);
 }
