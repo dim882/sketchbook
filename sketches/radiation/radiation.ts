@@ -29,16 +29,19 @@ function render(contexts: CanvasRenderingContext2D[]) {
 
   saveAndRestore(scratchContexts[0], (ctx) => {
     ctx.translate(centerX, centerY + height / 9);
-    drawTriangleWithHole(ctx, 0, 0, 900, 510);
-    drawOuterRadiatingTriangle(ctx, -1);
+    drawTriangleWithHole(ctx, 0, 0, 510, 900);
+  });
+  saveAndRestore(scratchContexts[0], (ctx) => {
+    ctx.translate(centerX, centerY);
+    drawOuterRadiatingTriangle(ctx, 0);
   });
 
   mainContext.drawImage(scratchContexts[0].canvas, 0, 0);
 
   saveAndRestore(scratchContexts[1], (ctx) => {
     ctx.translate(centerX, centerY + height / 9);
-    drawTriangleWithHole(ctx, 0, 0, 1200, 910);
-    drawOuterRadiatingTriangle(ctx, -2);
+    drawTriangleWithHole(ctx, 0, 0, 910, 1200);
+    drawOuterRadiatingTriangle(ctx, 0);
   });
 
   mainContext.drawImage(scratchContexts[1].canvas, 0, 0);

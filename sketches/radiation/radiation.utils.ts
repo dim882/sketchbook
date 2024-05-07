@@ -71,8 +71,8 @@ export function drawTriangleWithHole(
   context: CanvasRenderingContext2D,
   cx: number,
   cy: number,
-  outerSideLength: number,
-  innerSideLength: number
+  innerSideLength: number,
+  outerSideLength: number
 ): void {
   traceEquilateralTriangle(context, cx, cy, outerSideLength);
   context.fillStyle = 'black';
