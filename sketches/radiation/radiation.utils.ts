@@ -65,7 +65,7 @@ export function drawOuterRadiatingTriangle(
   angleOffset: number,
   lineLength = 1000
 ) {
-  drawTriangleWithHole(context, 0, 0, outerSideLength, innerSideLength);
+  // drawTriangleWithHole(context, 0, 0, outerSideLength, innerSideLength);
   context.globalCompositeOperation = 'source-atop';
   drawRadiatingLines(context, lineLength, angleOffset);
   context.globalCompositeOperation = 'source-over';
