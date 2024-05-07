@@ -3,11 +3,9 @@ import {
   addBackground,
   createCanvas,
   drawInnerRadiatingTriangle,
-  drawOuterRadiatingTriangle,
   drawRadiatingLines,
   drawTriangleWithHole,
   saveAndRestore,
-  traceEquilateralTriangle,
 } from './radiation.utils';
 
 // const prng = createPRNG(40502);
@@ -35,7 +33,11 @@ function render(context: CanvasRenderingContext2D) {
 
   saveAndRestore(scratchContext, () => {
     scratchContext.translate(centerX, centerY + height / 9);
-    drawOuterRadiatingTriangle(scratchContext, 510, 900, 1);
+    drawTriangleWithHole(context, 0, 0, 510, 900);
+    saveAndRestore(context, () => {
+      context.globalCompositeOperation = 'source-atop';
+      drawRadiatingLines(context, 1000, 1);
+    });
   });
 
   context.drawImage(scratchContext.canvas, 0, 0);
@@ -44,7 +46,11 @@ function render(context: CanvasRenderingContext2D) {
 
   saveAndRestore(scratchContext, () => {
     scratchContext.translate(centerX, centerY + height / 9);
-    drawOuterRadiatingTriangle(scratchContext, 910, 1200, 4);
+    drawTriangleWithHole(context, 0, 0, 910, 1200);
+    saveAndRestore(context, () => {
+      context.globalCompositeOperation = 'source-atop';
+      drawRadiatingLines(context, 1000, 1);
+    });
   });
 
   context.drawImage(scratchContext.canvas, 0, 0);
