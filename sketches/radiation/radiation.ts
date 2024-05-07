@@ -14,17 +14,15 @@ import {
 const prng = Math.random;
 
 window.addEventListener('DOMContentLoaded', () => {
-  const canvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
-  const context = canvas.getContext('2d');
-
   // prettier-ignore
   const contexts = Array.from(document.querySelectorAll('canvas'))
     .map((canvas) => canvas.getContext('2d'));
 
-  render(context);
+  render(contexts);
 });
 
-function render(context: CanvasRenderingContext2D) {
+function render(contexts: CanvasRenderingContext2D[]) {
+  const context = contexts[0];
   const { width, height } = context.canvas;
   const [centerX, centerY]: IPointTuple = [width / 2, height / 2];
 
