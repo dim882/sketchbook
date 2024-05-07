@@ -19,11 +19,11 @@ window.addEventListener('DOMContentLoaded', () => {
 function render(contexts: CanvasRenderingContext2D[]) {
   const [mainContext, ...scratchContexts] = contexts;
   const { width, height } = mainContext.canvas;
-  const [centerX, centerY] = [width / 2, height / 2];
+  const center: IPointTuple = [width / 2, height / 2];
 
   addBackground(mainContext, width, height);
 
-  const offset = offsetCenter(centerX, centerY, height);
+  const offset = offsetCenter(...center, height);
 
   saveAndRestore(mainContext, () => {
     mainContext.translate(...offset(9));
