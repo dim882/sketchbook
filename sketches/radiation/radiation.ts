@@ -14,8 +14,12 @@ import {
 const prng = Math.random;
 
 window.addEventListener('DOMContentLoaded', () => {
-  const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+  const canvas = document.getElementById('mainCanvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
+
+  // prettier-ignore
+  const contexts = Array.from(document.querySelectorAll('canvas'))
+    .map((canvas) => canvas.getContext('2d'));
 
   render(context);
 });
