@@ -58,14 +58,7 @@ export function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D) {
   context.globalCompositeOperation = 'source-over';
 }
 
-export function drawOuterRadiatingTriangle(
-  context: CanvasRenderingContext2D,
-  innerSideLength: number,
-  outerSideLength: number,
-  angleOffset: number,
-  lineLength = 1000
-) {
-  // drawTriangleWithHole(context, 0, 0, outerSideLength, innerSideLength);
+export function drawOuterRadiatingTriangle(context: CanvasRenderingContext2D, angleOffset: number, lineLength = 1000) {
   context.globalCompositeOperation = 'source-atop';
   drawRadiatingLines(context, lineLength, angleOffset);
   context.globalCompositeOperation = 'source-over';
