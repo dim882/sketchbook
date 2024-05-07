@@ -1,17 +1,10 @@
 import {
   IPointTuple,
   addBackground,
-  createCanvas,
   drawInnerRadiatingTriangle,
   drawOuterRadiatingTriangle,
-  drawRadiatingLines,
-  drawTriangleWithHole,
   saveAndRestore,
-  traceEquilateralTriangle,
 } from './radiation.utils';
-
-// const prng = createPRNG(40502);
-const prng = Math.random;
 
 window.addEventListener('DOMContentLoaded', () => {
   // prettier-ignore
@@ -27,8 +20,6 @@ function render(contexts: CanvasRenderingContext2D[]) {
   const [centerX, centerY]: IPointTuple = [width / 2, height / 2];
 
   addBackground(mainContext, width, height);
-
-  // const scratchContext = createCanvas(width, height);
 
   saveAndRestore(mainContext, () => {
     mainContext.translate(centerX, centerY + height / 9);
