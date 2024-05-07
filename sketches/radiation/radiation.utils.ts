@@ -20,10 +20,11 @@ export function saveAndRestore(
   context.save();
   callback(context);
   context.restore();
+  return context;
 }
 
 export const box = <T>(x: T) => ({
-  map: (f: Function) => box(f(x)),
+  map: (f: (arg0: T) => typeof box<T>) => box(f(x)),
   fold: (f: Function) => f(x),
 });
 
