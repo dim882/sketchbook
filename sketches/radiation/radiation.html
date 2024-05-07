@@ -17,32 +17,11 @@
       margin: 0;
     }
   </style>
-  <script type="module">
-    import '@polymer/paper-tabs/paper-tabs.js';
-    import '@polymer/paper-tabs/paper-tab.js';
-  </script>
 </head>
 
 <body>
-  <main>
-    <paper-tabs>
-      <paper-tab>1</paper-tab>
-      <paper-tab>2</paper-tab>
-      <paper-tab>3</paper-tab>
-    </paper-tabs>
-    <nav>
-      <ol>
-        <li>Main</li>
-        <li>Scratch</li>
-      </ol>
-    </nav>
-    <div>
-      <canvas class="main" width="1000" height="1000"></canvas>
-    </div>
-    <div>
-      <canvas class="scratch" width="1000" height="1000"></canvas>
-    </div>
-  </main>
+  <canvas class="main" width="1000" height="1000"></canvas>
+  <canvas class="scratch" width="1000" height="1000"></canvas>
 
   <script src="./dist/bundle.js" type="module"></script>
 </body>
