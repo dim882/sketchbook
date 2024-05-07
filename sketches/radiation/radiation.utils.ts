@@ -13,9 +13,12 @@ export function addBackground(context: CanvasRenderingContext2D, width: number, 
   context.fillRect(0, 0, width, height);
 }
 
-export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
+export function saveAndRestore(
+  context: CanvasRenderingContext2D,
+  callback: (context: CanvasRenderingContext2D) => void
+) {
   context.save();
-  callback();
+  callback(context);
   context.restore();
 }
 

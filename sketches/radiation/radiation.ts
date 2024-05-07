@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', () => {
 function render(contexts: CanvasRenderingContext2D[]) {
   const [mainContext, ...scratchContexts] = contexts;
   const { width, height } = mainContext.canvas;
-  const [centerX, centerY]: IPointTuple = [width / 2, height / 2];
+  const [centerX, centerY] = [width / 2, height / 2];
 
   addBackground(mainContext, width, height);
 
@@ -27,18 +27,18 @@ function render(contexts: CanvasRenderingContext2D[]) {
     drawInnerRadiatingTriangle(mainContext);
   });
 
-  saveAndRestore(scratchContexts[0], () => {
-    scratchContexts[0].translate(centerX, centerY + height / 9);
-    drawTriangleWithHole(scratchContexts[0], 0, 0, 900, 510);
-    drawOuterRadiatingTriangle(scratchContexts[0], -1);
+  saveAndRestore(scratchContexts[0], (ctx) => {
+    ctx.translate(centerX, centerY + height / 9);
+    drawTriangleWithHole(ctx, 0, 0, 900, 510);
+    drawOuterRadiatingTriangle(ctx, -1);
   });
 
   mainContext.drawImage(scratchContexts[0].canvas, 0, 0);
 
-  saveAndRestore(scratchContexts[1], () => {
-    scratchContexts[1].translate(centerX, centerY + height / 9);
-    drawTriangleWithHole(scratchContexts[1], 0, 0, 1200, 910);
-    drawOuterRadiatingTriangle(scratchContexts[1], -2);
+  saveAndRestore(scratchContexts[1], (ctx) => {
+    ctx.translate(centerX, centerY + height / 9);
+    drawTriangleWithHole(ctx, 0, 0, 1200, 910);
+    drawOuterRadiatingTriangle(ctx, -2);
   });
 
   mainContext.drawImage(scratchContexts[1].canvas, 0, 0);
