@@ -9,15 +9,6 @@ const getSketchName = R.propPath(['params', 'sketchName']);
 
 const computeDistPath = (sketchName) => path.join(__dirname, '../sketches', sketchName, 'dist');
 
-const serveStatic = (distPath) => express.static(distPath);
-
-// prettier-ignore
-const serveSketchAssets = R.pipe(
-  getSketchName, 
-  computeDistPath, 
-  serveStatic
-);
-
 // Route to list all sketches
 app.get('/', (req, res) => {
   const distPath = path.join(__dirname, '../sketches');
@@ -53,7 +44,12 @@ app.get('/sketches/:sketchName', (req, res) => {
 });
 
 app.use('/sketches/:sketchName/dist', (req, res, next) => {
-  serveSketchAssets(req)(req, res, next);
+  // prettier-ignore
+  R.pipe(
+    getSketchName, 
+    computeDistPath, 
+    (distPath) => express.static(distPath)
+  )(req)(req, res, next);
 });
 
 app.listen(port, () => {
