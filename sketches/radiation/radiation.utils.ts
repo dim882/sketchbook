@@ -58,13 +58,13 @@ export function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D, si
   traceEquilateralTriangle(context, 0, 0, sideLength);
   context.globalCompositeOperation = 'source-atop';
   context.clip();
-  drawRadiatingLines(context, 600, -0.7);
+  drawRadiatingLines(context, 600, 30, -0.7);
   context.globalCompositeOperation = 'source-over';
 }
 
 export function drawOuterRadiatingTriangle(context: CanvasRenderingContext2D, lineLength = 1000) {
   context.globalCompositeOperation = 'source-atop';
-  drawRadiatingLines(context, lineLength);
+  drawRadiatingLines(context, lineLength, 190);
   context.globalCompositeOperation = 'source-over';
 }
 
@@ -85,7 +85,12 @@ export function drawTriangleWithHole(
   context.fill();
 }
 
-export function drawRadiatingLines(context: CanvasRenderingContext2D, lineLength: number, angleOffset = 0) {
+export function drawRadiatingLines(
+  context: CanvasRenderingContext2D,
+  lineLength: number,
+  innerRadius = 30,
+  angleOffset = 0
+) {
   const numLines = 100;
   const angleIncrement = 360 / numLines;
 
@@ -93,8 +98,8 @@ export function drawRadiatingLines(context: CanvasRenderingContext2D, lineLength
     const angle = angleIncrement * i;
     const radians = (angle * Math.PI) / 180;
 
-    const startX = Math.cos(radians) * 30;
-    const startY = Math.sin(radians) * 30;
+    const startX = Math.cos(radians) * innerRadius;
+    const startY = Math.sin(radians) * innerRadius;
     const x = Math.cos(radians + angleOffset) * lineLength;
     const y = Math.sin(radians + angleOffset) * lineLength;
 
