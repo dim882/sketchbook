@@ -4,5 +4,8 @@
     "sketches/*",
     "lib",
     "tools"
-  ]
+  ],
+  "scripts": {
+    "dev": "yarn workspace tools dev"
+  }
 }
