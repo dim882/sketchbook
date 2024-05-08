@@ -1,27 +1,13 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const R = require('ramda');
 const app = express();
 const port = 3000;
-
-const getSketchName = R.propPath(['params', 'sketchName']);
-
-const computeDistPath = (sketchName) => path.join(__dirname, '../sketches', sketchName, 'dist');
-
-const serveStatic = (distPath) => express.static(distPath);
-
-// prettier-ignore
-const serveSketchAssets = R.pipe(
-  getSketchName, 
-  computeDistPath, 
-  serveStatic
-);
 
 // Route to list all sketches
 app.get('/', (req, res) => {
   const distPath = path.join(__dirname, '../sketches');
-
+  console.log({ distPath });
   fs.readdir(distPath, { withFileTypes: true }, (err, files) => {
     if (err) {
       res.status(500).send('Failed to read sketches directory');
@@ -40,6 +26,7 @@ app.get('/', (req, res) => {
   });
 });
 
+// Route to handle sketch requests
 app.get('/sketches/:sketchName', (req, res) => {
   const sketchName = req.params.sketchName;
   const filePath = path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
@@ -52,8 +39,12 @@ app.get('/sketches/:sketchName', (req, res) => {
   });
 });
 
+// Serve static files from each sketch's dist directory
 app.use('/sketches/:sketchName/dist', (req, res, next) => {
-  serveSketchAssets(req)(req, res, next);
+  const sketchName = req.params.sketchName;
+  const distPath = path.join(__dirname, '../sketches', sketchName, 'dist');
+
+  express.static(distPath)(req, res, next);
 });
 
 app.listen(port, () => {
