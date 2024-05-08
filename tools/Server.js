@@ -2,14 +2,11 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const R = require('ramda');
+const Utils = require('./Utils');
+
 const app = express();
 const port = 3000;
 
-const getSketchName = R.propPath(['params', 'sketchName']);
-
-const computeDistPath = (sketchName) => path.join(__dirname, '../sketches', sketchName, 'dist');
-
-// Route to list all sketches
 app.get('/', (req, res) => {
   const distPath = path.join(__dirname, '../sketches');
 
@@ -46,8 +43,8 @@ app.get('/sketches/:sketchName', (req, res) => {
 app.use('/sketches/:sketchName/dist', (req, res, next) => {
   // prettier-ignore
   R.pipe(
-    getSketchName, 
-    computeDistPath, 
+    Utils.getSketchName, 
+    Utils.computeDistPath, 
     (distPath) => express.static(distPath)
   )(req)(req, res, next);
 });
