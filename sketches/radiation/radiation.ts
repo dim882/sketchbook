@@ -52,6 +52,8 @@ function render(contexts: CanvasRenderingContext2D[]) {
     drawOuterRadiatingTriangle(ctx, 190);
   });
 
+  console.log('hello!');
+
   mainContext.drawImage(scratchContexts[1].canvas, 0, 0);
 }
 
