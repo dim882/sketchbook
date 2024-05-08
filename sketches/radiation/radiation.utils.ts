@@ -54,8 +54,8 @@ export function traceEquilateralTriangle(
   context.closePath();
 }
 
-export function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D) {
-  traceEquilateralTriangle(context, 0, 0, 500);
+export function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D, sideLength: number) {
+  traceEquilateralTriangle(context, 0, 0, sideLength);
   context.globalCompositeOperation = 'source-atop';
   context.clip();
   drawRadiatingLines(context, 600, -0.7);
@@ -69,11 +69,11 @@ export function drawOuterRadiatingTriangle(context: CanvasRenderingContext2D, an
 }
 
 export function drawTriangleWithHole(
-  context: CanvasRenderingContext2D,
+  innerSideLength: number,
+  outerSideLength: number,
   cx: number,
   cy: number,
-  innerSideLength: number,
-  outerSideLength: number
+  context: CanvasRenderingContext2D
 ): void {
   traceEquilateralTriangle(context, cx, cy, outerSideLength);
   context.fillStyle = 'black';
