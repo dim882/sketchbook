@@ -56,10 +56,8 @@ export function traceEquilateralTriangle(
 
 export function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D, sideLength: number) {
   traceEquilateralTriangle(context, 0, 0, sideLength);
-  context.globalCompositeOperation = 'source-atop';
   context.clip();
   drawRadiatingLines(context, 600, 30, -0.7);
-  context.globalCompositeOperation = 'source-over';
 }
 
 export function drawOuterRadiatingTriangle(context: CanvasRenderingContext2D, lineLength = 1000) {
