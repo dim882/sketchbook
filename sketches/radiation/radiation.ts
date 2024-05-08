@@ -38,7 +38,7 @@ function render(contexts: CanvasRenderingContext2D[]) {
   });
   saveAndRestore(scratchContexts[0], (ctx) => {
     ctx.translate(...center);
-    drawOuterRadiatingTriangle(ctx);
+    drawOuterRadiatingTriangle(ctx, 190);
   });
 
   mainContext.drawImage(scratchContexts[0].canvas, 0, 0);
@@ -49,7 +49,7 @@ function render(contexts: CanvasRenderingContext2D[]) {
   });
   saveAndRestore(scratchContexts[1], (ctx) => {
     ctx.translate(...offset(6));
-    drawOuterRadiatingTriangle(ctx);
+    drawOuterRadiatingTriangle(ctx, 190);
   });
 
   mainContext.drawImage(scratchContexts[1].canvas, 0, 0);

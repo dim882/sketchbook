@@ -60,9 +60,9 @@ export function drawInnerRadiatingTriangle(context: CanvasRenderingContext2D, si
   drawRadiatingLines(context, 600, 30, -0.7);
 }
 
-export function drawOuterRadiatingTriangle(context: CanvasRenderingContext2D, lineLength = 1000) {
+export function drawOuterRadiatingTriangle(context: CanvasRenderingContext2D, innerRadius: number, lineLength = 1000) {
   context.globalCompositeOperation = 'source-atop';
-  drawRadiatingLines(context, lineLength, 190);
+  drawRadiatingLines(context, lineLength, innerRadius);
   context.globalCompositeOperation = 'source-over';
 }
 
