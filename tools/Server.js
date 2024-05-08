@@ -39,6 +39,14 @@ app.get('/sketches/:sketchName', (req, res) => {
   });
 });
 
+// Serve static files from each sketch's dist directory
+app.use('/sketches/:sketchName/dist', (req, res, next) => {
+  const sketchName = req.params.sketchName;
+  const distPath = path.join(__dirname, '../sketches', sketchName, 'dist');
+
+  express.static(distPath)(req, res, next);
+});
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
