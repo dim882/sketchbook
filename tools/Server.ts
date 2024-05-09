@@ -29,12 +29,12 @@ app.get('/', (req, res) => {
           .join('')
         }
       </ul>
-      `);
+    `);
   });
 });
 
 app.get('/sketches/:sketchName', (req, res) => {
-  const sketchName = req.params.sketchName;
+  const { sketchName } = req.params;
   const filePath = path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
 
   res.sendFile(filePath, (err) => {
