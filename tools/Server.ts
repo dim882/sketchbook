@@ -15,23 +15,23 @@ app.get('/', (req, res) => {
       return;
     }
 
-    const dirs = files.filter((file) => file.isDirectory()).map((dir) => dir.name);
-    let html = `
+    // prettier-ignore
+    const dirs = files
+      .filter((file) => file.isDirectory())
+      .map((dir) => dir.name);
+
+    res.send(`
       <h1>Sketches</h1>
       <ul>
         ${dirs.map((dir) => `<li><a href="/sketches/${dir}">${dir}</a></li>`).join('')}
       </ul>
-      `;
-
-    res.send(html);
+      `);
   });
 });
 
-// Route to handle sketch requests
 app.get('/sketches/:sketchName', (req, res) => {
   const sketchName = req.params.sketchName;
   const filePath = path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
-  console.log(filePath);
 
   res.sendFile(filePath, (err) => {
     if (err) {
@@ -42,7 +42,7 @@ app.get('/sketches/:sketchName', (req, res) => {
 
 // Serve static files from each sketch's dist directory
 app.use('/sketches/:sketchName/dist', (req, res, next) => {
-  const sketchName = req.params.sketchName;
+  const { sketchName } = req.params;
   const distPath = path.join(__dirname, '../sketches', sketchName, 'dist');
 
   express.static(distPath)(req, res, next);
