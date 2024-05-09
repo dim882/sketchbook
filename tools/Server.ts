@@ -5,11 +5,11 @@ import path from 'path';
 const app = express();
 const port = 3000;
 
+const sketchesPath = path.join(__dirname, '../sketches');
+
 // Route to list all sketches
 app.get('/', (req, res) => {
-  const distPath = path.join(__dirname, '../sketches');
-
-  fs.readdir(distPath, { withFileTypes: true }, (err, files) => {
+  fs.readdir(sketchesPath, { withFileTypes: true }, (err, files) => {
     if (err) {
       res.status(500).send('Failed to read sketches directory');
       return;
@@ -20,10 +20,14 @@ app.get('/', (req, res) => {
       .filter((file) => file.isDirectory())
       .map((dir) => dir.name);
 
+    // prettier-ignore
     res.send(`
       <h1>Sketches</h1>
       <ul>
-        ${dirs.map((dir) => `<li><a href="/sketches/${dir}">${dir}</a></li>`).join('')}
+        ${dirs.map((dir) => 
+          `<li><a href="/sketches/${dir}">${dir}</a></li>`)
+          .join('')
+        }
       </ul>
       `);
   });
@@ -43,7 +47,7 @@ app.get('/sketches/:sketchName', (req, res) => {
 // Serve static files from each sketch's dist directory
 app.use('/sketches/:sketchName/dist', (req, res, next) => {
   const { sketchName } = req.params;
-  const distPath = path.join(__dirname, '../sketches', sketchName, 'dist');
+  const distPath = makeDistPath(sketchName);
 
   express.static(distPath)(req, res, next);
 });
@@ -51,3 +55,7 @@ app.use('/sketches/:sketchName/dist', (req, res, next) => {
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
+function makeDistPath(sketchName: any) {
+  return path.join(__dirname, '../sketches', sketchName, 'dist');
+}
