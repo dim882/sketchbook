@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
     "express": "^4.19.2",
     "nodemon": "^3.1.0"
   },
   "scripts": {
-    "dev": "nodemon Server.js",
-    "watch-sketches": "node watch-sketches.js"
+    "dev": "bun --watch Server.ts",
+    "watch-sketches": "bun watch-sketches.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.11"
   }
 }

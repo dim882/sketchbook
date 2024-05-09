@@ -1,12 +1,14 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+
 const app = express();
 const port = 3000;
 
 // Route to list all sketches
 app.get('/', (req, res) => {
   const distPath = path.join(__dirname, '../sketches');
+
   fs.readdir(distPath, { withFileTypes: true }, (err, files) => {
     if (err) {
       res.status(500).send('Failed to read sketches directory');
