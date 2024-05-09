@@ -7,7 +7,6 @@ const port = 3000;
 // Route to list all sketches
 app.get('/', (req, res) => {
   const distPath = path.join(__dirname, '../sketches');
-  console.log({ distPath });
   fs.readdir(distPath, { withFileTypes: true }, (err, files) => {
     if (err) {
       res.status(500).send('Failed to read sketches directory');
