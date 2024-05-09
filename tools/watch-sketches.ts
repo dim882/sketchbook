@@ -1,15 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 
-const packagesDir = path.join(__dirname, '../', 'sketches');
-const dirs = fs.readdirSync(packagesDir);
+const sketchesDir = path.join(__dirname, '../', 'sketches');
+const dirs = fs.readdirSync(sketchesDir);
 
 const commands = dirs
   .map((dir) => {
-    const packageJsonPath = path.join(packagesDir, dir, 'package.json');
+    const packageJsonPath = path.join(sketchesDir, dir, 'package.json');
 
     if (fs.existsSync(packageJsonPath)) {
       const packageJson = require(packageJsonPath);
+
       if (packageJson.scripts && packageJson.scripts.watch) {
         return `yarn workspace ${packageJson.name} watch`;
       }
