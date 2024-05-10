@@ -10,7 +10,8 @@ import {
 
 window.addEventListener('DOMContentLoaded', () => {
   // prettier-ignore
-  const contexts = Array.from(document.querySelectorAll('canvas'))
+  const contexts = Array
+    .from(document.querySelectorAll('canvas'))
     .map((canvas) => canvas.getContext('2d'));
 
   render(contexts);
@@ -51,8 +52,6 @@ function render(contexts: CanvasRenderingContext2D[]) {
     ctx.translate(...offset(6));
     drawOuterRadiatingTriangle(ctx, 190);
   });
-
-  console.log('hello!');
 
   mainContext.drawImage(scratchContexts[1].canvas, 0, 0);
 }
