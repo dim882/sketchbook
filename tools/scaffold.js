@@ -42,6 +42,19 @@ function copyDirectory(source, target) {
         fs.copyFileSync(sourcePath, targetPath);
       }
     }
+
+    if (file === 'package.json') {
+      const packageJsonPath = path.join(target, file);
+
+      try {
+        let packageData = fs.readFileSync(packageJsonPath, 'utf8');
+        let packageJson = JSON.parse(packageData);
+        packageJson.name = targetDirName; // Replace the `name` field with `targetDirName`
+        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2)); // Write back to the same file with formatting
+      } catch (error) {
+        console.error('Error processing package.json:', error);
+      }
+    }
   });
 }
 
