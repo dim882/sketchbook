@@ -68,6 +68,20 @@ function copyDirectory(source, target) {
         console.error('Error processing rollup.config.js:', error);
       }
     }
+
+    if (file.includes('.html')) {
+      const htmlPath = path.join(target, `${targetDirName}.html`);
+
+      console.log('htmlPath', htmlPath);
+      try {
+        let htmlFile = fs.readFileSync(htmlPath, 'utf8');
+        let updatedHtmlFile = htmlFile.replace(new RegExp(sourceDirName, 'g'), targetDirName);
+        fs.writeFileSync(htmlPath, updatedHtmlFile);
+        console.log('Updated html with new directory name.');
+      } catch (error) {
+        console.error('Error processing rollup.config.js:', error);
+      }
+    }
   });
 }
 
