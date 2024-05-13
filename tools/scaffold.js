@@ -57,6 +57,7 @@ function copyDirectory(source, target) {
     }
 
     // Replace any instances of sourceDir with targetDir in rollup files
+    // TODO: find a less hacky way to handle this
     if (file === 'rollup.config.js') {
       const rollupConfigPath = path.join(target, file);
 
@@ -70,6 +71,7 @@ function copyDirectory(source, target) {
     }
 
     // Replace any instances of sourceDir with targetDir in HTML files
+    // TODO: find a less hacky way to handle this
     if (file.includes('.html')) {
       const htmlPath = path.join(target, `${targetName}.html`);
 
