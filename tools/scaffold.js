@@ -46,7 +46,7 @@ function copyDirectory(source, target) {
 }
 
 function createTargetPath(file, target) {
-  let targetFileName = file.replace(/^${sourceDirName}.+(\.html|\.ts)$/, `${targetDirName}$1`);
+  let targetFileName = file.replace(new RegExp(`^${sourceDirName}(.*)\\.(html|ts)$`), `${targetDirName}$1.$2`);
 
   return path.join(target, targetFileName);
 }
