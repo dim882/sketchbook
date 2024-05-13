@@ -21,6 +21,12 @@ function copyDirectory(source, target) {
     fs.mkdirSync(target);
   }
 
+  // try {
+  //   execSync(`cd ./sketches/${targetDirName} && yarn install`, { stdio: 'inherit' });
+  // } catch (error) {
+  //   console.error('Error when running yarn install:', error);
+  // }
+
   const files = fs.readdirSync(source);
 
   files.forEach((file) => {
