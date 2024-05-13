@@ -3,5 +3,5 @@
 Pass the name of the sketch you want to copy, then the name to give the new sketch
 
 ```
-$ ./scaffold.js <base sketch name> <my sketch name>
+$ yarn scaffold <base sketch name> <my sketch name>
 ```

@@ -16,12 +16,6 @@ copyDirectory(sourceDir, targetDir);
 
 console.log(`Sketch './sketches/${targetDirName}' created.`);
 
-try {
-  execSync(`cd ./sketches/${targetDirName} && yarn install && yarn watch`, { stdio: 'inherit' });
-} catch (error) {
-  console.error('Error executing shell command:', error);
-}
-
 function copyDirectory(source, target) {
   if (!fs.existsSync(target)) {
     fs.mkdirSync(target);
