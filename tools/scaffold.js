@@ -9,8 +9,8 @@ const excludedFiles = ['dist', 'node_modules', 'yarn.lock'];
 const sourceDirName = process.argv[2];
 const targetDirName = process.argv[3];
 
-const sourceDir = path.join(__dirname, 'sketches', sourceDirName);
-const targetDir = path.join(__dirname, 'sketches', targetDirName);
+const sourceDir = path.join(__dirname, '../sketches', sourceDirName);
+const targetDir = path.join(__dirname, '../sketches', targetDirName);
 
 copyDirectory(sourceDir, targetDir);
 
