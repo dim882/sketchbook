@@ -55,6 +55,19 @@ function copyDirectory(source, target) {
         console.error('Error processing package.json:', error);
       }
     }
+
+    if (file === 'rollup.config.js') {
+      const rollupConfigPath = path.join(target, file);
+
+      try {
+        let rollupConfigData = fs.readFileSync(rollupConfigPath, 'utf8');
+        let updatedRollupConfigData = rollupConfigData.replace(new RegExp(sourceDirName, 'g'), targetDirName);
+        fs.writeFileSync(rollupConfigPath, updatedRollupConfigData);
+        console.log('Updated rollup.config.js with new directory name.');
+      } catch (error) {
+        console.error('Error processing rollup.config.js:', error);
+      }
+    }
   });
 }
 
