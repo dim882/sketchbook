@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <head>
   <title>A Sketch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     body {
       display: grid;
-      place-items: center;
       height: 100vh;
       margin: 0;
+      grid-template-columns: 1fr 400px;
+    }
+
+    main {
+      background-color: #ccc;
+      display: grid;
+      place-items: center;
+    }
+
+    aside {
+      background-color: #333;
     }
 
     canvas {
@@ -15,12 +27,20 @@
       height: 1000px;
       margin: 0;
     }
+
+    color-disc {
+      height: 220px;
+    }
   </style>
   <script src="https://unpkg.com/color-disc@1.0.1/dist/color-disc.min.js"></script>
   <script src="/sketches/squares/dist/bundle.js" type="module" defer></script>
 </head>
 
 <body>
-  <color-disc size="220" format="hsl" id="color-picker"></color-disc>
-  <canvas id="canvas" width="1000" height="1000"></canvas>
+  <main>
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+  </main>
+  <aside>
+    <color-disc size="220" format="hsl" id="color-picker"></color-disc>
+  </aside>
 </body>
