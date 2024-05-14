@@ -17,7 +17,7 @@ install();
 
 console.log(`Sketch './sketches/${targetName}' created.`);
 
-function copyDirectory(source, targetDir) {
+function copyDirectory(source: string, targetDir: string) {
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir);
   }
@@ -55,7 +55,7 @@ function copyDirectory(source, targetDir) {
 }
 
 // TODO: find a less hacky way to handle this
-function fixHtmlFile(target) {
+function fixHtmlFile(target: string) {
   const htmlPath = path.join(target, `${targetName}.html`);
 
   try {
@@ -69,7 +69,7 @@ function fixHtmlFile(target) {
 }
 
 // TODO: find a less hacky way to handle this
-function fixRollupConfig(target, file) {
+function fixRollupConfig(target: string, file: string) {
   const rollupConfigPath = path.join(target, file);
 
   try {
@@ -82,11 +82,11 @@ function fixRollupConfig(target, file) {
   }
 }
 
-function readFile(rollupConfigPath) {
+function readFile(rollupConfigPath: string) {
   return fs.readFileSync(rollupConfigPath, 'utf8');
 }
 
-function setPackageName(target, file) {
+function setPackageName(target: string, file: string) {
   const packageJsonPath = path.join(target, file);
 
   try {
@@ -107,7 +107,7 @@ function install() {
   }
 }
 
-function createTargetPath(file, target) {
+function createTargetPath(file: string, target: string) {
   let targetFileName = file.replace(new RegExp(`^${sourceName}(.*)\\.(html|ts)$`), `${targetName}$1.$2`);
 
   return path.join(target, targetFileName);
