@@ -18,7 +18,8 @@ app.get('/', (req, res) => {
     // prettier-ignore
     const dirs = files
       .filter((file) => file.isDirectory())
-      .map((dir) => dir.name);
+      .map((dir) => dir.name)
+      .sort();
 
     // prettier-ignore
     res.send(`
