@@ -17,9 +17,9 @@ install();
 
 console.log(`Sketch './sketches/${targetName}' created.`);
 
-function copyDirectory(source, target) {
-  if (!fs.existsSync(target)) {
-    fs.mkdirSync(target);
+function copyDirectory(source, targetDir) {
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir);
   }
 
   const files = fs.readdirSync(source);
@@ -28,7 +28,7 @@ function copyDirectory(source, target) {
     const sourcePath = path.join(source, file);
 
     // Replace base.html with ${dirName}.html and base.ts with ${dirName}.ts
-    const targetPath = createTargetPath(file, target);
+    const targetPath = createTargetPath(file, targetDir);
 
     if (!excludedFiles.includes(file)) {
       if (fs.statSync(sourcePath).isDirectory()) {
@@ -39,17 +39,17 @@ function copyDirectory(source, target) {
     }
 
     if (file === 'package.json') {
-      setPackageName(target, file);
+      setPackageName(targetDir, file);
     }
 
     // Replace any instances of sourceDir with targetDir in rollup files
     if (file === 'rollup.config.js') {
-      fixRollupConfig(target, file);
+      fixRollupConfig(targetDir, file);
     }
 
     // Replace any instances of sourceDir with targetDir in HTML files
     if (file.includes('.html')) {
-      fixHtmlFile(target);
+      fixHtmlFile(targetDir);
     }
   });
 }
