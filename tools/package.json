@@ -10,7 +10,7 @@
     "nodemon": "^3.1.0"
   },
   "scripts": {
-    "dev": "bun --watch Server.ts",
+    "dev": "bun --watch server.ts",
     "watch-sketches": "bun watch-sketches.ts",
     "clone": "bun clone-sketch.ts"
   },
