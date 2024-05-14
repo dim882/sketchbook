@@ -59,8 +59,8 @@ function fixHtmlFile(target) {
   const htmlPath = path.join(target, `${targetName}.html`);
 
   try {
-    let htmlFile = fs.readFileSync(htmlPath, 'utf8');
-    let updatedHtmlFile = htmlFile.replace(new RegExp(sourceName, 'g'), targetName);
+    const htmlFile = fs.readFileSync(htmlPath, 'utf8');
+    const updatedHtmlFile = htmlFile.replace(sourceName, targetName);
     fs.writeFileSync(htmlPath, updatedHtmlFile);
   } catch (error) {
     console.error('Error processing rollup.config.js:', error);
@@ -72,8 +72,8 @@ function fixRollupConfig(target, file) {
   const rollupConfigPath = path.join(target, file);
 
   try {
-    let rollupConfigData = fs.readFileSync(rollupConfigPath, 'utf8');
-    let updatedRollupConfigData = rollupConfigData.replace(new RegExp(sourceName, 'g'), targetName);
+    const rollupConfigData = fs.readFileSync(rollupConfigPath, 'utf8');
+    const updatedRollupConfigData = rollupConfigData.replace(sourceName, targetName);
     fs.writeFileSync(rollupConfigPath, updatedRollupConfigData);
   } catch (error) {
     console.error('Error processing rollup.config.js:', error);
