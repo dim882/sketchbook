@@ -59,8 +59,9 @@ function fixHtmlFile(target) {
   const htmlPath = path.join(target, `${targetName}.html`);
 
   try {
-    const htmlFile = fs.readFileSync(htmlPath, 'utf8');
+    const htmlFile = readFile(htmlPath);
     const updatedHtmlFile = htmlFile.replace(sourceName, targetName);
+
     fs.writeFileSync(htmlPath, updatedHtmlFile);
   } catch (error) {
     console.error('Error processing rollup.config.js:', error);
@@ -72,12 +73,17 @@ function fixRollupConfig(target, file) {
   const rollupConfigPath = path.join(target, file);
 
   try {
-    const rollupConfigData = fs.readFileSync(rollupConfigPath, 'utf8');
-    const updatedRollupConfigData = rollupConfigData.replace(sourceName, targetName);
-    fs.writeFileSync(rollupConfigPath, updatedRollupConfigData);
+    const rollupConfig = readFile(rollupConfigPath);
+    const updatedRollupConfig = rollupConfig.replace(sourceName, targetName);
+
+    fs.writeFileSync(rollupConfigPath, updatedRollupConfig);
   } catch (error) {
     console.error('Error processing rollup.config.js:', error);
   }
+}
+
+function readFile(rollupConfigPath) {
+  return fs.readFileSync(rollupConfigPath, 'utf8');
 }
 
 function setPackageName(target, file) {
