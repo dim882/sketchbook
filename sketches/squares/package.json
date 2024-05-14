@@ -16,7 +16,6 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@thednp/color-picker": "^2.0.0-alpha10",
     "ramda": "^0.29.1"
   }
 }
