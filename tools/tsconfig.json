@@ -5,7 +5,8 @@
     "esModuleInterop": true,
     "noEmitOnError": false,
     "moduleResolution": "node",
-    "lib": ["ES2023"]
+    "lib": ["ES2023"],
+    "noImplicitAny": true
   },
   "include": ["./**/*.ts"]
 }
