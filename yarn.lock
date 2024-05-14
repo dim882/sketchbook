@@ -111,6 +111,24 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.17.2.tgz#5a2d08b81e8064b34242d5cc9973ef8dd1e60503"
   integrity sha512-TGGO7v7qOq4CYmSBVEYpI1Y5xDuCEnbVC5Vth8mOsW0gDSzxNrVERPc790IGHsrT2dQSimgMr9Ub3Y1Jci5/8w==
 
+"@thednp/color-picker@^2.0.0-alpha10":
+  version "2.0.0-alpha10"
+  resolved "https://registry.yarnpkg.com/@thednp/color-picker/-/color-picker-2.0.0-alpha10.tgz#28e81cc75ca3c38f45d884e5aaa63d4ce0f9823c"
+  integrity sha512-5NhCpFaIafLXO1z0meeDug02jjaMu+ndwZTKDQqwwagEsTK4uIfzjZ/SndimnADNRDtl6NDX8MmRvFho6GZYuQ==
+  dependencies:
+    "@thednp/color" "^1.0.8"
+    "@thednp/shorty" "2.0.0-alpha22"
+
+"@thednp/color@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@thednp/color/-/color-1.0.8.tgz#d63ad8141a4a9037c3fd94edb683d41870f935df"
+  integrity sha512-jQBkcRtE8odj90mLZ3NsV69186fQcC0P2QSa2xyZBvXswJCiAzp2necdWU+nT6vjIU09o/dYB9Mv3rsyN/ysEA==
+
+"@thednp/shorty@2.0.0-alpha22":
+  version "2.0.0-alpha22"
+  resolved "https://registry.yarnpkg.com/@thednp/shorty/-/shorty-2.0.0-alpha22.tgz#ac728ecd1d95a69602b796665febee65939cbb6f"
+  integrity sha512-BpXSRRGKJyZcP1OLBM2G7i+zcWGEA+6oHPwHs8GdaHykJDroDl+UaDEQX+PGiIxItosvY4hmF8zU2vG2JQ/qkQ==
+
 "@types/body-parser@*":
   version "1.19.5"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.5.tgz#04ce9a3b677dc8bd681a17da1ab9835dc9d3ede4"
