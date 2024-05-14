@@ -10,7 +10,8 @@
   },
   "scripts": {
     "dev": "bun --watch Server.ts",
-    "watch-sketches": "bun watch-sketches.ts"
+    "watch-sketches": "bun watch-sketches.ts",
+    "clone": "bun clone-sketch.js"
   },
   "devDependencies": {
     "@types/node": "^20.12.11"
