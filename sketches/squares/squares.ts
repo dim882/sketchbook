@@ -1,6 +1,5 @@
-import { IPointTuple } from './base.utils';
+import { IPointTuple } from './squares.utils';
 
-// const prng = createPRNG(40502);
 const prng = Math.random;
 
 window.addEventListener('DOMContentLoaded', () => {
