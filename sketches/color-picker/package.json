@@ -16,6 +16,8 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.24.1",
+    "@babel/preset-typescript": "^7.24.1",
     "preact": "^10.22.0",
     "preact-custom-element": "^4.3.0",
     "ramda": "^0.29.1"

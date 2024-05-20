@@ -1,4 +1,4 @@
-import { IPointTuple } from './base.utils';
+import { IPointTuple } from './color-picker.utils';
 
 // const prng = createPRNG(40502);
 const prng = Math.random;
@@ -15,7 +15,7 @@ function render(context: CanvasRenderingContext2D) {
   const center: IPointTuple = [width / 2, height / 2];
 
   //  Do work here
-  context.fillStyle = 'red';
+  context.fillStyle = 'blue';
   context.save();
   context.translate(width / 4, height / 4);
   context.fillRect(0, 0, ...center);
