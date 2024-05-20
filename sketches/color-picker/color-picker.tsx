@@ -15,7 +15,7 @@ function render(context: CanvasRenderingContext2D) {
   const center: IPointTuple = [width / 2, height / 2];
 
   //  Do work here
-  context.fillStyle = 'blue';
+  context.fillStyle = 'red';
   context.save();
   context.translate(width / 4, height / 4);
   context.fillRect(0, 0, ...center);

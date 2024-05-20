@@ -12,6 +12,6 @@
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment"
   },
-  "include": ["./**/*.ts", "snabbdom-jsx/snabbdom-jsx.tsx"],
+  "include": ["./**/*.ts", "snabbdom-jsx/snabbdom-jsx.tsx", "color-picker.tsx"],
   "exclude": ["./dist"]
 }
