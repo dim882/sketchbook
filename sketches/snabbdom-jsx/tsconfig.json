@@ -7,8 +7,11 @@
     "noEmitOnError": false,
     "moduleResolution": "node",
     "noImplicitAny": true,
-    "lib": ["es2022", "DOM", "DOM.Iterable", "WebWorker"]
+    "lib": ["es2022", "DOM", "DOM.Iterable", "WebWorker"],
+    "jsx": "react",
+    "jsxFactory": "jsx",
+    "jsxFragmentFactory": "Fragment"
   },
-  "include": ["./**/*.ts", "snabbdom-jsx/snabbdom-jsx.tsx"],
+  "include": ["./**/*.ts", "snabbdom-jsx.tsx"],
   "exclude": ["./dist"]
 }

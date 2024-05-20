@@ -16,6 +16,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "ramda": "^0.29.1"
+    "ramda": "^0.29.1",
+    "snabbdom": "^3.6.2"
   }
 }
