@@ -10,7 +10,12 @@
     "lib": ["es2022", "DOM", "DOM.Iterable", "WebWorker"],
     "jsx": "react",
     "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment"
+    "jsxFragmentFactory": "Fragment",
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules"
+      }
+    ]
   },
   "include": ["./**/*.ts", "snabbdom-jsx/snabbdom-jsx.tsx", "color-picker.tsx"],
   "exclude": ["./dist"]
