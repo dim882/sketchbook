@@ -12,7 +12,7 @@ interface IColorPickerProps {
 
 const ColorPicker: FunctionComponent<IColorPickerProps> = ({ onChange, lch }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const circleRef = useRef<HTMLDivElement>(null);
+  const loupeRef = useRef<HTMLDivElement>(null);
   const [color, setColor] = useState<string>('');
   const [lightness, setLightness] = useState<number>(50);
   const [coords, setCoords] = useState<[number, number]>([0, 0]);
@@ -57,12 +57,12 @@ const ColorPicker: FunctionComponent<IColorPickerProps> = ({ onChange, lch }) =>
 
   const handlePointerDown: h.JSX.PointerEventHandler<HTMLCanvasElement> = (event) => {
     setIsDragging(true);
-    moveCircle(event);
+    moveLoupe(event);
   };
 
   const handlePointerMove: h.JSX.PointerEventHandler<HTMLCanvasElement> = (event) => {
     if (isDragging) {
-      moveCircle(event);
+      moveLoupe(event);
     }
   };
 
@@ -70,7 +70,7 @@ const ColorPicker: FunctionComponent<IColorPickerProps> = ({ onChange, lch }) =>
     setIsDragging(false);
   };
 
-  const moveCircle = (event: h.JSX.TargetedPointerEvent<HTMLCanvasElement>) => {
+  const moveLoupe = (event: h.JSX.TargetedPointerEvent<HTMLCanvasElement>) => {
     const context = canvasRef.current.getContext('2d', { willReadFrequently: true });
 
     if (!context) return;
@@ -100,7 +100,7 @@ const ColorPicker: FunctionComponent<IColorPickerProps> = ({ onChange, lch }) =>
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
         />
-        <div ref={circleRef} className={styles.selectionCircle} style={{ left: coords[0], top: coords[1] }} />
+        <div ref={loupeRef} className={styles.loupe} style={{ left: coords[0], top: coords[1] }} />
 
         <div style={{ backgroundColor: color }} className={styles.colorSwatch}></div>
         <input type="text" value={color} />
