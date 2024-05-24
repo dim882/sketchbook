@@ -23,6 +23,7 @@
   "dependencies": {
     "@babel/preset-react": "^7.24.1",
     "@babel/preset-typescript": "^7.24.1",
+    "@types/preact-custom-element": "^4.0.4",
     "preact": "^10.22.0",
     "preact-custom-element": "^4.3.0",
     "ramda": "^0.29.1"

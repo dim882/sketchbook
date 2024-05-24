@@ -1290,6 +1290,13 @@
   dependencies:
     undici-types "~5.26.4"
 
+"@types/preact-custom-element@^4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@types/preact-custom-element/-/preact-custom-element-4.0.4.tgz#4b5aba0d90fd0610efdd5fb538382097e2efb4bd"
+  integrity sha512-CkdXbHUnnJAluudh/3Y3hj4gx+mzl+GnqJuWUdEWKvppVQu7SqvvRlgkJVS73lRteC+BOnQ2TdLwZFZKHxNNnQ==
+  dependencies:
+    preact "^10.0.0"
+
 "@types/qs@*":
   version "6.9.15"
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.15.tgz#adde8a060ec9c305a82de1babc1056e73bd64dce"
@@ -3161,7 +3168,7 @@ preact-custom-element@^4.3.0:
   resolved "https://registry.yarnpkg.com/preact-custom-element/-/preact-custom-element-4.3.0.tgz#0404a0759f797a133adf246ec25eb179256fc55a"
   integrity sha512-5hG7nQhU4e7RNfCEQklaUqYQiiyibLuJ2wbhR+E2v1m8m9NDsJok5MykW/Nx0YLLBcXr8xnkap6DwByGy2TzDA==
 
-preact@^10.22.0:
+preact@^10.0.0, preact@^10.22.0:
   version "10.22.0"
   resolved "https://registry.yarnpkg.com/preact/-/preact-10.22.0.tgz#a50f38006ae438d255e2631cbdaf7488e6dd4e16"
   integrity sha512-RRurnSjJPj4rp5K6XoP45Ui33ncb7e4H7WiOHVpjbkvqvA3U+N8Z6Qbo0AE6leGYBV66n8EhEaFixvIu3SkxFw==
