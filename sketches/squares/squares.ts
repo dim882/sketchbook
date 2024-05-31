@@ -21,7 +21,7 @@ function render(context: CanvasRenderingContext2D, baseColor: string) {
   context.fillStyle = `lch(60% 10% ${backgroundHue})`;
   context.fillRect(0, 0, width, height);
 
-  const fillColor = `lch(60% 30% ${formHue} / 1)`;
+  const fillColor = 'rgb(87, 218, 92)'; //`lch(60% 30% ${formHue} / 1)`;
 
   context.fillStyle = fillColor;
   context.save();
