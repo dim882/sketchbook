@@ -38,8 +38,8 @@ app.get('/', (req, res) => {
 
 app.get('/sketches/:sketchName', (req, res) => {
   // prettier-ignore
-  fromNullable(req.params.sketchName)
-    .map((sketchName) => path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`))
+  fromNullable<string, string>(req.params.sketchName)
+    .map(makeSketchPath)
     .fold(
       (val) => { console.log('left', val) },
       (val) => { console.log('right', val) }
@@ -66,6 +66,10 @@ app.use('/sketches/:sketchName/dist', (req, res, next) => {
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
+function makeSketchPath(sketchName: string) {
+  return path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
+}
 
 function makeDistPath(sketchName: any) {
   return path.join(__dirname, '../sketches', sketchName, 'dist');
