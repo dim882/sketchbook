@@ -2,7 +2,7 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 
-import { Either, fromNullable } from '../lib/FPUtils';
+import { Either, fromNullable, tryCatch } from '../lib/FPUtils';
 
 const app = express();
 const port = 3000;
@@ -37,22 +37,30 @@ app.get('/', (req, res) => {
 });
 
 app.get('/sketches/:sketchName', (req, res) => {
+  const sendFile = (filePath: string) =>
+    new Promise<void>((resolve, reject) => {
+      res.sendFile(filePath, (err) => {
+        if (err) {
+          reject('Sketch not found');
+        } else {
+          resolve();
+        }
+      });
+    });
+
   // prettier-ignore
   fromNullable<string, string>(req.params.sketchName)
-    .map(makeSketchPath)
+    .map(sketchName => path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`))
     .fold(
-      (val) => { console.log('left', val) },
-      (val) => { console.log('right', val) }
+      (val) => { res.status(404).send(val) },
+      (filePath) => {
+        tryCatch(() => sendFile(filePath))
+          .fold(
+            (err) => res.status(404).send(err),
+            () => console.log('File sent successfully')
+          );
+      }
     );
-
-  const { sketchName } = req.params;
-  const filePath = path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
-
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      res.status(404).send('Sketch not found');
-    }
-  });
 });
 
 // Serve static files from each sketch's dist directory
