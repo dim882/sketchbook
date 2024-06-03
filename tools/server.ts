@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Response } from 'express';
 import fs from 'fs';
 import path from 'path';
 
@@ -37,24 +37,13 @@ app.get('/', (req, res) => {
 });
 
 app.get('/sketches/:sketchName', (req, res) => {
-  const sendFile = (filePath: string) =>
-    new Promise<void>((resolve, reject) => {
-      res.sendFile(filePath, (err) => {
-        if (err) {
-          reject('Sketch not found');
-        } else {
-          resolve();
-        }
-      });
-    });
-
   // prettier-ignore
   fromNullable<string, string>(req.params.sketchName)
-    .map(sketchName => path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`))
+    .map(makeSketchPath)
     .fold(
       (val) => { res.status(404).send(val) },
       (filePath) => {
-        tryCatch(() => sendFile(filePath))
+        tryCatch(() => sendFile(res, filePath))
           .fold(
             (err) => res.status(404).send(err),
             () => console.log('File sent successfully')
@@ -82,3 +71,14 @@ function makeSketchPath(sketchName: string) {
 function makeDistPath(sketchName: any) {
   return path.join(__dirname, '../sketches', sketchName, 'dist');
 }
+
+const sendFile = (res: Response, filePath: string) =>
+  new Promise<void>((resolve, reject) => {
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        reject('Sketch not found');
+      } else {
+        resolve();
+      }
+    });
+  });
