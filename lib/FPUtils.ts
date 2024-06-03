@@ -47,7 +47,7 @@ export const Left = <L>(x: L): ILeft<L> => ({
 });
 
 export const fromNullable = <L, R>(x: R | null | undefined): Either<L, R> =>
-  x !== null && x !== undefined ? Right(x) : Left<L>(x as L);
+  x !== null && x !== undefined ? Right(x) : Left<L>(x as unknown as L);
 
 // Curry
 type Curried<Fn> = Fn extends (...args: infer Args) => infer R ? CurriedArgs<Args, R> : never;

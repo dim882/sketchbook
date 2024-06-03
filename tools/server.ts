@@ -2,6 +2,8 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 
+import { Either, fromNullable } from '../lib/FPUtils';
+
 const app = express();
 const port = 3000;
 
@@ -35,6 +37,14 @@ app.get('/', (req, res) => {
 });
 
 app.get('/sketches/:sketchName', (req, res) => {
+  // prettier-ignore
+  fromNullable(req.params.sketchName)
+    .map((sketchName) => path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`))
+    .fold(
+      (val) => { console.log('left', val) },
+      (val) => { console.log('right', val) }
+    );
+
   const { sketchName } = req.params;
   const filePath = path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
 
