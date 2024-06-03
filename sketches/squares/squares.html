@@ -5,17 +5,6 @@
 
   <script type="module" src="https://unpkg.com/@ircam/sc-components@latest"></script>
   <script src="/sketches/squares/dist/bundle.js" type="module" defer></script>
-  <script defer>
-    window.addEventListener('DOMContentLoaded', () => {
-      const $ = document.querySelectorAll.bind(document);
-      const toggle = $('sc-toggle')[0];
-      toggle.addEventListener('change', (e) => console.log('Hello toggle', e.detail.value));
-
-      const colorPicker = $('sc-color-picker')[0];
-      colorPicker.addEventListener('input', (e) => console.log('input', e));
-      colorPicker.addEventListener('change', (e) => console.log('input', e));
-    });
-  </script>
   <link href="/sketches/squares/dist/squares.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -24,7 +13,6 @@
     <canvas id="canvas" width="1000" height="1000"></canvas>
   </main>
   <aside>
-    <!-- color picker -->
     <sc-toggle></sc-toggle>
     <sc-color-picker></sc-color-picker>
   </aside>
