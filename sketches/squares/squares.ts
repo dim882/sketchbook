@@ -12,15 +12,22 @@ window.addEventListener('DOMContentLoaded', () => {
   const $ = document.querySelectorAll.bind(document);
 
   // prettier-ignore
-  R.pipe($('sc-toggle'), 
+  R.pipe(
+    $('sc-toggle'), 
     R.head, 
     (toggle: HTMLElement) =>
     toggle.addEventListener('change', (e: CustomEvent) => console.log('Hello toggle', e.detail.value))
   );
 
-  const colorPicker = $('sc-color-picker')[0];
-  colorPicker.addEventListener('input', (e: CustomEvent) => console.log('input', e));
-  colorPicker.addEventListener('change', (e: CustomEvent) => console.log('input', e));
+  // prettier-ignore
+  R.pipe(
+    $('color-picker'), 
+    R.head, 
+    (colorPicker: HTMLElement) => {
+      colorPicker.addEventListener('input', (e: CustomEvent) => console.log('input', e));
+      colorPicker.addEventListener('change', (e: CustomEvent) => console.log('input', e));
+    });
+
   render(context, color);
 });
 
