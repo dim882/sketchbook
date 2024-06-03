@@ -1,4 +1,5 @@
 // Identity Functor
+
 export type IBox<T> = {
   chain: <U>(f: (value: T) => IBox<U>) => IBox<U>;
   map: <U>(f: (value: T) => U) => IBox<U>;
@@ -44,6 +45,9 @@ export const Left = <L>(x: L): ILeft<L> => ({
   fold: (f, g) => f(x),
   toString: () => `Left(${x})`,
 });
+
+export const fromNullable = <L, R>(x: R | null | undefined): Either<L, R> =>
+  x !== null && x !== undefined ? Right(x) : Left<L>(x as L);
 
 // Curry
 type Curried<Fn> = Fn extends (...args: infer Args) => infer R ? CurriedArgs<Args, R> : never;
