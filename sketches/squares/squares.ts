@@ -10,8 +10,13 @@ window.addEventListener('DOMContentLoaded', () => {
   let color = localStorage.getItem('color');
 
   const $ = document.querySelectorAll.bind(document);
-  const toggle = $('sc-toggle')[0];
-  toggle.addEventListener('change', (e: CustomEvent) => console.log('Hello toggle', e.detail.value));
+
+  // prettier-ignore
+  R.pipe($('sc-toggle'), 
+    R.head, 
+    (toggle: HTMLElement) =>
+    toggle.addEventListener('change', (e: CustomEvent) => console.log('Hello toggle', e.detail.value))
+  );
 
   const colorPicker = $('sc-color-picker')[0];
   colorPicker.addEventListener('input', (e: CustomEvent) => console.log('input', e));
