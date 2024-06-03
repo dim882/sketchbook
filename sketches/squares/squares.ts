@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', () => {
     () => document.querySelector('sc-toggle'),
     log('got toggle element'),
     (toggle: HTMLElement) => {
-      toggle.addEventListener('change', handleToggle());
+      toggle.addEventListener('change', handleToggle);
       return toggle;
     }
   )();
@@ -40,8 +40,8 @@ window.addEventListener('DOMContentLoaded', () => {
   render(context, color);
 });
 
-function handleToggle(): (this: HTMLElement, ev: Event) => any {
-  return (e: CustomEvent) => console.log('toggle', e.detail.value);
+function handleToggle(this: HTMLElement, e: CustomEvent) {
+  console.log('toggle!', e.detail.value);
 }
 
 function render(context: CanvasRenderingContext2D, baseColor: string) {
