@@ -46,7 +46,7 @@ app.get('/sketches/:sketchName', (req, res) => {
         tryCatch(() => sendFile(res, filePath))
           .fold(
             (err) => res.status(404).send(err),
-            () => console.log('File sent successfully!')
+            () => console.log('serve: ', filePath)
           );
       }
     );
