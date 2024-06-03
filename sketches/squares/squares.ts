@@ -13,12 +13,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
   console.log('foo?');
 
+  const addEvent = (el: HTMLElement, eventName: string, handler: (e: CustomEvent) => void) => {
+    el.addEventListener(eventName, handler);
+    return el;
+  };
+
   // prettier-ignore
   pipe(
     () => document.querySelector('sc-toggle'),
-    log('toggle'),
+    log('got toggle element'),
     (toggle: HTMLElement) => {
-      toggle.addEventListener('change', (e: CustomEvent) => console.log('Hello toggle?', e.detail.value));
+      toggle.addEventListener('change', handleToggle());
       return toggle;
     }
   )();
@@ -26,14 +31,18 @@ window.addEventListener('DOMContentLoaded', () => {
   // prettier-ignore
   pipe(
     () => document.querySelector('sc-color-picker'),
-    (colorPicker: HTMLElement) => {
-      colorPicker.addEventListener('input', (e: CustomEvent) => console.log('input', e));
-      colorPicker.addEventListener('change', (e: CustomEvent) => console.log('input', e));
+    (el: HTMLElement) => {
+      el.addEventListener('input', (e: CustomEvent) => console.log('input', e));
+      el.addEventListener('change', (e: CustomEvent) => console.log('input', e));
     }
   )();
 
   render(context, color);
 });
+
+function handleToggle(): (this: HTMLElement, ev: Event) => any {
+  return (e: CustomEvent) => console.log('toggle', e.detail.value);
+}
 
 function render(context: CanvasRenderingContext2D, baseColor: string) {
   const { width, height } = context.canvas;
