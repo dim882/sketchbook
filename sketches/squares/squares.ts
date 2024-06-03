@@ -1,3 +1,4 @@
+import R from 'ramda';
 import { IPointTuple, getInteger } from './squares.utils';
 
 const prng = Math.random;
@@ -10,11 +11,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const $ = document.querySelectorAll.bind(document);
   const toggle = $('sc-toggle')[0];
-  toggle.addEventListener('change', (e) => console.log('Hello toggle', e.detail.value));
+  toggle.addEventListener('change', (e: CustomEvent) => console.log('Hello toggle', e.detail.value));
 
   const colorPicker = $('sc-color-picker')[0];
-  colorPicker.addEventListener('input', (e) => console.log('input', e));
-  colorPicker.addEventListener('change', (e) => console.log('input', e));
+  colorPicker.addEventListener('input', (e: CustomEvent) => console.log('input', e));
+  colorPicker.addEventListener('change', (e: CustomEvent) => console.log('input', e));
   render(context, color);
 });
 
