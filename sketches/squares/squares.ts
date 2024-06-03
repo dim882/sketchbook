@@ -9,11 +9,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let color = localStorage.getItem('color');
 
-  const log = curry((tag: string, val) => (console.log(tag, val), val));
+  const log =
+    <T>(tag: string) =>
+    (val: T) => (console.log(tag, val), val);
 
-  console.log('foo!');
-
-  const addEvent = curry((eventName: string, handler: (e: CustomEvent) => void, el: HTMLElement) => {
+  const addEvent = curry((eventName: string, handler: (e: CustomEvent) => void, el: Element) => {
     el.addEventListener(eventName, handler);
     return el;
   });
@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // prettier-ignore
   pipe(
     () => document.querySelector('sc-toggle'),
-    log('got toggle element'),
+    log('set up toggle'),
     addEvent('change', handleToggle)
   )();
 
