@@ -9,19 +9,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let color = localStorage.getItem('color');
 
-  const $ = document.querySelectorAll.bind(document);
-
   const log = curry((tag: string, val) => (console.log(tag, val), val));
 
-  console.log('foo!');
+  console.log('foo?');
 
   // prettier-ignore
   pipe(
-    () => document.querySelector('sc-toggle') as HTMLElement,
-    (toggle: HTMLElement) => {
-      console.log('element:', toggle);
-      return toggle;
-    },
+    () => document.querySelector('sc-toggle'),
+    log('toggle'),
     (toggle: HTMLElement) => {
       toggle.addEventListener('change', (e: CustomEvent) => console.log('Hello toggle?', e.detail.value));
       return toggle;
@@ -30,12 +25,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // prettier-ignore
   pipe(
-    $('color-picker'), 
-    head, 
+    () => document.querySelector('sc-color-picker'),
     (colorPicker: HTMLElement) => {
       colorPicker.addEventListener('input', (e: CustomEvent) => console.log('input', e));
       colorPicker.addEventListener('change', (e: CustomEvent) => console.log('input', e));
-      return colorPicker
     }
   )();
 
