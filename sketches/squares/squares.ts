@@ -13,10 +13,10 @@ window.addEventListener('DOMContentLoaded', () => {
     <T>(tag: string) =>
     (val: T) => (console.log(tag, val), val);
 
-  const addEvent = curry((eventName: string, handler: (e: CustomEvent) => void, el: Element) => {
+  const addEvent = (eventName: string, handler: (e: CustomEvent) => void) => (el: Element) => {
     el.addEventListener(eventName, handler);
     return el;
-  });
+  };
 
   // prettier-ignore
   pipe(
@@ -28,10 +28,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // prettier-ignore
   pipe(
     () => document.querySelector('sc-color-picker'),
-    (el: HTMLElement) => {
-      el.addEventListener('input', (e: CustomEvent) => console.log('input', e));
-      el.addEventListener('change', (e: CustomEvent) => console.log('input', e));
-    }
+    addEvent('input', (e: CustomEvent) => console.log('input', e)),
+    addEvent('change', (e: CustomEvent) => console.log('change', e)),
   )();
 
   render(context, color);
