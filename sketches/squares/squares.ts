@@ -11,21 +11,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const log = curry((tag: string, val) => (console.log(tag, val), val));
 
-  console.log('foo?');
+  console.log('foo!');
 
-  const addEvent = (el: HTMLElement, eventName: string, handler: (e: CustomEvent) => void) => {
+  const addEvent = curry((eventName: string, handler: (e: CustomEvent) => void, el: HTMLElement) => {
     el.addEventListener(eventName, handler);
     return el;
-  };
+  });
 
   // prettier-ignore
   pipe(
     () => document.querySelector('sc-toggle'),
     log('got toggle element'),
-    (toggle: HTMLElement) => {
-      toggle.addEventListener('change', handleToggle);
-      return toggle;
-    }
+    addEvent('change', handleToggle)
   )();
 
   // prettier-ignore
