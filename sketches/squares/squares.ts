@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { pipe, curry, head } from 'ramda';
 import { IPointTuple, getInteger } from './squares.utils';
 
 const prng = Math.random;
@@ -11,22 +11,33 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const $ = document.querySelectorAll.bind(document);
 
-  // prettier-ignore
-  R.pipe(
-    $('sc-toggle'), 
-    R.head, 
-    (toggle: HTMLElement) =>
-    toggle.addEventListener('change', (e: CustomEvent) => console.log('Hello toggle?', e.detail.value))
-  );
+  const log = curry((tag: string, val) => (console.log(tag, val), val));
+
+  console.log('foo!');
 
   // prettier-ignore
-  R.pipe(
+  pipe(
+    () => document.querySelector('sc-toggle') as HTMLElement,
+    (toggle: HTMLElement) => {
+      console.log('element:', toggle);
+      return toggle;
+    },
+    (toggle: HTMLElement) => {
+      toggle.addEventListener('change', (e: CustomEvent) => console.log('Hello toggle?', e.detail.value));
+      return toggle;
+    }
+  )();
+
+  // prettier-ignore
+  pipe(
     $('color-picker'), 
-    R.head, 
+    head, 
     (colorPicker: HTMLElement) => {
       colorPicker.addEventListener('input', (e: CustomEvent) => console.log('input', e));
       colorPicker.addEventListener('change', (e: CustomEvent) => console.log('input', e));
-    });
+      return colorPicker
+    }
+  )();
 
   render(context, color);
 });
