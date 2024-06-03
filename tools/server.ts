@@ -46,7 +46,7 @@ app.get('/sketches/:sketchName', (req, res) => {
         tryCatch(() => sendFile(res, filePath))
           .fold(
             (err) => res.status(404).send(err),
-            () => console.log('File sent successfully')
+            () => console.log('File sent successfully!')
           );
       }
     );
@@ -64,13 +64,9 @@ app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
 
-function makeSketchPath(sketchName: string) {
-  return path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
-}
+const makeSketchPath = (sketchName: string) => path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
 
-function makeDistPath(sketchName: any) {
-  return path.join(__dirname, '../sketches', sketchName, 'dist');
-}
+const makeDistPath = (sketchName: any) => path.join(__dirname, '../sketches', sketchName, 'dist');
 
 const sendFile = (res: Response, filePath: string) =>
   new Promise<void>((resolve, reject) => {
