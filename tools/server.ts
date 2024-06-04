@@ -41,7 +41,7 @@ app.get('/sketches/:sketchName', (req, res) => {
   // prettier-ignore
   fromNullable(req.params.sketchName)
     .map(makeSketchPath)
-    // .map((val) => { console.log(val) })
+    // This doesn't work. sendFile is async
     .chain((path: string) => tryCatch(()=>sendFile(res, path)))
     .fold(
       (err) => { 
