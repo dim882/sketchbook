@@ -1,8 +1,9 @@
 import express, { Response } from 'express';
 import fs from 'fs';
 import path from 'path';
+import { pipe } from 'ramda';
 
-import { Either, fromNullable, tryCatch } from '../lib/FPUtils';
+import { Box, Either, fromNullable, tryCatch } from '../lib/FPUtils';
 
 const app = express();
 const port = 3000;
@@ -38,18 +39,19 @@ app.get('/', (req, res) => {
 
 app.get('/sketches/:sketchName', (req, res) => {
   // prettier-ignore
-  fromNullable<string, string>(req.params.sketchName)
+  fromNullable(req.params.sketchName)
     .map(makeSketchPath)
+    // .map((val) => { console.log(val) })
+    .chain((path: string) => tryCatch(()=>sendFile(res, path)))
     .fold(
-      (val) => { res.status(404).send(val) },
-      (filePath) => {
-        tryCatch(() => sendFile(res, filePath))
-          .fold(
-            (err) => res.status(404).send(err),
-            () => console.log('serve: ', filePath)
-          );
-      }
-    );
+      (err) => { 
+        console.log('error', err);
+        res.send(404);
+       },
+      (val) => {  
+        console.log('success');
+      },
+    )
 });
 
 // Serve static files from each sketch's dist directory
