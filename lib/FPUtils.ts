@@ -70,3 +70,68 @@ function curry<Fn extends (...args: any[]) => any>(fn: Fn): Curried<Fn> {
     }
   } as Curried<Fn>;
 }
+
+type Fork<T> = (reject: (err: any) => void, resolve: (value: T) => void) => void;
+
+interface ITask<T> {
+  fork: Fork<T>;
+  ap<U>(other: ITask<(value: T) => U>): ITask<U>;
+  map<U>(f: (value: T) => U): ITask<U>;
+  chain<U>(f: (value: T) => ITask<U>): ITask<U>;
+  concat(other: ITask<T>): ITask<T>;
+  fold<U>(f: (value: any) => ITask<U>, g: (value: T) => ITask<U>): ITask<U>;
+}
+
+function Task<T>(fork: Fork<T>): ITask<T> {
+  return {
+    fork,
+    ap<U>(other: ITask<(value: T) => U>): ITask<U> {
+      return Task<U>((rej, res) => fork(rej, (f) => other.fork(rej, (x) => res(f(x)))));
+    },
+    map<U>(f: (value: T) => U): ITask<U> {
+      return Task<U>((rej, res) => fork(rej, (x) => res(f(x))));
+    },
+    chain<U>(f: (value: T) => ITask<U>): ITask<U> {
+      return Task<U>((rej, res) => fork(rej, (x) => f(x).fork(rej, res)));
+    },
+    concat(other: ITask<T>): ITask<T> {
+      return Task<T>((rej, res) =>
+        fork(rej, (x) =>
+          other.fork(rej, (y) => {
+            console.log('X', x, 'Y', y);
+            res((x as any).concat(y));
+          })
+        )
+      );
+    },
+    fold<U>(f: (value: any) => ITask<U>, g: (value: T) => ITask<U>): ITask<U> {
+      return Task<U>((rej, res) =>
+        fork(
+          (x) => f(x).fork(rej, res),
+          (x) => g(x).fork(rej, res)
+        )
+      );
+    },
+  };
+}
+
+namespace Task {
+  export function of<T>(x: T): ITask<T> {
+    return Task<T>((rej, res) => res(x));
+  }
+
+  export function rejected<T>(x: any): ITask<T> {
+    return Task<T>((rej, res) => rej(x));
+  }
+
+  export function fromPromised<T, U>(fn: (...args: any[]) => Promise<T>): (...args: any[]) => ITask<T> {
+    return (...args: any[]) =>
+      Task<T>((rej, res) =>
+        fn(...args)
+          .then(res)
+          .catch(rej)
+      );
+  }
+}
+
+export { Task };
