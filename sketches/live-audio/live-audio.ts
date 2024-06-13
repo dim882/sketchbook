@@ -1,10 +1,13 @@
+import { getAudioDevices } from './live-audio.utils.js';
 import { IPointTuple, loop } from './utils.js';
 
-document.body.onload = () => {
+window.addEventListener('DOMContentLoaded', async () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
 
   const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
+  const audioDevices = await getAudioDevices();
+  console.log({ audioDevices });
 
   document.getElementById('transport').addEventListener('change', (e: CustomEvent) => {
     const command = e.detail.value;
@@ -31,7 +34,7 @@ document.body.onload = () => {
   });
 
   // loop(context, render, 60);
-};
+});
 
 function render(context: CanvasRenderingContext2D, t: number) {
   const { width, height } = context.canvas;
