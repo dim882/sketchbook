@@ -4,7 +4,26 @@ document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
 
-  playAudio().catch(console.error);
+  const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
+
+  document.getElementById('transport').addEventListener('change', (e: CustomEvent) => {
+    const command = e.detail.value;
+    let source: AudioBufferSourceNode;
+
+    switch (command) {
+      case 'play':
+        playAudio(audioElement)
+          .then((s) => {
+            source = s;
+          })
+          .catch(console.error);
+        break;
+
+      default:
+        break;
+    }
+  });
+
   // loop(context, render, 60);
 };
 
@@ -25,9 +44,8 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.fill();
 }
 
-const playAudio = async () => {
+const playAudio = async (audioElement: HTMLAudioElement) => {
   const audioContext = new AudioContext();
-  const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
 
   try {
     const track = await fetch(audioElement.src);
@@ -39,6 +57,7 @@ const playAudio = async () => {
     source.connect(audioContext.destination);
     source.start();
 
+    return source;
     console.log('Audio started playing');
   } catch (error) {
     console.error('Error playing audio:', error);
