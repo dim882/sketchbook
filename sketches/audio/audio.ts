@@ -4,6 +4,7 @@ document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
 
+  playAudio().catch(console.error);
   // loop(context, render, 60);
 };
 
@@ -23,3 +24,23 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.fillStyle = 'red';
   context.fill();
 }
+
+const playAudio = async () => {
+  const audioContext = new AudioContext();
+  const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
+
+  try {
+    const track = await fetch(audioElement.src);
+    const arrayBuffer = await track.arrayBuffer();
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+    const source = audioContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(audioContext.destination);
+    source.start();
+
+    console.log('Audio started playing');
+  } catch (error) {
+    console.error('Error playing audio:', error);
+  }
+};
