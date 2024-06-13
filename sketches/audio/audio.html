@@ -2,26 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Blob Grid</title>
-    <style>
-      body {
-        display: grid;
-        place-items: center;
-        height: 100vh;
-        margin: 0;
-      }
+    <title>Audio</title>
 
-      canvas {
-        border: 1px solid black;
-        width: 1000px;
-        height: 1000px;
-        margin: 0;
-      }
-    </style>
-
+    <script type="module" src="https://unpkg.com/@ircam/sc-components@latest"></script>
     <script src="/sketches/audio/dist/bundle.js" type="module" defer></script>
+    <link href="/sketches/audio/dist/audio.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
     <canvas id="canvas" width="1000" height="1000"></canvas>
+    <aside>
+      <sc-transport></sc-transport>
+      <sc-color-picker></sc-color-picker>
+    </aside>
   </body>
 </html>
