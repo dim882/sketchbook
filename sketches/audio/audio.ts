@@ -12,12 +12,14 @@ document.body.onload = () => {
 
     switch (command) {
       case 'play':
-        playAudio(audioElement)
-          .then((s) => {
-            source = s;
-          })
-          .catch(console.error);
+        const audioContext = new AudioContext();
+        source = audioContext.createBufferSource();
+        playAudio(audioContext, source, audioElement).catch(console.error);
+
         break;
+
+      case 'pause':
+        source.stop();
 
       default:
         break;
@@ -44,22 +46,23 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.fill();
 }
 
-const playAudio = async (audioElement: HTMLAudioElement) => {
-  const audioContext = new AudioContext();
-
+const playAudio = async (audioContext: AudioContext, source: AudioBufferSourceNode, audioElement: HTMLAudioElement) => {
   try {
     const track = await fetch(audioElement.src);
     const arrayBuffer = await track.arrayBuffer();
     const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
-    const source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
     source.start();
 
-    return source;
     console.log('Audio started playing');
   } catch (error) {
     console.error('Error playing audio:', error);
   }
+  return source;
 };
+
+function getAudioObjects() {
+  return { audioContext, source };
+}
