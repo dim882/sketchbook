@@ -5,15 +5,17 @@ document.body.onload = () => {
   const context = canvas.getContext('2d');
 
   const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
+  let audioContext: AudioContext;
 
   document.getElementById('transport').addEventListener('change', (e: CustomEvent) => {
     const command = e.detail.value;
     let source: AudioBufferSourceNode;
 
+    audioContext = new AudioContext();
+    source = audioContext.createBufferSource();
+
     switch (command) {
       case 'play':
-        const audioContext = new AudioContext();
-        source = audioContext.createBufferSource();
         console.log({ source });
 
         playAudio(audioContext, source, audioElement).catch(console.error);
