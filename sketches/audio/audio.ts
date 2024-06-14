@@ -20,11 +20,11 @@ window.addEventListener('DOMContentLoaded', () => {
     switch (command) {
       case 'play':
         audioElement.play();
-
         break;
 
       case 'pause':
         audioElement.pause();
+        break;
 
       default:
         break;
