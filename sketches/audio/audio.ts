@@ -12,9 +12,10 @@ document.body.onload = () => {
     const command = e.detail.value;
 
     audioContext = audioContext ? audioContext : new AudioContext();
-    source = source ? source : audioContext.createBufferSource();
-
-    await setUpSourceNode(source, audioElement, audioContext);
+    if (!source) {
+      source = audioContext.createBufferSource();
+      await setUpSourceNode(source, audioElement, audioContext);
+    }
 
     switch (command) {
       case 'play':
