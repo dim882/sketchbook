@@ -1,6 +1,6 @@
 import { IPointTuple, loop } from './utils.js';
 
-document.body.onload = () => {
+window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
   const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
@@ -17,12 +17,6 @@ document.body.onload = () => {
     // track = track ? track : audioContext.createMediaElementSource(audioElement);
     analyser = analyser ? analyser : audioContext.createAnalyser();
 
-    if (audioContext.state === 'suspended') {
-      audioContext.resume().then(() => {
-        console.log('Playback resumed successfully');
-      });
-    }
-
     switch (command) {
       case 'play':
         audioElement.play();
@@ -38,7 +32,7 @@ document.body.onload = () => {
   });
 
   // loop(context, render, 60);
-};
+});
 
 function render(context: CanvasRenderingContext2D, t: number) {
   const { width, height } = context.canvas;
