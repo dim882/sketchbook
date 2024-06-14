@@ -6,25 +6,23 @@ document.body.onload = () => {
 
   const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
   let audioContext: AudioContext;
+  let source: AudioBufferSourceNode;
 
-  document.getElementById('transport').addEventListener('change', (e: CustomEvent) => {
+  document.getElementById('transport').addEventListener('change', async (e: CustomEvent) => {
     const command = e.detail.value;
-    let source: AudioBufferSourceNode;
 
-    audioContext = new AudioContext();
-    source = audioContext.createBufferSource();
+    audioContext = audioContext ? audioContext : new AudioContext();
+    source = source ? source : audioContext.createBufferSource();
+
+    await setUpSourceNode(source, audioElement, audioContext);
 
     switch (command) {
       case 'play':
-        console.log({ source });
-
-        playAudio(audioContext, source, audioElement).catch(console.error);
+        source.start();
 
         break;
 
       case 'pause':
-        console.log({ source });
-
         source.stop();
 
       default:
@@ -54,7 +52,6 @@ function render(context: CanvasRenderingContext2D, t: number) {
 
 const playAudio = async (audioContext: AudioContext, source: AudioBufferSourceNode, audioElement: HTMLAudioElement) => {
   try {
-    await setUpSourceNode(source, audioElement, audioContext);
     source.start();
 
     console.log('Audio started playing');
