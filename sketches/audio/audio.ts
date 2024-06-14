@@ -52,18 +52,23 @@ function render(context: CanvasRenderingContext2D, t: number) {
 
 const playAudio = async (audioContext: AudioContext, source: AudioBufferSourceNode, audioElement: HTMLAudioElement) => {
   try {
-    const audioBuffer = await createAudioBuffer(audioElement, audioContext);
-
-    source.buffer = audioBuffer;
-    source.connect(audioContext.destination);
+    await setUpSourceNode(source, audioElement, audioContext);
     source.start();
 
     console.log('Audio started playing');
   } catch (error) {
     console.error('Error playing audio:', error);
   }
-  return source;
 };
+
+async function setUpSourceNode(
+  source: AudioBufferSourceNode,
+  audioElement: HTMLAudioElement,
+  audioContext: AudioContext
+) {
+  source.buffer = await createAudioBuffer(audioElement, audioContext);
+  source.connect(audioContext.destination);
+}
 
 async function createAudioBuffer(audioElement: HTMLAudioElement, audioContext: AudioContext) {
   const track = await fetch(audioElement.src);
