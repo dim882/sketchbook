@@ -3,28 +3,34 @@ import { IPointTuple, loop } from './utils.js';
 document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
-
   const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
+
   let audioContext: AudioContext;
-  let source: AudioBufferSourceNode;
+  let track: MediaElementAudioSourceNode;
+  let analyser: AnalyserNode;
 
   document.getElementById('transport').addEventListener('change', async (e: CustomEvent) => {
     const command = e.detail.value;
 
     audioContext = audioContext ? audioContext : new AudioContext();
-    if (!source) {
-      source = audioContext.createBufferSource();
-      await setUpSourceNode(source, audioElement, audioContext);
+
+    // track = track ? track : audioContext.createMediaElementSource(audioElement);
+    analyser = analyser ? analyser : audioContext.createAnalyser();
+
+    if (audioContext.state === 'suspended') {
+      audioContext.resume().then(() => {
+        console.log('Playback resumed successfully');
+      });
     }
 
     switch (command) {
       case 'play':
-        source.start();
+        audioElement.play();
 
         break;
 
       case 'pause':
-        source.stop();
+        audioElement.pause();
 
       default:
         break;
@@ -60,18 +66,3 @@ const playAudio = async (audioContext: AudioContext, source: AudioBufferSourceNo
     console.error('Error playing audio:', error);
   }
 };
-
-async function setUpSourceNode(
-  source: AudioBufferSourceNode,
-  audioElement: HTMLAudioElement,
-  audioContext: AudioContext
-) {
-  source.buffer = await createAudioBuffer(audioElement, audioContext);
-  source.connect(audioContext.destination);
-}
-
-async function createAudioBuffer(audioElement: HTMLAudioElement, audioContext: AudioContext) {
-  const track = await fetch(audioElement.src);
-  const arrayBuffer = await track.arrayBuffer();
-  return await audioContext.decodeAudioData(arrayBuffer);
-}
