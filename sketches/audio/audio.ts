@@ -13,10 +13,11 @@ window.addEventListener('DOMContentLoaded', () => {
     const command = e.detail.value;
 
     audioContext = audioContext ? audioContext : new AudioContext();
-
-    // track = track ? track : audioContext.createMediaElementSource(audioElement);
+    track = track ? track : audioContext.createMediaElementSource(audioElement);
     analyser = analyser ? analyser : audioContext.createAnalyser();
+    analyser.connect(audioContext.destination);
 
+    track.connect(analyser);
     switch (command) {
       case 'play':
         audioElement.play();
@@ -50,13 +51,3 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.fillStyle = 'red';
   context.fill();
 }
-
-const playAudio = async (audioContext: AudioContext, source: AudioBufferSourceNode, audioElement: HTMLAudioElement) => {
-  try {
-    source.start();
-
-    console.log('Audio started playing');
-  } catch (error) {
-    console.error('Error playing audio:', error);
-  }
-};
