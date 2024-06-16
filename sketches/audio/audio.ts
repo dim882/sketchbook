@@ -2,7 +2,7 @@ import { IPointTuple, loop } from './utils.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-  const context = canvas.getContext('2d');
+  const canvasContext = canvas.getContext('2d');
   const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
 
   let audioContext: AudioContext;
@@ -15,24 +15,24 @@ window.addEventListener('DOMContentLoaded', () => {
     audioContext = audioContext ? audioContext : new AudioContext();
     track = track ? track : audioContext.createMediaElementSource(audioElement);
     analyser = analyser ? analyser : audioContext.createAnalyser();
-    analyser.connect(audioContext.destination);
 
+    analyser.connect(audioContext.destination);
     track.connect(analyser);
+
     switch (command) {
-      case 'play':
+      case 'play': {
         audioElement.play();
         break;
+      }
 
-      case 'pause':
+      case 'pause': {
         audioElement.pause();
         break;
-
-      default:
-        break;
+      }
     }
   });
 
-  // loop(context, render, 60);
+  loop(canvasContext, render, 60);
 });
 
 function render(context: CanvasRenderingContext2D, t: number) {

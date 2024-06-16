@@ -12,7 +12,7 @@ export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps
     if (time - lastFrameTime < frameDuration) return;
     lastFrameTime = time;
 
-    render(context, t); // Assuming `context` is accessible in this scope
+    render(context, t);
     t++;
   }
 
