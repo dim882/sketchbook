@@ -15,6 +15,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const audioDevices = await getAudioDevices('ES-9');
   console.log({ audioDevices });
 
+  audioDevices.forEach((device) => {});
   startRenderingWaveformForDevice(context, 'cfb9b5a09ecdbe210d3277457cb76ffcc83dca38555bd88b97982a333266df20');
 });
 

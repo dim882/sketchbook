@@ -32,11 +32,9 @@ export function getAudioDevices(labelPrefix: string): Promise<Promise<MediaStrea
       console.table(deviceTracks);
 
       if (deviceTracks.length > 0) {
-        // console.log({ deviceTracks });
-        const device0 = navigator.mediaDevices.getUserMedia({ audio: { deviceId: deviceTracks[0].deviceId } });
-        const device1 = navigator.mediaDevices.getUserMedia({ audio: { deviceId: deviceTracks[1].deviceId } });
-
-        return [device0, device1];
+        return deviceTracks.map((device) =>
+          navigator.mediaDevices.getUserMedia({ audio: { deviceId: device.deviceId } })
+        );
       } else {
         console.error('QuickTime device not found');
       }
