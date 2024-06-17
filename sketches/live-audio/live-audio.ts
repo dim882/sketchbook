@@ -6,32 +6,10 @@ window.addEventListener('DOMContentLoaded', async () => {
   const context = canvas.getContext('2d');
 
   const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
-  const audioDevices = await getAudioDevices();
+
+  await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+  const audioDevices = await getAudioDevices('ES-9');
   console.log({ audioDevices });
-
-  document.getElementById('transport').addEventListener('change', (e: CustomEvent) => {
-    const command = e.detail.value;
-    let source: AudioBufferSourceNode;
-
-    switch (command) {
-      case 'play':
-        const audioContext = new AudioContext();
-        source = audioContext.createBufferSource();
-        console.log({ source });
-
-        playAudio(audioContext, source, audioElement).catch(console.error);
-
-        break;
-
-      case 'pause':
-        console.log({ source });
-
-        source.stop();
-
-      default:
-        break;
-    }
-  });
 
   // loop(context, render, 60);
 });
