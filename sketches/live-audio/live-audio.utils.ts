@@ -62,12 +62,11 @@ export function createAnalyser(audioContext: AudioContext, fftSize = 2048): Anal
   return analyser;
 }
 
-export function renderWaveform(ctx: CanvasRenderingContext2D, dataArray: Uint8Array, color = '#ff0000'): void {
-  const width = ctx.canvas.width;
-  const height = ctx.canvas.height;
+export function renderWaveform(context: CanvasRenderingContext2D, dataArray: Uint8Array, color = '#ff0000'): void {
+  const { width, height } = context.canvas;
 
-  ctx.beginPath();
-  ctx.moveTo(0, height / 2);
+  context.beginPath();
+  context.moveTo(0, height / 2);
 
   const sliceWidth = (width * 1.0) / dataArray.length;
   let x = 0;
@@ -77,17 +76,17 @@ export function renderWaveform(ctx: CanvasRenderingContext2D, dataArray: Uint8Ar
     const y = (v * height) / 2;
 
     if (i === 0) {
-      ctx.moveTo(x, y);
+      context.moveTo(x, y);
     } else {
-      ctx.lineTo(x, y);
+      context.lineTo(x, y);
     }
 
     x += sliceWidth;
   }
 
-  ctx.lineTo(width, height / 2);
-  ctx.strokeStyle = color;
-  ctx.stroke();
+  context.lineTo(width, height / 2);
+  context.strokeStyle = color;
+  context.stroke();
 }
 
 export function createWaveformRenderer(audioContext: AudioContext, stream: MediaStream, color: string) {
