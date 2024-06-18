@@ -3,15 +3,16 @@ export type IRenderFunc = (context: CanvasRenderingContext2D, t: number) => void
 export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps = 60) {
   let frameDuration = 1000 / fps;
   let lastFrameTime = 0;
-
   let t = 0;
+
   function animate(time: number) {
     requestAnimationFrame(animate);
 
     if (time - lastFrameTime < frameDuration) return;
+
     lastFrameTime = time;
 
-    render(context, t); // Assuming `context` is accessible in this scope
+    render(context, t);
     t++;
   }
 
@@ -22,20 +23,16 @@ export function getAudioDevices(labelPrefix: string) {
   return navigator.mediaDevices
     .enumerateDevices()
     .then((devices) => {
-      console.table(devices);
-      const deviceTracks = devices
+      return devices
         .filter((device) => device.label.match(`${labelPrefix}:`))
         .sort((a, b) => (a.label < b.label ? -1 : 0));
-      return deviceTracks;
     })
-    .then((deviceTracks) => {
-      console.table(deviceTracks);
-
-      if (deviceTracks.length > 0) {
-        return deviceTracks;
+    .then((devices) => {
+      if (devices.length > 0) {
+        return devices;
       } else {
-        console.error('QuickTime device not found');
-        return []; // Return an empty array if no devices were found
+        console.error(`${labelPrefix} device not found`);
+        return [];
       }
     });
 }
