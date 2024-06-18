@@ -69,7 +69,6 @@ export function renderWaveform(ctx: CanvasRenderingContext2D, dataArray: Uint8Ar
   const width = ctx.canvas.width;
   const height = ctx.canvas.height;
 
-  ctx.clearRect(0, 0, width, height);
   ctx.beginPath();
   ctx.moveTo(0, height / 2);
 
