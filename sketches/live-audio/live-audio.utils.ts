@@ -65,7 +65,7 @@ export function createAnalyser(audioContext: AudioContext): AnalyserNode {
   return analyser;
 }
 
-export function renderWaveform(ctx: CanvasRenderingContext2D, dataArray: Uint8Array): void {
+export function renderWaveform(ctx: CanvasRenderingContext2D, dataArray: Uint8Array, color = '#ff0000'): void {
   const width = ctx.canvas.width;
   const height = ctx.canvas.height;
 
@@ -90,6 +90,6 @@ export function renderWaveform(ctx: CanvasRenderingContext2D, dataArray: Uint8Ar
   }
 
   ctx.lineTo(width, height / 2);
-  ctx.strokeStyle = 'rgba(0, 255, 0, 1)';
+  ctx.strokeStyle = color;
   ctx.stroke();
 }
