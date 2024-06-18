@@ -29,11 +29,11 @@ function startRenderingWaveformForDevice(stream: MediaStream, color: string) {
   const analyser = createAnalyser(audioContext);
   sourceNode.connect(analyser);
 
-  const render = (context: CanvasRenderingContext2D, _t: number) => {
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+  const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+  return (context: CanvasRenderingContext2D, _t: number) => {
     analyser.getByteTimeDomainData(dataArray);
 
     renderWaveform(context, dataArray, color);
   };
-  return render;
 }
