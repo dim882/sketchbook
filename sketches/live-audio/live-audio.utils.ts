@@ -55,9 +55,10 @@ function setupAudioContext(stream: MediaStream): {
   return { audioContext, sourceNode };
 }
 
-export function createAnalyser(audioContext: AudioContext): AnalyserNode {
+export function createAnalyser(audioContext: AudioContext, fftSize = 2048): AnalyserNode {
   const analyser = audioContext.createAnalyser();
-  analyser.fftSize = 2048; // Adjust FFT size for frequency analysis
+  analyser.fftSize = fftSize;
+
   return analyser;
 }
 
