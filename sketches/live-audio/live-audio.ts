@@ -16,17 +16,26 @@ window.addEventListener('DOMContentLoaded', async () => {
   const audioDevices = await getAudioDevices('ES-9');
   console.log({ audioDevices });
 
-  audioDevices.map((device) => {});
-  const deviceId = 'cfb9b5a09ecdbe210d3277457cb76ffcc83dca38555bd88b97982a333266df20';
-  const stream = await captureAudioStream(deviceId);
+  const colors = ['#ff0000', '#00ff00', '#0000ff', '#000000'];
+  const waveRenderers = await Promise.all(
+    audioDevices.map(async (device, i) => {
+      console.log(device.deviceId);
 
-  const renderWave = createWaveformRenderer(stream, '#ff0000');
+      const stream = await captureAudioStream(device.deviceId);
+
+      const renderWave = createWaveformRenderer(stream, colors[i]);
+      console.log({ renderWave });
+      return renderWave;
+    })
+  );
 
   const render: IRenderFunc = (canvasContext, t) => {
     const { width, height } = canvasContext.canvas;
 
     canvasContext.clearRect(0, 0, width, height);
-    renderWave(canvasContext, t);
+    waveRenderers.forEach((renderWave) => {
+      renderWave(canvasContext, t);
+    });
   };
 
   loop(context, render, 60);
