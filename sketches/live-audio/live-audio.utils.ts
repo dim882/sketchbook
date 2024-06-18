@@ -18,7 +18,7 @@ export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps
   requestAnimationFrame(animate);
 }
 
-export function getAudioDevices(labelPrefix: string): Promise<Promise<MediaStream>[]> {
+export function getAudioDevices(labelPrefix: string): Promise<MediaStream[]> {
   return navigator.mediaDevices
     .enumerateDevices()
     .then((devices) => {
@@ -28,15 +28,19 @@ export function getAudioDevices(labelPrefix: string): Promise<Promise<MediaStrea
         .sort((a, b) => (a.label < b.label ? -1 : 0));
       return deviceTracks;
     })
-    .then((deviceTracks) => {
+    .then(async (deviceTracks) => {
       console.table(deviceTracks);
 
       if (deviceTracks.length > 0) {
-        return deviceTracks.map((device) =>
+        const streamPromises = deviceTracks.map((device) =>
           navigator.mediaDevices.getUserMedia({ audio: { deviceId: device.deviceId } })
         );
+
+        const streams = await Promise.all(streamPromises);
+        return streams;
       } else {
         console.error('QuickTime device not found');
+        return []; // Return an empty array if no devices were found
       }
     });
 }
