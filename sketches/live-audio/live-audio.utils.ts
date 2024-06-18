@@ -49,7 +49,7 @@ export async function captureAudioStream(deviceId: string): Promise<MediaStream>
   });
 }
 
-export function setupAudioContext(stream: MediaStream): {
+function setupAudioContext(stream: MediaStream): {
   audioContext: AudioContext;
   sourceNode: MediaStreamAudioSourceNode;
 } {

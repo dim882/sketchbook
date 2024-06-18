@@ -3,7 +3,6 @@ import {
   createAnalyser,
   getAudioDevices,
   renderWaveform,
-  setupAudioContext,
   loop,
   IRenderFunc,
 } from './live-audio.utils.js';
@@ -21,7 +20,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const waveRenderers = await Promise.all(
     audioDevices.map(async (device, i) => {
       const stream = await captureAudioStream(device.deviceId);
-      const renderWave = createWaveformRenderer(stream, colors[i]);
+      const renderWave = createWaveformRenderer(audioContext, stream, colors[i]);
 
       return renderWave;
     })
@@ -45,8 +44,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   loop(context, render, 60);
 });
 
-function createWaveformRenderer(stream: MediaStream, color: string) {
-  const { audioContext, sourceNode } = setupAudioContext(stream);
+function createWaveformRenderer(audioContext: AudioContext, stream: MediaStream, color: string) {
+  const sourceNode = audioContext.createMediaStreamSource(stream);
   const analyser = createAnalyser(audioContext);
   const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
