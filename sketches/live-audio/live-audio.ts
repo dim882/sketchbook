@@ -45,15 +45,22 @@ window.addEventListener('DOMContentLoaded', async () => {
 });
 
 function createWaveformRenderer(audioContext: AudioContext, stream: MediaStream, color: string) {
+  const getDataArray = createGetDataArray(audioContext, stream);
+
+  return (context: CanvasRenderingContext2D, _t: number) => {
+    renderWaveform(context, getDataArray(), color);
+  };
+}
+
+function createGetDataArray(audioContext: AudioContext, stream: MediaStream) {
   const sourceNode = audioContext.createMediaStreamSource(stream);
   const analyser = createAnalyser(audioContext);
   const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
   sourceNode.connect(analyser);
 
-  return (context: CanvasRenderingContext2D, _t: number) => {
+  return () => {
     analyser.getByteTimeDomainData(dataArray);
-
-    renderWaveform(context, dataArray, color);
+    return dataArray;
   };
 }
