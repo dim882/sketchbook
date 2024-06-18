@@ -91,3 +91,24 @@ export function renderWaveform(ctx: CanvasRenderingContext2D, dataArray: Uint8Ar
   ctx.strokeStyle = color;
   ctx.stroke();
 }
+
+export function createWaveformRenderer(audioContext: AudioContext, stream: MediaStream, color: string) {
+  const getDataArray = createGetDataArray(audioContext, stream);
+
+  return (context: CanvasRenderingContext2D, _t: number) => {
+    renderWaveform(context, getDataArray(), color);
+  };
+}
+
+export function createGetDataArray(audioContext: AudioContext, stream: MediaStream) {
+  const sourceNode = audioContext.createMediaStreamSource(stream);
+  const analyser = createAnalyser(audioContext);
+  const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+  sourceNode.connect(analyser);
+
+  return () => {
+    analyser.getByteTimeDomainData(dataArray);
+    return dataArray;
+  };
+}
