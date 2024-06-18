@@ -14,8 +14,9 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
   const audioDevices = await getAudioDevices('ES-9');
-  console.log({ audioDevices });
   const colors = ['#ff0000', '#00ff00', '#0000ff', '#000000'];
+
+  const audioContext = new AudioContext();
 
   const waveRenderers = await Promise.all(
     audioDevices.map(async (device, i) => {
@@ -30,12 +31,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     const { width, height } = canvasContext.canvas;
 
     canvasContext.clearRect(0, 0, width, height);
+    canvasContext.save();
+    canvasContext.translate(0, -height / 3);
     waveRenderers.forEach((renderWave, i) => {
       canvasContext.save();
       canvasContext.translate(0, (height / 4) * i);
       renderWave(canvasContext, t);
       canvasContext.restore();
     });
+    canvasContext.restore();
   };
 
   loop(context, render, 60);
