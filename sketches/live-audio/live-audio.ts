@@ -32,6 +32,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     canvasContext.clearRect(0, 0, width, height);
     waveRenderers.forEach((renderWave, i) => {
       canvasContext.save();
+      canvasContext.translate(0, (height / 4) * i);
       renderWave(canvasContext, t);
       canvasContext.restore();
     });
