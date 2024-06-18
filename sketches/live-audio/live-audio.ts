@@ -16,14 +16,15 @@ window.addEventListener('DOMContentLoaded', async () => {
   console.log({ audioDevices });
 
   audioDevices.forEach((device) => {});
-  startRenderingWaveformForDevice(context, 'cfb9b5a09ecdbe210d3277457cb76ffcc83dca38555bd88b97982a333266df20');
+  const deviceId = 'cfb9b5a09ecdbe210d3277457cb76ffcc83dca38555bd88b97982a333266df20';
+  const stream = await captureAudioStream(deviceId);
+  startRenderingWaveformForDevice(context, stream);
 });
 
 async function startRenderingWaveformForDevice(
   canvasContext: CanvasRenderingContext2D,
-  deviceId: string
+  stream: MediaStream
 ): Promise<void> {
-  const stream = await captureAudioStream(deviceId);
   const { audioContext, sourceNode } = setupAudioContext(stream);
   const analyser = createAnalyser(audioContext);
   sourceNode.connect(analyser);
