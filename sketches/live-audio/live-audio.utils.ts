@@ -74,14 +74,17 @@ export function createGetDataArray(audioContext: AudioContext, stream: MediaStre
   };
 }
 
-export function getAmplitude(timeDomainData: Uint8Array) {
-  let sumSquares = 0.0;
+export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
+  context.save();
+  callback();
+  context.restore();
+}
 
-  for (let i = 0; i < timeDomainData.length; i++) {
-    sumSquares += timeDomainData[i] * timeDomainData[i];
-  }
-
-  return Math.sqrt(sumSquares / timeDomainData.length);
+export function translateY(canvasContext: CanvasRenderingContext2D, yTranslate: number, callback: () => void) {
+  saveAndRestore(canvasContext, () => {
+    canvasContext.translate(0, yTranslate);
+    callback();
+  });
 }
 
 export function renderWaveform(context: CanvasRenderingContext2D, dataArray: Uint8Array, color = '#ff0000'): void {
@@ -111,15 +114,12 @@ export function renderWaveform(context: CanvasRenderingContext2D, dataArray: Uin
   context.stroke();
 }
 
-export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
-  context.save();
-  callback();
-  context.restore();
-}
+export function getAmplitude(timeDomainData: Uint8Array) {
+  let sumSquares = 0.0;
 
-export function translateY(canvasContext: CanvasRenderingContext2D, yTranslate: number, callback: () => void) {
-  saveAndRestore(canvasContext, () => {
-    canvasContext.translate(0, yTranslate);
-    callback();
-  });
+  for (let i = 0; i < timeDomainData.length; i++) {
+    sumSquares += timeDomainData[i] * timeDomainData[i];
+  }
+
+  return Math.sqrt(sumSquares / timeDomainData.length);
 }
