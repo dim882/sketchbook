@@ -46,15 +46,6 @@ export async function captureAudioStream(deviceId: string): Promise<MediaStream>
   });
 }
 
-function setupAudioContext(stream: MediaStream): {
-  audioContext: AudioContext;
-  sourceNode: MediaStreamAudioSourceNode;
-} {
-  const audioContext = new AudioContext();
-  const sourceNode = audioContext.createMediaStreamSource(stream);
-  return { audioContext, sourceNode };
-}
-
 export function createAnalyser(audioContext: AudioContext, fftSize = 2048): AnalyserNode {
   const analyser = audioContext.createAnalyser();
   analyser.fftSize = fftSize;
