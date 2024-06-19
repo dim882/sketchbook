@@ -1,9 +1,16 @@
-import { captureAudioStream, getAudioDevices, loop, IRenderFunc, createWaveformRenderer } from './live-audio.utils.js';
+import {
+  captureAudioStream,
+  getAudioDevices,
+  loop,
+  IRenderFunc,
+  createWaveformRenderer,
+  saveAndRestore,
+} from './live-audio.utils.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const canvasContext = canvas.getContext('2d');
-  const colors = ['#ff0000', '#00ff00', '#0000ff', '#00000'];
+  const colors = ['#ff0000', '#00ff00', '#0000ff', '#000000'];
 
   await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
 
@@ -21,27 +28,26 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     canvasContext.clearRect(0, 0, width, height);
 
-    canvasContext.save();
-    canvasContext.translate(0, -height / 3);
+    const yTranslate = -height / 3;
 
-    waveRenderers.forEach((renderWave, i) => {
-      // prettier-ignore
-      translateY(
+    translateY(canvasContext, yTranslate, () => {
+      waveRenderers.forEach((renderWave, i) => {
+        // prettier-ignore
+        translateY(
         canvasContext, 
         (height / 4) * i, 
         () => renderWave(canvasContext, t)
       );
+      });
     });
-
-    canvasContext.restore();
   };
 
   loop(canvasContext, render, 60);
 });
 
 function translateY(canvasContext: CanvasRenderingContext2D, yTranslate: number, callback: () => void) {
-  canvasContext.save();
-  canvasContext.translate(0, yTranslate);
-  callback();
-  canvasContext.restore();
+  saveAndRestore(canvasContext, () => {
+    canvasContext.translate(0, yTranslate);
+    callback();
+  });
 }
