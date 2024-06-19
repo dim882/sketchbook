@@ -109,3 +109,13 @@ export function createGetDataArray(audioContext: AudioContext, stream: MediaStre
     return dataArray;
   };
 }
+
+export function getAmplitude(timeDomainData: Uint8Array) {
+  let sumSquares = 0.0;
+
+  for (let i = 0; i < timeDomainData.length; i++) {
+    sumSquares += timeDomainData[i] * timeDomainData[i];
+  }
+
+  return Math.sqrt(sumSquares / timeDomainData.length);
+}
