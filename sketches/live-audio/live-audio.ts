@@ -3,19 +3,17 @@ import { captureAudioStream, getAudioDevices, loop, IRenderFunc, createWaveformR
 window.addEventListener('DOMContentLoaded', async () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
-
-  await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-  const audioDevices = await getAudioDevices('ES-9');
   const colors = ['#ff0000', '#00ff00', '#0000ff', '#000000'];
 
-  const audioContext = new AudioContext();
+  await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
 
+  const audioDevices = await getAudioDevices('ES-9');
+  const audioContext = new AudioContext();
   const waveRenderers = await Promise.all(
     audioDevices.map(async (device, i) => {
       const stream = await captureAudioStream(device.deviceId);
-      const renderWave = createWaveformRenderer(audioContext, stream, colors[i]);
 
-      return renderWave;
+      return createWaveformRenderer(audioContext, stream, colors[i]);
     })
   );
 
