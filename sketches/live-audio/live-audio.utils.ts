@@ -110,3 +110,9 @@ export function renderWaveform(context: CanvasRenderingContext2D, dataArray: Uin
   context.strokeStyle = color;
   context.stroke();
 }
+
+export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
+  context.save();
+  callback();
+  context.restore();
+}

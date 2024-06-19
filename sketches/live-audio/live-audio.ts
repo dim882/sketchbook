@@ -25,10 +25,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     canvasContext.translate(0, -height / 3);
 
     waveRenderers.forEach((renderWave, i) => {
-      canvasContext.save();
-      canvasContext.translate(0, (height / 4) * i);
-      renderWave(canvasContext, t);
-      canvasContext.restore();
+      // prettier-ignore
+      translateY(
+        canvasContext, 
+        (height / 4) * i, 
+        () => renderWave(canvasContext, t)
+      );
     });
 
     canvasContext.restore();
@@ -36,3 +38,10 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   loop(canvasContext, render, 60);
 });
+
+function translateY(canvasContext: CanvasRenderingContext2D, yTranslate: number, callback: () => void) {
+  canvasContext.save();
+  canvasContext.translate(0, yTranslate);
+  callback();
+  canvasContext.restore();
+}
