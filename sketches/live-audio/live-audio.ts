@@ -5,6 +5,7 @@ import {
   IRenderFunc,
   createWaveformRenderer,
   saveAndRestore,
+  translateY,
 } from './live-audio.utils.js';
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -42,10 +43,3 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   loop(canvasContext, render, 60);
 });
-
-function translateY(canvasContext: CanvasRenderingContext2D, yTranslate: number, callback: () => void) {
-  saveAndRestore(canvasContext, () => {
-    canvasContext.translate(0, yTranslate);
-    callback();
-  });
-}

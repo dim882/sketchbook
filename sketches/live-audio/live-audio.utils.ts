@@ -116,3 +116,10 @@ export function saveAndRestore(context: CanvasRenderingContext2D, callback: () =
   callback();
   context.restore();
 }
+
+export function translateY(canvasContext: CanvasRenderingContext2D, yTranslate: number, callback: () => void) {
+  saveAndRestore(canvasContext, () => {
+    canvasContext.translate(0, yTranslate);
+    callback();
+  });
+}
