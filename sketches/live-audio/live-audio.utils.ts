@@ -53,33 +53,6 @@ export function createAnalyser(audioContext: AudioContext, fftSize = 2048): Anal
   return analyser;
 }
 
-export function renderWaveform(context: CanvasRenderingContext2D, dataArray: Uint8Array, color = '#ff0000'): void {
-  const { width, height } = context.canvas;
-
-  context.beginPath();
-  context.moveTo(0, height / 2);
-
-  const sliceWidth = (width * 1.0) / dataArray.length;
-  let x = 0;
-
-  for (let i = 0; i < dataArray.length; i++) {
-    const v = dataArray[i] / 128.0;
-    const y = (v * height) / 2;
-
-    if (i === 0) {
-      context.moveTo(x, y);
-    } else {
-      context.lineTo(x, y);
-    }
-
-    x += sliceWidth;
-  }
-
-  context.lineTo(width, height / 2);
-  context.strokeStyle = color;
-  context.stroke();
-}
-
 export function createWaveformRenderer(audioContext: AudioContext, stream: MediaStream, color: string) {
   const getDataArray = createGetDataArray(audioContext, stream);
 
@@ -109,4 +82,31 @@ export function getAmplitude(timeDomainData: Uint8Array) {
   }
 
   return Math.sqrt(sumSquares / timeDomainData.length);
+}
+
+export function renderWaveform(context: CanvasRenderingContext2D, dataArray: Uint8Array, color = '#ff0000'): void {
+  const { width, height } = context.canvas;
+
+  context.beginPath();
+  context.moveTo(0, height / 2);
+
+  const sliceWidth = (width * 1.0) / dataArray.length;
+  let x = 0;
+
+  for (let i = 0; i < dataArray.length; i++) {
+    const v = dataArray[i] / 128.0;
+    const y = (v * height) / 2;
+
+    if (i === 0) {
+      context.moveTo(x, y);
+    } else {
+      context.lineTo(x, y);
+    }
+
+    x += sliceWidth;
+  }
+
+  context.lineTo(width, height / 2);
+  context.strokeStyle = color;
+  context.stroke();
 }
