@@ -46,13 +46,6 @@ export async function captureAudioStream(deviceId: string): Promise<MediaStream>
   });
 }
 
-export function createAnalyser(audioContext: AudioContext, fftSize = 2048): AnalyserNode {
-  const analyser = audioContext.createAnalyser();
-  analyser.fftSize = fftSize;
-
-  return analyser;
-}
-
 export function createWaveformRenderer(audioContext: AudioContext, stream: MediaStream, color: string) {
   const getDataArray = createGetDataArray(audioContext, stream);
 
@@ -61,9 +54,11 @@ export function createWaveformRenderer(audioContext: AudioContext, stream: Media
   };
 }
 
-export function createGetDataArray(audioContext: AudioContext, stream: MediaStream) {
+export function createGetDataArray(audioContext: AudioContext, stream: MediaStream, fftSize = 2048) {
   const sourceNode = audioContext.createMediaStreamSource(stream);
-  const analyser = createAnalyser(audioContext);
+  const analyser = audioContext.createAnalyser();
+  analyser.fftSize = fftSize;
+
   const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
   sourceNode.connect(analyser);
