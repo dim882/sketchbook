@@ -28,9 +28,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     canvasContext.clearRect(0, 0, width, height);
 
-    const yTranslate = -height / 3;
-
-    translateY(canvasContext, yTranslate, () => {
+    translateY(canvasContext, -height / 3, () => {
       waveRenderers.forEach((renderWave, i) => {
         // prettier-ignore
         translateY(
