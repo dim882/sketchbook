@@ -51,18 +51,19 @@ export function createWaveformRenderer(audioContext: AudioContext, stream: Media
     // prettier-ignore
     renderWaveform(
       context, 
-      createGetDataArray(audioContext, stream)(), 
+      createTimeDomainData(audioContext, stream)(), 
       color
     );
   };
 }
 
-export function createGetDataArray(audioContext: AudioContext, stream: MediaStream, fftSize = 2048) {
+export function createTimeDomainData(audioContext: AudioContext, stream: MediaStream, fftSize = 2048) {
   const sourceNode = audioContext.createMediaStreamSource(stream);
+
   const analyser = audioContext.createAnalyser();
   analyser.fftSize = fftSize;
-  const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
+  const dataArray = new Uint8Array(analyser.frequencyBinCount);
   sourceNode.connect(analyser);
 
   return () => {
