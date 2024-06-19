@@ -47,10 +47,13 @@ export async function captureAudioStream(deviceId: string): Promise<MediaStream>
 }
 
 export function createWaveformRenderer(audioContext: AudioContext, stream: MediaStream, color: string) {
-  const getDataArray = createGetDataArray(audioContext, stream);
-
   return (context: CanvasRenderingContext2D, _t: number) => {
-    renderWaveform(context, getDataArray(), color);
+    // prettier-ignore
+    renderWaveform(
+      context, 
+      createGetDataArray(audioContext, stream)(), 
+      color
+    );
   };
 }
 
@@ -58,7 +61,6 @@ export function createGetDataArray(audioContext: AudioContext, stream: MediaStre
   const sourceNode = audioContext.createMediaStreamSource(stream);
   const analyser = audioContext.createAnalyser();
   analyser.fftSize = fftSize;
-
   const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
   sourceNode.connect(analyser);
