@@ -1,5 +1,6 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { exec } from 'child_process';
 
 const sketchesDir = path.join(__dirname, '../', 'sketches');
 const dirs = fs.readdirSync(sketchesDir);
@@ -24,7 +25,7 @@ if (commands.length) {
   const concurrentCommand = `npx concurrently "${commands.join('" "')}"`;
   console.log('Running:', concurrentCommand);
 
-  require('child_process').exec(concurrentCommand, (error, stdout, stderr) => {
+  exec(concurrentCommand, (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
       return;
