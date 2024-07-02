@@ -47,11 +47,13 @@ export async function captureAudioStream(deviceId: string): Promise<MediaStream>
 }
 
 export function createWaveformRenderer(audioContext: AudioContext, stream: MediaStream, color: string) {
+  const getDataArray = createTimeDomainData(audioContext, stream);
+
   return (context: CanvasRenderingContext2D, _t: number) => {
     // prettier-ignore
     renderWaveform(
       context, 
-      createTimeDomainData(audioContext, stream)(), 
+      getDataArray(), 
       color
     );
   };
@@ -64,6 +66,7 @@ export function createTimeDomainData(audioContext: AudioContext, stream: MediaSt
   analyser.fftSize = fftSize;
 
   const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
   sourceNode.connect(analyser);
 
   return () => {
