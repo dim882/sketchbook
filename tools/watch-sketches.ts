@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { exec } from 'child_process';
+import concurrently from 'concurrently';
 
 const sketchesDir = path.join(__dirname, '../', 'sketches');
 const dirs = fs.readdirSync(sketchesDir);
@@ -13,7 +13,10 @@ const commands = dirs
       const packageJson = require(packageJsonPath);
 
       if (packageJson.scripts && packageJson.scripts.watch) {
-        return `yarn workspace ${packageJson.name} watch`;
+        return {
+          command: `yarn workspace ${packageJson.name} watch`,
+          name: packageJson.name,
+        };
       }
     }
 
@@ -22,18 +25,13 @@ const commands = dirs
   .filter(Boolean);
 
 if (commands.length) {
-  const concurrentCommand = `npx concurrently "${commands.join('" "')}"`;
-  console.log('Running:', concurrentCommand);
-
-  exec(concurrentCommand, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
-
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
-  });
+  concurrently(commands)
+    .result.then((result) => {
+      console.log('All commands completed successfully:', result);
+    })
+    .catch((error) => {
+      console.error('Some commands failed:', error);
+    });
 } else {
   console.log('No watch scripts found to run.');
 }

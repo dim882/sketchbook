@@ -15,6 +15,7 @@
     "clone": "bun clone-sketch.ts"
   },
   "devDependencies": {
-    "@types/node": "^20.12.11"
+    "@types/node": "^20.12.11",
+    "concurrently": "^8.2.2"
   }
 }
