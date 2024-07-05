@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
   pipe(
     () => document.querySelector('sc-color-picker'),
     addEvent('input', (e: CustomEvent) => console.log('input', e)),
-    addEvent('change', (e: CustomEvent) => console.log('change', e)),
+    addEvent('change', (e: CustomEvent) => console.log('change', e.detail.value)),
   )();
 
   render(context, color);
