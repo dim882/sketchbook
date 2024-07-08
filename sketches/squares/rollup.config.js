@@ -6,12 +6,14 @@ export default {
   input: 'squares.ts',
   output: {
     file: 'dist/bundle.js',
-    format: 'module',
+    format: 'es',
     sourcemap: true,
   },
   plugins: [
     nodeResolve(),
-    typescript(),
+    typescript({
+      include: ['../../lib/**/*.ts', '**/*.ts'],
+    }),
     copy({
       targets: [
         { src: '*.css', dest: 'dist' },
