@@ -6,7 +6,7 @@ import { pipe } from 'ramda';
 import { Box, Either, fromNullable, tryCatch } from '../lib/FPUtils';
 
 const app = express();
-const port = 3000;
+const port = 2000;
 
 const sketchesPath = path.join(__dirname, '../sketches');
 
