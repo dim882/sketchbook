@@ -25,4 +25,7 @@ function render(context: CanvasRenderingContext2D, baseColor: string) {
   const center: I2DTuple = [width / 2, height / 2];
 
   const fuzzer = makeFuzzer({ context, prng });
+
+  context.strokeStyle = baseColor;
+  fuzzer(...center);
 }
