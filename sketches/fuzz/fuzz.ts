@@ -1,6 +1,6 @@
 import { getFloat } from '@dim882/lib';
 import { pipe, curry, head } from 'ramda';
-import { IPointTuple, getInteger, addEvent, log } from './fuzz.utils';
+import { I2DTuple, getInteger, addEvent, log } from './fuzz.utils';
 
 const prng = Math.random;
 
@@ -22,5 +22,5 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function render(context: CanvasRenderingContext2D, baseColor: string) {
   const { width, height } = context.canvas;
-  const center: IPointTuple = [width / 2, height / 2];
+  const center: I2DTuple = [width / 2, height / 2];
 }
