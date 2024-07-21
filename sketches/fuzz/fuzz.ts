@@ -28,7 +28,7 @@ function render(context: CanvasRenderingContext2D, baseColor: string) {
   context.fillStyle = `#000`;
   context.fillRect(0, 0, width, height);
 
-  context.strokeStyle = 'rgba(100, 0 , 0, .3)';
+  context.strokeStyle = 'lch(50% 50 50 / .2)';
 
   for (let i = 0; i < 80; i++) {
     fuzzer(...center);
