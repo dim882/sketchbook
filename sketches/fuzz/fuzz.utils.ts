@@ -104,3 +104,5 @@ const makeGaussianFactory = (generateRandomNumber: PseudoRandomNumberGenerator, 
     }
   };
 };
+
+export const getGridIndex = (x: number, y: number, columnCount: number) => x + y * columnCount;
