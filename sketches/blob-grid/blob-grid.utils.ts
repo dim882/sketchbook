@@ -117,10 +117,10 @@ export function applyBlur(context: CanvasRenderingContext2D, BLUR: number) {
   context.filter = `blur(${BLUR}px)`;
 }
 
-export function createGrid(width: number, height: number, size: number): IPointTuple[] {
+export function createGrid(width: number, height: number, step: number): IPointTuple[] {
   // prettier-ignore
-  return range(0, width, size)
-    .flatMap((x) => range(0, height, size)
+  return range(0, width, step)
+    .flatMap((x) => range(0, height, step)
     .map((y) => [x, y] as IPointTuple));
 }
 
