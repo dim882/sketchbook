@@ -26,6 +26,12 @@ function render(context: CanvasRenderingContext2D, baseColor: string) {
 
   const fuzzer = makeFuzzer({ context, prng });
 
-  context.strokeStyle = baseColor;
-  fuzzer(...center);
+  context.fillStyle = `#000`;
+  context.fillRect(0, 0, width, height);
+
+  context.strokeStyle = 'rgba(100, 0 , 0, .3)';
+
+  for (let i = 0; i < 80; i++) {
+    fuzzer(...center);
+  }
 }
