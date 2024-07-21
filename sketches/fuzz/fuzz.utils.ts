@@ -1,3 +1,5 @@
+import { hsl, formatHsl, Hsl } from 'culori';
+
 export type PseudoRandomNumberGenerator = () => number;
 export type I2DTuple = [number, number];
 export type IRange = [lower: number, upper: number];
