@@ -25,14 +25,14 @@ export const log =
 export function makeFuzzer({
   context,
   prng,
-  radius,
-  iterations,
+  radius = 200,
+  iterations = 30,
   lengthRange = [0.4, 0.5],
 }: {
   context: CanvasRenderingContext2D;
   prng: PseudoRandomNumberGenerator;
-  radius: number;
-  iterations: number;
+  radius?: number;
+  iterations?: number;
   lengthRange?: IRange;
 }) {
   const [lengthLower, lengthHigher] = lengthRange;
