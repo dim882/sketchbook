@@ -1,3 +1,4 @@
+import { createNoise2D } from 'simplex-noise';
 import { pipe } from 'ramda';
 import { I2DTuple, addEvent, log, makeFuzzer } from './fuzz.utils';
 
@@ -6,6 +7,7 @@ const prng = Math.random;
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
+  const noise = createNoise2D();
 
   let color = localStorage.getItem('color');
 
