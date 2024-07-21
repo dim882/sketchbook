@@ -1,6 +1,5 @@
-import { getFloat } from '@dim882/lib';
-import { pipe, curry, head } from 'ramda';
-import { I2DTuple, getInteger, addEvent, log, makeFuzzer } from './fuzz.utils';
+import { pipe } from 'ramda';
+import { I2DTuple, addEvent, log, makeFuzzer } from './fuzz.utils';
 
 const prng = Math.random;
 
