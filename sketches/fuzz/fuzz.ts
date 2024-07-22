@@ -1,6 +1,6 @@
 import { createNoise2D, NoiseFunction2D } from 'simplex-noise';
 import { pipe } from 'ramda';
-import { I2DTuple, addEvent, applyNoise, log, makeFuzzer, renderDebugNoise } from './fuzz.utils';
+import { I2DTuple, IDrawNoise, addEvent, applyNoise, log, makeFuzzer, renderDebugNoise } from './fuzz.utils';
 
 const prng = Math.random;
 
@@ -36,9 +36,26 @@ function render({ contexts, baseColor, noise2D }: IRenderArgs) {
 
   renderDebugNoise({ width, height, noise2D, context: noiseDebugContext, scale: 500 });
 
-  const drawFuzz = makeFuzzer({ context: mainContext, prng });
+  const drawFuzz = makeFuzzer({ context: mainContext, prng, iterations: 5, radius: 50 });
 
-  // applyNoise({ context: mainContext, width, height, noise2D, scale: 50 });
+  mainContext.strokeStyle = 'lch(50% 50 50 / .2)';
+  const fuzzFromNoise: IDrawNoise = ({ value, context, x, y }) => {
+    const normalValue = Math.floor((value + 1) * 50); // Normalize to [0, 100]
+    // console.log(normalValue);
+
+    if (normalValue > 80 && normalValue < 100) {
+      drawFuzz(x, y);
+    }
+  };
+
+  applyNoise({
+    context: mainContext,
+    width,
+    height,
+    noise2D,
+    scale: 50,
+    callback: fuzzFromNoise,
+  });
   // mainContext.fillStyle = `#000`;
   // mainContext.fillRect(0, 0, width, height);
   // mainContext.strokeStyle = 'lch(50% 50 50 / .2)';
