@@ -36,28 +36,27 @@ function render({ contexts, baseColor, noise2D }: IRenderArgs) {
 
   renderDebugNoise({ width, height, noise2D, context: noiseDebugContext, scale: 500 });
 
-  const drawFuzz = makeFuzzer({ context: mainContext, prng, iterations: 5, radius: 50 });
+  const drawFuzz = makeFuzzer({ context: mainContext, prng, iterations: 2, radius: 100 });
 
-  mainContext.strokeStyle = 'lch(50% 50 50 / .2)';
+  mainContext.strokeStyle = 'lch(50% 50 50 / .03)';
   const fuzzFromNoise: IDrawNoise = ({ value, context, x, y }) => {
     const normalValue = Math.floor((value + 1) * 50); // Normalize to [0, 100]
-    // console.log(normalValue);
 
-    if (normalValue > 80 && normalValue < 100) {
+    if (normalValue > 90 && normalValue < 100) {
       drawFuzz(x, y);
     }
   };
 
+  mainContext.fillStyle = `#000`;
+  mainContext.fillRect(0, 0, width, height);
   applyNoise({
     context: mainContext,
     width,
     height,
     noise2D,
-    scale: 50,
+    scale: 500,
     callback: fuzzFromNoise,
   });
-  // mainContext.fillStyle = `#000`;
-  // mainContext.fillRect(0, 0, width, height);
   // mainContext.strokeStyle = 'lch(50% 50 50 / .2)';
 
   // for (let i = 0; i < 80; i++) {
