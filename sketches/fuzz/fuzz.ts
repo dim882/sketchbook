@@ -65,8 +65,10 @@ function renderDebugNoise({
       const value = noise2D(x / scale, y / scale);
       const color = Math.floor((value + 1) * 128); // Normalize to [0, 255]
 
-      noiseDebugContext.fillStyle = `rgb(${color}, ${color}, ${color})`;
-      noiseDebugContext.fillRect(x, y, 1, 1);
+      if (color > 180 && color < 255) {
+        noiseDebugContext.fillStyle = `rgb(${color}, ${color}, ${color})`;
+        noiseDebugContext.fillRect(x, y, 1, 1);
+      }
     }
   }
 }
