@@ -34,7 +34,7 @@ function render({ contexts, baseColor, noise2D }: IRenderArgs) {
   const { width, height } = mainContext.canvas;
   const center: I2DTuple = [width / 2, height / 2];
 
-  renderDebugNoise({ width, height, noise2D, noiseDebugContext });
+  renderDebugNoise({ width, height, noise2D, noiseDebugContext, scale: 500 });
 
   const drawFuzz = makeFuzzer({ context: mainContext, prng });
 
@@ -52,16 +52,19 @@ function renderDebugNoise({
   height,
   noise2D,
   noiseDebugContext,
+  scale = 100,
 }: {
   width: number;
   height: number;
   noise2D: NoiseFunction2D;
   noiseDebugContext: CanvasRenderingContext2D;
+  scale?: number;
 }) {
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
-      const value = noise2D(x / 100, y / 100); // Adjust the scale factor as needed
+      const value = noise2D(x / scale, y / scale);
       const color = Math.floor((value + 1) * 128); // Normalize to [0, 255]
+
       noiseDebugContext.fillStyle = `rgb(${color}, ${color}, ${color})`;
       noiseDebugContext.fillRect(x, y, 1, 1);
     }
