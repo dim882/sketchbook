@@ -1,8 +1,14 @@
-import { createNoise2D } from 'simplex-noise';
+import { createNoise2D, NoiseFunction2D } from 'simplex-noise';
 import { pipe } from 'ramda';
 import { I2DTuple, addEvent, log, makeFuzzer } from './fuzz.utils';
 
 const prng = Math.random;
+
+interface IRenderArgs {
+  contexts: CanvasRenderingContext2D[];
+  baseColor: string;
+  noise: NoiseFunction2D;
+}
 
 window.addEventListener('DOMContentLoaded', () => {
   const contexts = Array.from(document.querySelectorAll('canvas')).map((canvas) => canvas.getContext('2d'));
@@ -20,10 +26,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   console.log('hi!');
 
-  render(contexts, color);
+  render({ contexts, baseColor: color, noise });
 });
 
-function render(contexts: CanvasRenderingContext2D[], baseColor: string) {
+function render({ contexts, baseColor, noise }: IRenderArgs) {
   const [mainContext, ...scratchContexts] = contexts;
   const { width, height } = mainContext.canvas;
   const center: I2DTuple = [width / 2, height / 2];
