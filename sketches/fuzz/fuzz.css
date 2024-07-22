@@ -1,0 +1,64 @@
+main {
+  background-color: #ccc;
+  display: grid;
+  place-items: center;
+}
+
+aside {
+  background-color: #333;
+}
+
+canvas {
+  border: 1px solid black;
+  width: 1000px;
+  height: 1000px;
+  margin: 0;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #ccc;
+}
+
+canvas {
+  border: 1px solid black;
+  width: 1000px;
+  height: 1000px;
+  margin: 0;
+}
+
+/* Basic styling for tabs */
+.tab-links li {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.tab-links a {
+  padding: 5px 10px;
+  display: inline-block;
+  background: #eee;
+  color: #000;
+  text-decoration: none;
+}
+
+.tab-links a:hover {
+  background-color: #ddd;
+}
+
+.tab-content {
+  display: none;
+  padding: 20px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+}
+
+:target {
+  display: block;
+}
+
+color-disc {
+  height: 220px;
+}

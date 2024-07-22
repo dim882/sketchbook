@@ -40,7 +40,7 @@ export function makeFuzzer({
   const [lengthLower, lengthHigher] = lengthRange;
   const getGaussian = makeGaussianFactory(prng);
 
-  return function makeFuzz(x: number, y: number, strokeStyle?: string) {
+  return function drawFuzz(x: number, y: number, strokeStyle?: string) {
     for (let i = 0; i < iterations; i++) {
       // prettier-ignore
       const center: I2DTuple = [

@@ -5,8 +5,8 @@ import { I2DTuple, addEvent, log, makeFuzzer } from './fuzz.utils';
 const prng = Math.random;
 
 window.addEventListener('DOMContentLoaded', () => {
-  const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-  const context = canvas.getContext('2d');
+  const contexts = Array.from(document.querySelectorAll('canvas')).map((canvas) => canvas.getContext('2d'));
+  console.log({ contexts });
   const noise = createNoise2D();
 
   let color = localStorage.getItem('color');
@@ -18,19 +18,22 @@ window.addEventListener('DOMContentLoaded', () => {
     addEvent('change', (e: CustomEvent) => console.log('change', e.detail.value)),
   )();
 
-  render(context, color);
+  console.log('hi!');
+
+  render(contexts, color);
 });
 
-function render(context: CanvasRenderingContext2D, baseColor: string) {
-  const { width, height } = context.canvas;
+function render(contexts: CanvasRenderingContext2D[], baseColor: string) {
+  const [mainContext, ...scratchContexts] = contexts;
+  const { width, height } = mainContext.canvas;
   const center: I2DTuple = [width / 2, height / 2];
 
-  const fuzzer = makeFuzzer({ context, prng });
+  const fuzzer = makeFuzzer({ context: mainContext, prng });
 
-  context.fillStyle = `#000`;
-  context.fillRect(0, 0, width, height);
+  mainContext.fillStyle = `#000`;
+  mainContext.fillRect(0, 0, width, height);
 
-  context.strokeStyle = 'lch(50% 50 50 / .2)';
+  mainContext.strokeStyle = 'lch(50% 50 50 / .2)';
 
   for (let i = 0; i < 80; i++) {
     fuzzer(...center);

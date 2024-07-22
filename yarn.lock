@@ -3987,6 +3987,11 @@ simple-update-notifier@^2.0.0:
   dependencies:
     semver "^7.5.3"
 
+simplex-noise@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/simplex-noise/-/simplex-noise-4.0.2.tgz#f8e0a7848b0113a4a0ee346e48717f2b703f0ed3"
+  integrity sha512-E3c6BbcFcwyxExp5lorMYP3tZqSfs4iHcNzv2mRJIP4xf3G4r77b9YE8ceIt1ntyTu2VFFISunxt2YX9CpAf+w==
+
 slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
