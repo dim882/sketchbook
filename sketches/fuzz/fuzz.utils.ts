@@ -119,7 +119,7 @@ export function renderDebugNoise({
   context: CanvasRenderingContext2D;
   scale?: number;
 }) {
-  applyNoise({ context, width, height, noise2D, scale });
+  applyNoise({ context, width, height, noise2D, scale, callback: drawNarrowBand });
 }
 
 export interface IApplyNoiseArgs {
@@ -128,14 +128,15 @@ export interface IApplyNoiseArgs {
   noise2D: NoiseFunction2D;
   scale: number;
   context: CanvasRenderingContext2D;
+  callback: IDrawNoise;
 }
 
-export function applyNoise({ width, height, noise2D, scale, context }: IApplyNoiseArgs) {
+export function applyNoise({ width, height, noise2D, scale, context, callback }: IApplyNoiseArgs) {
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
       const value = noise2D(x / scale, y / scale);
 
-      drawNarrowBand({ value, context, x, y });
+      callback({ value, context, x, y });
     }
   }
 }
