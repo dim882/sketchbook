@@ -34,7 +34,7 @@ function render({ contexts, baseColor, noise2D }: IRenderArgs) {
   const { width, height } = mainContext.canvas;
   const center: I2DTuple = [width / 2, height / 2];
 
-  renderDebugNoise({ width, height, noise2D, noiseDebugContext, scale: 500 });
+  renderDebugNoise({ width, height, noise2D, context: noiseDebugContext, scale: 500 });
 
   const drawFuzz = makeFuzzer({ context: mainContext, prng });
 
@@ -51,24 +51,48 @@ function renderDebugNoise({
   width,
   height,
   noise2D,
-  noiseDebugContext,
+  context,
   scale = 100,
 }: {
   width: number;
   height: number;
   noise2D: NoiseFunction2D;
-  noiseDebugContext: CanvasRenderingContext2D;
+  context: CanvasRenderingContext2D;
   scale?: number;
 }) {
+  iteratePixels({ context, width, height, noise2D, scale });
+}
+
+interface IInteratePixelsArgs {
+  width: number;
+  height: number;
+  noise2D: NoiseFunction2D;
+  scale: number;
+  context: CanvasRenderingContext2D;
+}
+
+function iteratePixels({ width, height, noise2D, scale, context }: IInteratePixelsArgs) {
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
       const value = noise2D(x / scale, y / scale);
-      const color = Math.floor((value + 1) * 128); // Normalize to [0, 255]
 
-      if (color > 180 && color < 255) {
-        noiseDebugContext.fillStyle = `rgb(${color}, ${color}, ${color})`;
-        noiseDebugContext.fillRect(x, y, 1, 1);
-      }
+      drawNoise({ value, context, x, y });
     }
+  }
+}
+
+interface IDrawNoiseArgs {
+  value: number;
+  context: CanvasRenderingContext2D;
+  x: number;
+  y: number;
+}
+
+function drawNoise({ value, context, x, y }: IDrawNoiseArgs) {
+  const color = Math.floor((value + 1) * 128); // Normalize to [0, 255]
+
+  if (color > 180 && color < 255) {
+    context.fillStyle = `rgb(${color}, ${color}, ${color})`;
+    context.fillRect(x, y, 1, 1);
   }
 }
