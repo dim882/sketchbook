@@ -28,7 +28,7 @@ function render(contexts: CanvasRenderingContext2D[], baseColor: string) {
   const { width, height } = mainContext.canvas;
   const center: I2DTuple = [width / 2, height / 2];
 
-  const fuzzer = makeFuzzer({ context: mainContext, prng });
+  const drawFuzz = makeFuzzer({ context: mainContext, prng });
 
   mainContext.fillStyle = `#000`;
   mainContext.fillRect(0, 0, width, height);
@@ -36,6 +36,6 @@ function render(contexts: CanvasRenderingContext2D[], baseColor: string) {
   mainContext.strokeStyle = 'lch(50% 50 50 / .2)';
 
   for (let i = 0; i < 80; i++) {
-    fuzzer(...center);
+    drawFuzz(...center);
   }
 }
