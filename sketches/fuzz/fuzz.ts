@@ -60,10 +60,10 @@ function renderDebugNoise({
   context: CanvasRenderingContext2D;
   scale?: number;
 }) {
-  iteratePixels({ context, width, height, noise2D, scale });
+  applyNoise({ context, width, height, noise2D, scale });
 }
 
-interface IInteratePixelsArgs {
+interface IApplyNoiseArgs {
   width: number;
   height: number;
   noise2D: NoiseFunction2D;
@@ -71,7 +71,7 @@ interface IInteratePixelsArgs {
   context: CanvasRenderingContext2D;
 }
 
-function iteratePixels({ width, height, noise2D, scale, context }: IInteratePixelsArgs) {
+function applyNoise({ width, height, noise2D, scale, context }: IApplyNoiseArgs) {
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
       const value = noise2D(x / scale, y / scale);
