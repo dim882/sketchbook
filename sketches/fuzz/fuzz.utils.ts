@@ -1,4 +1,5 @@
 import { hsl, formatHsl, Hsl } from 'culori';
+import { NoiseFunction2D } from 'simplex-noise';
 
 export type PseudoRandomNumberGenerator = () => number;
 export type I2DTuple = [number, number];
@@ -105,4 +106,54 @@ const makeGaussianFactory = (generateRandomNumber: PseudoRandomNumberGenerator, 
   };
 };
 
-export const getGridIndex = (x: number, y: number, columnCount: number) => x + y * columnCount;
+export function renderDebugNoise({
+  width,
+  height,
+  noise2D,
+  context,
+  scale = 100,
+}: {
+  width: number;
+  height: number;
+  noise2D: NoiseFunction2D;
+  context: CanvasRenderingContext2D;
+  scale?: number;
+}) {
+  applyNoise({ context, width, height, noise2D, scale });
+}
+
+export interface IApplyNoiseArgs {
+  width: number;
+  height: number;
+  noise2D: NoiseFunction2D;
+  scale: number;
+  context: CanvasRenderingContext2D;
+}
+
+export function applyNoise({ width, height, noise2D, scale, context }: IApplyNoiseArgs) {
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      const value = noise2D(x / scale, y / scale);
+
+      drawNarrowBand({ value, context, x, y });
+    }
+  }
+}
+
+export interface IDrawNoiseArgs {
+  value: number;
+  context: CanvasRenderingContext2D;
+  x: number;
+  y: number;
+}
+
+export type IDrawNoise = (args: IDrawNoiseArgs) => void;
+
+export const drawNarrowBand: IDrawNoise = ({ value, context, x, y }) => {
+  const color = Math.floor((value + 1) * 128); // Normalize to [0, 255]
+
+  if (color > 150 && color < 255) {
+    context.fillStyle = `rgb(${color}, ${color}, ${color})`;
+    context.fillRect(x, y, 1, 1);
+  }
+};
