@@ -36,13 +36,13 @@ function render({ contexts, baseColor, noise2D }: IRenderArgs) {
 
   renderDebugNoise({ width, height, noise2D, context: noiseDebugContext, scale: 500 });
 
-  const drawFuzz = makeFuzzer({ context: mainContext, prng, iterations: 2, radius: 100 });
+  const drawFuzz = makeFuzzer({ context: mainContext, prng, iterations: 1, radius: 150 });
 
-  mainContext.strokeStyle = 'lch(50% 50 50 / .03)';
+  mainContext.strokeStyle = 'lch(50% 50 50 / .02)';
   const fuzzFromNoise: IDrawNoise = ({ value, context, x, y }) => {
     const normalValue = Math.floor((value + 1) * 50); // Normalize to [0, 100]
 
-    if (normalValue > 90 && normalValue < 100) {
+    if (normalValue > 60 && normalValue < 90) {
       drawFuzz(x, y);
     }
   };
