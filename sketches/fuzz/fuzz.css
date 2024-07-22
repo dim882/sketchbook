@@ -1,3 +1,11 @@
+body {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #ccc;
+}
+
 main {
   background-color: #ccc;
   display: grid;
@@ -6,21 +14,6 @@ main {
 
 aside {
   background-color: #333;
-}
-
-canvas {
-  border: 1px solid black;
-  width: 1000px;
-  height: 1000px;
-  margin: 0;
-}
-
-body {
-  display: grid;
-  place-items: center;
-  height: 100vh;
-  margin: 0;
-  background-color: #ccc;
 }
 
 canvas {
