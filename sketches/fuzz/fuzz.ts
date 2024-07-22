@@ -7,7 +7,7 @@ const prng = Math.random;
 interface IRenderArgs {
   contexts: CanvasRenderingContext2D[];
   baseColor: string;
-  noise: NoiseFunction2D;
+  noise2D: NoiseFunction2D;
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -26,19 +26,26 @@ window.addEventListener('DOMContentLoaded', () => {
 
   console.log('hi!');
 
-  render({ contexts, baseColor: color, noise });
+  render({ contexts, baseColor: color, noise2D: noise });
 });
 
-function render({ contexts, baseColor, noise }: IRenderArgs) {
-  const [mainContext, ...scratchContexts] = contexts;
+function render({ contexts, baseColor, noise2D }: IRenderArgs) {
+  const [mainContext, noiseDebugContext, ...scratchContexts] = contexts;
   const { width, height } = mainContext.canvas;
   const center: I2DTuple = [width / 2, height / 2];
 
+  for (let x = 0; x < width; x++) {
+    for (let y = 0; y < height; y++) {
+      const value = noise2D(x / 100, y / 100); // Adjust the scale factor as needed
+      const color = Math.floor((value + 1) * 128); // Normalize to [0, 255]
+      noiseDebugContext.fillStyle = `rgb(${color}, ${color}, ${color})`;
+      noiseDebugContext.fillRect(x, y, 1, 1);
+    }
+  }
   const drawFuzz = makeFuzzer({ context: mainContext, prng });
 
   mainContext.fillStyle = `#000`;
   mainContext.fillRect(0, 0, width, height);
-
   mainContext.strokeStyle = 'lch(50% 50 50 / .2)';
 
   for (let i = 0; i < 80; i++) {
