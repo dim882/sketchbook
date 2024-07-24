@@ -153,8 +153,9 @@ export type IDrawNoise = (args: IDrawNoiseArgs) => void;
 export const drawNarrowBand: IDrawNoise = ({ value, context, x, y }) => {
   const color = Math.floor((value + 1) * 128); // Normalize to [0, 255]
 
-  if (color > 150 && color < 255) {
-    context.fillStyle = `rgb(${color}, ${color}, ${color})`;
+  if (color > 160 && color < 170) {
+    // context.fillStyle = `rgb(${color}, ${color}, ${color})`;
+    context.fillStyle = '#000';
     context.fillRect(x, y, 1, 1);
   }
 };

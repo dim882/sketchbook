@@ -42,8 +42,13 @@ function render({ contexts, baseColor, noise2D }: IRenderArgs) {
   const fuzzFromNoise: IDrawNoise = ({ value, context, x, y }) => {
     const normalValue = Math.floor((value + 1) * 50); // Normalize to [0, 100]
 
-    if (normalValue > 60 && normalValue < 90) {
+    if (normalValue > 60 && normalValue < 80) {
       drawFuzz(x, y);
+    }
+
+    if (normalValue > 73 && normalValue < 78) {
+      context.fillStyle = '#fff';
+      context.fillRect(x, y, 1, 1);
     }
   };
 
