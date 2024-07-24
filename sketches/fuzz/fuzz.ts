@@ -47,7 +47,7 @@ function render({ contexts, baseColor, noise2D }: IRenderArgs) {
     }
 
     if (normalValue > 73 && normalValue < 78) {
-      context.fillStyle = '#fff';
+      context.fillStyle = '#000';
       context.fillRect(x, y, 1, 1);
     }
   };
