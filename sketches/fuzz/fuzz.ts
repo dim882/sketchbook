@@ -46,7 +46,7 @@ function render({ contexts, baseColor, noise2D }: IRenderArgs) {
       drawFuzz(x, y);
     }
 
-    if (normalValue > 73 && normalValue < 78) {
+    if (normalValue > 60) {
       context.fillStyle = '#000';
       context.fillRect(x, y, 1, 1);
     }
