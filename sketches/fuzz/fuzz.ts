@@ -61,12 +61,7 @@ function render({ contexts, baseColor, noise2D }: IRenderArgs) {
     width,
     height,
     noise2D,
-    scale: 500,
+    scale: 800,
     callback: fuzzFromNoise,
   });
-  // mainContext.strokeStyle = 'lch(50% 50 50 / .2)';
-
-  // for (let i = 0; i < 80; i++) {
-  //   drawFuzz(...center);
-  // }
 }
