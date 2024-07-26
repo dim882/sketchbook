@@ -17,8 +17,7 @@ function render(context: CanvasRenderingContext2D) {
   const center: IPointTuple = [width / 2, height / 2];
 
   const formHue = getInteger(prng, 0, 270);
-  const backgroundHue = formHue + 180;
-  context.fillStyle = `lch(99% 10% ${backgroundHue})`;
+  context.fillStyle = '#fff';
   context.fillRect(0, 0, width, height);
 
   let radius = 20;
