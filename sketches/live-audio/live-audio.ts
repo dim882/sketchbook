@@ -15,7 +15,9 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
 
-  const audioDevices = await getAudioDevices('ES-9');
+  const audioDevices = await getAudioDevices('QuickTime');
+  console.log(audioDevices);
+
   const audioContext = new AudioContext();
 
   const waveRenderers = await Promise.all(

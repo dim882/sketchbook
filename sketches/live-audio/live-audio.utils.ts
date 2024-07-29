@@ -23,6 +23,8 @@ export function getAudioDevices(labelPrefix: string) {
   return navigator.mediaDevices
     .enumerateDevices()
     .then((devices) => {
+      // console.table(devices.sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0)));
+
       return devices
         .filter((device) => device.label.match(`${labelPrefix}:`))
         .sort((a, b) => (a.label < b.label ? -1 : 0));
