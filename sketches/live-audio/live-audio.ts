@@ -20,7 +20,12 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const waveRenderers = await Promise.all(
     audioDevices.map(async (device, i) =>
-      createWaveformRenderer(audioContext, await captureAudioStream(device.deviceId), colors[i])
+      // prettier-ignore
+      createWaveformRenderer(
+        audioContext, 
+        await captureAudioStream(device.deviceId), 
+        colors[i]
+      )
     )
   );
 
@@ -33,10 +38,10 @@ window.addEventListener('DOMContentLoaded', async () => {
       waveRenderers.forEach((renderWave, i) => {
         // prettier-ignore
         translateY(
-        canvasContext, 
-        (height / 4) * i, 
-        () => renderWave(canvasContext, t)
-      );
+          canvasContext, 
+          (height / 4) * i, 
+          () => renderWave(canvasContext, t)
+        );
       });
     });
   };
