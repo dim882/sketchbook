@@ -3,17 +3,17 @@ body {
   height: 100vh;
   margin: 0;
   background-color: #ccc;
+  grid-template-columns: 1fr auto;
 }
 
 main {
   display: grid;
   place-items: center;
   background-color: #ccc;
-  display: grid;
-  place-items: center;
 }
 
 aside {
+  justify-self: end;
   background-color: #333;
 }
 
