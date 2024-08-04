@@ -3,7 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
 
 export default {
-  input: 'fuzz.ts',
+  input: './fuzz.ts',
   output: {
     file: 'dist/bundle.js',
     format: 'es',

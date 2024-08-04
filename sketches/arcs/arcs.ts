@@ -23,7 +23,7 @@ function render(context: CanvasRenderingContext2D) {
   let radius = 20;
   while (radius < width / 2 - PADDING) {
     let arcStartAngle = 0;
-    const arcWidth = getFloat(prng, 10, 80);
+    const arcWidth = getFloat(prng, 1, 40);
 
     while (arcStartAngle < FULL_ROTATION) {
       const lightness = getInteger(prng, 10, 100);
