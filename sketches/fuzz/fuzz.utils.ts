@@ -159,3 +159,9 @@ export const drawNarrowBand: IDrawNoise = ({ value, context, x, y }) => {
     context.fillRect(x, y, 1, 1);
   }
 };
+
+export function getElement<K extends keyof HTMLElementTagNameMap>(selector: K): HTMLElementTagNameMap[K][];
+export function getElement(selector: string): HTMLElement[];
+export function getElement(selector: string) {
+  return Array.from(document.querySelectorAll(selector));
+}
