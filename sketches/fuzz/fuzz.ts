@@ -26,12 +26,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let color = localStorage.getItem('color');
 
-  // prettier-ignore
   pipe(
     () => getElement('sc-color-picker'),
     head,
-    addEvent('input', (e: CustomEvent) => console.log('input', e)),
-    addEvent('change', (e: CustomEvent) => console.log('change', e.detail.value)),
+    addEvent('input', (e) => console.log('input', e)),
+    addEvent('change', (e) => console.log('change', e.detail.value))
   )();
 
   render({ contexts, baseColor: color, noise2D: noise });
