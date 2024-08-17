@@ -2,6 +2,7 @@ import { createNoise2D, NoiseFunction2D } from 'simplex-noise';
 import { pipe, head } from 'ramda';
 import {
   getElement,
+  setup,
   I2DTuple,
   IDrawNoise,
   addEvent,
@@ -19,7 +20,7 @@ interface IRenderArgs {
   noise2D: NoiseFunction2D;
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+setup(() => {
   const contexts = getElement('canvas').map((canvas) => canvas.getContext('2d'));
   console.log({ contexts });
   const noise = createNoise2D();
