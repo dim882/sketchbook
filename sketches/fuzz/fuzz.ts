@@ -1,5 +1,5 @@
 import { createNoise2D, NoiseFunction2D } from 'simplex-noise';
-import { pipe } from 'ramda';
+import { pipe, head } from 'ramda';
 import {
   getElement,
   I2DTuple,
@@ -28,12 +28,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // prettier-ignore
   pipe(
-    () => document.querySelector('sc-color-picker'),
+    () => getElement('sc-color-picker'),
+    head,
     addEvent('input', (e: CustomEvent) => console.log('input', e)),
     addEvent('change', (e: CustomEvent) => console.log('change', e.detail.value)),
   )();
-
-  console.log('hi!');
 
   render({ contexts, baseColor: color, noise2D: noise });
 });
