@@ -1,5 +1,5 @@
 import { getFloat } from '@dim882/lib';
-import { pipe, curry, head } from 'ramda';
+import { pipe } from 'ramda';
 import { IPointTuple, getInteger } from './squares.utils';
 
 const prng = Math.random;
@@ -7,8 +7,6 @@ const prng = Math.random;
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
-
-  console.log('hello');
 
   console.log('random', getFloat(Math.random));
 
@@ -60,5 +58,6 @@ function render(context: CanvasRenderingContext2D, baseColor: string) {
   context.save();
   context.translate(width / 4, height / 4);
   context.fillRect(0, 0, ...center);
+
   context.restore();
 }
