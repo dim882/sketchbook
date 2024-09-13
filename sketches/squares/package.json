@@ -14,8 +14,8 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@dim882/lib": "0.1.0",
     "rambda": "^9.2.0",
-    "ramda": "^0.29.1",
-    "@dim882/lib": "0.1.0"
+    "ramda": "^0.29.1"
   }
 }
