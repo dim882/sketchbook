@@ -1,5 +1,11 @@
-@scope (.outer) to (.inner) {
+@scope (.outer) to (.child) {
   .text {
     color: red;
+  }
+}
+
+@scope (.outer-2) to (.child-2) {
+  :scope {
+    color: purple;
   }
 }
