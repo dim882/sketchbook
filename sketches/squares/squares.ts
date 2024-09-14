@@ -39,7 +39,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function handleToggle(this: HTMLElement, e: CustomEvent) {
-  console.log('toggle!', e.detail.value);
+  console.log('toggle???', e.detail.value);
 }
 
 function render(context: CanvasRenderingContext2D, baseColor: string) {

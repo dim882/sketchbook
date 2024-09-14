@@ -6,12 +6,14 @@ export default {
   input: 'base.ts',
   output: {
     file: 'dist/bundle.js',
-    format: 'module',
+    format: 'es',
     sourcemap: true,
   },
   plugins: [
-    nodeResolve(), 
-    typescript(),
+    nodeResolve(),
+    typescript({
+      include: ['../../lib/**/*.ts', '**/*.ts'],
+    }),
     copy({
       targets: [
         { src: '*.css', dest: 'dist' },
