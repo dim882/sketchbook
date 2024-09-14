@@ -6,7 +6,7 @@ export default {
   input: 'css-scope.ts',
   output: {
     file: 'dist/bundle.js',
-    format: 'es',
+    format: 'module',
     sourcemap: true,
   },
   plugins: [
