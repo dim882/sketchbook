@@ -1,3 +1,5 @@
-.text {
-  color: red;
+@scope (.outer) to (.inner) {
+  .text {
+    color: red;
+  }
 }
