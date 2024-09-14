@@ -1,7 +1,5 @@
-type IPointTuple = [number, number];
+import { IPointTuple } from './css-scope.utils';
 
-// const prng = createPRNG(40502);
-const prng = Math.random;
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;

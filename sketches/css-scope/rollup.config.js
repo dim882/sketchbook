@@ -1,8 +1,9 @@
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import copy from 'rollup-plugin-copy';
 
 export default {
-  input: 'base.ts',
+  input: 'css-scope.ts',
   output: {
     file: 'dist/bundle.js',
     format: 'module',
