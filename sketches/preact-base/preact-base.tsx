@@ -1,6 +1,8 @@
-import { h, render } from 'preact';
-import App2 from './App';
+import { render } from 'preact';
+import App from './App';
+
+console.log('hello!!!??');
 
 window.addEventListener('DOMContentLoaded', () => {
-  render(<App2 />, document.getElementById('app'));
+  render(<App />, document.getElementById('app'));
 });

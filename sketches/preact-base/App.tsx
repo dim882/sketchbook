@@ -1,6 +1,8 @@
 import { h } from 'preact';
 import { JSX } from 'preact/jsx-runtime';
 
+// h;
+
 function App(): JSX.Element {
   return (
     <div>

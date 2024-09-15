@@ -7,20 +7,17 @@ export default {
   input: 'preact-base.tsx',
   output: {
     file: 'dist/bundle.js',
-    format: 'es',
+    format: 'esm',
     sourcemap: true,
   },
   plugins: [
     nodeResolve(),
     typescript({
-      include: ['**/*.ts', '**/*.tsx'],
-      jsx: 'preserve',
       tsconfig: './tsconfig.json',
     }),
     babel({
-      presets: [['@babel/preset-react', { pragma: 'h', pragmaFrag: 'Fragment' }]],
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
       babelHelpers: 'bundled',
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
     }),
     copy({
       targets: [
