@@ -13,8 +13,9 @@ export default {
   plugins: [
     nodeResolve(),
     typescript({
-      include: ['../../lib/**/*.ts', '**/*.ts', '**/*.tsx'],
+      include: ['**/*.ts', '**/*.tsx'],
       jsx: 'preserve',
+      tsconfig: './tsconfig.json'
     }),
     babel({
       presets: ['@babel/preset-react'],
