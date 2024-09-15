@@ -1,14 +1,6 @@
-import { h, Component } from 'preact';
-import { JSX } from 'preact/jsx-runtime';
+import { h, render } from 'preact';
+import App from './App';
 
-class MyComponent extends Component {
-  render(): JSX.Element {
-    return (
-      <div>
-        <h1>Hello, Preact!</h1>
-      </div>
-    );
-  }
-}
-
-export default MyComponent;
+window.addEventListener('DOMContentLoaded', () => {
+  render(<App />, document.getElementById('app'));
+});
