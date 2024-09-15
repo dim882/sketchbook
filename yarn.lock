@@ -5391,6 +5391,7 @@ __metadata:
     "@rollup/plugin-node-resolve": "npm:^15.2.3"
     "@rollup/plugin-typescript": "npm:^11.1.6"
     "@types/ramda": "npm:^0.29.12"
+    preact: "npm:^10.24.0"
     rambda: "npm:^9.2.0"
     ramda: "npm:^0.29.1"
     rollup: "npm:^4.14.3"
@@ -5413,6 +5414,13 @@ __metadata:
   version: 10.22.0
   resolution: "preact@npm:10.22.0"
   checksum: 10c0/dc5466c5968c56997e917580c00983cec2f6486a89ea9ba29f1bb88dcfd2f9ff67c8d561a69a1b3acdab17f2bb36b311fef0c348b62e89c332d00c674f7871f0
+  languageName: node
+  linkType: hard
+
+"preact@npm:^10.24.0":
+  version: 10.24.0
+  resolution: "preact@npm:10.24.0"
+  checksum: 10c0/09d490d2326c511e205a96f81db0adf05f1b42dbe2a39be6fc494662c7476575494e96140252f351a0e3b3d15aee5b079bf963865bb01287f69c45c6755ed22e
   languageName: node
   linkType: hard
 

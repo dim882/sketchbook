@@ -1,9 +1,10 @@
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
+import babel from '@rollup/plugin-babel';
 
 export default {
-  input: 'preact-base.ts',
+  input: 'preact-base.tsx',
   output: {
     file: 'dist/bundle.js',
     format: 'es',
@@ -12,7 +13,13 @@ export default {
   plugins: [
     nodeResolve(),
     typescript({
-      include: ['../../lib/**/*.ts', '**/*.ts'],
+      include: ['../../lib/**/*.ts', '**/*.ts', '**/*.tsx'],
+      jsx: 'preserve',
+    }),
+    babel({
+      presets: ['@babel/preset-react'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      babelHelpers: 'bundled',
     }),
     copy({
       targets: [
