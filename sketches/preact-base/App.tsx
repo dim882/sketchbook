@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { h } from 'preact';
 import { JSX } from 'preact/jsx-runtime';
 
 function App(): JSX.Element {

@@ -15,10 +15,10 @@ export default {
     typescript({
       include: ['**/*.ts', '**/*.tsx'],
       jsx: 'preserve',
-      tsconfig: './tsconfig.json'
+      tsconfig: './tsconfig.json',
     }),
     babel({
-      presets: ['@babel/preset-react'],
+      presets: [['@babel/preset-react', { pragma: 'h', pragmaFrag: 'Fragment' }]],
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       babelHelpers: 'bundled',
     }),
