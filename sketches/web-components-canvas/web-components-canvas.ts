@@ -1,6 +1,6 @@
 import { getFloat } from '@dim882/lib';
 import { pipe } from 'ramda';
-import { IPointTuple, getInteger } from './squares.utils';
+import { IPointTuple, getInteger } from './web-components-canvas.utils';
 
 const prng = Math.random;
 
