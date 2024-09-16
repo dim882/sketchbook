@@ -2743,6 +2743,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"color-blocks@workspace:sketches/color-blocks":
+  version: 0.0.0-use.local
+  resolution: "color-blocks@workspace:sketches/color-blocks"
+  dependencies:
+    "@dim882/lib": "npm:0.1.0"
+    "@rollup/plugin-node-resolve": "npm:^15.2.3"
+    "@rollup/plugin-typescript": "npm:^11.1.6"
+    "@types/ramda": "npm:^0.29.12"
+    rambda: "npm:^9.2.0"
+    ramda: "npm:^0.29.1"
+    rollup: "npm:^4.14.3"
+    rollup-plugin-copy: "npm:^3.5.0"
+    tslib: "npm:^2.6.2"
+    typescript: "npm:^5.4.5"
+  languageName: unknown
+  linkType: soft
+
 "color-convert@npm:^1.9.0":
   version: 1.9.3
   resolution: "color-convert@npm:1.9.3"
@@ -6392,23 +6409,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"squares@workspace:sketches/squares":
-  version: 0.0.0-use.local
-  resolution: "squares@workspace:sketches/squares"
-  dependencies:
-    "@dim882/lib": "npm:0.1.0"
-    "@rollup/plugin-node-resolve": "npm:^15.2.3"
-    "@rollup/plugin-typescript": "npm:^11.1.6"
-    "@types/ramda": "npm:^0.29.12"
-    rambda: "npm:^9.2.0"
-    ramda: "npm:^0.29.1"
-    rollup: "npm:^4.14.3"
-    rollup-plugin-copy: "npm:^3.5.0"
-    tslib: "npm:^2.6.2"
-    typescript: "npm:^5.4.5"
-  languageName: unknown
-  linkType: soft
-
 "ssri@npm:^10.0.0":
   version: 10.0.6
   resolution: "ssri@npm:10.0.6"
@@ -6959,6 +6959,23 @@ __metadata:
   checksum: 10c0/f15d588d79f3675135ba783c91a4083dcd290a2a5be9fcb6514220a1634e23df116847b1cc51f66bfb0644cf9353b2abb7815ae499bab06e46dd33c1a6bf1f4f
   languageName: node
   linkType: hard
+
+"web-components-canvas@workspace:sketches/web-components-canvas":
+  version: 0.0.0-use.local
+  resolution: "web-components-canvas@workspace:sketches/web-components-canvas"
+  dependencies:
+    "@dim882/lib": "npm:0.1.0"
+    "@rollup/plugin-node-resolve": "npm:^15.2.3"
+    "@rollup/plugin-typescript": "npm:^11.1.6"
+    "@types/ramda": "npm:^0.29.12"
+    rambda: "npm:^9.2.0"
+    ramda: "npm:^0.29.1"
+    rollup: "npm:^4.14.3"
+    rollup-plugin-copy: "npm:^3.5.0"
+    tslib: "npm:^2.6.2"
+    typescript: "npm:^5.4.5"
+  languageName: unknown
+  linkType: soft
 
 "which-boxed-primitive@npm:^1.0.2":
   version: 1.0.2
