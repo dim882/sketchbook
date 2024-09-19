@@ -10,6 +10,9 @@ if (!sketchName) {
 const libPath = path.resolve(__dirname, '..', 'lib');
 const sketchLibPath = path.resolve(__dirname, '..', 'sketches', sketchName, 'lib');
 
-fs.copy(libPath, sketchLibPath, { overwrite: true })
+fs.copy(libPath, sketchLibPath, {
+  overwrite: true,
+  filter: (src) => !src.endsWith('package.json'),
+})
   .then(() => console.log(`Copied lib to ${sketchName}`))
   .catch((err) => console.error('Error copying lib:', err));

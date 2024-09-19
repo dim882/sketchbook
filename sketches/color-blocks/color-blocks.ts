@@ -1,13 +1,7 @@
+import { getInteger } from './lib';
+
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
-
-const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower: number = 0, upper: number = 1) => {
-  return (upper - lower) * generateNumber() + lower;
-};
-
-const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower: number = 0, upper: number = 1) => {
-  return Math.floor(getFloat(generateNumber, lower, upper));
-};
 
 const prng = Math.random;
 
