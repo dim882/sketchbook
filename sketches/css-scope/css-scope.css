@@ -1,11 +1,15 @@
 @scope (.outer) to (.child) {
   .text {
+    display: block;
     color: red;
+    border: 1px solid red;
   }
 }
 
 @scope (.outer-2) to (.child-2) {
   :scope {
+    display: block;
     color: purple;
+    border: 1px solid purple;
   }
 }

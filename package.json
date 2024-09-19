@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "npm-run-all --parallel tools:watch tools:dev",
     "clone": "yarn workspace tools clone",
+    "lib:pull": "yarn workspace tools lib:pull",
     "tools:dev": "yarn workspace tools dev",
     "tools:watch": "yarn workspace tools watch"
   },

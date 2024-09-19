@@ -2,7 +2,7 @@ body {
   display: grid;
   height: 100vh;
   margin: 0;
-  grid-template-columns: 1fr 400px;
+  /* grid-template-columns: 1fr 400px; */
 }
 
 main {

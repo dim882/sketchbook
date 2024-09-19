@@ -15,7 +15,8 @@
   "scripts": {
     "dev": "bun --watch server.ts",
     "watch": "bun watch.ts",
-    "clone": "bun clone-sketch.ts"
+    "clone": "bun clone-sketch.ts",
+    "lib:pull": "bun lib-pull.ts"
   },
   "resolutions": {
     "rollup": "@rollup/wasm-node"
