@@ -1,15 +1,14 @@
 import { getInteger } from './lib';
+import { setup } from './lib/DOM';
 
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
 const prng = Math.random;
 
-window.addEventListener('DOMContentLoaded', () => {
+setup(() => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
-
-  console.log('hello');
 
   if (context) {
     render(context);
@@ -19,19 +18,26 @@ window.addEventListener('DOMContentLoaded', () => {
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
+  const squareSize = width / 3;
+  const offset = 20;
 
-  const formHue = getInteger(prng, 0, 270);
-  const backgroundHue = formHue + 180;
+  context.fillStyle = 'yellow';
 
-  context.fillStyle = `lch(60% 10% ${backgroundHue})`;
-  context.fillRect(0, 0, width, height);
+  // prettier-ignore
+  context.fillRect(
+    width / 2 - squareSize - offset / 2, 
+    height / 2 - squareSize / 2, 
+    squareSize, 
+    squareSize
+  );
 
-  const fillColor = 'rgb(87, 218, 92)'; //`lch(60% 30% ${formHue} / 1)`;
-
-  context.fillStyle = fillColor;
-  context.save();
-  context.translate(width / 4, height / 4);
-  context.fillRect(0, 0, ...center);
+  // prettier-ignore
+  context.fillRect(
+    width / 2 + offset / 2, 
+    height / 2 - squareSize / 2, 
+    squareSize, 
+    squareSize
+  );
 
   context.restore();
 }
