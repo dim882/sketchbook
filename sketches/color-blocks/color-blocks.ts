@@ -1,5 +1,6 @@
 import { getInteger } from './lib';
 import { setup } from './lib/DOM';
+import { point } from './lib/Math';
 
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
@@ -17,7 +18,13 @@ setup(() => {
 
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
-  const center: IPointTuple = [width / 2, height / 2];
+  const center = point([width / 2, height / 2]);
+  // const [x, y] = center;
+  const { x, y } = center;
+  console.log(x, y);
+
+  console.log(center.x, center.y, center[0], center[1]);
+
   const squareSize = width / 3;
   const offset = 20;
 
