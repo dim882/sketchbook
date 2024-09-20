@@ -5,8 +5,6 @@ export const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower: num
 };
 
 export const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower: number = 0, upper: number = 1) => {
-  console.log('getInteger?');
-
   return Math.floor(getFloat(generateNumber, lower, upper));
 };
 

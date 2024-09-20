@@ -38,20 +38,21 @@ app.get('/', (req, res) => {
 });
 
 app.get('/sketches/:sketchName', (req, res) => {
-  // prettier-ignore
-  fromNullable(req.params.sketchName)
-    .map(makeSketchPath)
-    // This doesn't work. sendFile is async
-    .chain((path: string) => tryCatch(()=>sendFile(res, path)))
-    .fold(
-      (err) => { 
-        console.log('error', err);
-        res.send(404);
-       },
-      (val) => {  
-        console.log('success');
-      },
-    )
+  const sketchName = req.params.sketchName;
+  if (!sketchName) {
+    return res.status(404).send('Sketch name not provided');
+  }
+
+  const sketchPath = makeSketchPath(sketchName);
+
+  res.sendFile(sketchPath, (err) => {
+    if (err) {
+      console.error('Error sending file:', err);
+      res.status(404).send('Sketch not found');
+    } else {
+      console.log('Sketch sent successfully');
+    }
+  });
 });
 
 // Serve static files from each sketch's dist directory

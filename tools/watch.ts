@@ -3,18 +3,51 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { rollup, RollupOptions } from '@rollup/wasm-node';
 
-const sketchesDir = path.resolve(__dirname, '../sketches');
+const ROOT_DIR = path.resolve(__dirname, '../');
+const SKETCHES_DIR = path.join(ROOT_DIR, 'sketches');
 
-const logError = (error: any) => {
-  console.error('Error occurred:', error);
+const watcher = makeWatcher(SKETCHES_DIR);
+
+watcher.on('all', (event, filePath) => {
+  const configPath = findNearestConfig(path.dirname(filePath));
+
+  if (configPath) {
+    console.log(`Detected change. Running rollup for ${path.dirname(configPath)}...`);
+
+    runRollup(configPath)
+      .then(() => console.log(`Rollup completed for ${path.dirname(configPath)}`))
+      .catch(logError);
+  }
+});
+
+console.log(`Watching for changes in ${SKETCHES_DIR}`);
+
+function makeWatcher(dir: string) {
+  const watchOptions = {
+    ignored: [/node_modules/, /\.DS_Store/, /dist/],
+    persistent: true,
+    ignoreInitial: true,
+  };
+  const watchPaths = [dir, path.join(dir, './**/*')];
+
+  return chokidar.watch(watchPaths, watchOptions);
+}
+
+const findNearestConfig = (dir: string): string | null => {
+  const configPath = path.join(dir, 'rollup.config.js');
+
+  return fs.existsSync(configPath)
+    ? configPath
+    : dir === path.parse(dir).root
+    ? null
+    : findNearestConfig(path.dirname(dir));
 };
 
 const runRollup = async (configPath: string) => {
   const originalCwd = process.cwd();
 
   try {
-    const dir = path.dirname(configPath);
-    process.chdir(dir);
+    process.chdir(path.dirname(configPath));
 
     const configModule = await import(configPath);
     const config: RollupOptions = configModule.default || configModule;
@@ -34,33 +67,6 @@ const runRollup = async (configPath: string) => {
   }
 };
 
-const watchOptions = {
-  ignored: [/node_modules/, /\.DS_Store/],
-  persistent: true,
-  ignoreInitial: true,
+const logError = (error: any) => {
+  console.error('Error occurred:', error);
 };
-
-const watchPaths = [sketchesDir, path.join(sketchesDir, './lib')];
-
-const watcher = chokidar.watch(watchPaths, watchOptions);
-
-const findNearestConfig = (dir: string): string | null => {
-  const configPath = path.join(dir, 'rollup.config.js');
-  return fs.existsSync(configPath)
-    ? configPath
-    : dir === path.parse(dir).root
-    ? null
-    : findNearestConfig(path.dirname(dir));
-};
-
-watcher.on('all', (event, filePath) => {
-  const configPath = findNearestConfig(path.dirname(filePath));
-  if (configPath) {
-    console.log(`Detected change. Running rollup for ${path.dirname(configPath)}...`);
-    runRollup(configPath)
-      .then(() => console.log(`Rollup completed for ${path.dirname(configPath)}`))
-      .catch(logError);
-  }
-});
-
-console.log(`Watching for changes in ${sketchesDir}`);
