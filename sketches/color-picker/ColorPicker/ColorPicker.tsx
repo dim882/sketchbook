@@ -50,7 +50,12 @@ const ColorPicker: FunctionComponent<IColorPickerProps> = ({ onChange, lch }) =>
   function handleColorChange(context: CanvasRenderingContext2D, x: number, y: number) {
     const imageData = context.getImageData(x, y, 1, 1).data;
 
-    const rgbColor = rgb({ r: imageData[0] / 255, g: imageData[1] / 255, b: imageData[2] / 255 });
+    const rgbColor = rgb({
+      mode: 'rgb',
+      r: imageData[0] / 255,
+      g: imageData[1] / 255,
+      b: imageData[2] / 255,
+    });
     const hslColor = hsl(rgbColor);
     const hslString = `hsl(${Math.round(hslColor.h)}, ${Math.round(hslColor.s * 100)}%, ${Math.round(
       hslColor.l * 100
@@ -58,7 +63,7 @@ const ColorPicker: FunctionComponent<IColorPickerProps> = ({ onChange, lch }) =>
 
     setCoords([x, y]);
     setColor(hslString);
-    onChange(rgbColor);
+    onChange(hslString);
   }
 
   const handlePointerDown: h.JSX.PointerEventHandler<HTMLCanvasElement> = (event) => {
