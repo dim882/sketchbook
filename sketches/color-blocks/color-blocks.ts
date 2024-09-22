@@ -28,7 +28,7 @@ function render(context: CanvasRenderingContext2D) {
   const squareSize = width / 3;
   const offset = 20;
 
-  context.fillStyle = 'yellow';
+  context.fillStyle = 'rgb(231, 186, 72)';
 
   // prettier-ignore
   context.fillRect(
