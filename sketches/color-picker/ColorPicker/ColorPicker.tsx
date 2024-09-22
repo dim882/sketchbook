@@ -1,3 +1,4 @@
+import { rgb, hsl } from 'culori';
 import { h, FunctionComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import register from 'preact-custom-element';
@@ -48,10 +49,15 @@ const ColorPicker: FunctionComponent<IColorPickerProps> = ({ onChange, lch }) =>
 
   function handleColorChange(context: CanvasRenderingContext2D, x: number, y: number) {
     const imageData = context.getImageData(x, y, 1, 1).data;
-    const rgbColor = `rgb(${imageData[0]}, ${imageData[1]}, ${imageData[2]})`;
+
+    const rgbColor = rgb({ r: imageData[0] / 255, g: imageData[1] / 255, b: imageData[2] / 255 });
+    const hslColor = hsl(rgbColor);
+    const hslString = `hsl(${Math.round(hslColor.h)}, ${Math.round(hslColor.s * 100)}%, ${Math.round(
+      hslColor.l * 100
+    )}%)`;
 
     setCoords([x, y]);
-    setColor(rgbColor);
+    setColor(hslString);
     onChange(rgbColor);
   }
 

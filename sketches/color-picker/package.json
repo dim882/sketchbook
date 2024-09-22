@@ -10,6 +10,7 @@
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
+    "@types/culori": "^2.1.1",
     "@types/ramda": "^0.29.12",
     "postcss": "^8.4.38",
     "rollup": "^4.14.3",
@@ -22,6 +23,7 @@
     "@babel/preset-react": "^7.24.1",
     "@babel/preset-typescript": "^7.24.1",
     "@types/preact-custom-element": "^4.0.4",
+    "culori": "^4.0.1",
     "preact": "^10.22.0",
     "preact-custom-element": "^4.3.0",
     "ramda": "^0.29.1"

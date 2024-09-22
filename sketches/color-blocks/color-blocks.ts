@@ -1,4 +1,4 @@
-import { getInteger } from './lib';
+import { rgb, hsl } from 'culori';
 import { setup } from './lib/DOM';
 import { point } from './lib/Math';
 
@@ -28,7 +28,7 @@ function render(context: CanvasRenderingContext2D) {
   const squareSize = width / 3;
   const offset = 20;
 
-  context.fillStyle = 'rgb(231, 186, 72)';
+  context.fillStyle = 'hsl(42, 80%, 60%)';
 
   // prettier-ignore
   context.fillRect(
