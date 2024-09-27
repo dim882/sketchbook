@@ -19,11 +19,6 @@ setup(() => {
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center = point(width / 2, height / 2);
-  // const [x, y] = center;
-  const { x, y } = center;
-  console.log(x, y);
-
-  console.log(x, y, center.x, center.y);
 
   const squareSize = width / 3;
   const offset = 20;
@@ -32,16 +27,16 @@ function render(context: CanvasRenderingContext2D) {
 
   // prettier-ignore
   context.fillRect(
-    width / 2 - squareSize - offset / 2, 
-    height / 2 - squareSize / 2, 
+    center.x - squareSize - offset / 2, 
+    center.y - squareSize / 2, 
     squareSize, 
     squareSize
   );
 
   // prettier-ignore
   context.fillRect(
-    width / 2 + offset / 2, 
-    height / 2 - squareSize / 2, 
+    center.x + offset / 2, 
+    center.y - squareSize / 2, 
     squareSize, 
     squareSize
   );
