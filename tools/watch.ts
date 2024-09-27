@@ -49,8 +49,9 @@ const runRollup = async (configPath: string) => {
   try {
     process.chdir(path.dirname(configPath));
 
-    const configModule = await import(configPath);
-    const config: RollupOptions = configModule.default || configModule;
+    const config: RollupOptions = await getRollupConfig(configPath);
+    console.log({ config });
+
     const bundle = await rollup(config);
 
     if (Array.isArray(config.output)) {
@@ -70,3 +71,9 @@ const runRollup = async (configPath: string) => {
 const logError = (error: any) => {
   console.error('Error occurred:', error);
 };
+
+async function getRollupConfig(configPath: string): Promise<RollupOptions> {
+  const configModule = await import(configPath);
+
+  return configModule.default || configModule;
+}

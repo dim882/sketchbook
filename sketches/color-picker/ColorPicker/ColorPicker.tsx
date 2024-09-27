@@ -135,6 +135,8 @@ const ColorPicker: FunctionComponent<IColorPickerProps> = ({ onChange, lch }) =>
   );
 };
 
+console.log('hhh');
+
 register(ColorPicker, 'color-picker', ['onChange', 'lch'], { shadow: true });
 
 export default ColorPicker;
