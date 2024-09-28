@@ -29,8 +29,6 @@ function render(context: CanvasRenderingContext2D) {
     height: rect[3],
   });
 
-  console.log(center);
-
   const shortSide = width / 3;
 
   context.fillStyle = '#fff';
@@ -42,6 +40,4 @@ function render(context: CanvasRenderingContext2D) {
 
   context.translate(center.x - dimensions(rectangle).width / 2, center.y - dimensions(rectangle).height / 2);
   context.fillRect(...rectangle);
-
-  context.restore();
 }
