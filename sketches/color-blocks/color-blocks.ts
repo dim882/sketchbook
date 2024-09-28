@@ -24,6 +24,11 @@ function render(context: CanvasRenderingContext2D) {
   const rect = (width: number, height = width): Rectangle => {
     return [0, 0, width, height];
   };
+  const dimensions = (rect: Rectangle) => ({
+    width: rect[2],
+    height: rect[3],
+  });
+
   console.log(center);
 
   const shortSide = width / 3;
@@ -35,7 +40,7 @@ function render(context: CanvasRenderingContext2D) {
 
   const rectangle: Rectangle = rect(shortSide, shortSide * 2);
 
-  context.translate(center.x, center.y);
+  context.translate(center.x - dimensions(rectangle).width / 2, center.y - dimensions(rectangle).height / 2);
   context.fillRect(...rectangle);
 
   context.restore();
