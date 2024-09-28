@@ -1,6 +1,7 @@
 import { rgb, hsl } from 'culori';
 import { setup } from './lib/DOM';
 import { point } from './lib/Math';
+import { dimensions, rect, Rectangle } from './lib/color-blocks.utils';
 export type IPoint = [number, number];
 
 export type PseudoRandomNumberGenerator = () => number;
@@ -17,18 +18,9 @@ setup(() => {
   }
 });
 
-type Rectangle = [number, number, number, number];
-
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center = point(width / 2, height / 2);
-  const rect = (width: number, height = width): Rectangle => {
-    return [0, 0, width, height];
-  };
-  const dimensions = (rect: Rectangle) => ({
-    width: rect[2],
-    height: rect[3],
-  });
 
   const shortSide = width / 3;
 
