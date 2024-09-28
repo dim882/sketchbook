@@ -16,30 +16,27 @@ setup(() => {
   }
 });
 
+type Rectangle = [number, number, number, number];
+
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center = point(width / 2, height / 2);
+  const rect = (width: number, height = width): Rectangle => {
+    return [0, 0, width, height];
+  };
+  console.log(center);
 
-  const squareSize = width / 3;
-  const offset = 20;
+  const shortSide = width / 3;
 
-  context.fillStyle = 'hsl(42, 80%, 60%)';
+  context.fillStyle = '#fff';
+  context.fillRect(0, 0, width, height);
 
-  // prettier-ignore
-  context.fillRect(
-    center.x - squareSize - offset / 2, 
-    center.y - squareSize / 2, 
-    squareSize, 
-    squareSize
-  );
+  context.fillStyle = 'hsl(42, 80%, 60%, .5)';
 
-  // prettier-ignore
-  context.fillRect(
-    center.x + offset / 2, 
-    center.y - squareSize / 2, 
-    squareSize, 
-    squareSize
-  );
+  const rectangle: Rectangle = rect(shortSide, shortSide * 2);
+
+  context.translate(center.x, center.y);
+  context.fillRect(...rectangle);
 
   context.restore();
 }
