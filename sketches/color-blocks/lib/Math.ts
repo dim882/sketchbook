@@ -18,7 +18,7 @@ export type IPoint = [number, number] & { x: number; y: number };
 //     yield this.y;
 //   }
 // }
-class Point implements Iterable<number> {
+export class Point implements Iterable<number> {
   constructor(private values: number[]) {}
 
   get x() {

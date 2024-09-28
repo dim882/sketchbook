@@ -1,6 +1,7 @@
 import { rgb, hsl } from 'culori';
 import { setup } from './lib/DOM';
 import { point } from './lib/Math';
+export type IPoint = [number, number];
 
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
@@ -38,6 +39,7 @@ function render(context: CanvasRenderingContext2D) {
 
   const rectangle: Rectangle = rect(shortSide, shortSide * 2);
 
-  context.translate(center.x - dimensions(rectangle).width / 2, center.y - dimensions(rectangle).height / 2);
+  const translation: IPoint = [center.x - dimensions(rectangle).width / 2, center.y - dimensions(rectangle).height / 2];
+  context.translate(...translation);
   context.fillRect(...rectangle);
 }
