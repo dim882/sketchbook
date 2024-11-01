@@ -8,9 +8,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
 
+  if (!context) {
+    return;
+  }
+
   console.log('random', getFloat(Math.random));
 
-  let color = localStorage.getItem('color');
+  let color = localStorage.getItem('color') ?? 'red';
 
   const log =
     <T>(tag: string) =>
@@ -34,6 +38,8 @@ window.addEventListener('DOMContentLoaded', () => {
     addEvent('input', (e: CustomEvent) => console.log('input', e)),
     addEvent('change', (e: CustomEvent) => console.log('change', e.detail.value)),
   )();
+
+  console.log({ color });
 
   render(context, color);
 });

@@ -3,7 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
 
 export default {
-  input: 'web-components-canvas',
+  input: 'web-components-canvas.ts',
   output: {
     file: 'dist/bundle.js',
     format: 'es',

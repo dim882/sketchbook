@@ -34,6 +34,8 @@ setup(() => {
     addEvent('change', (e) => console.log('change', e.detail.value))
   )();
 
+  console.log('hi!');
+
   render({ contexts, baseColor: color, noise2D: noise });
 });
 
