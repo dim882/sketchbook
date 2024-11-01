@@ -20,23 +20,25 @@ window.addEventListener('DOMContentLoaded', () => {
     <T>(tag: string) =>
     (val: T) => (console.log(tag, val), val);
 
-  const addEvent = (eventName: string, handler: (e: CustomEvent) => void) => (el: Element) => {
-    el.addEventListener(eventName, handler);
-    return el;
-  };
+  const addCustomEvent =
+    <T = any>(eventName: string, handler: (e: CustomEvent<T>) => void) =>
+    (el: Element) => {
+      el.addEventListener(eventName, handler as EventListener);
+      return el;
+    };
 
   // prettier-ignore
   pipe(
     () => document.querySelector('sc-toggle'),
     log('set up toggle'),
-    addEvent('change', handleToggle)
+    addCustomEvent('change', handleToggle)
   )();
 
   // prettier-ignore
   pipe(
     () => document.querySelector('sc-color-picker'),
-    addEvent('input', (e: CustomEvent) => console.log('input', e)),
-    addEvent('change', (e: CustomEvent) => console.log('change', e.detail.value)),
+    addCustomEvent('input', (e: CustomEvent) => console.log('input', e)),
+    addCustomEvent('change', (e: CustomEvent) => console.log('change', e.detail.value)),
   )();
 
   console.log({ color });
