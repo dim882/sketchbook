@@ -13,6 +13,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   const canvasContext = canvas.getContext('2d');
   const colors = ['#ff0000', '#00ff00', '#0000ff', '#000000'];
 
+  if (!canvasContext) return;
+
   await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
 
   const audioDevices = await getAudioDevices('QuickTime');
