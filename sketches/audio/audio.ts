@@ -5,11 +5,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const canvasContext = canvas.getContext('2d');
   const audioElement = document.getElementById('audioElement') as HTMLAudioElement;
 
+  if (!canvasContext) return;
+
   let audioContext: AudioContext;
   let track: MediaElementAudioSourceNode;
   let analyser: AnalyserNode;
 
-  document.getElementById('transport').addEventListener('change', async (e: CustomEvent) => {
+  document.getElementById('transport')?.addEventListener('change', async (e: Event) => {
+    if (!(e instanceof CustomEvent)) return;
+
     const command = e.detail.value;
 
     audioContext = audioContext ? audioContext : new AudioContext();
