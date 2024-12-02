@@ -11,6 +11,8 @@ const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, uppe
 
 const prng = Math.random;
 
+const SQUARE_SIZE = 200;
+
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
@@ -23,19 +25,17 @@ window.addEventListener('DOMContentLoaded', () => {
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
+  const centerY = height / 2;
 
-  const formHue = getInteger(prng, 0, 270);
-  const backgroundHue = formHue + 180;
-
-  context.fillStyle = `lch(60% 10% ${backgroundHue})`;
+  context.fillStyle = '#fff';
   context.fillRect(0, 0, width, height);
 
-  const fillColor = 'rgb(87, 218, 92)'; //`lch(60% 30% ${formHue} / 1)`;
-
-  context.fillStyle = fillColor;
-  context.save();
-  context.translate(width / 4, height / 4);
-  context.fillRect(0, 0, ...center);
+  drawSquareOutline(context, 20, centerY - SQUARE_SIZE / 2, SQUARE_SIZE);
 
   context.restore();
+}
+
+function drawSquareOutline(context: CanvasRenderingContext2D, x: number, y: number, size: number) {
+  context.strokeStyle = '#000';
+  context.strokeRect(x, y, size, size);
 }
