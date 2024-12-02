@@ -2743,24 +2743,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"color-blocks@workspace:sketches/color-blocks":
-  version: 0.0.0-use.local
-  resolution: "color-blocks@workspace:sketches/color-blocks"
-  dependencies:
-    "@dim882/lib": "npm:0.1.0"
-    "@rollup/plugin-node-resolve": "npm:^15.2.3"
-    "@rollup/plugin-typescript": "npm:^11.1.6"
-    "@types/ramda": "npm:^0.29.12"
-    culori: "npm:^4.0.1"
-    rambda: "npm:^9.2.0"
-    ramda: "npm:^0.29.1"
-    rollup: "npm:^4.14.3"
-    rollup-plugin-copy: "npm:^3.5.0"
-    tslib: "npm:^2.6.2"
-    typescript: "npm:^5.4.5"
-  languageName: unknown
-  linkType: soft
-
 "color-convert@npm:^1.9.0":
   version: 1.9.3
   resolution: "color-convert@npm:1.9.3"
@@ -6412,6 +6394,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"square-transform@workspace:sketches/square-transform":
+  version: 0.0.0-use.local
+  resolution: "square-transform@workspace:sketches/square-transform"
+  dependencies:
+    "@dim882/lib": "npm:0.1.0"
+    "@rollup/plugin-node-resolve": "npm:^15.2.3"
+    "@rollup/plugin-typescript": "npm:^11.1.6"
+    "@types/ramda": "npm:^0.29.12"
+    rambda: "npm:^9.2.0"
+    ramda: "npm:^0.29.1"
+    rollup: "npm:^4.14.3"
+    rollup-plugin-copy: "npm:^3.5.0"
+    tslib: "npm:^2.6.2"
+    typescript: "npm:^5.4.5"
+  languageName: unknown
+  linkType: soft
+
 "ssri@npm:^10.0.0":
   version: 10.0.6
   resolution: "ssri@npm:10.0.6"
@@ -6610,20 +6609,6 @@ __metadata:
   checksum: 10c0/0741f5d5cad63111a90a0ce7a1a5a9013f6d293e871b75efe39addb57f29a263e45294e485a4d2ff9cc260a5d142c8b5937b2234b4ef05efdd2706fb2d360ecc
   languageName: node
   linkType: hard
-
-"tabindex-demo@workspace:sketches/tabindex-demo":
-  version: 0.0.0-use.local
-  resolution: "tabindex-demo@workspace:sketches/tabindex-demo"
-  dependencies:
-    "@rollup/plugin-node-resolve": "npm:^15.2.3"
-    "@rollup/plugin-typescript": "npm:^11.1.6"
-    "@types/ramda": "npm:^0.29.12"
-    ramda: "npm:^0.29.1"
-    rollup: "npm:^4.14.3"
-    tslib: "npm:^2.6.2"
-    typescript: "npm:^5.4.5"
-  languageName: unknown
-  linkType: soft
 
 "tar@npm:^6.1.11, tar@npm:^6.2.1":
   version: 6.2.1
