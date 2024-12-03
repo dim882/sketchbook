@@ -40,9 +40,9 @@ function transformAndDrawSquare(
   size: number,
   rotation: number
 ) {
-  context.translate(x, y);
+  context.translate(x + SQUARE_SIZE / 2, y + SQUARE_SIZE / 2);
   context.rotate(rotation);
-  context.translate(-x, -y);
+  context.translate(-x - SQUARE_SIZE / 2, -y - SQUARE_SIZE / 2);
   drawSquareOutline(context, x, y, size);
 }
 
