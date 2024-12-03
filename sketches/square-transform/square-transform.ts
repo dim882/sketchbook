@@ -3,7 +3,7 @@ export type IPointTuple = [number, number];
 
 const SQUARE_SIZE = 200;
 const SQUARE_COUNT = 10;
-const MAX_ROTATION = Math.PI / 4; // 45 degrees
+const MAX_ROTATION = Math.PI / 2; // 45 degrees
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
