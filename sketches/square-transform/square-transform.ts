@@ -3,6 +3,7 @@ export type IPointTuple = [number, number];
 
 const SQUARE_SIZE = 200;
 const SQUARE_COUNT = 10;
+const MAX_ROTATION = Math.PI / 4; // 45 degrees
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -23,13 +24,29 @@ function render(context: CanvasRenderingContext2D) {
   const stepX = (width - 20 - SQUARE_SIZE) / SQUARE_COUNT;
 
   Array.from({ length: SQUARE_COUNT }).forEach((_, i) => {
-    drawSquare(context, 20 + stepX * i, centerY - SQUARE_SIZE / 2, SQUARE_SIZE);
+    context.save();
+    const x = 20 + stepX * i;
+    const y = centerY - SQUARE_SIZE / 2;
+    const rotation = MAX_ROTATION * (i / (SQUARE_COUNT - 1));
+    transformAndDrawSquare(context, x, y, SQUARE_SIZE, rotation);
+    context.restore();
   });
-
-  context.restore();
 }
 
-function drawSquare(context: CanvasRenderingContext2D, x: number, y: number, size: number) {
+function transformAndDrawSquare(
+  context: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  size: number,
+  rotation: number
+) {
+  context.translate(x, y);
+  context.rotate(rotation);
+  context.translate(-x, -y);
+  drawSquareOutline(context, x, y, size);
+}
+
+function drawSquareOutline(context: CanvasRenderingContext2D, x: number, y: number, size: number) {
   context.strokeStyle = '#000';
   context.strokeRect(x, y, size, size);
 }
