@@ -1,6 +1,3 @@
-export type PseudoRandomNumberGenerator = () => number;
-export type IPointTuple = [number, number];
-
 const SQUARE_SIZE = 200;
 const SQUARE_COUNT = 10;
 const MAX_ROTATION = Math.PI / 2;
