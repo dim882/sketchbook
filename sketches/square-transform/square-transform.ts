@@ -1,5 +1,5 @@
-const SQUARE_SIZE = 200;
-const SQUARE_COUNT = 10;
+const SQUARE_SIZE = 300;
+const SQUARE_COUNT = 8;
 const MAX_ROTATION = Math.PI / 2;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -18,10 +18,10 @@ function render(context: CanvasRenderingContext2D) {
   context.fillStyle = 'goldenrod';
   context.fillRect(0, 0, width, height);
 
-  const stepX = (width - 20 - SQUARE_SIZE) / SQUARE_COUNT;
+  const stepX = (width - 30 - SQUARE_SIZE / 2) / SQUARE_COUNT;
 
   Array.from({ length: SQUARE_COUNT }).forEach((_, i) => {
-    const x = 20 + stepX * i;
+    const x = 10 + stepX * i;
     const y = centerY - SQUARE_SIZE / 2;
     const rotation = MAX_ROTATION * (i / (SQUARE_COUNT - 1));
 
