@@ -1,16 +1,6 @@
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
-const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
-  return (upper - lower) * generateNumber() + lower;
-};
-
-const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
-  return Math.floor(getFloat(generateNumber, lower, upper));
-};
-
-const prng = Math.random;
-
 const SQUARE_SIZE = 200;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -24,7 +14,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
-  const center: IPointTuple = [width / 2, height / 2];
   const centerY = height / 2;
 
   context.fillStyle = '#fff';
