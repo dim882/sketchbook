@@ -15,7 +15,7 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const centerY = height / 2;
 
-  context.fillStyle = '#fff';
+  context.fillStyle = 'goldenrod';
   context.fillRect(0, 0, width, height);
 
   const stepX = (width - 20 - SQUARE_SIZE) / SQUARE_COUNT;
@@ -41,6 +41,6 @@ function translateAndRotate(context: CanvasRenderingContext2D, x: number, y: num
 }
 
 function drawSquare(context: CanvasRenderingContext2D, x: number, y: number, size: number) {
-  context.strokeStyle = '#000';
+  context.strokeStyle = '#fff';
   context.strokeRect(x, y, size, size);
 }
