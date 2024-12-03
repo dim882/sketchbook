@@ -26,28 +26,21 @@ function render(context: CanvasRenderingContext2D) {
     const rotation = MAX_ROTATION * (i / (SQUARE_COUNT - 1));
 
     context.save();
-    transformAndDrawSquare(context, x, y, SQUARE_SIZE, rotation);
+    translateAndRotate(context, x, y, rotation);
+    drawSquare(context, x, y, SQUARE_SIZE);
     context.restore();
   });
 }
 
-function transformAndDrawSquare(
-  context: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  size: number,
-  rotation: number
-) {
+function translateAndRotate(context: CanvasRenderingContext2D, x: number, y: number, rotation: number) {
   const halfSide = SQUARE_SIZE / 2;
 
   context.translate(x + halfSide, y + halfSide);
   context.rotate(rotation);
   context.translate(-x - halfSide, -y - halfSide);
-
-  drawSquareOutline(context, x, y, size);
 }
 
-function drawSquareOutline(context: CanvasRenderingContext2D, x: number, y: number, size: number) {
+function drawSquare(context: CanvasRenderingContext2D, x: number, y: number, size: number) {
   context.strokeStyle = '#000';
   context.strokeRect(x, y, size, size);
 }
