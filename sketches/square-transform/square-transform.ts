@@ -38,9 +38,11 @@ function transformAndDrawSquare(
   size: number,
   rotation: number
 ) {
-  context.translate(x + SQUARE_SIZE / 2, y + SQUARE_SIZE / 2);
+  const halfSide = SQUARE_SIZE / 2;
+
+  context.translate(x + halfSide, y + halfSide);
   context.rotate(rotation);
-  context.translate(-x - SQUARE_SIZE / 2, -y - SQUARE_SIZE / 2);
+  context.translate(-x - halfSide, -y - halfSide);
 
   drawSquareOutline(context, x, y, size);
 }
