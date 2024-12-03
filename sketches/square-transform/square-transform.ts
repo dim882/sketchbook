@@ -3,7 +3,7 @@ export type IPointTuple = [number, number];
 
 const SQUARE_SIZE = 200;
 const SQUARE_COUNT = 10;
-const MAX_ROTATION = Math.PI / 2; // 45 degrees
+const MAX_ROTATION = Math.PI / 2;
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -24,10 +24,11 @@ function render(context: CanvasRenderingContext2D) {
   const stepX = (width - 20 - SQUARE_SIZE) / SQUARE_COUNT;
 
   Array.from({ length: SQUARE_COUNT }).forEach((_, i) => {
-    context.save();
     const x = 20 + stepX * i;
     const y = centerY - SQUARE_SIZE / 2;
     const rotation = MAX_ROTATION * (i / (SQUARE_COUNT - 1));
+
+    context.save();
     transformAndDrawSquare(context, x, y, SQUARE_SIZE, rotation);
     context.restore();
   });
@@ -43,6 +44,7 @@ function transformAndDrawSquare(
   context.translate(x + SQUARE_SIZE / 2, y + SQUARE_SIZE / 2);
   context.rotate(rotation);
   context.translate(-x - SQUARE_SIZE / 2, -y - SQUARE_SIZE / 2);
+
   drawSquareOutline(context, x, y, size);
 }
 
