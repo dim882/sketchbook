@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@dim882/lib": "0.1.0",
-    "preact": "^10.24.0",
+    "preact": "^10.25.3",
     "rambda": "^9.2.0",
     "ramda": "^0.29.1"
   }
