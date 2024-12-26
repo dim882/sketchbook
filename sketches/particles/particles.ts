@@ -1,4 +1,4 @@
-import { type IPointTuple, loop } from './utils.js';
+import { type IPointTuple, loop } from './particles.utils.js';
 
 const getCanvas = (): HTMLCanvasElement => {
   const canvas = document.querySelector('canvas');
