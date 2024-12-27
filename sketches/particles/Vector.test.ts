@@ -4,11 +4,13 @@ describe('Vector', () => {
   describe('create', () => {
     it('should create a 2D vector', () => {
       const v = Vector.create(1, 2);
+
       expect(v).toEqual({ x: 1, y: 2 });
     });
 
     it('should create a 3D vector', () => {
       const v = Vector.create(1, 2, 3);
+
       expect(v).toEqual({ x: 1, y: 2, z: 3 });
     });
   });

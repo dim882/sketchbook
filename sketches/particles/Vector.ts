@@ -6,7 +6,7 @@ export interface IVector {
   z?: number;
 }
 
-export const create = (x: number, y: number, z = 0): IVector => ({ x, y, z });
+export const create = (x: number, y: number, z?: number): IVector => (z === undefined ? { x, y } : { x, y, z });
 
 export const fromRadians = (angle: number) => create(Math.cos(angle), Math.sin(angle));
 
