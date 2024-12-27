@@ -1,4 +1,4 @@
-import createParticle, { type IParticle } from './Particle.js';
+import { type IParticle, create } from './Particle.js';
 import { getCanvas, getCanvasContext, type IPointTuple, loop } from './particles.utils.js';
 import { fromAngle, fromTuple, type IVector, toTuple } from './Vector.js';
 
@@ -12,7 +12,7 @@ document.body.onload = () => {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  particle = createParticle({ position: fromTuple(center) });
+  particle = create({ position: fromTuple(center) });
   force = fromAngle(1);
 
   loop(context, createRender(context, { particle, force }), 60);

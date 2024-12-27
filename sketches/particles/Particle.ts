@@ -17,7 +17,7 @@ interface IParticleConstructor {
   radius?: number;
 }
 
-export const createParticle = ({
+export const create = ({
   position,
   velocity = Vector.create(0, 0),
   acceleration = Vector.create(0, 0),
@@ -32,7 +32,7 @@ export const createParticle = ({
   radius,
 });
 
-export const updateParticle = (particle: IParticle, maxVelocity?: number): void => {
+export const update = (particle: IParticle, maxVelocity?: number): void => {
   Vector.add(particle.velocity, particle.acceleration);
 
   const mVelocity = maxVelocity ?? particle.maxVelocity;
@@ -45,15 +45,12 @@ export const updateParticle = (particle: IParticle, maxVelocity?: number): void 
   Vector.multiply(particle.acceleration, 0);
 };
 
-export const applyForceToParticle = (particle: IParticle, force: Vector.IVector): void => {
+export const applyForce = (particle: IParticle, force: Vector.IVector): void => {
   Vector.add(particle.acceleration, force);
 };
 
-export const updateParticlePreviousPosition = (particle: IParticle): void => {
+export const updatePreviousPosition = (particle: IParticle): void => {
   particle.previousPosition = Vector.clone(particle.position);
 };
 
-export const copyParticle = (particle: IParticle): IParticle =>
-  createParticle({ position: Vector.clone(particle.position) });
-
-export default createParticle;
+export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
