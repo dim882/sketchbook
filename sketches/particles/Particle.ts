@@ -4,7 +4,7 @@ import {
   multiply as multiplyVector,
   limit as limitVector,
   add as addVector,
-  createVector,
+  create,
 } from './Vector';
 
 export interface IParticle {
@@ -26,8 +26,8 @@ interface IParticleConstructor {
 
 export const createParticle = ({
   position,
-  velocity = createVector(0, 0),
-  acceleration = createVector(0, 0),
+  velocity = create(0, 0),
+  acceleration = create(0, 0),
   maxVelocity,
   radius = 1,
 }: IParticleConstructor): IParticle => ({

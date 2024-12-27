@@ -6,9 +6,9 @@ export interface IVector {
   z?: number;
 }
 
-export const createVector = (x: number, y: number, z = 0): IVector => ({ x, y, z });
+export const create = (x: number, y: number, z = 0): IVector => ({ x, y, z });
 
-export const createVectorFromRadians = (angle: number) => createVector(Math.cos(angle), Math.sin(angle));
+export const fromRadians = (angle: number) => create(Math.cos(angle), Math.sin(angle));
 
 export const add = (v1: IVector, v2: IVector): IVector => {
   const z = v1.z !== undefined && v2.z !== undefined ? v1.z + v2.z : v1.z;
@@ -69,7 +69,7 @@ export const normalize = (v: IVector): IVector => {
     return multiply(v, 1 / length);
   }
 
-  return createVector(0, 0, 0);
+  return create(0, 0, 0);
 };
 
 export const getMagnitudeSquared = (v: IVector): number => v.x * v.x + v.y * v.y + (v.z ? v.z * v.z : 0);
@@ -96,7 +96,7 @@ export const dot = (v1: IVector, v2: IVector): number =>
 // Is this correct?
 export const toArray = (v: IVector): number[] => [v.x, v.y, v.z ?? 0];
 
-export const clone = (v: IVector): IVector => createVector(v.x, v.y, v.z);
+export const clone = (v: IVector): IVector => create(v.x, v.y, v.z);
 
 export const toAngle = (v: IVector): number => Math.atan2(v.y, v.x);
 
@@ -110,6 +110,6 @@ export const fromAngle = (angleRadians: number, length = 1): IVector => {
   return { x, y, z };
 };
 
-export const fromTuple = ([x, y]: IPointTuple): IVector => createVector(x, y);
+export const fromTuple = ([x, y]: IPointTuple): IVector => create(x, y);
 
 export const toTuple = (v: IVector): IPointTuple => [v.x, v.y];
