@@ -1,3 +1,5 @@
+import type { IPointTuple } from './particles.utils';
+
 export interface IVector {
   x: number;
   y: number;
@@ -107,3 +109,5 @@ export const fromAngle = (angleRadians: number, length = 1): IVector => {
 
   return { x, y, z };
 };
+
+export const fromTuple = ([x, y]: IPointTuple): IVector => createVector(x, y);

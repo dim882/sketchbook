@@ -1,3 +1,4 @@
+
 export type IRenderFunc = (context: CanvasRenderingContext2D, t: number) => void;
 export type IPointTuple = [number, number];
 
@@ -32,3 +33,5 @@ export const getCanvasContext = (canvas: HTMLCanvasElement): CanvasRenderingCont
 
   return context;
 };
+
+
