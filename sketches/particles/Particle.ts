@@ -42,7 +42,7 @@ function limitVelocity(velocity: Vector.IVector, maxVelocity: number) {
 export const applyForce = (particle: IParticle, force: Vector.IVector, maxVelocity?: number): IParticle => {
   return {
     ...particle,
-    velocity: makeVelocity(particle, force, maxVelocity),
+    velocity: makeVelocity(particle, force, maxVelocity), // TS: why isn't this erroring? Our maxVelocity might be null
     position: Vector.add(particle.position, particle.velocity),
     acceleration: Vector.multiply(particle.acceleration, 0),
   };
