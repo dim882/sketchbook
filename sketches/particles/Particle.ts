@@ -31,14 +31,14 @@ export const copy = (particle: IParticle): IParticle => create({ position: Vecto
 
 function makeVelocity(particle: IParticle, force: Vector.IVector, maxVelocity: number | undefined) {
   const acceleration = Vector.add(particle.acceleration, force);
-  const velocity = Vector.add(particle.velocity, acceleration);
-  const mVelocity = maxVelocity ?? particle.maxVelocity;
 
-  if (mVelocity) {
-    return Vector.limit(velocity, mVelocity);
+  return Vector.add(particle.velocity, acceleration);
+}
+
+function limitVelocity(velocity: Vector.IVector, maxVelocity: number) {
+  if (maxVelocity) {
+    return Vector.limit(velocity, maxVelocity);
   }
-
-  return velocity;
 }
 
 export const applyForce = (particle: IParticle, force: Vector.IVector, maxVelocity?: number): IParticle => {
