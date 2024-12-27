@@ -24,6 +24,17 @@ app.get('/', (req, res) => {
 
     // prettier-ignore
     res.send(`
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@100&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+      <style>
+        body {
+          font-family: "Inter", sans serif;
+          font-optical-sizing: auto;
+          font-weight: 500;
+          font-style: normal;
+        }
+      </style>
       <h1>Sketches</h1>
       <ul>
         ${dirs.map((dir) => 
