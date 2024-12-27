@@ -12,8 +12,8 @@ interface IParticleCreateArgs {
   position: Vector.IVector;
   velocity?: Vector.IVector;
   acceleration?: Vector.IVector;
-  maxVelocity?: number;
-  radius?: number;
+  radius?: number; // remove?
+  maxVelocity?: number; // remove
 }
 
 export const create = ({
@@ -30,12 +30,15 @@ export const create = ({
   radius,
 });
 
-export const applyForce = (particle: IParticle, force: Vector.IVector): void => {
+export const applyForce = (particle: IParticle, force: Vector.IVector): IParticle => {
   Vector.add(particle.acceleration, force);
+
+  return particle;
 };
 
 export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
 
+// This should use function composition
 export const update = (particle: IParticle, maxVelocity?: number): void => {
   Vector.add(particle.velocity, particle.acceleration);
 
