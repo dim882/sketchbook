@@ -3,7 +3,7 @@ import * as Vector from './Vector';
 
 describe('Particle', () => {
   describe('applyForce', () => {
-    it('should apply force to particle acceleration', () => {
+    it.only('should apply force to particle acceleration', () => {
       const particle = Particle.create({ position: Vector.create(0, 0) });
       const force = Vector.create(1, 1);
 

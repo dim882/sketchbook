@@ -30,24 +30,26 @@ export const create = ({
   radius,
 });
 
+export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
+
+// These should use function composition
 export const applyForce = (particle: IParticle, force: Vector.IVector): IParticle => {
-  Vector.add(particle.acceleration, force);
+  particle.acceleration = Vector.add(particle.acceleration, force);
 
   return particle;
 };
 
-export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
-
-// This should use function composition
-export const update = (particle: IParticle, maxVelocity?: number): void => {
-  Vector.add(particle.velocity, particle.acceleration);
+export const update = (particle: IParticle, maxVelocity?: number): IParticle => {
+  particle.velocity = Vector.add(particle.velocity, particle.acceleration);
 
   const mVelocity = maxVelocity ?? particle.maxVelocity;
 
   if (mVelocity) {
-    Vector.limit(particle.velocity, mVelocity);
+    particle.velocity = Vector.limit(particle.velocity, mVelocity);
   }
 
-  Vector.add(particle.position, particle.velocity);
-  Vector.multiply(particle.acceleration, 0);
+  particle.position = Vector.add(particle.position, particle.velocity);
+  particle.acceleration = Vector.multiply(particle.acceleration, 0);
+
+  return particle;
 };
