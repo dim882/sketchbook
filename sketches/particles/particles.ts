@@ -1,6 +1,6 @@
 import createParticle from './Particle.js';
 import { getCanvas, getCanvasContext, type IPointTuple, loop } from './particles.utils.js';
-import { fromTuple } from './Vector.js';
+import { fromTuple, toTuple } from './Vector.js';
 
 document.body.onload = () => {
   const canvas = getCanvas();
@@ -14,4 +14,11 @@ function render(context: CanvasRenderingContext2D, t: number) {
   const center: IPointTuple = [width / 2, height / 2];
 
   const particle = createParticle({ position: fromTuple(center) });
+
+  console.log('hi??');
+
+  context.beginPath();
+  context.arc(...toTuple(particle.position), 10, 0, 2 * Math.PI);
+  context.fillStyle = 'purple';
+  context.fill();
 }

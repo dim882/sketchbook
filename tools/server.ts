@@ -49,8 +49,6 @@ app.get('/sketches/:sketchName', (req, res) => {
     if (err) {
       console.error('Error sending file:', err);
       res.status(404).send('Sketch not found');
-    } else {
-      console.log('Sketch sent successfully');
     }
   });
 });

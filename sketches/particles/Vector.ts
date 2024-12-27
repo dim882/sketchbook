@@ -111,3 +111,5 @@ export const fromAngle = (angleRadians: number, length = 1): IVector => {
 };
 
 export const fromTuple = ([x, y]: IPointTuple): IVector => createVector(x, y);
+
+export const toTuple = (v: IVector): IPointTuple => [v.x, v.y];
