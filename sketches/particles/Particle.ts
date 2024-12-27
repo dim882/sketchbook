@@ -36,9 +36,7 @@ function makeVelocity(particle: IParticle, force: Vector.IVector, maxVelocity: n
 }
 
 function limitVelocity(velocity: Vector.IVector, maxVelocity: number) {
-  if (maxVelocity) {
-    return Vector.limit(velocity, maxVelocity);
-  }
+  return maxVelocity ? Vector.limit(velocity, maxVelocity) : velocity;
 }
 
 export const applyForce = (particle: IParticle, force: Vector.IVector, maxVelocity?: number): IParticle => {
