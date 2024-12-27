@@ -12,10 +12,10 @@ watcher.on('all', (event, filePath) => {
   const configPath = findNearestConfig(path.dirname(filePath));
 
   if (configPath) {
-    console.log(`Detected change. Running rollup for ${path}...`);
+    console.log(`Detected change. Building ${filePath}...`);
 
     runRollup(configPath)
-      .then(() => console.log(`Rollup completed for ${path.dirname(configPath)}`))
+      .then(() => console.log(`Built ${path.dirname(configPath)}`))
       .catch(logError);
   } else {
     console.log(`No config found: ${configPath}`);
