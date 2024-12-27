@@ -29,15 +29,9 @@ export const create = ({
 
 export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
 
-// These should use function composition
-export const applyForce = (particle: IParticle, force: Vector.IVector): IParticle => {
-  particle.acceleration = Vector.add(particle.acceleration, force);
-
-  return particle;
-};
-
-function makeVelocity(particle: IParticle, maxVelocity: number | undefined) {
-  const velocity = Vector.add(particle.velocity, particle.acceleration);
+function makeVelocity(particle: IParticle, force: Vector.IVector, maxVelocity: number | undefined) {
+  const acceleration = Vector.add(particle.acceleration, force);
+  const velocity = Vector.add(particle.velocity, acceleration);
   const mVelocity = maxVelocity ?? particle.maxVelocity;
 
   if (mVelocity) {
@@ -47,8 +41,8 @@ function makeVelocity(particle: IParticle, maxVelocity: number | undefined) {
   return velocity;
 }
 
-export const update = (particle: IParticle, maxVelocity?: number): IParticle => {
-  particle.velocity = makeVelocity(particle, maxVelocity);
+export const applyForce = (particle: IParticle, force: Vector.IVector, maxVelocity?: number): IParticle => {
+  particle.velocity = makeVelocity(particle, force, maxVelocity);
   particle.position = Vector.add(particle.position, particle.velocity);
   particle.acceleration = Vector.multiply(particle.acceleration, 0);
 
