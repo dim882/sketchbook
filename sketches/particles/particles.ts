@@ -15,10 +15,8 @@ function render(context: CanvasRenderingContext2D, t: number) {
 
   const particle = createParticle({ position: fromTuple(center) });
 
-  console.log('hi??');
-
   context.beginPath();
   context.arc(...toTuple(particle.position), 10, 0, 2 * Math.PI);
-  context.fillStyle = 'purple';
+  context.fillStyle = 'red';
   context.fill();
 }

@@ -10,6 +10,7 @@ const watcher = makeWatcher(SKETCHES_DIR);
 
 watcher.on('all', (event, filePath) => {
   const configPath = findNearestConfig(path.dirname(filePath));
+  console.log({ configPath });
 
   if (configPath) {
     console.log(`Detected change. Running rollup for ${path.dirname(configPath)}...`);
@@ -27,10 +28,27 @@ function makeWatcher(dir: string) {
     ignored: [/node_modules/, /\.DS_Store/, /dist/],
     persistent: true,
     ignoreInitial: true,
+    awaitWriteFinish: {
+      stabilityThreshold: 2000,
+      pollInterval: 100,
+    },
+    usePolling: true,
+    alwaysStat: true,
+    depth: 99,
   };
   const watchPaths = [dir, path.join(dir, './**/*')];
 
-  return chokidar.watch(watchPaths, watchOptions);
+  const watcher = chokidar.watch(watchPaths, watchOptions);
+
+  // Add debug logging
+  watcher
+    .on('add', (filePath) => console.log(`File ${filePath} has been added`))
+    .on('change', (filePath) => console.log(`File ${filePath} has been changed`))
+    .on('unlink', (filePath) => console.log(`File ${filePath} has been removed`))
+    .on('error', (error) => console.error(`Watcher error: ${error}`))
+    .on('ready', () => console.log('Initial scan complete. Ready for changes'));
+
+  return watcher;
 }
 
 const findNearestConfig = (dir: string): string | null => {
