@@ -1,14 +1,12 @@
-import express, { Response } from 'express';
-import fs from 'fs';
-import path from 'path';
-import { pipe } from 'ramda';
-
-import { Box, Either, fromNullable, tryCatch } from '../lib/FPUtils';
+import express from 'express';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const app = express();
 const port = 2000;
-
 const sketchesPath = path.join(__dirname, '../sketches');
+const makeSketchPath = (sketchName: string) => path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
+const makeDistPath = (sketchName: string) => path.join(__dirname, '../sketches', sketchName, 'dist');
 
 // Route to list all sketches
 app.get('/', (req, res) => {
@@ -64,18 +62,3 @@ app.use('/sketches/:sketchName/dist', (req, res, next) => {
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
-
-const makeSketchPath = (sketchName: string) => path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
-
-const makeDistPath = (sketchName: any) => path.join(__dirname, '../sketches', sketchName, 'dist');
-
-const sendFile = (res: Response, filePath: string) =>
-  new Promise<void>((resolve, reject) => {
-    res.sendFile(filePath, (err) => {
-      if (err) {
-        reject('Sketch not found');
-      } else {
-        resolve();
-      }
-    });
-  });
