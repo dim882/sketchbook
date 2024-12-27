@@ -1,5 +1,4 @@
-
-export type IRenderFunc = (context: CanvasRenderingContext2D, t: number) => void;
+export type IRenderFunc = (t: number) => void;
 export type IPointTuple = [number, number];
 
 export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps = 60) {
@@ -13,7 +12,7 @@ export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps
     if (time - lastFrameTime < frameDuration) return;
     lastFrameTime = time;
 
-    render(context, t); // Assuming `context` is accessible in this scope
+    render(t); // Assuming `context` is accessible in this scope
     t++;
   }
 
@@ -33,5 +32,3 @@ export const getCanvasContext = (canvas: HTMLCanvasElement): CanvasRenderingCont
 
   return context;
 };
-
-

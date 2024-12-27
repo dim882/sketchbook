@@ -10,14 +10,15 @@ const watcher = makeWatcher(SKETCHES_DIR);
 
 watcher.on('all', (event, filePath) => {
   const configPath = findNearestConfig(path.dirname(filePath));
-  console.log({ configPath });
 
   if (configPath) {
-    console.log(`Detected change. Running rollup for ${path.dirname(configPath)}...`);
+    console.log(`Detected change. Running rollup for ${path}...`);
 
     runRollup(configPath)
       .then(() => console.log(`Rollup completed for ${path.dirname(configPath)}`))
       .catch(logError);
+  } else {
+    console.log(`No config found: ${configPath}`);
   }
 });
 
