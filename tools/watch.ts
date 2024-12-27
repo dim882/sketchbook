@@ -15,7 +15,7 @@ watcher.on('all', (event, filePath) => {
     console.log(`Detected change. Building ${filePath}...`);
 
     runRollup(configPath)
-      .then(() => console.log(`Built ${path.dirname(configPath)}`))
+      .then(() => console.log(`Built ${filePath}`))
       .catch(logError);
   } else {
     console.log(`No config found: ${configPath}`);
@@ -30,7 +30,7 @@ function makeWatcher(dir: string) {
     persistent: true,
     ignoreInitial: true,
     awaitWriteFinish: {
-      stabilityThreshold: 2000,
+      stabilityThreshold: 500,
       pollInterval: 100,
     },
     usePolling: true,
@@ -69,7 +69,6 @@ const runRollup = async (configPath: string) => {
     process.chdir(path.dirname(configPath));
 
     const config: RollupOptions = await getRollupConfig(configPath);
-    console.log({ config });
 
     const bundle = await rollup(config);
 
