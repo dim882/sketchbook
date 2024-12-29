@@ -8,4 +8,5 @@ export default {
   transform: {
     '^.+\\.tsx?$': ['ts-jest', { useESM: true }],
   },
+  reporters: ['default', './ListReporter.js'],
 };
