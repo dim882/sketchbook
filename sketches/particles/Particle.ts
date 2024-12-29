@@ -39,7 +39,7 @@ export function limitVelocity(velocity: Vector.IVector, maxVelocity: number) {
   return maxVelocity ? Vector.limit(velocity, maxVelocity) : velocity;
 }
 
-export const applyForce = (particle: IParticle, force: Vector.IVector, maxVelocity?: number): IParticle => {
+export const applyForce = (particle: IParticle, force: Vector.IVector): IParticle => {
   return {
     ...particle,
     velocity: makeVelocity(particle, force),
