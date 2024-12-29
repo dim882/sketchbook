@@ -1,30 +1,30 @@
 import * as Vector from './Vector';
 
+type OptionalExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
+
+// type Debug<T> = { [P in keyof T]: T[P] };
+// type ExpandedType = Debug<IParticleCreateArgs>;
+// let _: ExpandedType = null!;
+
 export interface IParticle {
   position: Vector.IVector;
   velocity: Vector.IVector;
   acceleration: Vector.IVector;
-  maxVelocity?: number;
-  radius: number;
+  mass: number;
 }
 
-interface IParticleCreateArgs {
-  position: Vector.IVector;
-  velocity?: Vector.IVector;
-  acceleration?: Vector.IVector;
-  radius?: number; // remove?
-}
+type IParticleCreateArgs = OptionalExcept<IParticle, 'position'>;
 
 export const create = ({
   position,
   velocity = Vector.create(0, 0),
   acceleration = Vector.create(0, 0),
-  radius = 1,
+  mass = 1,
 }: IParticleCreateArgs): IParticle => ({
   position,
   velocity,
   acceleration,
-  radius,
+  mass,
 });
 
 export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
@@ -42,10 +42,7 @@ export function limitVelocity(velocity: Vector.IVector, maxVelocity: number) {
 export const applyForce = (particle: IParticle, force: Vector.IVector, maxVelocity?: number): IParticle => {
   return {
     ...particle,
-    velocity: (() => {
-      const velocity = makeVelocity(particle, force);
-      return maxVelocity ? limitVelocity(velocity, maxVelocity) : velocity;
-    })(),
+    velocity: makeVelocity(particle, force),
     position: Vector.add(particle.position, particle.velocity),
     acceleration: Vector.multiply(particle.acceleration, 0),
   };
