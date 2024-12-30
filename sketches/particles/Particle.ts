@@ -9,21 +9,14 @@ type OptionalExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
 export interface IParticle {
   position: Vector.IVector;
   velocity: Vector.IVector;
-  acceleration: Vector.IVector;
   mass: number;
 }
 
 type IParticleCreateArgs = OptionalExcept<IParticle, 'position'>;
 
-export const create = ({
-  position,
-  velocity = Vector.create(0, 0),
-  acceleration = Vector.create(0, 0),
-  mass = 1,
-}: IParticleCreateArgs): IParticle => ({
+export const create = ({ position, velocity = Vector.create(0, 0), mass = 1 }: IParticleCreateArgs): IParticle => ({
   position,
   velocity,
-  acceleration,
   mass,
 });
 
@@ -44,6 +37,5 @@ export const applyForce = (particle: IParticle, force: Vector.IVector): IParticl
     ...particle,
     velocity: makeVelocity(particle, force),
     position: Vector.add(particle.position, particle.velocity),
-    acceleration: Vector.multiply(particle.acceleration, 0),
   };
 };
