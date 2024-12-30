@@ -3,33 +3,39 @@ import * as Vector from './Vector';
 
 describe('Particle', () => {
   describe('applyForce', () => {
-    it('should update particle position and velocity', () => {
-      let particle = Particle.create({
+    it('should update particle velocity and position correctly', () => {
+      const particle = Particle.create({
         position: Vector.create(0, 0),
         velocity: Vector.create(1, 1),
+        mass: 2,
       });
+      const force = Vector.create(4, 3);
+      const dt = 0.5;
 
-      particle = Particle.applyForce(particle, Vector.create(0.5, 0.5));
+      const updatedParticle = Particle.applyForce(particle, force, dt);
 
-      expect(particle).toEqual({
-        velocity: Vector.create(1.5, 1.5),
-        position: Vector.create(1.5, 1.5),
-        acceleration: Vector.create(0, 0),
-      });
+      expect(updatedParticle.velocity.x).toBeCloseTo(2);
+      expect(updatedParticle.velocity.y).toBeCloseTo(1.75);
+      expect(updatedParticle.position.x).toBeCloseTo(1);
+      expect(updatedParticle.position.y).toBeCloseTo(0.875);
     });
 
-    xit('should limit velocity when maxVelocity is provided', () => {
-      let particle = Particle.create({
+    it('should limit velocity when maxVelocity is specified', () => {
+      const particle = Particle.create({
         position: Vector.create(0, 0),
-        velocity: Vector.create(2, 2),
-        acceleration: Vector.create(1, 1),
+        velocity: Vector.create(3, 4),
+        mass: 1,
       });
+      const force = Vector.create(10, 10);
+      const dt = 1;
+      const maxVelocity = 6;
 
-      particle = Particle.applyForce(particle, Vector.create(2, 2));
+      const updatedParticle = Particle.applyForce(particle, force, dt, maxVelocity);
 
-      const velocityMagnitude = Vector.getMagnitude(particle.velocity);
-      expect(velocityMagnitude).toBeLessThanOrEqual(2);
-      expect(Vector.equals(particle.velocity, Vector.setMagnitude(particle.velocity, 2))).toBe(true);
+      const speed = Vector.getMagnitude(updatedParticle.velocity);
+      expect(speed).toBeCloseTo(maxVelocity);
+      expect(updatedParticle.velocity.x).toBeCloseTo(3.6);
+      expect(updatedParticle.velocity.y).toBeCloseTo(4.8);
     });
   });
 });

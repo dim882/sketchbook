@@ -22,20 +22,19 @@ export const create = ({ position, velocity = Vector.create(0, 0), mass = 1 }: I
 
 export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
 
-function makeVelocity(particle: IParticle, force: Vector.IVector) {
-  const acceleration = Vector.add(particle.acceleration, force);
+export const applyForce = (particle: IParticle, force: Vector.IVector, dt: number, maxVelocity?: number): IParticle => {
+  const acceleration = Vector.divide(force, particle.mass);
+  let newVelocity = Vector.add(particle.velocity, Vector.multiply(acceleration, dt));
 
-  return Vector.add(particle.velocity, acceleration);
-}
+  if (maxVelocity !== undefined) {
+    newVelocity = Vector.limit(newVelocity, maxVelocity);
+  }
 
-export function limitVelocity(velocity: Vector.IVector, maxVelocity: number) {
-  return maxVelocity ? Vector.limit(velocity, maxVelocity) : velocity;
-}
+  const newPosition = Vector.add(particle.position, Vector.multiply(newVelocity, dt));
 
-export const applyForce = (particle: IParticle, force: Vector.IVector): IParticle => {
   return {
     ...particle,
-    velocity: makeVelocity(particle, force),
-    position: Vector.add(particle.position, particle.velocity),
+    velocity: newVelocity,
+    position: newPosition,
   };
 };
