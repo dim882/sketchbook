@@ -22,12 +22,14 @@ export const create = ({ position, velocity = Vector.create(0, 0), mass = 1 }: I
 
 export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
 
-export const applyForce = (
-  particle: IParticle,
-  force: Vector.IVector,
-  deltaTime = 1,
-  maxVelocity?: number
-): IParticle => {
+type ApplyForceArgs = {
+  particle: IParticle;
+  force: Vector.IVector;
+  deltaTime?: number;
+  maxVelocity?: number;
+};
+
+export const applyForce = ({ particle, force, deltaTime = 1, maxVelocity }: ApplyForceArgs): IParticle => {
   const acceleration = Vector.divide(force, particle.mass);
   let newVelocity = Vector.add(particle.velocity, Vector.multiply(acceleration, deltaTime));
 
