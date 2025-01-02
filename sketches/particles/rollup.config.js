@@ -6,7 +6,7 @@ export default {
   output: {
     file: 'dist/bundle.js',
     format: 'module',
-    sourcemap: true,
+    sourcemap: false,
   },
   plugins: [nodeResolve(), typescript()],
 };
