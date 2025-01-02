@@ -26,16 +26,16 @@ describe('Particle', () => {
         velocity: Vector.create(3, 4),
         mass: 1,
       });
-      const force = Vector.create(10, 10);
+      const force = Vector.create(100, 100);
       const dt = 1;
-      const maxVelocity = 6;
+      const maxVelocity = 3;
 
       const updatedParticle = Particle.applyForce({ particle, force, deltaTime: dt, maxVelocity });
 
       const speed = Vector.getMagnitude(updatedParticle.velocity);
       expect(speed).toBeCloseTo(maxVelocity);
-      expect(updatedParticle.velocity.x).toBeCloseTo(3.6);
-      expect(updatedParticle.velocity.y).toBeCloseTo(4.8);
+      expect(updatedParticle.velocity.x).toBeCloseTo(3);
+      expect(updatedParticle.velocity.y).toBeCloseTo(3);
     });
   });
 });
