@@ -11,13 +11,13 @@ document.body.onload = () => {
   const previousTime = 0;
   const force: Vec.IVector = { x: 0, y: 0 };
 
-  loop(context, createRender(context, { particle, previousTime, currentForce: force }), 60);
+  loop(context, createRender(context, { particle, previousTime, force }), 60);
 };
 
 interface ISketchData {
   particle: IParticle;
   previousTime: number;
-  currentForce: Vec.IVector;
+  force: Vec.IVector;
 }
 
 const createRender = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
@@ -29,13 +29,13 @@ const createRender = (context: CanvasRenderingContext2D, data: ISketchData) => (
     const angle = Math.random() * Math.PI * 2;
     const newForce = 100;
 
-    data.currentForce = Vec.multiply(Vec.fromAngle(angle), newForce);
+    data.force = Vec.multiply(Vec.fromAngle(angle), newForce);
     data.previousTime = t;
   }
 
   data.particle = applyForce({
     particle: data.particle,
-    force: data.currentForce,
+    force: data.force,
     deltaTime: 1 / 60,
   });
 
