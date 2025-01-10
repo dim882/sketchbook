@@ -14,41 +14,41 @@ document.body.onload = () => {
   loop(context, createRender(context, { particle, lastForceTime, currentForce }), 60);
 };
 
-interface ISetupData {
+interface ISketchData {
   particle: IParticle;
   lastForceTime: number;
   currentForce: IVector;
 }
 
-const createRender = (context: CanvasRenderingContext2D, setupData: ISetupData) => (t: number) => {
+const createRender = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { width, height } = context.canvas;
 
   // Apply new force every 2 seconds
-  if (t - setupData.lastForceTime >= 120) {
+  if (t - data.lastForceTime >= 120) {
     // 60 fps * 2 seconds = 120 frames
     const randomAngle = Math.random() * Math.PI * 2;
     const forceMagnitude = 100;
 
-    setupData.currentForce = multiply(fromAngle(randomAngle), forceMagnitude);
-    setupData.lastForceTime = t;
+    data.currentForce = multiply(fromAngle(randomAngle), forceMagnitude);
+    data.lastForceTime = t;
 
     // Reset particle velocity
-    setupData.particle = {
-      ...setupData.particle,
+    data.particle = {
+      ...data.particle,
       velocity: { x: 0, y: 0 },
     };
   }
 
-  setupData.particle = applyForce({
-    particle: setupData.particle,
-    force: setupData.currentForce,
+  data.particle = applyForce({
+    particle: data.particle,
+    force: data.currentForce,
     deltaTime: 1 / 60, // assuming 60 FPS
   });
 
   context.clearRect(0, 0, width, height);
 
   context.beginPath();
-  context.arc(...toTuple(setupData.particle.position), 10, 0, 2 * Math.PI);
+  context.arc(...toTuple(data.particle.position), 10, 0, 2 * Math.PI);
   context.fillStyle = 'purple';
   context.fill();
 };
