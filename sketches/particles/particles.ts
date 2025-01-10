@@ -11,7 +11,7 @@ document.body.onload = () => {
   const previousTime = 0;
   const force: Vec.IVector = { x: 0, y: 0 };
 
-  loop(createRender(context, { particle, previousTime, force }), 60);
+  loop(render(context, { particle, previousTime, force }), 60);
 };
 
 interface ISketchData {
@@ -20,7 +20,7 @@ interface ISketchData {
   force: Vec.IVector;
 }
 
-const createRender = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
+const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { width, height } = context.canvas;
 
   if (t - data.previousTime >= 120) {
