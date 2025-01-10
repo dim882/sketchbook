@@ -8,29 +8,29 @@ document.body.onload = () => {
   const { width, height } = canvas;
   const center: IPointTuple = [width / 2, height / 2];
   const particle = create({ position: Vec.fromTuple(center) });
-  const lastForceTime = 0;
+  const previousTime = 0;
   const force: Vec.IVector = { x: 0, y: 0 };
 
-  loop(context, createRender(context, { particle, lastForceTime, currentForce: force }), 60);
+  loop(context, createRender(context, { particle, previousTime, currentForce: force }), 60);
 };
 
 interface ISketchData {
   particle: IParticle;
-  lastForceTime: number;
+  previousTime: number;
   currentForce: Vec.IVector;
 }
 
 const createRender = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { width, height } = context.canvas;
 
-  if (t - data.lastForceTime >= 120) {
+  if (t - data.previousTime >= 120) {
     data.particle.velocity = { x: 0, y: 0 };
 
     const angle = Math.random() * Math.PI * 2;
     const newForce = 100;
 
     data.currentForce = Vec.multiply(Vec.fromAngle(angle), newForce);
-    data.lastForceTime = t;
+    data.previousTime = t;
   }
 
   data.particle = applyForce({
