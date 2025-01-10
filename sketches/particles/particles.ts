@@ -39,17 +39,14 @@ const createRender = (context: CanvasRenderingContext2D, setupData: ISetupData) 
     };
   }
 
-  // Apply the current force
   setupData.particle = applyForce({
     particle: setupData.particle,
     force: setupData.currentForce,
     deltaTime: 1 / 60, // assuming 60 FPS
   });
 
-  // Clear the canvas
   context.clearRect(0, 0, width, height);
 
-  // Draw the particle
   context.beginPath();
   context.arc(...toTuple(setupData.particle.position), 10, 0, 2 * Math.PI);
   context.fillStyle = 'purple';
