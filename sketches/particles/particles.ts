@@ -5,13 +5,13 @@ import { fromTuple, type IVector, toTuple, fromAngle, multiply } from './Vector.
 document.body.onload = () => {
   const canvas = getCanvas();
   const context = getCanvasContext(canvas);
-  const { width, height } = context.canvas;
+  const { width, height } = canvas;
   const center: IPointTuple = [width / 2, height / 2];
   const particle = create({ position: fromTuple(center) });
   const lastForceTime = 0;
-  const currentForce: IVector = { x: 0, y: 0 };
+  const force: IVector = { x: 0, y: 0 };
 
-  loop(context, createRender(context, { particle, lastForceTime, currentForce }), 60);
+  loop(context, createRender(context, { particle, lastForceTime, currentForce: force }), 60);
 };
 
 interface ISketchData {
@@ -23,16 +23,15 @@ interface ISketchData {
 const createRender = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { width, height } = context.canvas;
 
-  // Apply new force every 2 seconds
+  // Apply force every 2 seconds
   if (t - data.lastForceTime >= 120) {
     // Stop any current motion
     data.particle.velocity = { x: 0, y: 0 };
 
-    // 60 fps * 2 seconds = 120 frames
-    const randomAngle = Math.random() * Math.PI * 2;
-    const forceMagnitude = 100;
+    const angle = Math.random() * Math.PI * 2;
+    const newForce = 100;
 
-    data.currentForce = multiply(fromAngle(randomAngle), forceMagnitude);
+    data.currentForce = multiply(fromAngle(angle), newForce);
     data.lastForceTime = t;
   }
 
