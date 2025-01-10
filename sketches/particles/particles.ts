@@ -25,18 +25,15 @@ const createRender = (context: CanvasRenderingContext2D, data: ISketchData) => (
 
   // Apply new force every 2 seconds
   if (t - data.lastForceTime >= 120) {
+    // Stop any current motion
+    data.particle.velocity = { x: 0, y: 0 };
+
     // 60 fps * 2 seconds = 120 frames
     const randomAngle = Math.random() * Math.PI * 2;
     const forceMagnitude = 100;
 
     data.currentForce = multiply(fromAngle(randomAngle), forceMagnitude);
     data.lastForceTime = t;
-
-    // Reset particle velocity
-    data.particle = {
-      ...data.particle,
-      velocity: { x: 0, y: 0 },
-    };
   }
 
   data.particle = applyForce({
