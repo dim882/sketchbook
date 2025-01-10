@@ -1,7 +1,7 @@
 export type IRenderFunc = (t: number) => void;
 export type IPointTuple = [number, number];
 
-export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps = 60) {
+export function loop(render: IRenderFunc, fps = 60) {
   const frameDuration = 1000 / fps;
   let lastFrameTime = 0;
   let t = 0;

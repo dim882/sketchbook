@@ -11,7 +11,7 @@ document.body.onload = () => {
   const previousTime = 0;
   const force: Vec.IVector = { x: 0, y: 0 };
 
-  loop(context, createRender(context, { particle, previousTime, force }), 60);
+  loop(createRender(context, { particle, previousTime, force }), 60);
 };
 
 interface ISketchData {
