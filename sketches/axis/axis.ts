@@ -33,7 +33,7 @@ function render(context: CanvasRenderingContext2D) {
   context.lineWidth = 1;
 
   traceArc(context, radius, 0, Math.PI / 2, 20);
-  traceArc(context, radius, Math.PI, (Math.PI / 2) * 3, 200);
+  traceArc(context, radius, Math.PI, (Math.PI / 2) * 3, 100);
 
   context.restore();
 }
