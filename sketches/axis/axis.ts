@@ -1,4 +1,4 @@
-import { traceArc } from './axis.utils';
+import { range, traceArc } from './axis.utils';
 
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
@@ -34,6 +34,8 @@ function render(context: CanvasRenderingContext2D) {
 
   traceArc(context, radius, 0, Math.PI / 2, 20);
   traceArc(context, radius, Math.PI, (Math.PI / 2) * 3, 100);
+
+  range(100, radius, 10).forEach((i) => traceArc(context, i, Math.PI / 2, Math.PI, 1));
 
   context.restore();
 }
