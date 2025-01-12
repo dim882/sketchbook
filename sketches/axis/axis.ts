@@ -1,3 +1,5 @@
+import { traceArc } from './axis.utils';
+
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
@@ -24,16 +26,13 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const radius = Math.min(width, height) * 0.2;
-  const startAngle = 0;
-  const endAngle = Math.PI / 2;
-
   context.save();
   context.translate(...center);
 
-  context.beginPath();
-  context.arc(0, 0, radius, startAngle, endAngle);
-  context.stroke();
+  const radius = Math.min(width, height) * 0.2;
+  const startAngle = 0;
+  const endAngle = Math.PI / 2;
+  traceArc(context, radius, startAngle, endAngle);
 
   context.restore();
 }
