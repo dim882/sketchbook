@@ -2,6 +2,7 @@ import { range, traceArc } from './axis.utils';
 
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
+export type IQuadrant = [number, number];
 
 const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
   return (upper - lower) * generateNumber() + lower;
@@ -31,11 +32,13 @@ function render(context: CanvasRenderingContext2D) {
 
   const radius = Math.min(width, height) * 0.2;
   context.lineWidth = 1;
+  const QUADRANT_1: IQuadrant = [0, Math.PI / 2];
+  const QUADRANT_2: IQuadrant = [Math.PI / 2, Math.PI];
 
-  traceArc(context, radius, 0, Math.PI / 2, 20);
+  traceArc(context, radius, ...QUADRANT_1, 20);
   traceArc(context, radius, Math.PI, (Math.PI / 2) * 3, 100);
 
-  range(100, radius, 10).forEach((i) => traceArc(context, i, Math.PI / 2, Math.PI, 1));
+  range(100, radius, 10).forEach((i) => traceArc(context, i, ...QUADRANT_2, 1));
 
   context.restore();
 }
