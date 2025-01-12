@@ -23,4 +23,17 @@ window.addEventListener('DOMContentLoaded', () => {
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
+
+  const radius = Math.min(width, height) * 0.4;
+  const startAngle = 0;
+  const endAngle = Math.PI;
+
+  context.save();
+  context.translate(...center);
+
+  context.beginPath();
+  context.arc(0, 0, radius, startAngle, endAngle);
+  context.stroke();
+
+  context.restore();
 }
