@@ -46,14 +46,14 @@ function render(context: CanvasRenderingContext2D) {
   range(100, radius, 10).forEach((i) => traceArc(context, i, ...QUADRANTS[1], 1));
   range(150, radius, 20).forEach((i) => traceArc(context, i, ...QUADRANTS[3], 1));
 
-  range(0, Math.PI * 2, Math.PI / 2).forEach((angle) => {
-    context.save();
-    context.rotate(angle);
+  context.save();
+  range(0, 4).forEach(() => {
     context.moveTo(0, 0);
     context.lineTo((width / 2) * 0.6, 0);
     context.stroke();
-    context.restore();
+    context.rotate(Math.PI / 2);
   });
+  context.restore();
 
   context.restore();
 }
