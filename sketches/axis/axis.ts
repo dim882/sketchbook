@@ -30,9 +30,9 @@ function render(context: CanvasRenderingContext2D) {
   context.translate(...center);
 
   const radius = Math.min(width, height) * 0.2;
-  const startAngle = 0;
-  const endAngle = Math.PI / 2;
-  traceArc(context, radius, startAngle, endAngle);
+
+  traceArc(context, radius, 0, Math.PI / 2);
+  traceArc(context, radius, Math.PI, (Math.PI / 2) * 3);
 
   context.restore();
 }
