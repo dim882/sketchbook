@@ -34,11 +34,14 @@ function render(context: CanvasRenderingContext2D) {
   context.lineWidth = 1;
   const QUADRANT_1: IQuadrant = [0, Math.PI / 2];
   const QUADRANT_2: IQuadrant = [Math.PI / 2, Math.PI];
+  const QUADRANT_3: IQuadrant = [Math.PI, (Math.PI / 2) * 3];
+  const QUADRANT_4: IQuadrant = [(Math.PI / 2) * 3, 0];
 
   traceArc(context, radius, ...QUADRANT_1, 20);
-  traceArc(context, radius, Math.PI, (Math.PI / 2) * 3, 100);
+  traceArc(context, radius, ...QUADRANT_3, 100);
 
   range(100, radius, 10).forEach((i) => traceArc(context, i, ...QUADRANT_2, 1));
+  range(150, radius, 20).forEach((i) => traceArc(context, i, ...QUADRANT_4, 1));
 
   context.restore();
 }
