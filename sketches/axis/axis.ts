@@ -24,9 +24,9 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const radius = Math.min(width, height) * 0.4;
+  const radius = Math.min(width, height) * 0.2;
   const startAngle = 0;
-  const endAngle = Math.PI;
+  const endAngle = Math.PI / 2;
 
   context.save();
   context.translate(...center);
