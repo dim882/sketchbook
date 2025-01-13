@@ -1,6 +1,5 @@
 import { range, saveAndRestore, traceArc } from './axis.utils';
 
-export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 export type IQuadrant = [number, number];
 export type IQuadrants = [IQuadrant, IQuadrant, IQuadrant, IQuadrant];
@@ -12,15 +11,7 @@ const QUADRANTS: IQuadrants = [
   [(Math.PI / 2) * 3, 0],
 ];
 
-const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
-  return (upper - lower) * generateNumber() + lower;
-};
-
-const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
-  return Math.floor(getFloat(generateNumber, lower, upper));
-};
-
-const prng = Math.random;
+const BLUE = 'hsl(228, 78%, 80%)';
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
