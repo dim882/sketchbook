@@ -35,13 +35,20 @@ app.get('/', (req, res) => {
       <style>
       </style>
 
-      <h1>Sketches</h1>
-      <ul>
-        ${dirs.map((dir) => 
-          `<li><a href="/sketches/${dir}">${dir}</a></li>`)
-          .join('')
-        }
-      </ul>
+      <div class="container">
+        <div class="list">
+          <h1>Sketches</h1>
+          <ul>
+            ${dirs.map((dir) => 
+              `<li><a href="/sketches/${dir}" target="sketchFrame">${dir}</a></li>`)
+              .join('')
+            }
+          </ul>
+        </div>
+        <div class="preview">
+          <iframe name="sketchFrame" src="about:blank"></iframe>
+        </div>
+      </div>
     `);
   });
 });
