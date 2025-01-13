@@ -1,3 +1,9 @@
+export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
+  context.save();
+  callback();
+  context.restore();
+}
+
 export function traceArc(
   context: CanvasRenderingContext2D,
   radius: number,

@@ -1,4 +1,4 @@
-import { range, traceArc } from './axis.utils';
+import { range, saveAndRestore, traceArc } from './axis.utils';
 
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
@@ -35,25 +35,24 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  context.save();
-  context.translate(...center);
+  saveAndRestore(context, () => {
+    context.translate(...center);
 
-  const radius = Math.min(width, height) * 0.2;
+    saveAndRestore(context, () => {
+      range(0, 4).forEach(() => {
+        context.moveTo(0, 0);
+        context.lineTo((width / 2) * 0.6, 0);
+        context.stroke();
+        context.rotate(Math.PI / 2);
+      });
+    });
 
-  traceArc(context, radius, ...QUADRANTS[0], 20);
-  traceArc(context, radius, ...QUADRANTS[2], 100);
+    const radius = Math.min(width, height) * 0.2;
 
-  range(100, radius, 10).forEach((i) => traceArc(context, i, ...QUADRANTS[1], 1));
-  range(150, radius, 20).forEach((i) => traceArc(context, i, ...QUADRANTS[3], 1));
+    traceArc(context, radius, ...QUADRANTS[0], 20);
+    traceArc(context, radius, ...QUADRANTS[2], 100);
 
-  context.save();
-  range(0, 4).forEach(() => {
-    context.moveTo(0, 0);
-    context.lineTo((width / 2) * 0.6, 0);
-    context.stroke();
-    context.rotate(Math.PI / 2);
+    range(100, radius, 10).forEach((i) => traceArc(context, i, ...QUADRANTS[1], 1));
+    range(150, radius, 20).forEach((i) => traceArc(context, i, ...QUADRANTS[3], 1));
   });
-  context.restore();
-
-  context.restore();
 }
