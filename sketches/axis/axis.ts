@@ -11,7 +11,8 @@ const QUADRANTS: IQuadrants = [
   [(Math.PI / 2) * 3, 0],
 ];
 
-const BLUE = 'hsl(228, 78%, 80%)';
+const BLACK = '#000';
+const BLUE = 'hsl(212, 65%, 54%)';
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -29,13 +30,22 @@ function render(context: CanvasRenderingContext2D) {
   saveAndRestore(context, () => {
     context.translate(...center);
 
+    context.lineWidth = 0;
+    context.beginPath();
+    context.rect(0, -100, 100, 100);
+    context.fillStyle = BLUE;
+    context.fill();
+
+    context.fillStyle = BLACK;
+
     saveAndRestore(context, () => {
+      context.beginPath();
       range(0, 4).forEach(() => {
         context.moveTo(0, 0);
-        context.lineTo((width / 2) * 0.6, 0);
-        context.stroke();
+        context.lineTo((width / 2) * 0.7, 0);
         context.rotate(Math.PI / 2);
       });
+      context.stroke();
     });
 
     const radius = Math.min(width, height) * 0.2;
@@ -44,6 +54,6 @@ function render(context: CanvasRenderingContext2D) {
     traceArc(context, radius, ...QUADRANTS[2], 100);
 
     range(100, radius, 10).forEach((i) => traceArc(context, i, ...QUADRANTS[1], 1));
-    range(150, radius, 20).forEach((i) => traceArc(context, i, ...QUADRANTS[3], 1));
+    // range(150, radius, 20).forEach((i) => traceArc(context, i, ...QUADRANTS[3], 1));
   });
 }
