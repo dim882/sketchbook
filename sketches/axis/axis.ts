@@ -47,6 +47,7 @@ function render(context: CanvasRenderingContext2D) {
       });
       context.stroke();
     });
+    context.filter = 'url(#myFilter)';
 
     const radius = Math.min(width, height) * 0.2;
 
