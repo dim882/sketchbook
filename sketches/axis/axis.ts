@@ -30,6 +30,7 @@ function render(context: CanvasRenderingContext2D) {
   saveAndRestore(context, () => {
     context.translate(...center);
 
+    context.filter = 'url(#myFilter)';
     context.lineWidth = 0;
     context.beginPath();
     context.rect(0, -100, 100, 100);
@@ -47,7 +48,6 @@ function render(context: CanvasRenderingContext2D) {
       });
       context.stroke();
     });
-    context.filter = 'url(#myFilter)';
 
     const radius = Math.min(width, height) * 0.2;
 

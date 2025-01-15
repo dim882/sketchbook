@@ -39,17 +39,18 @@ function render(context: CanvasRenderingContext2D) {
   const grid = createGrid(width, height, CELL_SIZE)
     .map((point) => randomOffset(point, CIRCLE_OFFSET));
 
-  context.fillStyle = backgroundColor;
-  context.fillRect(0, 0, width, height);
+  // context.fillStyle = backgroundColor;
+  // context.fillRect(0, 0, width, height);
 
   const blobContext = createCanvas(width, height);
 
-  applyBlur(blobContext, BLUR);
+  // applyBlur(blobContext, BLUR);
 
-  drawGrid(blobContext, grid, RADIUS, fillColor);
+  context.filter = 'url(#blur)';
+  drawGrid(context, grid, RADIUS, fillColor);
 
   // prettier-ignore
-  flattenColors(blobContext, ALPHA_TRANSFORM, );
+  // flattenColors(blobContext, ALPHA_TRANSFORM, );
 
-  context.drawImage(blobContext.canvas, 0, 0);
+  // context.drawImage(blobContext.canvas, 0, 0);
 }
