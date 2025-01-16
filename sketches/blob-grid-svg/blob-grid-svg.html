@@ -18,7 +18,7 @@
       margin: 0;
     }
   </style>
-  <script src="/sketches/blob-grid/dist/bundle.js" type="module" defer></script>
+  <script src="/sketches/blob-grid-svg/dist/bundle.js" type="module" defer></script>
 </head>
 
 <body>
@@ -30,6 +30,11 @@
         <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
         <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
         <feBlend in="SourceGraphic" in2="goo" />
+        <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+      </filter>
+
+      <filter id="blur">
+        <feGaussianBlur stdDeviation="5" />
       </filter>
     </defs>
   </svg>
