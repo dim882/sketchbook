@@ -9,14 +9,8 @@ import {
   createGrid,
 } from './blob-grid-svg.utils.js';
 
-// const prng = createPRNG(40502);
-const prng = Math.random;
-
 window.addEventListener('DOMContentLoaded', () => {
-  const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-  const context = canvas.getContext('2d');
-
-  render(context);
+  //
 });
 
 function render(context: CanvasRenderingContext2D) {

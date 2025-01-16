@@ -74,7 +74,17 @@ app.use('/sketches/:sketchName/dist', (req, res, next) => {
   const { sketchName } = req.params;
   const distPath = makeDistPath(sketchName);
 
-  express.static(distPath)(req, res, next);
+  express.static(distPath, {
+    setHeaders: (res, path) => {
+      console.log(path);
+
+      if (path.endsWith('.css')) {
+        console.log('sending as css');
+
+        res.setHeader('Content-Type', 'text/css');
+      }
+    },
+  })(req, res, next);
 });
 
 app.listen(port, () => {
