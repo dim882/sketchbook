@@ -33,7 +33,7 @@ function render(context: CanvasRenderingContext2D) {
   const ALPHA_TRANSFORM = 300;
   const CELL_SIZE = 250;
   const CIRCLE_OFFSET = 80;
-  const RADIUS = 70;
+  const RADIUS = 100;
 
   // prettier-ignore
   const grid = createGrid(width, height, CELL_SIZE)
@@ -46,7 +46,7 @@ function render(context: CanvasRenderingContext2D) {
 
   // applyBlur(blobContext, BLUR);
 
-  context.filter = 'url(#blur)';
+  context.filter = 'url(#goo)';
   drawGrid(context, grid, RADIUS, fillColor);
 
   // prettier-ignore

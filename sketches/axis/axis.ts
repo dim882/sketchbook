@@ -4,11 +4,13 @@ export type IPointTuple = [number, number];
 export type IQuadrant = [number, number];
 export type IQuadrants = [IQuadrant, IQuadrant, IQuadrant, IQuadrant];
 
+const QSTARTS = [0, Math.PI / 2, Math.PI, Math.PI * 1.5];
+
 const QUADRANTS: IQuadrants = [
   [0, Math.PI / 2],
   [Math.PI / 2, Math.PI],
-  [Math.PI, (Math.PI / 2) * 3],
-  [(Math.PI / 2) * 3, 0],
+  [Math.PI, Math.PI * 1.5],
+  [Math.PI * 1.5, 0],
 ];
 
 const BLACK = '#000';
