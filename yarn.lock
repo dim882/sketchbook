@@ -3286,6 +3286,7 @@ __metadata:
     "@types/ramda": "npm:^0.29.12"
     ramda: "npm:^0.29.1"
     rollup: "npm:^4.14.3"
+    simplex-noise: "npm:^4.0.3"
     tslib: "npm:^2.6.2"
     typescript: "npm:^5.4.5"
   languageName: unknown
@@ -8250,6 +8251,13 @@ __metadata:
   version: 4.0.2
   resolution: "simplex-noise@npm:4.0.2"
   checksum: 10c0/9eb403eb7831693ee82dc450066bf6652a6ee5c436d3cc759093154ccb086fab90ce8d12d1f4e5e01ebc3c00b5910aa6299114c737149dd89c9af907263f4bba
+  languageName: node
+  linkType: hard
+
+"simplex-noise@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "simplex-noise@npm:4.0.3"
+  checksum: 10c0/117b7f85abd90f3dc63817ed790705ff0fb50cb0bf396a8fc8fa1443265e4b2529429bb34992e43e7b27d6cacb9059f37fa52a37e59c52f51698ad0d3038d0f3
   languageName: node
   linkType: hard
 
