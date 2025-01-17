@@ -1,12 +1,24 @@
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import copy from 'rollup-plugin-copy';
 
 export default {
   input: 'blob-grid-svg.ts',
   output: {
     file: 'dist/bundle.js',
-    format: 'module',
+    format: 'es',
     sourcemap: true,
   },
-  plugins: [nodeResolve(), typescript()],
+  plugins: [
+    nodeResolve(),
+    typescript({
+      include: ['../../lib/**/*.ts', '**/*.ts'],
+    }),
+    copy({
+      targets: [
+        { src: '*.css', dest: 'dist' },
+        { src: '*.html', dest: 'dist' },
+      ],
+    }),
+  ],
 };
