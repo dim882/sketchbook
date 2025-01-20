@@ -14,6 +14,7 @@ const getNoise = createNoise2D(prng);
 
 function App(): JSX.Element {
   const [dimensions, setDimensions] = useState<IDimensions>({ width: 0, height: 0 });
+  const [scrollY, setScrollY] = useState(0);
   const formHue = getInteger(prng, 0, 270);
   const backgroundHue = formHue + 180;
   const backgroundColor = `lch(95% 40% ${backgroundHue})`;
@@ -39,6 +40,19 @@ function App(): JSX.Element {
       window.removeEventListener('resize', updateDimensions);
     };
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  console.log(scrollY);
 
   return (
     <div class="blobs">
