@@ -57,7 +57,7 @@ function App(): JSX.Element {
 
         return (
           <div class="blob" style={style}>
-            {size.toString().substring(0, 2)}
+            {/* {size.toString().substring(0, 2)} */}
           </div>
         );
       })}
