@@ -24,9 +24,16 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.save();
   context.translate(center[0] - 100, 0);
   drawWave(height, t, context);
+  context.stroke();
   context.restore();
 
+  context.beginPath();
+  context.strokeStyle = 'hsl(80, 76%, 56%)';
+  context.save();
+  context.translate(center[0] + 100, 0);
+  drawWave(height, t + 100, context);
   context.stroke();
+  context.restore();
 }
 
 function drawWave(height: number, t: number, context: CanvasRenderingContext2D) {
