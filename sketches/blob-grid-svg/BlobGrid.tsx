@@ -1,11 +1,14 @@
 import { JSX } from 'preact/jsx-runtime';
 import { useState, useEffect } from 'preact/hooks';
-import { createGrid, getInteger } from './blob-grid-svg.utils';
+import { createGrid, getInteger, createPRNG } from './blob-grid-svg.utils';
 
 type IDimensions = {
   width: number;
   height: number;
 };
+
+const prng = createPRNG(0);
+
 function App(): JSX.Element {
   const [dimensions, setDimensions] = useState<IDimensions>({ width: 0, height: 0 });
 
