@@ -1,6 +1,7 @@
 import { JSX } from 'preact/jsx-runtime';
 import { useState, useEffect } from 'preact/hooks';
 import { createGrid, getInteger, createPRNG } from './blob-grid-svg.utils';
+import { createNoise2D } from 'simplex-noise';
 
 type IDimensions = {
   width: number;
@@ -40,6 +41,7 @@ function App(): JSX.Element {
   const RADIUS = 100;
 
   const grid = createGrid(dimensions.width, dimensions.height, CELL_SIZE);
+  console.log(grid);
 
   return (
     <div class="blobs">
