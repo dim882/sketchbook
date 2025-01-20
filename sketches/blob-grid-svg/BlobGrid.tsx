@@ -45,10 +45,9 @@ function App(): JSX.Element {
 
   return (
     <div class="blobs">
-      <div class="blob"></div>
-      <div class="blob"></div>
-      <div class="blob"></div>
-      <div class="blob"></div>
+      {grid.map((point) => (
+        <div class="blob" style={{ left: point[0], top: point[1] }}></div>
+      ))}
     </div>
   );
 }
