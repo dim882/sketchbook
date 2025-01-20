@@ -5,6 +5,7 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/ramda": "^0.29.12",
@@ -13,6 +14,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "preact": "^10.25.4",
     "ramda": "^0.29.1",
     "simplex-noise": "^4.0.3"
   }

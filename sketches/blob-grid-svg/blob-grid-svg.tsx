@@ -1,10 +1,12 @@
 import { getInteger, createGrid } from './blob-grid-svg.utils.js';
+import { render } from 'preact';
+import App from './App';
 
 window.addEventListener('DOMContentLoaded', () => {
   //
 });
 
-function render(context: CanvasRenderingContext2D) {
+function run(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
 
   const formHue = getInteger(prng, 0, 270);
@@ -18,3 +20,9 @@ function render(context: CanvasRenderingContext2D) {
 
   const grid = createGrid(width, height, CELL_SIZE);
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('DOMContentLoaded!');
+
+  render(<App />, document.getElementById('app') as Element);
+});

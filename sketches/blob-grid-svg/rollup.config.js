@@ -1,9 +1,10 @@
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
+import babel from '@rollup/plugin-babel';
 
 export default {
-  input: 'blob-grid-svg.ts',
+  input: 'blob-grid-svg.tsx',
   output: {
     file: 'dist/bundle.js',
     format: 'es',
@@ -13,6 +14,10 @@ export default {
     nodeResolve(),
     typescript({
       include: ['../../lib/**/*.ts', '**/*.ts'],
+    }),
+    babel({
+      babelHelpers: 'bundled',
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
     }),
     copy({
       targets: [
