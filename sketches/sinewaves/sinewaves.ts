@@ -16,11 +16,11 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.fillStyle = '#fff';
   context.fillRect(0, 0, width, height);
 
-  context.beginPath();
-  context.strokeStyle = 'hsl(15, 76%, 56%)';
   context.lineWidth = 30;
   context.lineCap = 'round';
 
+  context.beginPath();
+  context.strokeStyle = 'hsl(15, 76%, 56%)';
   context.save();
   context.translate(center[0] - 100, 0);
   drawWave(height, t, context);
