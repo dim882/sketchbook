@@ -2,13 +2,7 @@ import { getInteger, createGrid } from './blob-grid-svg.utils.js';
 import { render } from 'preact';
 import App from './App';
 
-window.addEventListener('DOMContentLoaded', () => {
-  //
-});
-
-function run(context) {
-  const { width, height } = context.canvas;
-
+function run() {
   const formHue = getInteger(prng, 0, 270);
   const backgroundHue = formHue + 180;
 
