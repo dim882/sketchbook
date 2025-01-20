@@ -51,8 +51,8 @@ function App(): JSX.Element {
           top: point[1],
           width: size,
           height: size,
-
           backgroundColor: `rgba(100, 100, 100 )`,
+          display: size > 0 ? 'block' : 'none',
         };
 
         return (
