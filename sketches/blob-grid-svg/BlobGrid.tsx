@@ -19,6 +19,9 @@ function App(): JSX.Element {
   const backgroundColor = `lch(95% 40% ${backgroundHue})`;
   const fillColor = `lch(40% 50% ${formHue})`;
   const CELL_SIZE = 100;
+  const SIZE_LIMIT = 120;
+  const NOISE_SCALE = 0.001;
+
   const grid = createGrid(dimensions.width, dimensions.height, CELL_SIZE);
 
   useEffect(() => {
@@ -37,29 +40,23 @@ function App(): JSX.Element {
     };
   }, []);
 
-  console.log(grid);
-
   return (
     <div class="blobs">
       {grid.map((point) => {
-        const scale = 0.001;
-        const size = getNoise(point[0] * scale, point[1] * scale) * 200;
-        // console.log({ size });
-        const sizeLimit = 120;
+        const size = getNoise(point[0] * NOISE_SCALE, point[1] * NOISE_SCALE) * 200;
 
         const style = {
           left: point[0],
           top: point[1],
-          width: size > sizeLimit ? sizeLimit : size,
-          height: size > sizeLimit ? sizeLimit : size,
+          width: size > SIZE_LIMIT ? SIZE_LIMIT : size,
+          height: size > SIZE_LIMIT ? SIZE_LIMIT : size,
           backgroundColor: `rgba(100, 100, 100 )`,
           display: size > 0 ? 'block' : 'none',
         };
-        console.log({ style });
 
         return (
           <div class="blob" style={style}>
-            {size.toString().substring(0, 4)}
+            {/* {size.toString().substring(0, 4)} */}
           </div>
         );
       })}
