@@ -13,7 +13,7 @@ export default {
   plugins: [
     nodeResolve(),
     typescript({
-      include: ['../../lib/**/*.ts', '**/*.ts'],
+      tsconfig: './tsconfig.json',
     }),
     babel({
       babelHelpers: 'bundled',

@@ -6,7 +6,7 @@ window.addEventListener('DOMContentLoaded', () => {
   //
 });
 
-function run(context: CanvasRenderingContext2D) {
+function run(context) {
   const { width, height } = context.canvas;
 
   const formHue = getInteger(prng, 0, 270);
@@ -22,7 +22,7 @@ function run(context: CanvasRenderingContext2D) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('DOMContentLoaded!');
+  console.log('DOMContentLoaded?!');
 
   render(<App />, document.getElementById('app') as Element);
 });
