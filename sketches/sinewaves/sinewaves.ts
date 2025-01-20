@@ -17,21 +17,26 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.fillRect(0, 0, width, height);
 
   context.beginPath();
-  context.strokeStyle = '#000';
+  context.strokeStyle = 'hsl(15, 76%, 56%)';
   context.lineWidth = 30;
   context.lineCap = 'round';
 
+  context.save();
+  context.translate(center[0] - 100, 0);
+  drawWave(height, t, context);
+  context.restore();
+
+  context.stroke();
+}
+
+function drawWave(height: number, t: number, context: CanvasRenderingContext2D) {
   for (let y = 0; y < height + 100; y += 50) {
-    const x1 = center[0] + Math.sin(y * 0.005 + t * 0.02) * 200;
-    const x2 = center[0] + Math.cos(y * 0.006 + t * 0.06) * 200;
+    const x1 = Math.sin(y * 0.005 + t * 0.01) * 200;
+    const x2 = Math.cos(y * 0.006 + t * 0.03) * 200;
 
     context.beginPath();
     context.moveTo(x1, y);
     context.lineTo(x2, y);
     context.stroke();
   }
-
-  for (let y = 0; y < height; y++) {}
-
-  context.stroke();
 }
