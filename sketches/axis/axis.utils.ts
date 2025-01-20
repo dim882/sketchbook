@@ -6,7 +6,7 @@ export function saveAndRestore(context: CanvasRenderingContext2D, callback: () =
   context.restore();
 }
 
-export function traceArc(
+export function drawArc(
   context: CanvasRenderingContext2D,
   radius: number,
   startAngle: number,

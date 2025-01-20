@@ -1,4 +1,4 @@
-import { range, saveAndRestore, traceArc } from './axis.utils';
+import { range, saveAndRestore, drawArc } from './axis.utils';
 
 export type IPointTuple = [number, number];
 export type IQuadrant = [number, number];
@@ -32,7 +32,6 @@ function render(context: CanvasRenderingContext2D) {
   saveAndRestore(context, () => {
     context.translate(...center);
 
-    context.filter = 'url(#myFilter)';
     context.lineWidth = 0;
     context.beginPath();
     context.rect(0, -100, 100, 100);
@@ -53,10 +52,12 @@ function render(context: CanvasRenderingContext2D) {
 
     const radius = Math.min(width, height) * 0.2;
 
-    traceArc(context, radius, ...QUADRANTS[0], 20);
-    traceArc(context, radius, ...QUADRANTS[2], 100);
+    context.filter = 'url(#myFilter)';
+    drawArc(context, radius, ...QUADRANTS[0], 20);
+    drawArc(context, radius, ...QUADRANTS[2], 100);
 
-    range(100, radius, 10).forEach((i) => traceArc(context, i, ...QUADRANTS[1], 1));
+    range(100, radius, 10).forEach((i) => drawArc(context, i, ...QUADRANTS[1], 1));
     // range(150, radius, 20).forEach((i) => traceArc(context, i, ...QUADRANTS[3], 1));
+    context.filter = 'none';
   });
 }
