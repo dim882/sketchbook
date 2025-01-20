@@ -10,6 +10,8 @@ type IDimensions = {
 
 const prng = createPRNG(0);
 
+const getNoise = createNoise2D(prng);
+
 function App(): JSX.Element {
   const [dimensions, setDimensions] = useState<IDimensions>({ width: 0, height: 0 });
   const formHue = getInteger(prng, 0, 270);
@@ -39,9 +41,17 @@ function App(): JSX.Element {
 
   return (
     <div class="blobs">
-      {grid.map((point) => (
-        <div class="blob" style={{ left: point[0], top: point[1] }}></div>
-      ))}
+      {grid.map((point) => {
+        const size = getNoise(...point) * 300;
+        const style = {
+          left: point[0],
+          top: point[1],
+          width: size,
+          height: size,
+        };
+
+        return <div class="blob" style={style}></div>;
+      })}
     </div>
   );
 }
