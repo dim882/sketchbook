@@ -48,9 +48,10 @@ function App(): JSX.Element {
         const style = {
           left: point[0],
           top: point[1],
-          width: size,
-          height: size,
-          backgroundColor: `rgba(100, 100, 100, ${size})`,
+          // width: size,
+          // height: size,
+
+          backgroundColor: `rgba(100, 100, 100, ${size / 100})`,
         };
 
         return (

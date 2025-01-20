@@ -22,4 +22,6 @@ body {
   position: absolute;
   background: #e97b7a;
   border-radius: 100%;
+  width: 75px;
+  height: 75px;
 }
