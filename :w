@@ -19,7 +19,7 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.beginPath();
   context.strokeStyle = '#000';
   context.lineWidth = 30;
-  context.lineCap = 'round';
+  context.lineCap = 'round'
 
   for (let y = 0; y < height; y += 50) {
     context.beginPath();
