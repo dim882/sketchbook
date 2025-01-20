@@ -44,20 +44,22 @@ function App(): JSX.Element {
       {grid.map((point) => {
         const scale = 0.001;
         const size = getNoise(point[0] * scale, point[1] * scale) * 200;
-        console.log({ size });
+        // console.log({ size });
+        const sizeLimit = 95;
 
         const style = {
           left: point[0],
           top: point[1],
-          width: size,
-          height: size,
+          width: size > sizeLimit ? sizeLimit : size,
+          height: size > sizeLimit ? sizeLimit : size,
           backgroundColor: `rgba(100, 100, 100 )`,
           display: size > 0 ? 'block' : 'none',
         };
+        console.log({ style });
 
         return (
           <div class="blob" style={style}>
-            {/* {size.toString().substring(0, 2)} */}
+            {size.toString().substring(0, 4)}
           </div>
         );
       })}
