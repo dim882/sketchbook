@@ -20,18 +20,16 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.strokeStyle = '#000';
   context.lineWidth = 2;
 
-  context.beginPath();
-  for (let y = 0; y < height; y++) {
-    const x = center[0] + Math.sin(y * 0.005 + t * 0.1) * 200;
-    context.lineTo(x, y);
+  for (let y = 0; y < height; y += 20) {
+    context.beginPath();
+    const x1 = center[0] + Math.sin(y * 0.005 + t * 0.1) * 200;
+    const x2 = center[0] + Math.cos(y * 0.006 + t * 0.06) * 200;
+    context.moveTo(x1, y);
+    context.lineTo(x2, y);
+    context.stroke();
   }
-  context.stroke();
-  context.beginPath();
 
-  for (let y = 0; y < height; y++) {
-    const x = center[0] + Math.cos(y * 0.006 + t * 0.06) * 200;
-    context.lineTo(x, y);
-  }
+  for (let y = 0; y < height; y++) {}
 
   context.stroke();
 }
