@@ -20,7 +20,7 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.lineCap = 'round';
 
   context.beginPath();
-  context.strokeStyle = 'hsl(15, 76%, 56%)';
+  context.strokeStyle = 'hsl(80, 76%, 56%)';
   context.save();
   context.translate(center[0] - 100, 0);
   drawWave(height, t, context);
@@ -28,7 +28,7 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.restore();
 
   context.beginPath();
-  context.strokeStyle = 'hsl(80, 76%, 56%)';
+  context.strokeStyle = 'hsl(15, 76%, 56%)';
   context.save();
   context.translate(center[0] + 100, 0);
   drawWave(height, t + 100, context);
