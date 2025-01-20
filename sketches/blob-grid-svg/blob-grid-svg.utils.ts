@@ -18,26 +18,6 @@ export const getBoolean = (generateNumber: PseudoRandomNumberGenerator, probabil
 
 type Range = (start: number, end: number, step?: number) => number[];
 
-export const range: Range = (start, end, step = 1) => {
-  const result: number[] = [];
-
-  if (start > end && step > 0) {
-    step = -step;
-  }
-
-  if (step > 0) {
-    for (let i = start; i <= end; i += step) {
-      result.push(i);
-    }
-  } else {
-    for (let i = start; i >= end; i += step) {
-      result.push(i);
-    }
-  }
-
-  return result;
-};
-
 type PRNG = () => number;
 
 export const createPRNG = (seed: number): PRNG => {
@@ -60,61 +40,10 @@ export const createPRNG = (seed: number): PRNG => {
   return prng;
 };
 
-export function tracePath(context: CanvasRenderingContext2D, points: IPointTuple[]) {
-  context.beginPath();
-  points.forEach(([x, y], index) => (index === 0 ? context.moveTo(x, y) : context.lineTo(x, y)));
-  context.closePath();
-}
-
 export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
   context.save();
   callback();
   context.restore();
-}
-
-export function applyColorMatrix(context: CanvasRenderingContext2D, matrix: number[][]) {
-  const { width, height } = context.canvas;
-  const imageData = context.getImageData(0, 0, width, height);
-  const data = imageData.data;
-
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-    const a = data[i + 3];
-
-    data[i] = r * matrix[0][0] + g * matrix[0][1] + b * matrix[0][2] + a * matrix[0][3] + matrix[0][4] * 255; // Red
-    data[i + 1] = r * matrix[1][0] + g * matrix[1][1] + b * matrix[1][2] + a * matrix[1][3] + matrix[1][4] * 255; // Green
-    data[i + 2] = r * matrix[2][0] + g * matrix[2][1] + b * matrix[2][2] + a * matrix[2][3] + matrix[2][4] * 255; // Blue
-    data[i + 3] = r * matrix[3][0] + g * matrix[3][1] + b * matrix[3][2] + a * matrix[3][3] + matrix[3][4] * 255; // Alpha
-  }
-
-  context.putImageData(imageData, 0, 0);
-}
-
-export function createCanvas(width: number, height: number) {
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-
-  return canvas.getContext('2d', { willReadFrequently: true });
-}
-
-export function flattenColors(context: CanvasRenderingContext2D, ALPHA_TRANSFORM: number) {
-  const flattenMatrix = [
-    [1, 0, 0, 0, 0], // R
-    [0, 1, 0, 0, 0], // G
-    [0, 0, 1, 0, 0], // B
-    [0, 0, 0, ALPHA_TRANSFORM, -15], // A
-  ];
-
-  console.log('before matrix', performance.now());
-  applyColorMatrix(context, flattenMatrix);
-  console.log('after matrix', performance.now());
-}
-
-export function applyBlur(context: CanvasRenderingContext2D, BLUR: number) {
-  context.filter = `blur(${BLUR}px)`;
 }
 
 export function createGrid(width: number, height: number, step: number): IPointTuple[] {
@@ -124,16 +53,11 @@ export function createGrid(width: number, height: number, step: number): IPointT
     .map((y) => [x, y] as IPointTuple));
 }
 
-export function drawGrid(context: CanvasRenderingContext2D, grid: IPointTuple[], radius: number, fillColor: string) {
-  grid.forEach((point: IPointTuple) => {
-    context.beginPath();
-    context.arc(...point, radius, 0, 2 * Math.PI);
-    context.fillStyle = fillColor;
-    context.fill();
-  });
-}
-
 export function randomOffset([x, y]: IPointTuple, offset: number): IPointTuple {
   const offsetRange = [-offset, offset];
+
   return [x + getInteger(Math.random, ...offsetRange), y + getInteger(Math.random, ...offsetRange)];
 }
+
+export const range = (start: number, end: number, step: number = 1): number[] =>
+  Array.from({ length: Math.ceil((end - start) / step) }, (_, i) => start + i * step);
