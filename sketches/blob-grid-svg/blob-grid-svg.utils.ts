@@ -47,9 +47,10 @@ export function saveAndRestore(context: CanvasRenderingContext2D, callback: () =
 }
 
 export function createGrid(width: number, height: number, step: number): IPointTuple[] {
+  const scale = 1;
   // prettier-ignore
   return range(0, width, step)
-    .flatMap((x) => range(0, height, step)
+    .flatMap((x) => range(0, height / scale, step / scale)
     .map((y) => [x, y] as IPointTuple));
 }
 

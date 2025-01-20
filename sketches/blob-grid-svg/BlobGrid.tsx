@@ -42,15 +42,22 @@ function App(): JSX.Element {
   return (
     <div class="blobs">
       {grid.map((point) => {
-        const size = getNoise(...point) * 300;
+        const size = getNoise(...point) * 200;
+        console.log({ size });
+
         const style = {
           left: point[0],
           top: point[1],
           width: size,
           height: size,
+          backgroundColor: `rgba(100, 100, 100, ${size})`,
         };
 
-        return <div class="blob" style={style}></div>;
+        return (
+          <div class="blob" style={style}>
+            {size.toString().substring(0, 2)}
+          </div>
+        );
       })}
     </div>
   );
