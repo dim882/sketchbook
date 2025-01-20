@@ -22,9 +22,10 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.lineCap = 'round';
 
   for (let y = 0; y < height + 100; y += 50) {
-    context.beginPath();
     const x1 = center[0] + Math.sin(y * 0.005 + t * 0.02) * 200;
     const x2 = center[0] + Math.cos(y * 0.006 + t * 0.06) * 200;
+
+    context.beginPath();
     context.moveTo(x1, y);
     context.lineTo(x2, y);
     context.stroke();
