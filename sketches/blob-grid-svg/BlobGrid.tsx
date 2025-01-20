@@ -45,7 +45,7 @@ function App(): JSX.Element {
         const scale = 0.001;
         const size = getNoise(point[0] * scale, point[1] * scale) * 200;
         // console.log({ size });
-        const sizeLimit = 95;
+        const sizeLimit = 120;
 
         const style = {
           left: point[0],
