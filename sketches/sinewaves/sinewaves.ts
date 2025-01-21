@@ -20,7 +20,7 @@ function render(context: CanvasRenderingContext2D, t: number) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  context.fillStyle = '#fff';
+  context.fillStyle = '#000';
   context.fillRect(0, 0, width, height);
 
   context.lineWidth = 30;

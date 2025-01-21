@@ -65,7 +65,7 @@ function App(): JSX.Element {
           top: point[1],
           width: size > SIZE_LIMIT ? SIZE_LIMIT : size,
           height: size > SIZE_LIMIT ? SIZE_LIMIT : size,
-          backgroundColor: `rgba(100, 100, 100 )`,
+          // backgroundColor: `rgba(100, 100, 100 )`,
           display: size > 0 ? 'block' : 'none',
         };
 
