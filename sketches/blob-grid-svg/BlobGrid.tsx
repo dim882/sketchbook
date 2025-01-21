@@ -1,7 +1,7 @@
 import { JSX } from 'preact/jsx-runtime';
 import { useState, useEffect } from 'preact/hooks';
 import { createGrid, getInteger, createPRNG } from './blob-grid-svg.utils';
-import { createNoise2D } from 'simplex-noise';
+import { createNoise2D, createNoise3D } from 'simplex-noise';
 
 type IDimensions = {
   width: number;
@@ -10,11 +10,11 @@ type IDimensions = {
 
 const prng = createPRNG(0);
 
-const getNoise = createNoise2D(prng);
+const getNoise = createNoise3D(prng);
 
 function App(): JSX.Element {
   const [dimensions, setDimensions] = useState<IDimensions>({ width: 0, height: 0 });
-  const [scrollY, setScrollY] = useState(0);
+  const [wheelPosition, setWheelPosition] = useState(0);
   const formHue = getInteger(prng, 0, 270);
   const backgroundHue = formHue + 180;
   const backgroundColor = `lch(95% 40% ${backgroundHue})`;
@@ -42,22 +42,23 @@ function App(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
+    const handleWheel = (event: WheelEvent) => {
+      setWheelPosition((prevPosition) => prevPosition + event.deltaY);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('wheel', handleWheel);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('wheel', handleWheel);
     };
   }, []);
-  console.log(scrollY);
+
+  console.log(wheelPosition);
 
   return (
     <div class="blobs">
       {grid.map((point) => {
-        const size = getNoise(point[0] * NOISE_SCALE, point[1] * NOISE_SCALE) * 200;
+        const size = getNoise(point[0] * NOISE_SCALE, point[1] * NOISE_SCALE, wheelPosition * NOISE_SCALE * 0.1) * 200;
 
         const style = {
           left: point[0],
