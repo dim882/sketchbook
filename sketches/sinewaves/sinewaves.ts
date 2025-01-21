@@ -27,7 +27,7 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.lineCap = 'round';
 
   context.beginPath();
-  context.strokeStyle = 'hsl(80, 76%, 56%, .7)';
+  context.strokeStyle = 'hsl(80, 76%, 56%, .8)';
   context.save();
   context.translate(0, center[1] - 100);
   drawWave(width, t, context);
@@ -35,7 +35,7 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.restore();
 
   context.beginPath();
-  context.strokeStyle = 'hsl(15, 76%, 56%, .7)';
+  context.strokeStyle = 'hsl(15, 76%, 56%, .8)';
   context.save();
   context.translate(0, center[1] + 100);
   drawWave(width, -t + 100, context);
@@ -45,8 +45,8 @@ function render(context: CanvasRenderingContext2D, t: number) {
 
 function drawWave(width: number, t: number, context: CanvasRenderingContext2D) {
   for (let x = 0; x < width + 100; x += 50) {
-    const y1 = Math.sin(x * 0.005 + t * 0.01) * 200;
-    const y2 = Math.cos(x * 0.006 + t * 0.03) * 200;
+    const y1 = Math.sin(x * 0.005 + t * 0.01) * 150;
+    const y2 = Math.cos(x * 0.005 + t * 0.007) * 150;
 
     context.beginPath();
     context.moveTo(x, y1);
