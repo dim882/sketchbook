@@ -38,7 +38,7 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.strokeStyle = 'hsl(15, 76%, 56%, .7)';
   context.save();
   context.translate(0, center[1] + 100);
-  drawWave(width, t + 100, context);
+  drawWave(width, -t + 100, context);
   context.stroke();
   context.restore();
 }
