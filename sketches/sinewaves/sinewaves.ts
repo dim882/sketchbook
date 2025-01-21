@@ -5,9 +5,16 @@ document.body.onload = () => {
   const context = canvas.getContext('2d');
 
   if (context) {
+    resizeCanvas(canvas);
+    window.addEventListener('resize', () => resizeCanvas(canvas));
     loop(context, render, 60);
   }
 };
+
+function resizeCanvas(canvas: HTMLCanvasElement) {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
 
 function render(context: CanvasRenderingContext2D, t: number) {
   const { width, height } = context.canvas;
