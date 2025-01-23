@@ -10,6 +10,8 @@
     "chokidar": "^3.6.0",
     "express": "^4.19.2",
     "nodemon": "^3.1.0",
+    "preact": "^10.25.4",
+    "preact-render-to-string": "^6.5.13",
     "rollup": "^4.20.0"
   },
   "scripts": {
