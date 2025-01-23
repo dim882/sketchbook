@@ -7462,6 +7462,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"preact-render-to-string@npm:^6.5.13":
+  version: 6.5.13
+  resolution: "preact-render-to-string@npm:6.5.13"
+  peerDependencies:
+    preact: ">=10"
+  checksum: 10c0/10c6c424af03066b832cb3f2c44372dd64180e9e2a6038cccb758e06337b13b3dd399bf26697afff07d7c5b253fd6bc194524d726ec36d930e36ea2defbb60f7
+  languageName: node
+  linkType: hard
+
 "preact@npm:^10.0.0":
   version: 10.22.0
   resolution: "preact@npm:10.22.0"
@@ -8735,6 +8744,8 @@ __metadata:
     chokidar: "npm:^3.6.0"
     express: "npm:^4.19.2"
     nodemon: "npm:^3.1.0"
+    preact: "npm:^10.25.4"
+    preact-render-to-string: "npm:^6.5.13"
     rollup: "npm:^4.20.0"
   languageName: unknown
   linkType: soft
