@@ -20,7 +20,7 @@ body {
 
 .blob {
   position: absolute;
-  background: #e97b7a;
+  background: #333;
   border-radius: 100%;
   translate: -50% -50%;
 }
