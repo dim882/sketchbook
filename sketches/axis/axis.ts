@@ -52,12 +52,10 @@ function render(context: CanvasRenderingContext2D) {
 
     const radius = Math.min(width, height) * 0.2;
 
-    context.filter = 'url(#myFilter)';
     drawArc(context, radius, ...QUADRANTS[0], 20);
     drawArc(context, radius, ...QUADRANTS[2], 100);
 
     range(100, radius, 10).forEach((i) => drawArc(context, i, ...QUADRANTS[1], 1));
     // range(150, radius, 20).forEach((i) => traceArc(context, i, ...QUADRANTS[3], 1));
-    context.filter = 'none';
   });
 }
