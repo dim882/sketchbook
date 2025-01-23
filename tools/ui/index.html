@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="/styles.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Anybody:wght@100&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+  rel="stylesheet"
+/>
+
+<div class="container">
+  <div class="list">
+    <h1>Sketches</h1>
+    <ul>
+      ${dirs.map((dir) => `
+      <li><a href="/sketches/${dir}" target="sketchFrame">${dir}</a></li>
+      `) .join('') }
+    </ul>
+  </div>
+  <div class="preview">
+    <iframe name="sketchFrame" src="about:blank"></iframe>
+  </div>
+</div>
