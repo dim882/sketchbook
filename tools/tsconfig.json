@@ -6,7 +6,10 @@
     "noEmitOnError": false,
     "moduleResolution": "node",
     "noImplicitAny": true,
-    "lib": ["ES2023"]
+    "lib": ["ES2023"],
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment"
   },
   "include": ["./**/*.ts"]
 }

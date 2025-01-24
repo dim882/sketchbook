@@ -1,6 +1,9 @@
 import express from 'express';
 import fs from 'node:fs';
 import path from 'node:path';
+import { h } from 'preact';
+import render from 'preact-render-to-string';
+import SketchList from './ui/SketchList';
 
 const app = express();
 const port = 2000;
@@ -11,7 +14,6 @@ const makeDistPath = (sketchName: string) => path.join(__dirname, '../sketches',
 
 app.use(express.static(publicPath));
 
-// Route to list all sketches
 app.get('/', (req, res) => {
   fs.readdir(sketchesPath, { withFileTypes: true }, (err, files) => {
     if (err) {
@@ -19,34 +21,22 @@ app.get('/', (req, res) => {
       return;
     }
 
-    // prettier-ignore
     const dirs = files
       .filter((file) => file.isDirectory())
       .map((dir) => dir.name)
       .sort();
 
-    // prettier-ignore
-    res.send(`
-      <link rel="stylesheet" href="/styles.css">
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@100&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    const sketchListHtml = render(h(SketchList, { dirs }));
 
-      <div class="container">
-        <div class="list">
-          <h1>Sketches</h1>
-          <ul>
-            ${dirs.map((dir) => 
-              `<li><a href="/sketches/${dir}" target="sketchFrame">${dir}</a></li>`)
-              .join('')
-            }
-          </ul>
-        </div>
-        <div class="preview">
-          <iframe name="sketchFrame" src="about:blank"></iframe>
-        </div>
-      </div>
-    `);
+    fs.readFile(path.join(__dirname, './ui/index.html'), 'utf8', (err, data) => {
+      if (err) {
+        res.status(500).send('Failed to read index.html');
+        return;
+      }
+
+      const renderedHtml = data.replace('${sketchListPlaceholder}', sketchListHtml);
+      res.send(renderedHtml);
+    });
   });
 });
 
