@@ -10,7 +10,8 @@
     "clone": "yarn workspace tools clone",
     "lib:pull": "yarn workspace tools lib:pull",
     "tools:dev": "yarn workspace tools dev",
-    "tools:watch": "yarn workspace tools watch"
+    "tools:watch": "yarn workspace tools watch",
+    "build": "rollup -c"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"

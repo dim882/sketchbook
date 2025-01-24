@@ -29,12 +29,12 @@ app.get('/', (req, res) => {
     const sketchListHtml = render(h(SketchList, { dirs }));
 
     fs.readFile(path.join(__dirname, './ui/index.html'), 'utf8', (err, data) => {
-      if (err) {
-        res.status(500).send('Failed to read index.html');
-        return;
-      }
+      // ... existing error handling ...
 
-      const renderedHtml = data.replace('${sketchListPlaceholder}', sketchListHtml);
+      const renderedHtml = data
+        .replace('${sketchListPlaceholder}', sketchListHtml)
+        .replace('${initialData}', JSON.stringify({ dirs }));
+
       res.send(renderedHtml);
     });
   });

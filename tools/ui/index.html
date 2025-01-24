@@ -14,10 +14,14 @@
   </head>
   <body>
     <div class="container">
-      ${sketchListPlaceholder}
+      <div id="sketchList">${sketchListPlaceholder}</div>
       <div class="preview">
         <iframe name="sketchFrame" src="about:blank"></iframe>
       </div>
     </div>
+    <script>
+      window.__INITIAL_DATA__ = ${initialData};
+    </script>
+    <script src="/dist/client.js" defer></script>
   </body>
 </html>

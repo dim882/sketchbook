@@ -18,12 +18,16 @@
     "dev": "bun --watch server.ts",
     "watch": "bun watch.ts",
     "clone": "bun clone-sketch.ts",
-    "lib:pull": "bun lib-pull.ts"
+    "lib:pull": "bun lib-pull.ts",
+    "build": "rollup -c ./ui/rollup.config.js"
   },
   "resolutions": {
     "rollup": "@rollup/wasm-node"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@types/node": "^20.12.11"
   }
 }
