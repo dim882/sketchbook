@@ -1,23 +1,24 @@
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
-import babel from '@rollup/plugin-babel';
+// import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
+import sucrase from '@rollup/plugin-sucrase';
 
 export default {
   input: './ui/client.tsx',
   output: {
-    file: '../public/dist/bundle.js',
+    file: './public/dist/bundle.js',
     format: 'es',
     sourcemap: true,
   },
   plugins: [
     nodeResolve(),
-    typescript(),
     commonjs(),
-    // typescript({
-    //   tsconfig: './tsconfig.json',
-    // }),
+    sucrase({
+      exclude: ['node_modules/**'],
+      transforms: ['typescript', 'jsx'],
+    }),
     // babel({
     //   babelHelpers: 'bundled',
     //   extensions: ['.js', '.jsx', '.ts', '.tsx'],

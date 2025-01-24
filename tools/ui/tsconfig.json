@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "ES2022",
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "noEmitOnError": false,
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "lib": ["ES2023", "DOM"],
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
+    "outDir": "./dist"
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"]
+}
