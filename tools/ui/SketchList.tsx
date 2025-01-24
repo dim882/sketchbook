@@ -1,4 +1,5 @@
 import { h, FunctionComponent } from 'preact';
+import { useState } from 'preact/hooks';
 
 export interface IDir {
   name: string;
@@ -9,18 +10,33 @@ export interface SketchListProps {
   dirs: IDir[];
 }
 
-const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
-  console.log('SketchList');
+type SortMethod = 'recent' | 'alpha';
 
-  console.log(dirs);
+const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
+  const [sortMethod, setSortMethod] = useState<SortMethod>('recent');
+
+  const sortedDirs = [...dirs].sort((a, b) => {
+    if (sortMethod === 'recent') {
+      return b.lastModified - a.lastModified;
+    }
+    return a.name.localeCompare(b.name);
+  });
+
+  const handleRecentSort = () => setSortMethod('recent');
+  const handleAlphaSort = () => setSortMethod('alpha');
 
   return (
     <div class="list">
       <h1>Sketches</h1>
-      <button></button>
+      <button onClick={handleRecentSort} class={sortMethod === 'recent' ? 'active' : ''}>
+        Recent
+      </button>
+      <button onClick={handleAlphaSort} class={sortMethod === 'alpha' ? 'active' : ''}>
+        Alphabetical
+      </button>
       <ul>
-        {dirs.map((dir) => (
-          <li key={dir}>
+        {sortedDirs.map((dir) => (
+          <li key={dir.name}>
             <a href={`/sketches/${dir.name}`} target="sketchFrame">
               {dir.name}
             </a>
