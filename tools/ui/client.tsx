@@ -1,10 +1,10 @@
 import { h, hydrate } from 'preact';
-import SketchList from './SketchList';
+import SketchList, { IDir } from './SketchList';
 
 // Assume we're passing the dirs data through a global variable
 declare global {
   interface Window {
-    __INITIAL_DATA__: { dirs: string[] };
+    __INITIAL_DATA__: { dirs: IDir[] };
   }
 }
 

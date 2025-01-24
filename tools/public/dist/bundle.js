@@ -10,7 +10,7 @@ const SketchList = ({ dirs }) => {
       , g('ul', null
         , dirs.map((dir) => (
           g('li', { key: dir,}
-            , g('a', { href: `/sketches/${dir}`, target: "sketchFrame",}
+            , g('a', { href: `/sketches/${dir.name}`, target: "sketchFrame",}
               , dir
             )
           )

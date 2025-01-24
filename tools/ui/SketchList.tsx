@@ -1,10 +1,17 @@
 import { h, FunctionComponent } from 'preact';
 
-interface SketchListProps {
-  dirs: string[];
+export interface IDir {
+  name: string;
+  lastModified: number;
+}
+
+export interface SketchListProps {
+  dirs: IDir[];
 }
 
 const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
+  console.log('SketchList');
+
   console.log(dirs);
 
   return (
@@ -14,8 +21,8 @@ const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
       <ul>
         {dirs.map((dir) => (
           <li key={dir}>
-            <a href={`/sketches/${dir}`} target="sketchFrame">
-              {dir}
+            <a href={`/sketches/${dir.name}`} target="sketchFrame">
+              {dir.name}
             </a>
           </li>
         ))}

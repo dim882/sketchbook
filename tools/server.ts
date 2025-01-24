@@ -18,17 +18,28 @@ app.get('/', async (req, res) => {
   try {
     const files = await fs.readdir(sketchesPath, { withFileTypes: true });
 
-    const dirs = files
-      .filter((file) => file.isDirectory())
-      .map((dir) => dir.name)
-      .sort();
+    const dirsWithTimestamps = await Promise.all(
+      files
+        .filter((file) => file.isDirectory())
+        .map(async (dir) => {
+          const dirPath = path.join(sketchesPath, dir.name);
+          const stats = await fs.stat(dirPath);
+          return {
+            name: dir.name,
+            lastModified: stats.mtime.getTime(),
+          };
+        })
+    );
+    // console.log(dirsWithTimestamps);
 
-    const sketchListHtml = render(h(SketchList, { dirs }));
+    const sortedDirs = dirsWithTimestamps.sort((a, b) => b.lastModified - a.lastModified);
+
+    const sketchListHtml = render(h(SketchList, { dirs: sortedDirs }));
 
     const data = await fs.readFile(path.join(__dirname, './ui/index.html'), 'utf8');
     const renderedHtml = data
       .replace('${sketchListPlaceholder}', sketchListHtml)
-      .replace('${initialData}', JSON.stringify({ dirs }));
+      .replace('${initialData}', JSON.stringify({ dirs: sortedDirs }));
 
     res.send(renderedHtml);
   } catch (err) {
