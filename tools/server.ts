@@ -23,10 +23,14 @@ app.get('/', async (req, res) => {
         .filter((file) => file.isDirectory())
         .map(async (dir) => {
           const dirPath = path.join(sketchesPath, dir.name);
-          const stats = await fs.stat(dirPath);
+          const files = await fs.readdir(dirPath);
+          const tsFiles = files.filter((file) => file.endsWith('.ts'));
+          const tsStats = await Promise.all(tsFiles.map((file) => fs.stat(path.join(dirPath, file))));
+          const lastModified = Math.max(...tsStats.map((stat) => stat.mtime.getTime()));
+
           return {
             name: dir.name,
-            lastModified: stats.mtime.getTime(),
+            lastModified,
           };
         })
     );
