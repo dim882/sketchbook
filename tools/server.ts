@@ -1,5 +1,5 @@
 import express from 'express';
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import { h } from 'preact';
 import render from 'preact-render-to-string';
@@ -14,12 +14,9 @@ const makeDistPath = (sketchName: string) => path.join(__dirname, '../sketches',
 
 app.use(express.static(publicPath));
 
-app.get('/', (req, res) => {
-  fs.readdir(sketchesPath, { withFileTypes: true }, (err, files) => {
-    if (err) {
-      res.status(500).send('Failed to read sketches directory');
-      return;
-    }
+app.get('/', async (req, res) => {
+  try {
+    const files = await fs.readdir(sketchesPath, { withFileTypes: true });
 
     const dirs = files
       .filter((file) => file.isDirectory())
@@ -28,16 +25,16 @@ app.get('/', (req, res) => {
 
     const sketchListHtml = render(h(SketchList, { dirs }));
 
-    fs.readFile(path.join(__dirname, './ui/index.html'), 'utf8', (err, data) => {
-      // ... existing error handling ...
+    const data = await fs.readFile(path.join(__dirname, './ui/index.html'), 'utf8');
+    const renderedHtml = data
+      .replace('${sketchListPlaceholder}', sketchListHtml)
+      .replace('${initialData}', JSON.stringify({ dirs }));
 
-      const renderedHtml = data
-        .replace('${sketchListPlaceholder}', sketchListHtml)
-        .replace('${initialData}', JSON.stringify({ dirs }));
-
-      res.send(renderedHtml);
-    });
-  });
+    res.send(renderedHtml);
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).send('Failed to process request');
+  }
 });
 
 app.get('/sketches/:sketchName', (req, res) => {

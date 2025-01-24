@@ -5,6 +5,8 @@ interface SketchListProps {
 }
 
 const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
+  console.log(dirs);
+
   return (
     <div class="list">
       <h1>Sketches</h1>
