@@ -11,13 +11,20 @@ export default {
     file: './public/dist/bundle.js',
     format: 'es',
     sourcemap: true,
+    globals: {
+      preact: 'preact',
+    },
   },
   plugins: [
-    nodeResolve(),
+    nodeResolve({
+      extensions: ['.js', '.ts', '.tsx'],
+    }),
     commonjs(),
     sucrase({
       exclude: ['node_modules/**'],
       transforms: ['typescript', 'jsx'],
+      jsxPragma: 'h',
+      production: true,
     }),
     // babel({
     //   babelHelpers: 'bundled',
