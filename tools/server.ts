@@ -30,9 +30,8 @@ app.get('/', async (req, res) => {
           };
         })
     );
-    // console.log(dirsWithTimestamps);
 
-    const sortedDirs = dirsWithTimestamps.sort((a, b) => b.lastModified - a.lastModified);
+    const sortedDirs = dirsWithTimestamps.sort((a, b) => a.name.localeCompare(b.name));
 
     const sketchListHtml = render(h(SketchList, { dirs: sortedDirs }));
 
