@@ -6,11 +6,12 @@
     "tools"
   ],
   "scripts": {
-    "dev": "npm-run-all --parallel tools:watch tools:dev",
+    "dev": "npm-run-all --parallel tools:watch tools:dev tools:build:watch",
     "clone": "yarn workspace tools clone",
     "lib:pull": "yarn workspace tools lib:pull",
     "tools:dev": "yarn workspace tools dev",
     "tools:watch": "yarn workspace tools watch",
+    "tools:build:watch": "yarn workspace tools build:watch",
     "build": "rollup -c"
   },
   "devDependencies": {
