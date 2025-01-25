@@ -13,7 +13,7 @@ export interface SketchListProps {
 type SortMethod = 'recent' | 'alpha';
 
 const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
-  const [sortMethod, setSortMethod] = useState<SortMethod>('recent');
+  const [sortMethod, setSortMethod] = useState<SortMethod>('alpha');
 
   const sortedDirs = [...dirs].sort((a, b) => {
     if (sortMethod === 'recent') {

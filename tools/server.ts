@@ -17,7 +17,6 @@ app.use(express.static(publicPath));
 app.get('/', async (req, res) => {
   try {
     const files = await fs.readdir(sketchesPath, { withFileTypes: true });
-
     const dirsWithTimestamps = await Promise.all(
       files
         .filter((file) => file.isDirectory())
@@ -36,9 +35,9 @@ app.get('/', async (req, res) => {
     );
 
     const sortedDirs = dirsWithTimestamps.sort((a, b) => a.name.localeCompare(b.name));
+    console.log(sortedDirs);
 
     const sketchListHtml = render(h(SketchList, { dirs: sortedDirs }));
-
     const data = await fs.readFile(path.join(__dirname, './ui/index.html'), 'utf8');
     const renderedHtml = data
       .replace('${sketchListPlaceholder}', sketchListHtml)
