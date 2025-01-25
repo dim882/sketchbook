@@ -14,16 +14,12 @@ type SortMethod = 'recent' | 'alpha';
 
 const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
   const [sortMethod, setSortMethod] = useState<SortMethod>('alpha');
-
-  const sortedDirs = [...dirs].sort((a, b) => {
-    if (sortMethod === 'recent') {
-      return b.lastModified - a.lastModified;
-    }
-    return a.name.localeCompare(b.name);
-  });
-
   const handleRecentSort = () => setSortMethod('recent');
   const handleAlphaSort = () => setSortMethod('alpha');
+
+  const sortedDirs = [...dirs].sort((a, b) =>
+    sortMethod === 'recent' ? b.lastModified - a.lastModified : a.name.localeCompare(b.name)
+  );
 
   return (
     <div class="list">
