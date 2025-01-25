@@ -18,15 +18,14 @@ function sortBy(sortMethod: string): (a: IDir, b: IDir) => number {
 
 const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
   const [sortMethod, setSortMethod] = useState<SortMethod>('alpha');
-  const handleRecentSort = () => setSortMethod('recent');
-  const handleAlphaSort = () => setSortMethod('alpha');
+  const handleSort = (method: SortMethod) => () => setSortMethod(method);
 
   return (
     <div class="list">
       <h1>Sketches</h1>
 
-      <button onClick={handleRecentSort}>Recent</button>
-      <button onClick={handleAlphaSort}>Alphabetical</button>
+      <button onClick={handleSort('alpha')}>Alphabetical</button>
+      <button onClick={handleSort('recent')}>Recent</button>
 
       <ul>
         {dirs.sort(sortBy(sortMethod)).map((dir) => (
@@ -40,5 +39,4 @@ const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
     </div>
   );
 };
-
 export default SketchList;
