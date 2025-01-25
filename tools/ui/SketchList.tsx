@@ -24,12 +24,10 @@ const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
   return (
     <div class="list">
       <h1>Sketches</h1>
-      <button onClick={handleRecentSort} class={sortMethod === 'recent' ? 'active' : ''}>
-        Recent
-      </button>
-      <button onClick={handleAlphaSort} class={sortMethod === 'alpha' ? 'active' : ''}>
-        Alphabetical
-      </button>
+
+      <button onClick={handleRecentSort}>Recent</button>
+      <button onClick={handleAlphaSort}>Alphabetical</button>
+
       <ul>
         {sortedDirs.map((dir) => (
           <li key={dir.name}>
