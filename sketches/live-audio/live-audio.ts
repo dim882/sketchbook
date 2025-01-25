@@ -16,11 +16,10 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (!canvasContext) return;
 
   await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-
-  const audioDevices = await getAudioDevices('QuickTime');
-  console.log(audioDevices);
-
+  const audioDevices = await getAudioDevices('VCV');
   const audioContext = new AudioContext();
+
+  console.log(audioDevices);
 
   const waveRenderers = await Promise.all(
     audioDevices.map(async (device, i) =>
@@ -44,7 +43,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         translateY(
           canvasContext, 
           (height / 4) * i, 
-          () => renderWave(canvasContext, t)
+          () => renderWave(canvasContext)
         );
       });
     });
