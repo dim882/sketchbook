@@ -17,9 +17,7 @@ const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
   const handleRecentSort = () => setSortMethod('recent');
   const handleAlphaSort = () => setSortMethod('alpha');
 
-  const sortedDirs = [...dirs].sort((a, b) =>
-    sortMethod === 'recent' ? b.lastModified - a.lastModified : a.name.localeCompare(b.name)
-  );
+  const sortedDirs = [...dirs].sort(sortBy(sortMethod));
 
   return (
     <div class="list">
@@ -42,3 +40,7 @@ const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
 };
 
 export default SketchList;
+
+function sortBy(sortMethod: string): (a: IDir, b: IDir) => number {
+  return (a, b) => (sortMethod === 'recent' ? b.lastModified - a.lastModified : a.name.localeCompare(b.name));
+}
