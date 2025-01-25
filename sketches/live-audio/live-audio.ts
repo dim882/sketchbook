@@ -22,14 +22,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   console.log(audioDevices);
 
   const waveRenderers = await Promise.all(
-    audioDevices.map(async (device, i) =>
-      // prettier-ignore
-      createWaveformRenderer(
-        audioContext, 
-        await captureAudioStream(device.deviceId), 
-        colors[i]
-      )
-    )
+    audioDevices.map(async (device, i) => {
+      const audioStream = await captureAudioStream(device.deviceId);
+
+      return createWaveformRenderer(audioContext, audioStream, colors[i]);
+    })
   );
 
   const render: IRenderFunc = (canvasContext, t) => {

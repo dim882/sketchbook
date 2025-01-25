@@ -24,10 +24,10 @@ export function getAudioDevices(labelPrefix: string) {
     .enumerateDevices()
     .then((devices) => {
       // console.table(devices.sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0)));
-      console.log(devices);
 
       return devices
         .filter((device) => device.label.match(`${labelPrefix}`))
+        .filter((device) => device.kind === 'audioinput')
         .sort((a, b) => (a.label < b.label ? -1 : 0));
     })
     .then((devices) => {
@@ -43,21 +43,17 @@ export function getAudioDevices(labelPrefix: string) {
 export async function captureAudioStream(deviceId: string): Promise<MediaStream> {
   return await navigator.mediaDevices.getUserMedia({
     video: false,
-    audio: {
-      deviceId: { exact: deviceId },
-    },
+    audio: { deviceId: { exact: deviceId } },
   });
 }
 
 export function createWaveformRenderer(audioContext: AudioContext, stream: MediaStream, color: string) {
-  const getDataArray = createTimeDomainData(audioContext, stream);
+  const getTimeData = make_getTimeData(audioContext, stream);
 
-  return (context: CanvasRenderingContext2D) => {
-    renderWaveform(context, getDataArray(), color);
-  };
+  return (context: CanvasRenderingContext2D) => renderWaveform(context, getTimeData(), color);
 }
 
-export function createTimeDomainData(audioContext: AudioContext, stream: MediaStream, fftSize = 2048) {
+export function make_getTimeData(audioContext: AudioContext, stream: MediaStream, fftSize = 2048) {
   const sourceNode = audioContext.createMediaStreamSource(stream);
   const analyser = audioContext.createAnalyser();
 
