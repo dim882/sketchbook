@@ -1,4 +1,4 @@
-import { captureAudioStream, drawWave, getAudioDevices, resizeCanvas } from './sinewaves.utils.js';
+import { captureAudioStream, drawWave, getAudioDevices, resizeCanvas, saveAndRestore } from './sinewaves.utils.js';
 import { IPointTuple, loop } from './utils.js';
 
 document.body.onload = async () => {
@@ -28,21 +28,21 @@ document.body.onload = async () => {
     context.lineWidth = 30;
     context.lineCap = 'round';
 
-    context.beginPath();
-    context.strokeStyle = 'hsl(244, 89%, 69%)';
-    context.save();
-    context.translate(0, center[1] - 100);
-    drawWave(width, t, context);
-    context.stroke();
-    context.restore();
+    saveAndRestore(context, () => {
+      context.strokeStyle = 'hsl(244, 89%, 69%)';
+      context.translate(0, center[1] - 100);
+      context.beginPath();
+      drawWave(width, t, context);
+      context.stroke();
+    });
 
-    context.beginPath();
-    context.strokeStyle = 'hsl(15, 76%, 56%, .8)';
-    context.save();
-    context.translate(0, center[1] + 100);
-    drawWave(width, -t + 100, context);
-    context.stroke();
-    context.restore();
+    saveAndRestore(context, () => {
+      context.strokeStyle = 'hsl(15, 76%, 56%, .8)';
+      context.translate(0, center[1] + 100);
+      context.beginPath();
+      drawWave(width, -t + 100, context);
+      context.stroke();
+    });
   }
 
   if (context) {
