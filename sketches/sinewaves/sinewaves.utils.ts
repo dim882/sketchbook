@@ -5,6 +5,12 @@ export function resizeCanvas(canvas: HTMLCanvasElement) {
   canvas.height = window.innerHeight;
 }
 
+export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
+  context.save();
+  callback();
+  context.restore();
+}
+
 export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps = 60) {
   let frameDuration = 1000 / fps;
   let lastFrameTime = 0;
@@ -66,12 +72,6 @@ export function make_getTimeData(audioContext: AudioContext, stream: MediaStream
     analyser.getByteTimeDomainData(dataArray);
     return dataArray;
   };
-}
-
-export function saveAndRestore(context: CanvasRenderingContext2D, callback: () => void) {
-  context.save();
-  callback();
-  context.restore();
 }
 
 export function getAmplitude(timeDomainData: Uint8Array) {

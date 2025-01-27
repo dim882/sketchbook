@@ -1,4 +1,10 @@
-import { captureAudioStream, getAudioDevices, resizeCanvas, saveAndRestore } from './sinewaves.utils.js';
+import {
+  captureAudioStream,
+  getAudioDevices,
+  make_getTimeData,
+  resizeCanvas,
+  saveAndRestore,
+} from './sinewaves.utils.js';
 import { IPointTuple, loop } from './utils.js';
 
 document.body.onload = async () => {
@@ -23,7 +29,9 @@ document.body.onload = async () => {
   const renderers = await Promise.all(
     audioDevices.map(async (device, i) => {
       const audioStream = await captureAudioStream(device.deviceId);
-      console.log(audioStream);
+      const getTimeData = make_getTimeData(audioContext, audioStream);
+
+      return createWaveformRenderer(context, getTimeData);
     })
   );
 
@@ -77,3 +85,29 @@ document.body.onload = async () => {
     });
   }
 };
+
+function createWaveformRenderer(context: CanvasRenderingContext2D, getDataArray: () => Uint8Array) {
+  return (color = '#ff0000') => {
+    const { width, height } = context.canvas;
+    const dataArray = getDataArray();
+    const sliceWidth = (width + 100) / dataArray.length;
+
+    saveAndRestore(context, () => {
+      context.strokeStyle = color;
+      context.lineWidth = 30;
+      context.lineCap = 'round';
+
+      for (let i = 0; i < dataArray.length; i++) {
+        const x = i * sliceWidth;
+        const normalizedValue = dataArray[i] / 128.0 - 1;
+        const y1 = normalizedValue * 150;
+        const y2 = -normalizedValue * 150;
+
+        context.beginPath();
+        context.moveTo(x, y1);
+        context.lineTo(x, y2);
+        context.stroke();
+      }
+    });
+  };
+}
