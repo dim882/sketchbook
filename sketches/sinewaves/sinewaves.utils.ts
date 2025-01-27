@@ -96,6 +96,7 @@ export function createWaveformRenderer(context: CanvasRenderingContext2D, getDat
       context.strokeStyle = color;
       context.lineWidth = 30;
       context.lineCap = 'round';
+      context.translate(0, height / 2);
 
       for (let i = 0; i < dataArray.length; i++) {
         const x = i * sliceWidth;
