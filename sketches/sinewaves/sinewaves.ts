@@ -26,8 +26,6 @@ document.body.onload = async () => {
   resizeCanvas(canvas);
   window.addEventListener('resize', () => resizeCanvas(canvas));
 
-  loop(context, render, 60);
-
   const renderers = await Promise.all(
     audioDevices.map(async (device, i) => {
       const audioStream = await captureAudioStream(device.deviceId);
@@ -36,6 +34,8 @@ document.body.onload = async () => {
       return createWaveformRenderer(context, getTimeData);
     })
   );
+
+  console.log(renderers);
 
   function render(context: CanvasRenderingContext2D, t: number) {
     const { width, height } = context.canvas;
@@ -47,18 +47,8 @@ document.body.onload = async () => {
     context.lineWidth = 30;
     context.lineCap = 'round';
 
-    drawWave(context, {
-      width,
-      yOffset: center[1] - 100,
-      time: t,
-      color: 'hsl(244, 89%, 69%)',
-    });
-
-    drawWave(context, {
-      width,
-      yOffset: center[1] + 100,
-      time: -t + 100,
-      color: 'hsl(15, 76%, 56%, .8)',
-    });
+    renderers[1]('hsl(244, 89%, 69%)');
   }
+
+  loop(context, render, 60);
 };
