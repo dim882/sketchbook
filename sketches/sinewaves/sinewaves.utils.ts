@@ -1,5 +1,10 @@
 export type IRenderFunc = (context: CanvasRenderingContext2D, t: number) => void;
 
+export function resizeCanvas(canvas: HTMLCanvasElement) {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
 export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps = 60) {
   let frameDuration = 1000 / fps;
   let lastFrameTime = 0;
@@ -44,7 +49,6 @@ export async function captureAudioStream(deviceId: string): Promise<MediaStream>
   return await navigator.mediaDevices.getUserMedia({
     video: false,
     audio: {
-      channelCount: 2,
       deviceId: { exact: deviceId },
     },
   });
@@ -120,4 +124,16 @@ export function getAmplitude(timeDomainData: Uint8Array) {
   }
 
   return Math.sqrt(sumSquares / timeDomainData.length);
+}
+
+export function drawWave(width: number, t: number, context: CanvasRenderingContext2D) {
+  for (let x = 0; x < width + 100; x += 50) {
+    const y1 = Math.sin(x * 0.005 + t * 0.01) * 150;
+    const y2 = Math.cos(x * 0.005 + t * 0.007) * 150;
+
+    context.beginPath();
+    context.moveTo(x, y1);
+    context.lineTo(x, y2);
+    context.stroke();
+  }
 }

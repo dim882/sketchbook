@@ -24,6 +24,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const waveRenderers = await Promise.all(
     audioDevices.map(async (device, i) => {
       const audioStream = await captureAudioStream(device.deviceId);
+      console.log(audioStream);
 
       return createWaveformRenderer(audioContext, audioStream, colors[i]);
     })
@@ -34,6 +35,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     canvasContext.clearRect(0, 0, width, height);
 
+    // TODO: Change translations to  be based on the number of wave renderers
     translateY(canvasContext, -height / 3, () => {
       waveRenderers.forEach((renderWave, i) => {
         // prettier-ignore
