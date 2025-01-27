@@ -83,15 +83,3 @@ export function getAmplitude(timeDomainData: Uint8Array) {
 
   return Math.sqrt(sumSquares / timeDomainData.length);
 }
-
-export function drawWave(width: number, t: number, context: CanvasRenderingContext2D) {
-  for (let x = 0; x < width + 100; x += 50) {
-    const y1 = Math.sin(x * 0.005 + t * 0.01) * 150;
-    const y2 = Math.cos(x * 0.005 + t * 0.007) * 150;
-
-    context.beginPath();
-    context.moveTo(x, y1);
-    context.lineTo(x, y2);
-    context.stroke();
-  }
-}

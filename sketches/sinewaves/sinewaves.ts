@@ -1,15 +1,24 @@
-import { captureAudioStream, drawWave, getAudioDevices, resizeCanvas, saveAndRestore } from './sinewaves.utils.js';
+import { captureAudioStream, getAudioDevices, resizeCanvas, saveAndRestore } from './sinewaves.utils.js';
 import { IPointTuple, loop } from './utils.js';
 
 document.body.onload = async () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
 
+  if (!context) {
+    return;
+  }
+
   await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
   const audioDevices = await getAudioDevices('VCV');
   const audioContext = new AudioContext();
 
   console.log(audioDevices);
+
+  resizeCanvas(canvas);
+  window.addEventListener('resize', () => resizeCanvas(canvas));
+
+  loop(context, render, 60);
 
   const renderers = await Promise.all(
     audioDevices.map(async (device, i) => {
@@ -28,26 +37,43 @@ document.body.onload = async () => {
     context.lineWidth = 30;
     context.lineCap = 'round';
 
-    saveAndRestore(context, () => {
-      context.strokeStyle = 'hsl(244, 89%, 69%)';
-      context.translate(0, center[1] - 100);
-      context.beginPath();
-      drawWave(width, t, context);
-      context.stroke();
+    drawWave(context, {
+      width,
+      yOffset: center[1] - 100,
+      time: t,
+      color: 'hsl(244, 89%, 69%)',
     });
 
-    saveAndRestore(context, () => {
-      context.strokeStyle = 'hsl(15, 76%, 56%, .8)';
-      context.translate(0, center[1] + 100);
-      context.beginPath();
-      drawWave(width, -t + 100, context);
-      context.stroke();
+    drawWave(context, {
+      width,
+      yOffset: center[1] + 100,
+      time: -t + 100,
+      color: 'hsl(15, 76%, 56%, .8)',
     });
   }
 
-  if (context) {
-    resizeCanvas(canvas);
-    window.addEventListener('resize', () => resizeCanvas(canvas));
-    loop(context, render, 60);
+  function drawWave(
+    context: CanvasRenderingContext2D,
+    options: {
+      width: number;
+      yOffset: number;
+      time: number;
+      color: string;
+    }
+  ) {
+    saveAndRestore(context, () => {
+      context.strokeStyle = options.color;
+      context.translate(0, options.yOffset);
+
+      for (let x = 0; x < options.width + 100; x += 50) {
+        const y1 = Math.sin(x * 0.005 + options.time * 0.01) * 150;
+        const y2 = Math.cos(x * 0.005 + options.time * 0.007) * 150;
+
+        context.beginPath();
+        context.moveTo(x, y1);
+        context.lineTo(x, y2);
+        context.stroke();
+      }
+    });
   }
 };
