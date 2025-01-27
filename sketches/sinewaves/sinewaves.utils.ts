@@ -1,3 +1,5 @@
+export type IPointTuple = [number, number];
+
 export type IRenderFunc = (context: CanvasRenderingContext2D, t: number) => void;
 
 export function resizeCanvas(canvas: HTMLCanvasElement) {
@@ -82,4 +84,55 @@ export function getAmplitude(timeDomainData: Uint8Array) {
   }
 
   return Math.sqrt(sumSquares / timeDomainData.length);
+}
+
+export function createWaveformRenderer(context: CanvasRenderingContext2D, getDataArray: () => Uint8Array) {
+  return (color = '#ff0000') => {
+    const { width, height } = context.canvas;
+    const dataArray = getDataArray();
+    const sliceWidth = (width + 100) / dataArray.length;
+
+    saveAndRestore(context, () => {
+      context.strokeStyle = color;
+      context.lineWidth = 30;
+      context.lineCap = 'round';
+
+      for (let i = 0; i < dataArray.length; i++) {
+        const x = i * sliceWidth;
+        const normalizedValue = dataArray[i] / 128.0 - 1;
+        const y1 = normalizedValue * 150;
+        const y2 = -normalizedValue * 150;
+
+        context.beginPath();
+        context.moveTo(x, y1);
+        context.lineTo(x, y2);
+        context.stroke();
+      }
+    });
+  };
+}
+
+export function drawWave(
+  context: CanvasRenderingContext2D,
+  options: {
+    width: number;
+    yOffset: number;
+    time: number;
+    color: string;
+  }
+) {
+  saveAndRestore(context, () => {
+    context.strokeStyle = options.color;
+    context.translate(0, options.yOffset);
+
+    for (let x = 0; x < options.width + 100; x += 50) {
+      const y1 = Math.sin(x * 0.005 + options.time * 0.01) * 150;
+      const y2 = Math.cos(x * 0.005 + options.time * 0.007) * 150;
+
+      context.beginPath();
+      context.moveTo(x, y1);
+      context.lineTo(x, y2);
+      context.stroke();
+    }
+  });
 }
