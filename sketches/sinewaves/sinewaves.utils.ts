@@ -28,8 +28,6 @@ export function getAudioDevices(labelPrefix: string) {
   return navigator.mediaDevices
     .enumerateDevices()
     .then((devices) => {
-      // console.table(devices.sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0)));
-
       return devices
         .filter((device) => device.label.match(`${labelPrefix}`))
         .filter((device) => device.kind === 'audioinput')
@@ -54,12 +52,6 @@ export async function captureAudioStream(deviceId: string): Promise<MediaStream>
   });
 }
 
-export function createWaveformRenderer(audioContext: AudioContext, stream: MediaStream, color: string) {
-  const getTimeData = make_getTimeData(audioContext, stream);
-
-  return (context: CanvasRenderingContext2D) => renderWaveform(context, getTimeData(), color);
-}
-
 export function make_getTimeData(audioContext: AudioContext, stream: MediaStream, fftSize = 2048) {
   const sourceNode = audioContext.createMediaStreamSource(stream);
   const analyser = audioContext.createAnalyser();
@@ -80,40 +72,6 @@ export function saveAndRestore(context: CanvasRenderingContext2D, callback: () =
   context.save();
   callback();
   context.restore();
-}
-
-export function translateY(canvasContext: CanvasRenderingContext2D, yTranslate: number, callback: () => void) {
-  saveAndRestore(canvasContext, () => {
-    canvasContext.translate(0, yTranslate);
-    callback();
-  });
-}
-
-export function renderWaveform(context: CanvasRenderingContext2D, dataArray: Uint8Array, color = '#ff0000'): void {
-  const { width, height } = context.canvas;
-
-  context.beginPath();
-  context.moveTo(0, height / 2);
-
-  const sliceWidth = (width * 1.0) / dataArray.length;
-  let x = 0;
-
-  for (let i = 0; i < dataArray.length; i++) {
-    const v = dataArray[i] / 128.0;
-    const y = (v * height) / 2;
-
-    if (i === 0) {
-      context.moveTo(x, y);
-    } else {
-      context.lineTo(x, y);
-    }
-
-    x += sliceWidth;
-  }
-
-  context.lineTo(width, height / 2);
-  context.strokeStyle = color;
-  context.stroke();
 }
 
 export function getAmplitude(timeDomainData: Uint8Array) {
