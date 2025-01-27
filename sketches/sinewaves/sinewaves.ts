@@ -1,9 +1,22 @@
-import { drawWave, resizeCanvas } from './sinewaves.utils.js';
+import { captureAudioStream, drawWave, getAudioDevices, resizeCanvas } from './sinewaves.utils.js';
 import { IPointTuple, loop } from './utils.js';
 
-document.body.onload = () => {
+document.body.onload = async () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
+
+  await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+  const audioDevices = await getAudioDevices('VCV');
+  const audioContext = new AudioContext();
+
+  console.log(audioDevices);
+
+  const renderers = await Promise.all(
+    audioDevices.map(async (device, i) => {
+      const audioStream = await captureAudioStream(device.deviceId);
+      console.log(audioStream);
+    })
+  );
 
   function render(context: CanvasRenderingContext2D, t: number) {
     const { width, height } = context.canvas;
