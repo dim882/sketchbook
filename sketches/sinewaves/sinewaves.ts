@@ -9,6 +9,14 @@ import {
 } from './sinewaves.utils.js';
 import { IPointTuple, loop } from './utils.js';
 
+const clamp = (value: number, min: number, max: number): number => {
+  return Math.min(Math.max(value, min), max);
+};
+
+const powerOfTwo = (n: number): number => {
+  return Math.pow(2, Math.ceil(Math.log2(n)));
+};
+
 document.body.onload = async () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
@@ -29,7 +37,7 @@ document.body.onload = async () => {
   const renderers = await Promise.all(
     audioDevices.map(async (device, i) => {
       const audioStream = await captureAudioStream(device.deviceId);
-      const getTimeData = make_getTimeData(audioContext, audioStream);
+      const getTimeData = make_getTimeData(audioContext, audioStream, powerOfTwo(clamp(canvas.width / 50, 32, 2046)));
 
       return createWaveformRenderer(context, getTimeData);
     })

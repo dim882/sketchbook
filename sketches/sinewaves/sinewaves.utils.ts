@@ -3,6 +3,8 @@ export type IPointTuple = [number, number];
 export type IRenderFunc = (context: CanvasRenderingContext2D, t: number) => void;
 
 export function resizeCanvas(canvas: HTMLCanvasElement) {
+  console.log('width', window.innerWidth);
+
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
@@ -67,6 +69,7 @@ export function make_getTimeData(audioContext: AudioContext, stream: MediaStream
   analyser.fftSize = fftSize;
 
   const dataArray = new Uint8Array(analyser.frequencyBinCount);
+  console.log('length', dataArray.length);
 
   sourceNode.connect(analyser);
 
@@ -101,8 +104,8 @@ export function createWaveformRenderer(context: CanvasRenderingContext2D, getDat
       for (let i = 0; i < dataArray.length; i++) {
         const x = i * sliceWidth;
         const normalizedValue = dataArray[i] / 128.0 - 1;
-        const y1 = normalizedValue * 150;
-        const y2 = -normalizedValue * 150;
+        const y1 = normalizedValue * 1000;
+        const y2 = -normalizedValue * 1000;
 
         context.beginPath();
         context.moveTo(x, y1);
