@@ -105,7 +105,7 @@ export function createWaveformRenderer(context: CanvasRenderingContext2D, getDat
         const x = i * sliceWidth;
         const normalizedValue = dataArray[i] / 128.0 - 1;
 
-        if (normalizedValue < 0.0001 && normalizedValue > -0.0001) {
+        if (normalizedValue < 0.01 && normalizedValue > -0.01) {
           break;
         }
 
