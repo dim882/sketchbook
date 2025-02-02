@@ -4847,6 +4847,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"functron-demo@workspace:sketches/functron-demo":
+  version: 0.0.0-use.local
+  resolution: "functron-demo@workspace:sketches/functron-demo"
+  dependencies:
+    "@dim882/lib": "npm:0.1.0"
+    "@rollup/plugin-node-resolve": "npm:^15.2.3"
+    "@rollup/plugin-typescript": "npm:^11.1.6"
+    "@types/ramda": "npm:^0.29.12"
+    rambda: "npm:^9.2.0"
+    ramda: "npm:^0.29.1"
+    rollup: "npm:^4.14.3"
+    rollup-plugin-copy: "npm:^3.5.0"
+    tslib: "npm:^2.6.2"
+    typescript: "npm:^5.4.5"
+  languageName: unknown
+  linkType: soft
+
 "fuzz@workspace:sketches/fuzz":
   version: 0.0.0-use.local
   resolution: "fuzz@workspace:sketches/fuzz"
