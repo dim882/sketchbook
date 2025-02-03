@@ -20,6 +20,8 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+console.log('hi');
+
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
