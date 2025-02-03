@@ -12,7 +12,7 @@ export default {
   plugins: [
     nodeResolve(),
     typescript({
-      include: ['../../lib/**/*.ts', '**/*.ts'],
+      include: ['**/*.ts'],
       tsconfig: './tsconfig.json',
     }),
     copy({

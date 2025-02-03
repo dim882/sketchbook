@@ -4860,6 +4860,7 @@ __metadata:
     ramda: "npm:^0.29.1"
     rollup: "npm:^4.14.3"
     rollup-plugin-copy: "npm:^3.5.0"
+    snabbdom: "npm:^3.6.2"
     tslib: "npm:^2.6.2"
     typescript: "npm:^5.4.5"
   languageName: unknown

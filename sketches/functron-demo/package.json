@@ -17,6 +17,7 @@
     "@dim882/lib": "0.1.0",
     "functron": "../../../functron/package.tgz",
     "rambda": "^9.2.0",
-    "ramda": "^0.29.1"
+    "ramda": "^0.29.1",
+    "snabbdom": "^3.6.2"
   }
 }
