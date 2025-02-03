@@ -13,6 +13,7 @@ export default {
     nodeResolve(),
     typescript({
       include: ['../../lib/**/*.ts', '**/*.ts'],
+      tsconfig: './tsconfig.json',
     }),
     copy({
       targets: [

@@ -29,3 +29,7 @@ const MyComponent = createComponent<[], ICounterModel, typeof handlers, typeof r
 });
 
 customElements.define('ui-counter', MyComponent);
+
+console.log('from counter');
+
+export default MyComponent;

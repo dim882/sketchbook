@@ -1,5 +1,6 @@
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
+import Counter from './counter';
 
 const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
   return (upper - lower) * generateNumber() + lower;
