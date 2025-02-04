@@ -12,8 +12,10 @@ export default {
   plugins: [
     nodeResolve(),
     typescript({
-      include: ['**/*.ts'],
+      include: ['**/*.ts', '**/*.tsx'],
       tsconfig: './tsconfig.json',
+      jsx: 'react',
+      jsxFactory: 'jsx',
     }),
     copy({
       targets: [

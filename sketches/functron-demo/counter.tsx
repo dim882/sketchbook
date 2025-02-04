@@ -1,7 +1,8 @@
+/** @jsx jsx */
 import { createComponent, EventHandler, jsx, RenderFunc } from 'functron';
 import { h } from 'snabbdom';
 
-console.log('counter---_');
+console.log('counter--');
 
 interface ICounterModel {
   count: number;

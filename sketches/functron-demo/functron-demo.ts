@@ -2,6 +2,8 @@ export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 import Counter from './counter';
 
+console.log('hi@!');
+
 const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
   return (upper - lower) * generateNumber() + lower;
 };
@@ -20,8 +22,6 @@ window.addEventListener('DOMContentLoaded', () => {
     render(context);
   }
 });
-
-console.log('hi');
 
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
