@@ -4855,7 +4855,7 @@ __metadata:
     "@rollup/plugin-node-resolve": "npm:^15.2.3"
     "@rollup/plugin-typescript": "npm:^11.1.6"
     "@types/ramda": "npm:^0.29.12"
-    functron: ../../../functron/package.tgz
+    functron: /Users/danimal/dev/self/functron/tarballs/package.tgz
     rambda: "npm:^9.2.0"
     ramda: "npm:^0.29.1"
     rollup: "npm:^4.14.3"
@@ -4866,16 +4866,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"functron@file:../../../functron/package.tgz::locator=functron-demo%40workspace%3Asketches%2Ffunctron-demo":
+"functron@file:/Users/danimal/dev/self/functron/tarballs/package.tgz::locator=functron-demo%40workspace%3Asketches%2Ffunctron-demo":
   version: 0.1.0
-  resolution: "functron@file:../../../functron/package.tgz#../../../functron/package.tgz::hash=e19cd9&locator=functron-demo%40workspace%3Asketches%2Ffunctron-demo"
+  resolution: "functron@file:/Users/danimal/dev/self/functron/tarballs/package.tgz#/Users/danimal/dev/self/functron/tarballs/package.tgz::hash=fe856b&locator=functron-demo%40workspace%3Asketches%2Ffunctron-demo"
   dependencies:
     "@babel/plugin-transform-react-jsx": "npm:^7.23.4"
     "@babel/preset-env": "npm:^7.24.5"
     "@babel/preset-typescript": "npm:^7.24.1"
     "@rollup/plugin-babel": "npm:^6.0.4"
     snabbdom: "npm:^3.6.2"
-  checksum: 10c0/e09ee13f9fab8bd26417b924df0a2e23fdbbe66c9fc634d215c7766803226a76951f70c8149676049245b6c6b85ce533b6beb4473a48e7b736a3ab8812045355
+  checksum: 10c0/8c8fd27e708fac681d56d0a986723c4de9730e36234c0e996bf6dcec97891a994f117dcd0cde62e754d2e217030743966e0bedde212bc1bf3aff3771165775fc
   languageName: node
   linkType: hard
 
