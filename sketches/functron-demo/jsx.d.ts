@@ -1,9 +1,7 @@
+import { VNode } from 'snabbdom';
+
 declare namespace JSX {
-  interface Element {
-    sel: string;
-    data: any;
-    children: Array<Element | string>;
-  }
+  interface Element extends VNode {}
   interface IntrinsicElements {
     [elemName: string]: any;
   }

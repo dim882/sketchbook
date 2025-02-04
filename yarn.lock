@@ -4868,14 +4868,14 @@ __metadata:
 
 "functron@file:../../../functron/package.tgz::locator=functron-demo%40workspace%3Asketches%2Ffunctron-demo":
   version: 0.1.0
-  resolution: "functron@file:../../../functron/package.tgz#../../../functron/package.tgz::hash=4ca1a6&locator=functron-demo%40workspace%3Asketches%2Ffunctron-demo"
+  resolution: "functron@file:../../../functron/package.tgz#../../../functron/package.tgz::hash=e19cd9&locator=functron-demo%40workspace%3Asketches%2Ffunctron-demo"
   dependencies:
     "@babel/plugin-transform-react-jsx": "npm:^7.23.4"
     "@babel/preset-env": "npm:^7.24.5"
     "@babel/preset-typescript": "npm:^7.24.1"
     "@rollup/plugin-babel": "npm:^6.0.4"
     snabbdom: "npm:^3.6.2"
-  checksum: 10c0/d3887f5d22c2043e10fe370ce67d46fc5ac8ffc3411b3033fe0ec50cfff8d2a96d11fa706d5d2dae769624b516439cbe32dc14ce4ffe80fc85d10388976fe715
+  checksum: 10c0/e09ee13f9fab8bd26417b924df0a2e23fdbbe66c9fc634d215c7766803226a76951f70c8149676049245b6c6b85ce533b6beb4473a48e7b736a3ab8812045355
   languageName: node
   linkType: hard
 
