@@ -1,4 +1,4 @@
-import { voronoiDiagram } from './voronoi.utils';
+import { computeVoronoi } from './voronoi.utils';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }));
 
     // Generate the voronoi diagram
-    const diagram = voronoiDiagram(points);
+    const diagram = computeVoronoi(points);
 
     // Draw each cell
     diagram.forEach(({ cell, site }) => {

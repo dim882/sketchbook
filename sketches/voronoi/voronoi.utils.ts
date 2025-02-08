@@ -1,74 +1,68 @@
+// Types
 type Point = { x: number; y: number };
 type Polygon = Point[];
 
-// Compute a large bounding box that covers all sites (with padding)
-const computeBoundingBox = (points: Point[]): Polygon => {
-  const xs = points.map((p) => p.x);
-  const ys = points.map((p) => p.y);
-  const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys);
-  const pad = 10;
+// Compute a bounding polygon covering all sites (with padding)
+const computeBoundingPolygon = (sites: Point[]): Polygon => {
+  const allX = sites.map((site) => site.x);
+  const allY = sites.map((site) => site.y);
+  const minX = Math.min(...allX);
+  const maxX = Math.max(...allX);
+  const minY = Math.min(...allY);
+  const maxY = Math.max(...allY);
+  const padding = 10;
   return [
-    { x: minX - pad, y: minY - pad },
-    { x: maxX + pad, y: minY - pad },
-    { x: maxX + pad, y: maxY + pad },
-    { x: minX - pad, y: maxY + pad },
+    { x: minX - padding, y: minY - padding },
+    { x: maxX + padding, y: minY - padding },
+    { x: maxX + padding, y: maxY + padding },
+    { x: minX - padding, y: maxY + padding },
   ];
 };
 
-// Clip a convex polygon by the half-plane f(p) <= 0 using the Sutherland–Hodgman algorithm.
-const clipPolygon = (poly: Polygon, f: (p: Point) => number): Polygon =>
-  poly.reduce<Polygon>((acc, curr, i, arr) => {
-    const prev = arr[(i - 1 + arr.length) % arr.length];
-    const currInside = f(curr) <= 0;
-    const prevInside = f(prev) <= 0;
-    // Edge from prev -> curr
-    if (prevInside && currInside) return acc.concat(curr);
-    if (prevInside && !currInside) {
-      const t = f(prev) / (f(prev) - f(curr));
-      const inter = {
-        x: prev.x + t * (curr.x - prev.x),
-        y: prev.y + t * (curr.y - prev.y),
-      };
-      return acc.concat(inter);
+// Clip a convex polygon by a half-plane using Sutherland–Hodgman.
+const clipPolygon = (polygon: Polygon, isInside: (point: Point) => number): Polygon =>
+  polygon.reduce<Polygon>((accumulatedPoints, currentPoint, index, points) => {
+    const previousPoint = points[(index - 1 + points.length) % points.length];
+    const currentInside = isInside(currentPoint) <= 0;
+    const previousInside = isInside(previousPoint) <= 0;
+    if (previousInside && currentInside) {
+      return accumulatedPoints.concat(currentPoint);
     }
-    if (!prevInside && currInside) {
-      const t = f(prev) / (f(prev) - f(curr));
-      const inter = {
-        x: prev.x + t * (curr.x - prev.x),
-        y: prev.y + t * (curr.y - prev.y),
+    if (previousInside && !currentInside) {
+      const t = isInside(previousPoint) / (isInside(previousPoint) - isInside(currentPoint));
+      const intersection: Point = {
+        x: previousPoint.x + t * (currentPoint.x - previousPoint.x),
+        y: previousPoint.y + t * (currentPoint.y - previousPoint.y),
       };
-      return acc.concat(inter, curr);
+      return accumulatedPoints.concat(intersection);
     }
-    return acc;
+    if (!previousInside && currentInside) {
+      const t = isInside(previousPoint) / (isInside(previousPoint) - isInside(currentPoint));
+      const intersection: Point = {
+        x: previousPoint.x + t * (currentPoint.x - previousPoint.x),
+        y: previousPoint.y + t * (currentPoint.y - previousPoint.y),
+      };
+      return accumulatedPoints.concat(intersection, currentPoint);
+    }
+    return accumulatedPoints;
   }, []);
 
-// For a given site s, compute its Voronoi cell by clipping the bounding polygon
-// with each half-plane defined by (distance to s <= distance to t)
-const voronoiCell = (s: Point, sites: Point[], bbox: Polygon): Polygon =>
-  sites
-    .filter((t) => t.x !== s.x || t.y !== s.y)
-    .reduce<Polygon>((cell, t) => {
-      // f(p) <= 0 when p is closer to s than to t.
-      const f = (p: Point) =>
-        2 * (t.x - s.x) * p.x + 2 * (t.y - s.y) * p.y - (t.x ** 2 - s.x ** 2 + (t.y ** 2 - s.y ** 2));
-      return clipPolygon(cell, f);
-    }, bbox);
+// Compute the Voronoi cell for a given site by clipping the bounding polygon
+// with each half-plane that favors the current site over another site.
+const voronoiCell = (currentSite: Point, allSites: Point[], boundingPolygon: Polygon): Polygon =>
+  allSites
+    .filter((otherSite) => otherSite.x !== currentSite.x || otherSite.y !== currentSite.y)
+    .reduce<Polygon>((cellPolygon, otherSite) => {
+      // Returns a positive number if point is closer to otherSite, negative if closer to currentSite.
+      const halfPlaneTest = (point: Point) =>
+        2 * (otherSite.x - currentSite.x) * point.x +
+        2 * (otherSite.y - currentSite.y) * point.y -
+        (otherSite.x ** 2 - currentSite.x ** 2 + (otherSite.y ** 2 - currentSite.y ** 2));
+      return clipPolygon(cellPolygon, halfPlaneTest);
+    }, boundingPolygon);
 
-// Compute the Voronoi diagram for all sites
-export const voronoiDiagram = (sites: Point[]): { site: Point; cell: Polygon }[] => {
-  const bbox = computeBoundingBox(sites);
-  return sites.map((site) => ({ site, cell: voronoiCell(site, sites, bbox) }));
+// Compute the Voronoi diagram for all sites.
+export const computeVoronoi = (sites: Point[]): { site: Point; cell: Polygon }[] => {
+  const boundingPolygon = computeBoundingPolygon(sites);
+  return sites.map((site) => ({ site, cell: voronoiCell(site, sites, boundingPolygon) }));
 };
-
-/* Example usage */
-const sites: Point[] = [
-  { x: 20, y: 30 },
-  { x: 50, y: 60 },
-  { x: 80, y: 20 },
-];
-
-const diagram = voronoiDiagram(sites);
-console.log(diagram);
