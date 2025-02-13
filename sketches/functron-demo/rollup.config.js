@@ -14,8 +14,6 @@ export default {
     typescript({
       include: ['**/*.ts', '**/*.tsx'],
       tsconfig: './tsconfig.json',
-      jsx: 'react',
-      jsxFactory: 'jsx',
     }),
     copy({
       targets: [

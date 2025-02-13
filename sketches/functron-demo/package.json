@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@dim882/lib": "0.1.0",
-    "functron": "/Users/danimal/dev/self/functron/tarballs/package.tgz",
+    "functron": "../../../functron/tarballs/package.tgz",
     "rambda": "^9.2.0",
     "ramda": "^0.29.1",
     "snabbdom": "^3.6.2"

@@ -6,7 +6,6 @@
     "noEmitOnError": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    // "jsx": "react",
     "jsxFactory": "jsx",
     "jsxImportSource": "functron",
     "jsxFragmentFactory": "Fragment",
