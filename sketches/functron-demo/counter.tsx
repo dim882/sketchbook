@@ -20,7 +20,7 @@ const handlers = {
 
 const render: RenderFunc<ICounterModel, typeof handlers> = ({ count }, { incrementCounter }) => (
   <div>
-    <button on={{ click: incrementCounter }}>Add 1</button>
+    <button on={{ click: incrementCounter }}>Add 1??</button>
     <div>{count}</div>
   </div>
 );

@@ -4855,7 +4855,7 @@ __metadata:
     "@rollup/plugin-node-resolve": "npm:^15.2.3"
     "@rollup/plugin-typescript": "npm:^11.1.6"
     "@types/ramda": "npm:^0.29.12"
-    functron: ../../../functron/tarballs/package.tgz
+    functron: "npm:^0.1.2"
     rambda: "npm:^9.2.0"
     ramda: "npm:^0.29.1"
     rollup: "npm:^4.14.3"
@@ -4866,17 +4866,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"functron@file:../../../functron/tarballs/package.tgz::locator=functron-demo%40workspace%3Asketches%2Ffunctron-demo":
-  version: 0.1.0
-  resolution: "functron@file:../../../functron/tarballs/package.tgz#../../../functron/tarballs/package.tgz::hash=88fd2c&locator=functron-demo%40workspace%3Asketches%2Ffunctron-demo"
+"functron@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "functron@npm:0.1.2"
   dependencies:
     "@babel/plugin-transform-react-jsx": "npm:^7.23.4"
     "@babel/preset-env": "npm:^7.24.5"
     "@babel/preset-typescript": "npm:^7.24.1"
     "@rollup/plugin-babel": "npm:^6.0.4"
     snabbdom: "npm:^3.6.2"
-    snabby: "npm:^6.1.1"
-  checksum: 10c0/8ba9966ee6c83c7550233b5fdf7ddbf0cb26b80dbd232e630f098e3dc7d9988f99d9455ed6df95c148a113f7f378f00493cffda0bec53a06907f9dbef96e86e8
+  checksum: 10c0/fd695a60efa4cdda76323a26ff9a259ffbf64caaf6e019be442708424eba74051ae991ea33183eecef0b1a0bd08f658fd8bfc859880756b2416290771bf72928
   languageName: node
   linkType: hard
 
@@ -5172,22 +5171,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hyperscript-attribute-to-property@npm:^1.0.0":
-  version: 1.0.2
-  resolution: "hyperscript-attribute-to-property@npm:1.0.2"
-  checksum: 10c0/52771779671a2d8dc325b9d1a6f4a8a1dd43cbac5f33c6a985206a6e654466163d09672b76e946c0f2072fb06cc565717f673f3bf3734dff0e196631935deab7
-  languageName: node
-  linkType: hard
-
-"hyperx@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "hyperx@npm:3.0.1"
-  dependencies:
-    hyperscript-attribute-to-property: "npm:^1.0.0"
-  checksum: 10c0/21b80df8ef9b9d9ad4dd6d61ebcd6e880f280d369d6a84b637bf431fcd8c815b3116f32b7b3e6b9ca000bc973dc582ab54e1aa7ac49f99b6d29a15ebbe494ce4
-  languageName: node
-  linkType: hard
-
 "iconv-lite@npm:0.4.24":
   version: 0.4.24
   resolution: "iconv-lite@npm:0.4.24"
@@ -5373,13 +5356,6 @@ __metadata:
   dependencies:
     binary-extensions: "npm:^2.0.0"
   checksum: 10c0/a16eaee59ae2b315ba36fad5c5dcaf8e49c3e27318f8ab8fa3cdb8772bf559c8d1ba750a589c2ccb096113bb64497084361a25960899cb6172a6925ab6123d38
-  languageName: node
-  linkType: hard
-
-"is-boolean-attribute@npm:^0.0.1":
-  version: 0.0.1
-  resolution: "is-boolean-attribute@npm:0.0.1"
-  checksum: 10c0/f85ca2cd3952c8c817c4372a8eb46f3c075c0bdb62d67c44132b56e21fbf4e65be512a3595d79853d51fb264716836ded51fe2d2eb541fc5a5957d76bbad8374
   languageName: node
   linkType: hard
 
@@ -8543,21 +8519,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"snabbdom@npm:^3.0.3, snabbdom@npm:^3.6.2":
+"snabbdom@npm:^3.6.2":
   version: 3.6.2
   resolution: "snabbdom@npm:3.6.2"
   checksum: 10c0/5b6763128458fde2ec3c32d3753650db7ab2a66ebc233696e201c65d41e976fdce038857056ccdf12c23540fd3745bbdf48c4819f061878d7546c2a5fcd9b1ca
-  languageName: node
-  linkType: hard
-
-"snabby@npm:^6.1.1":
-  version: 6.1.1
-  resolution: "snabby@npm:6.1.1"
-  dependencies:
-    hyperx: "npm:^3.0.0"
-    is-boolean-attribute: "npm:^0.0.1"
-    snabbdom: "npm:^3.0.3"
-  checksum: 10c0/16659e24c82846bc9fea1eb9d37588c92d38ed8b2818dab130552be3e96bb6f33812d782b827120ea481384bb41899099dc8e138cfe9a1016fc9ca1cdc626a46
   languageName: node
   linkType: hard
 
