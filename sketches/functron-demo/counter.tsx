@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { createComponent, EventHandler, jsx, RenderFunc } from 'functron';
 
-console.log('counter--');
+console.log('counte--');
 
 interface ICounterModel {
   count: number;
@@ -30,9 +30,5 @@ const MyComponent = createComponent<[], ICounterModel, typeof handlers, typeof r
   handlers,
   render,
 });
-
-customElements.define('ui-counter', MyComponent);
-
-console.log('from counter');
 
 export default MyComponent;
