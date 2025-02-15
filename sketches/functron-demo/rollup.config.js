@@ -18,7 +18,7 @@ export default {
     }),
     babel({
       presets: ['@babel/preset-typescript', ['@babel/preset-react', { pragma: 'jsx', pragmaFrag: 'Fragment' }]],
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      extensions: ['.ts', '.tsx'],
       babelHelpers: 'bundled',
     }),
     copy({
