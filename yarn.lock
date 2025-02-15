@@ -4847,6 +4847,38 @@ __metadata:
   languageName: node
   linkType: hard
 
+"functron-demo@workspace:sketches/functron-demo":
+  version: 0.0.0-use.local
+  resolution: "functron-demo@workspace:sketches/functron-demo"
+  dependencies:
+    "@dim882/lib": "npm:0.1.0"
+    "@rollup/plugin-node-resolve": "npm:^15.2.3"
+    "@rollup/plugin-typescript": "npm:^11.1.6"
+    "@types/ramda": "npm:^0.29.12"
+    functron: "npm:^0.1.2"
+    rambda: "npm:^9.2.0"
+    ramda: "npm:^0.29.1"
+    rollup: "npm:^4.14.3"
+    rollup-plugin-copy: "npm:^3.5.0"
+    snabbdom: "npm:^3.6.2"
+    tslib: "npm:^2.6.2"
+    typescript: "npm:^5.4.5"
+  languageName: unknown
+  linkType: soft
+
+"functron@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "functron@npm:0.1.2"
+  dependencies:
+    "@babel/plugin-transform-react-jsx": "npm:^7.23.4"
+    "@babel/preset-env": "npm:^7.24.5"
+    "@babel/preset-typescript": "npm:^7.24.1"
+    "@rollup/plugin-babel": "npm:^6.0.4"
+    snabbdom: "npm:^3.6.2"
+  checksum: 10c0/fd695a60efa4cdda76323a26ff9a259ffbf64caaf6e019be442708424eba74051ae991ea33183eecef0b1a0bd08f658fd8bfc859880756b2416290771bf72928
+  languageName: node
+  linkType: hard
+
 "fuzz@workspace:sketches/fuzz":
   version: 0.0.0-use.local
   resolution: "fuzz@workspace:sketches/fuzz"
@@ -8484,6 +8516,13 @@ __metadata:
   version: 4.2.0
   resolution: "smart-buffer@npm:4.2.0"
   checksum: 10c0/a16775323e1404dd43fabafe7460be13a471e021637bc7889468eb45ce6a6b207261f454e4e530a19500cc962c4cc5348583520843b363f4193cee5c00e1e539
+  languageName: node
+  linkType: hard
+
+"snabbdom@npm:^3.6.2":
+  version: 3.6.2
+  resolution: "snabbdom@npm:3.6.2"
+  checksum: 10c0/5b6763128458fde2ec3c32d3753650db7ab2a66ebc233696e201c65d41e976fdce038857056ccdf12c23540fd3745bbdf48c4819f061878d7546c2a5fcd9b1ca
   languageName: node
   linkType: hard
 

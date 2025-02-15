@@ -1,0 +1,26 @@
+{
+  "name": "functron-demo",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "get": "yarn add /Users/danimal/dev/self/functron/tarballs/package.tgz"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/ramda": "^0.29.12",
+    "rollup": "^4.14.3",
+    "rollup-plugin-copy": "^3.5.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@dim882/lib": "0.1.0",
+    "functron": "^0.1.2",
+    "rambda": "^9.2.0",
+    "ramda": "^0.29.1",
+    "snabbdom": "^3.6.2"
+  }
+}
