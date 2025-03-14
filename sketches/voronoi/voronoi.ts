@@ -12,6 +12,8 @@ const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, uppe
 
 const prng = Math.random;
 
+const NUM_POINTS = 20;
+
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
@@ -23,14 +25,11 @@ window.addEventListener('DOMContentLoaded', () => {
   function render(context: CanvasRenderingContext2D) {
     const { width, height } = context.canvas;
 
-    // Generate random points
-    const numPoints = 20;
-    const points = Array.from({ length: numPoints }, () => ({
+    const points = Array.from({ length: NUM_POINTS }, () => ({
       x: getFloat(prng, 0, width),
       y: getFloat(prng, 0, height),
     }));
 
-    // Generate the voronoi diagram
     const diagram = computeVoronoi(points);
 
     // Draw each cell
@@ -51,12 +50,6 @@ window.addEventListener('DOMContentLoaded', () => {
       context.fill();
       context.strokeStyle = 'white';
       context.stroke();
-
-      // Draw site point
-      context.beginPath();
-      context.arc(site.x, site.y, 2, 0, Math.PI * 2);
-      context.fillStyle = 'black';
-      context.fill();
     });
   }
 });
