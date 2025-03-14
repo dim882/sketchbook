@@ -29,8 +29,13 @@ window.addEventListener('DOMContentLoaded', () => {
       x: getFloat(prng, 0, width),
       y: getFloat(prng, 0, height),
     }));
-
-    const diagram = computeVoronoi(points);
+    const boundingPolygon = [
+      { x: 0, y: 0 },
+      { x: width, y: 0 },
+      { x: width, y: height },
+      { x: 0, y: height },
+    ];
+    const diagram = computeVoronoi(points, boundingPolygon);
 
     // Draw each cell
     diagram.forEach(({ cell, site }) => {

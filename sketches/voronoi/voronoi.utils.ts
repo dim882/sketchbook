@@ -68,8 +68,11 @@ const computeCell = (currentSite: Point, allSites: Point[], boundingPolygon: Pol
       return clipPolygon(cellPolygon, halfPlaneTest);
     }, boundingPolygon);
 
-export const computeVoronoi = (sites: Point[]): { site: Point; cell: Polygon }[] => {
-  const boundingPolygon = computeBoundingPolygon(sites);
+export const computeVoronoi = (sites: Point[], boundingPolygon: Polygon): { site: Point; cell: Polygon }[] => {
+  console.log(boundingPolygon);
 
-  return sites.map((site) => ({ site, cell: computeCell(site, sites, boundingPolygon) }));
+  return sites.map((site) => ({
+    site,
+    cell: computeCell(site, sites, boundingPolygon),
+  }));
 };
