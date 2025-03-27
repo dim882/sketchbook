@@ -36,10 +36,9 @@ window.addEventListener('DOMContentLoaded', () => {
       { x: 0, y: height },
     ];
     const diagram = computeVoronoi(points, boundingPolygon);
+    console.log(diagram);
 
-    // Draw each cell
     diagram.forEach(({ cell, site }) => {
-      // Draw cell
       context.beginPath();
       cell.forEach((point, index) => {
         if (index === 0) {
@@ -50,7 +49,6 @@ window.addEventListener('DOMContentLoaded', () => {
       });
       context.closePath();
 
-      // Fill with random color
       context.fillStyle = `hsl(${getFloat(prng, 0, 360)}, 70%, 70%)`;
       context.fill();
       context.strokeStyle = 'white';
