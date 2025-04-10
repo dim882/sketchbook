@@ -10,17 +10,25 @@ const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, uppe
   return Math.floor(getFloat(generateNumber, lower, upper));
 };
 
+function createColorPalettes(colorData: typeof colors): Record<string, string[]> {
+  return Object.entries(colorData).reduce((acc, [colorName, shades]) => {
+    const sortedKeys = Object.keys(shades).sort();
+    const colorArray = sortedKeys.map((key) => shades[key].value);
+
+    acc[colorName] = colorArray;
+
+    return acc;
+  }, {} as Record<string, string[]>);
+}
+
 const prng = Math.random;
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
-  console.log('dddd');
 
-  const myColors = Object.values(colors).map((color) => {
-    console.log(color);
-    return color;
-  });
+  const colorPalettes = createColorPalettes(colors);
+  console.log(colorPalettes);
 
   if (context) {
     render(context);
