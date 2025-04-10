@@ -1,4 +1,5 @@
 import { colors } from './colors';
+import { createColorPalettes } from './personal-site.utils';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
@@ -9,18 +10,6 @@ const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper 
 const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
   return Math.floor(getFloat(generateNumber, lower, upper));
 };
-
-function createColorPalettes(colorData: typeof colors): Record<string, string[]> {
-  return Object.entries(colorData).reduce((acc, [colorName, shades]) => {
-    const colorArray = Object.keys(shades)
-      .sort()
-      .map((key) => shades[key].value);
-
-    acc[colorName] = colorArray;
-
-    return acc;
-  }, {} as Record<string, string[]>);
-}
 
 const prng = Math.random;
 
