@@ -12,8 +12,9 @@ const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, uppe
 
 function createColorPalettes(colorData: typeof colors): Record<string, string[]> {
   return Object.entries(colorData).reduce((acc, [colorName, shades]) => {
-    const sortedKeys = Object.keys(shades).sort();
-    const colorArray = sortedKeys.map((key) => shades[key].value);
+    const colorArray = Object.keys(shades)
+      .sort()
+      .map((key) => shades[key].value);
 
     acc[colorName] = colorArray;
 
