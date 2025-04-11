@@ -38,7 +38,7 @@ const render: RenderFunc<ICounterModel, typeof handlers> = ({ count, palette }, 
             style={{
               display: 'grid',
               gridTemplateColumns: '1fr',
-              gap: '4px',
+              gap: '0',
             }}
           >
             {colorValues.map((color, index) => (
