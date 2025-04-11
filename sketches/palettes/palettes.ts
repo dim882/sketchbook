@@ -1,8 +1,6 @@
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
-import Counter from './counter';
+import ColorGrid from './color-grid';
 
-customElements.define('ui-counter', Counter);
-
-console.log('hi!!');
+customElements.define('sk-color-grid', ColorGrid);

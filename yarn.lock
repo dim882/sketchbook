@@ -7028,6 +7028,7 @@ __metadata:
   resolution: "palettes@workspace:sketches/palettes"
   dependencies:
     "@dim882/lib": "npm:0.1.0"
+    "@rollup/plugin-babel": "npm:^6.0.4"
     "@rollup/plugin-node-resolve": "npm:^15.2.3"
     "@rollup/plugin-typescript": "npm:^11.1.6"
     "@types/ramda": "npm:^0.29.12"

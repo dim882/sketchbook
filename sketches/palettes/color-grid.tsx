@@ -1,8 +1,6 @@
 /** @jsx jsx */
 import { createComponent, EventHandler, jsx, RenderFunc } from 'functron';
 
-console.log('counte--');
-
 interface ICounterModel {
   count: number;
 }
@@ -25,10 +23,10 @@ const render: RenderFunc<ICounterModel, typeof handlers> = ({ count }, { increme
   </div>
 );
 
-const MyComponent = createComponent<[], ICounterModel, typeof handlers, typeof render>({
+const ColorGrid = createComponent<[], ICounterModel, typeof handlers, typeof render>({
   initialModel,
   handlers,
   render,
 });
 
-export default MyComponent;
+export default ColorGrid;
