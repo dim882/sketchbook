@@ -1,5 +1,4 @@
-import { colors } from './colors';
-import { createColorPalettes } from './personal-site.utils';
+import { getColorPalette } from './personal-site.utils';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
@@ -16,9 +15,9 @@ const prng = Math.random;
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
+  const colorPalette = getColorPalette();
 
-  const colorPalettes = createColorPalettes(colors);
-  console.log(colorPalettes);
+  console.log(colorPalette);
 
   if (context) {
     render(context);
