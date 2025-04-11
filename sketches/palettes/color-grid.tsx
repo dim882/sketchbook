@@ -4,25 +4,14 @@ import { getPalette, IPalette } from './palettes/personal-site';
 import './color-grid.css';
 
 interface ICounterModel {
-  count: number;
   palette: IPalette;
 }
 
 const initialModel: ICounterModel = {
-  count: 0,
   palette: getPalette(),
 };
 
-const incrementCounter: EventHandler<ICounterModel, MouseEvent> = (event, model) => ({
-  ...model,
-  count: model.count + 1,
-});
-
-const handlers = {
-  incrementCounter,
-};
-
-const render: RenderFunc<ICounterModel, typeof handlers> = ({ count, palette }, {}) => (
+const render: RenderFunc<ICounterModel> = ({ palette }, {}) => (
   <div>
     <div class={{ 'color-grid-container': true }}>
       {Object.entries(palette).map(([colorName, colorValues]) => (
