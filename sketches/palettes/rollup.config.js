@@ -2,6 +2,7 @@ import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
 import { babel } from '@rollup/plugin-babel';
+import postcss from 'rollup-plugin-postcss';
 
 export default {
   input: 'palettes.ts',
@@ -19,6 +20,12 @@ export default {
       presets: ['@babel/preset-typescript', ['@babel/preset-react', { pragma: 'jsx', pragmaFrag: 'Fragment' }]],
       extensions: ['.ts', '.tsx'],
       babelHelpers: 'bundled',
+    }),
+    postcss({
+      modules: true,
+      extract: 'bundle.css',
+      minimize: true,
+      sourceMap: true,
     }),
     copy({
       targets: [

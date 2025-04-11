@@ -1,46 +1,43 @@
 /** @jsx jsx */
 import { createComponent, EventHandler, jsx, RenderFunc } from 'functron';
 import { getPalette, IPalette } from './palettes/personal-site';
+import './color-grid.css';
 
 interface ICounterModel {
+  count: number;
   palette: IPalette;
 }
 
 const initialModel: ICounterModel = {
+  count: 0,
   palette: getPalette(),
 };
 
-const handlers = {};
+const incrementCounter: EventHandler<ICounterModel, MouseEvent> = (event, model) => ({
+  ...model,
+  count: model.count + 1,
+});
 
-const render: RenderFunc<ICounterModel, typeof handlers> = ({ palette }) => (
+const handlers = {
+  incrementCounter,
+};
+
+const render: RenderFunc<ICounterModel, typeof handlers> = ({ count, palette }, {}) => (
   <div>
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
-        gap: '0',
-        padding: '16px',
-      }}
-    >
+    <div>{count}</div>
+    <div className="color-grid-container">
       {Object.entries(palette).map(([colorName, colorValues]) => (
-        <div key={colorName}>
-          <h3 style={{ margin: '0 0 8px 0' }}>{colorName}</h3>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr',
-              gap: '0',
-            }}
-          >
+        <div key={colorName} className="color-category">
+          <h3 className="color-category-title">{colorName}</h3>
+          <div className="color-swatches">
             {colorValues.map((color, index) => (
               <div
                 key={`${colorName}-${index}`}
-                style={{
-                  backgroundColor: color,
-                  height: '32px',
-                  borderRadius: '0',
-                }}
-              ></div>
+                className={`color-swatch ${index < 4 ? 'light-text' : 'dark-text'}`}
+                style={{ backgroundColor: color }}
+              >
+                {color}
+              </div>
             ))}
           </div>
         </div>
@@ -53,6 +50,7 @@ const ColorGrid = createComponent<[], ICounterModel, typeof handlers, typeof ren
   initialModel,
   handlers,
   render,
+  cssPath: './palettes/dist/color-grid.css',
 });
 
 export default ColorGrid;
