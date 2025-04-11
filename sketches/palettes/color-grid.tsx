@@ -3,25 +3,16 @@ import { createComponent, EventHandler, jsx, RenderFunc } from 'functron';
 import { getPalette, IPalette } from './palettes/personal-site';
 
 interface ICounterModel {
-  count: number;
   palette: IPalette;
 }
 
 const initialModel: ICounterModel = {
-  count: 0,
   palette: getPalette(),
 };
 
-const incrementCounter: EventHandler<ICounterModel, MouseEvent> = (event, model) => ({
-  ...model,
-  count: model.count + 1,
-});
+const handlers = {};
 
-const handlers = {
-  incrementCounter,
-};
-
-const render: RenderFunc<ICounterModel, typeof handlers> = ({ count, palette }, {}) => (
+const render: RenderFunc<ICounterModel, typeof handlers> = ({ palette }) => (
   <div>
     <div
       style={{
