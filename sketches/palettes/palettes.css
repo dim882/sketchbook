@@ -1,13 +1,11 @@
 body {
-  display: grid;
   height: 100vh;
   margin: 0;
-  grid-template-columns: 1fr 400px;
 }
 
 main {
-  background-color: #ccc;
   display: grid;
+  height: 100vh;
   place-items: center;
 }
 

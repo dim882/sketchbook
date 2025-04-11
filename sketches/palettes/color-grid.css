@@ -1,9 +1,7 @@
 .color-grid-container {
   display: grid;
   grid-template-columns: auto repeat(9, 1fr); /* First column for color name, then 9 for shades */
-  gap: 8px;
-  width: 100%;
-  max-width: 1200px;
+  width: 100vw;
   margin: 0 auto;
 }
 
@@ -32,12 +30,6 @@
   font-size: 12px;
   color: transparent;
   position: relative;
-  border-radius: 4px;
-}
-
-.color-swatch:hover {
-  transform: scale(1.05);
-  transition: transform 0.2s ease;
 }
 
 .light-text:hover {
