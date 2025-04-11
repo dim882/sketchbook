@@ -7023,6 +7023,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"palettes@workspace:sketches/palettes":
+  version: 0.0.0-use.local
+  resolution: "palettes@workspace:sketches/palettes"
+  dependencies:
+    "@dim882/lib": "npm:0.1.0"
+    "@rollup/plugin-node-resolve": "npm:^15.2.3"
+    "@rollup/plugin-typescript": "npm:^11.1.6"
+    "@types/ramda": "npm:^0.29.12"
+    rambda: "npm:^9.2.0"
+    ramda: "npm:^0.29.1"
+    rollup: "npm:^4.14.3"
+    rollup-plugin-copy: "npm:^3.5.0"
+    tslib: "npm:^2.6.2"
+    typescript: "npm:^5.4.5"
+  languageName: unknown
+  linkType: soft
+
 "parse-json@npm:^4.0.0":
   version: 4.0.0
   resolution: "parse-json@npm:4.0.0"
