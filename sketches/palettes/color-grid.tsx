@@ -11,6 +11,8 @@ const initialModel: ICounterModel = {
   palette: getPalette(),
 };
 
+const handlers = {};
+
 const render: RenderFunc<ICounterModel> = ({ palette }, {}) => (
   <div>
     <div class={{ 'color-grid-container': true }}>
@@ -40,7 +42,6 @@ const render: RenderFunc<ICounterModel> = ({ palette }, {}) => (
 
 const ColorGrid = createComponent<[], ICounterModel, typeof handlers, typeof render>({
   initialModel,
-  handlers,
   render,
   cssPath: './palettes/dist/color-grid.css',
 });
