@@ -7031,6 +7031,7 @@ __metadata:
     "@rollup/plugin-node-resolve": "npm:^15.2.3"
     "@rollup/plugin-typescript": "npm:^11.1.6"
     "@types/ramda": "npm:^0.29.12"
+    functron: "npm:^0.1.2"
     rambda: "npm:^9.2.0"
     ramda: "npm:^0.29.1"
     rollup: "npm:^4.14.3"

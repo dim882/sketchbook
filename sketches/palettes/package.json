@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@dim882/lib": "0.1.0",
+    "functron": "^0.1.2",
     "rambda": "^9.2.0",
     "ramda": "^0.29.1"
   }
