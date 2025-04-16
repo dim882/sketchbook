@@ -23,8 +23,8 @@ const render: RenderFunc<ICounterModel> = ({ palette }, {}) => {
             key={`${colorName}-${index}`}
             class={{
               'color-swatch': true,
-              'light-text': index < 4,
-              'dark-text': index >= 4,
+              'dark-text': index < 4,
+              'light-text': index >= 4,
             }}
             style={{ backgroundColor: color }}
           >

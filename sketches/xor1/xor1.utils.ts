@@ -17,6 +17,7 @@ export function createOffscreenCanvas(width: number, height: number) {
 export function drawConcentricRings(
   context: CanvasRenderingContext2D,
   center: IPoint,
+  color: string,
   maxRadius: number,
   ringWidth: number,
   ringSpacing: number
