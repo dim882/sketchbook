@@ -34,16 +34,29 @@ function render(context: CanvasRenderingContext2D) {
   const ringSpacing = 40;
   const maxRadius = Math.min(width, height) / 2 - ringWidth;
 
-  // context.fillStyle = 'white';
-  // context.fillRect(0, 0, width, height);
+  // Create offscreen canvas
+  const offscreenCanvas = document.createElement('canvas');
+  offscreenCanvas.width = width;
+  offscreenCanvas.height = height;
+  const offscreenContext = offscreenCanvas.getContext('2d');
 
-  context.globalCompositeOperation = 'xor';
+  if (!offscreenContext) return;
 
-  drawConcenticRings(context, center, maxRadius, ringWidth, ringSpacing);
+  // Draw to offscreen canvas with XOR
+  offscreenContext.globalCompositeOperation = 'xor';
 
+  // Draw first set of rings
+  drawConcenticRings(offscreenContext, center, maxRadius, ringWidth, ringSpacing);
+
+  // Draw second set of rings with offset
   const offsetCenter: IPointTuple = [center[0] + 20, center[1]];
+  drawConcenticRings(offscreenContext, offsetCenter, maxRadius, ringWidth, ringSpacing);
 
-  drawConcenticRings(context, offsetCenter, maxRadius, ringWidth, ringSpacing);
+  // Now draw to the main canvas
+  // First, clear with white background
+  context.fillStyle = 'white';
+  context.fillRect(0, 0, width, height);
 
-  context.globalCompositeOperation = 'source-over';
+  // Draw the offscreen canvas content onto the main canvas
+  context.drawImage(offscreenCanvas, 0, 0);
 }
