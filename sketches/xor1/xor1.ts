@@ -1,4 +1,4 @@
-import { createOffscreenCanvas, drawConcenticRings } from './xor1.utils';
+import { createOffscreenCanvas, drawConcenticRings as drawConcentricRings } from './xor1.utils';
 
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
@@ -24,8 +24,8 @@ function render(context: CanvasRenderingContext2D) {
   if (!offscreenContext) return;
 
   offscreenContext.globalCompositeOperation = 'xor';
-  drawConcenticRings(offscreenContext, center, maxRadius, ringWidth, ringSpacing);
-  drawConcenticRings(offscreenContext, [center[0] + 20, center[1]], maxRadius, ringWidth, ringSpacing);
+  drawConcentricRings(offscreenContext, center, maxRadius, ringWidth, ringSpacing);
+  drawConcentricRings(offscreenContext, [center[0] + 20, center[1]], maxRadius, ringWidth, ringSpacing);
 
   // Draw to the main canvas
   context.fillStyle = 'white';
