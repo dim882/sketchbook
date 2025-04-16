@@ -15,6 +15,7 @@ const handlers = {};
 
 const render: RenderFunc<ICounterModel> = ({ palette }, {}) => {
   const colorEntries = Object.entries(palette);
+  console.log(colorEntries);
 
   return (
     <div class={{ 'color-grid-container': true }}>
