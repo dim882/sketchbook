@@ -4,7 +4,9 @@ document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
 
-  loop(context, render, 60);
+  if (context) {
+    loop(context, render, 60);
+  }
 };
 
 function render(context: CanvasRenderingContext2D, t: number) {
