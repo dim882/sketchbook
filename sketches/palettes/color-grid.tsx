@@ -5,15 +5,36 @@ import './color-grid.css';
 
 interface ICounterModel {
   palette: IPalette;
+  copiedColor: string | null;
 }
 
 const initialModel: ICounterModel = {
   palette: getPalette(),
+  copiedColor: null,
 };
 
-const handlers = {};
+console.log('foo');
 
-const render: RenderFunc<ICounterModel> = ({ palette }, {}) => {
+const handlers = {
+  copyToClipboard: (model: ICounterModel, color: string) => {
+    console.log({ color });
+
+    navigator.clipboard
+      .writeText(color)
+      .then(() => {
+        return { ...model, copiedColor: color };
+      })
+      .catch((err) => {
+        console.error('Failed to copy color: ', err);
+        return model;
+      });
+
+    // Return immediately with updated state to show feedback
+    return model;
+  },
+};
+
+const render: RenderFunc<ICounterModel, typeof handlers> = ({ palette, copiedColor }, { copyToClipboard }) => {
   return (
     <div class={{ 'color-grid-container': true }}>
       {Object.entries(palette).flatMap(([colorName, colorValues]) => [
@@ -25,10 +46,12 @@ const render: RenderFunc<ICounterModel> = ({ palette }, {}) => {
               'color-swatch': true,
               'dark-text': index < 4,
               'light-text': index >= 4,
+              copied: copiedColor === color,
             }}
             style={{ backgroundColor: color }}
+            on={{ click: () => copyToClipboard({ palette }, color) }}
           >
-            {color}
+            {copiedColor === color ? 'Copied!' : color}
           </div>
         )),
       ])}
@@ -38,6 +61,7 @@ const render: RenderFunc<ICounterModel> = ({ palette }, {}) => {
 
 const ColorGrid = createComponent<[], ICounterModel, typeof handlers, typeof render>({
   initialModel,
+  handlers,
   render,
   cssPath: './palettes/dist/color-grid.css',
 });
