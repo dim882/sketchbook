@@ -14,12 +14,9 @@ const initialModel: ICounterModel = {
 const handlers = {};
 
 const render: RenderFunc<ICounterModel> = ({ palette }, {}) => {
-  const colorEntries = Object.entries(palette);
-  console.log(colorEntries);
-
   return (
     <div class={{ 'color-grid-container': true }}>
-      {colorEntries.flatMap(([colorName, colorValues]) => [
+      {Object.entries(palette).flatMap(([colorName, colorValues]) => [
         <div class={{ 'color-name': true }}>{colorName}</div>,
         ...colorValues.map((color, index) => (
           <div
