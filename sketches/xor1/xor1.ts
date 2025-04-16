@@ -37,5 +37,13 @@ function render(context: CanvasRenderingContext2D) {
   context.fillStyle = 'white';
   context.fillRect(0, 0, width, height);
 
+  context.globalCompositeOperation = 'xor';
+
   drawConcenticRings(context, center, maxRadius, ringWidth, ringSpacing);
+
+  const offsetCenter: IPointTuple = [center[0] + 20, center[1]];
+
+  drawConcenticRings(context, offsetCenter, maxRadius, ringWidth, ringSpacing);
+
+  context.globalCompositeOperation = 'source-over';
 }
