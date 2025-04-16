@@ -1,7 +1,6 @@
-import { createOffscreenCanvas, drawConcentricRings as drawConcentricRings, loop } from './xor1.utils';
+import { IPointTuple, createOffscreenCanvas, drawConcentricRings as drawConcentricRings, loop } from './xor1.utils';
 
 export type PseudoRandomNumberGenerator = () => number;
-export type IPointTuple = [number, number];
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;

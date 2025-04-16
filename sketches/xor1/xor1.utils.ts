@@ -1,4 +1,4 @@
-import { IPointTuple } from './xor1';
+export type IPointTuple = [number, number];
 
 export function createOffscreenCanvas(width: number, height: number) {
   const offscreenCanvas = document.createElement('canvas');
