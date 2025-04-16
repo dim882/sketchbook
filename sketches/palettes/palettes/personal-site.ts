@@ -145,7 +145,7 @@ export const colors = {
     },
     '800': {
       type: 'color',
-      value: '#938c6cff',
+      value: '#F4F4F0',
       blendMode: 'normal',
     },
     '000': {
