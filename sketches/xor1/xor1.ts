@@ -1,4 +1,4 @@
-import { createOffscreenCanvas, drawConcenticRings as drawConcentricRings, loop } from './xor1.utils';
+import { createOffscreenCanvas, drawConcentricRings as drawConcentricRings, loop } from './xor1.utils';
 
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
@@ -7,10 +7,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
 
-  // Track mouse position
   let mousePosition: IPointTuple = [0, 0];
 
-  // Add mouse move event listener
   canvas.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingClientRect();
     mousePosition = [event.clientX - rect.left, event.clientY - rect.top];
@@ -34,8 +32,12 @@ function render(context: CanvasRenderingContext2D, mousePosition: IPointTuple) {
 
   // Calculate offset based on mouse position
   // Map mouse position to create an offset relative to the center
-  const offsetX = (mousePosition[0] - center[0]) / 10;
-  const offsetY = (mousePosition[1] - center[1]) / 10;
+  let offsetX = (mousePosition[0] - center[0]) / 5;
+  let offsetY = (mousePosition[1] - center[1]) / 5;
+
+  const OFFSET_LIMIT = 30;
+  offsetX = Math.max(-OFFSET_LIMIT, Math.min(OFFSET_LIMIT, offsetX));
+  offsetY = Math.max(-OFFSET_LIMIT, Math.min(OFFSET_LIMIT, offsetY));
 
   offscreenContext.globalCompositeOperation = 'xor';
   drawConcentricRings(offscreenContext, center, maxRadius, ringWidth, ringSpacing);
