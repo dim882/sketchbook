@@ -1,4 +1,7 @@
-export type IPointTuple = [number, number];
+export interface IPoint {
+  x: number;
+  y: number;
+}
 
 export function createOffscreenCanvas(width: number, height: number) {
   const offscreenCanvas = document.createElement('canvas');
@@ -11,14 +14,14 @@ export function createOffscreenCanvas(width: number, height: number) {
 
 export function drawConcentricRings(
   context: CanvasRenderingContext2D,
-  center: IPointTuple,
+  center: IPoint,
   maxRadius: number,
   ringWidth: number,
   ringSpacing: number
 ) {
   for (let radius = ringWidth; radius <= maxRadius; radius += ringWidth + ringSpacing) {
     context.beginPath();
-    context.arc(center[0], center[1], radius, 0, Math.PI * 2);
+    context.arc(center.x, center.y, radius, 0, Math.PI * 2);
     context.lineWidth = ringWidth;
     context.strokeStyle = 'black';
     context.stroke();

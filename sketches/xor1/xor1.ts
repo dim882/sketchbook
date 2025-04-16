@@ -1,16 +1,14 @@
-import { IPointTuple, createOffscreenCanvas, drawConcentricRings as drawConcentricRings, loop } from './xor1.utils';
-
-export type PseudoRandomNumberGenerator = () => number;
+import { IPoint, createOffscreenCanvas, drawConcentricRings as drawConcentricRings, loop } from './xor1.utils';
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
 
-  let mousePosition: IPointTuple = [0, 0];
+  let mousePosition: IPoint = { x: 0, y: 0 };
 
   canvas.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingClientRect();
-    mousePosition = [event.clientX - rect.left, event.clientY - rect.top];
+    mousePosition = { x: event.clientX - rect.left, y: event.clientY - rect.top };
   });
 
   if (context) {
@@ -18,9 +16,9 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-function render(context: CanvasRenderingContext2D, mousePosition: IPointTuple) {
+function render(context: CanvasRenderingContext2D, mousePosition: IPoint) {
   const { width, height } = context.canvas;
-  const center: IPointTuple = [width / 2, height / 2];
+  const center: IPoint = { x: width / 2, y: height / 2 };
 
   const ringWidth = 40;
   const ringSpacing = 40;
@@ -31,8 +29,8 @@ function render(context: CanvasRenderingContext2D, mousePosition: IPointTuple) {
 
   // Calculate offset based on mouse position
   // Map mouse position to create an offset relative to the center
-  let offsetX = (mousePosition[0] - center[0]) / 5;
-  let offsetY = (mousePosition[1] - center[1]) / 5;
+  let offsetX = (mousePosition.x - center.x) / 5;
+  let offsetY = (mousePosition.y - center.y) / 5;
 
   const OFFSET_LIMIT = 30;
   offsetX = Math.max(-OFFSET_LIMIT, Math.min(OFFSET_LIMIT, offsetX));
@@ -40,7 +38,13 @@ function render(context: CanvasRenderingContext2D, mousePosition: IPointTuple) {
 
   offscreenContext.globalCompositeOperation = 'xor';
   drawConcentricRings(offscreenContext, center, maxRadius, ringWidth, ringSpacing);
-  drawConcentricRings(offscreenContext, [center[0] + offsetX, center[1] + offsetY], maxRadius, ringWidth, ringSpacing);
+  drawConcentricRings(
+    offscreenContext,
+    { x: center.x + offsetX, y: center.y + offsetY },
+    maxRadius,
+    ringWidth,
+    ringSpacing
+  );
 
   // Draw to the main canvas
   context.fillStyle = 'white';
