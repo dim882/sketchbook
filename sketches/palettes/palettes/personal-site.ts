@@ -239,7 +239,7 @@ export const colors = {
     },
     '800': {
       type: 'color',
-      value: '#e8d9c9ff',
+      value: '#eFAF5F6ff',
       blendMode: 'normal',
     },
     '000': {
