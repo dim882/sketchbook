@@ -34,8 +34,8 @@ function render(context: CanvasRenderingContext2D) {
   const ringSpacing = 40;
   const maxRadius = Math.min(width, height) / 2 - ringWidth;
 
-  context.fillStyle = 'white';
-  context.fillRect(0, 0, width, height);
+  // context.fillStyle = 'white';
+  // context.fillRect(0, 0, width, height);
 
   context.globalCompositeOperation = 'xor';
 
