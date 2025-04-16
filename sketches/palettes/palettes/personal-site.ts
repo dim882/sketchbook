@@ -4,6 +4,7 @@ export function getPalette(): IPalette {
   return Object.entries(colors).reduce((acc, [colorName, shades]) => {
     const colorArray = Object.keys(shades)
       .sort()
+      .reverse()
       .map((key) => shades[key].value);
 
     acc[colorName] = colorArray;
