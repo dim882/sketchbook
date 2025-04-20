@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { createComponent, jsx, RenderFunc } from 'functron';
+import { createComponent, EventHandler, jsx, RenderFunc } from 'functron';
 import { getPalette, IPalette } from './palettes/personal-site';
 import './color-grid.css';
 
@@ -13,26 +13,26 @@ const initialModel: ICounterModel = {
   copiedColor: null,
 };
 
-console.log('foo');
+console.log('b000??0');
 
-const handlers = {
-  copyToClipboard: (model: ICounterModel, color: string) => {
-    console.log({ color });
+const copyToClipboard: EventHandler<ICounterModel, MouseEvent> = (event, model) => {
+  console.log(model);
 
-    navigator.clipboard
-      .writeText(color)
-      .then(() => {
-        return { ...model, copiedColor: color };
-      })
-      .catch((err) => {
-        console.error('Failed to copy color: ', err);
-        return model;
-      });
+  const color = '';
+  navigator.clipboard
+    .writeText(color)
+    .then(() => {
+      return { ...model, copiedColor: color };
+    })
+    .catch((err) => {
+      console.error('Failed to copy color: ', err);
+      return model;
+    });
 
-    // Return immediately with updated state to show feedback
-    return model;
-  },
+  return model;
 };
+
+const handlers = { copyToClipboard };
 
 const render: RenderFunc<ICounterModel, typeof handlers> = ({ palette, copiedColor }, { copyToClipboard }) => {
   return (
@@ -49,7 +49,20 @@ const render: RenderFunc<ICounterModel, typeof handlers> = ({ palette, copiedCol
               copied: copiedColor === color,
             }}
             style={{ backgroundColor: color }}
-            on={{ click: () => copyToClipboard({ palette }, color) }}
+            on={{
+              click: (event, model) => {
+                console.log({ color });
+                navigator.clipboard
+                  .writeText(color)
+                  .then(() => {
+                    return { ...model, copiedColor: color };
+                  })
+                  .catch((err) => {
+                    console.error('Failed to copy color: ', err);
+                    return model;
+                  });
+              },
+            }}
           >
             {copiedColor === color ? 'Copied!' : color}
           </div>
