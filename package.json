@@ -1,21 +1,15 @@
 {
   "private": true,
-  "workspaces": [
-    "sketches/*",
-    "lib",
-    "tools"
-  ],
   "scripts": {
     "dev": "npm-run-all --parallel tools:watch tools:dev tools:build:watch",
-    "clone": "yarn workspace tools clone",
-    "lib:pull": "yarn workspace tools lib:pull",
-    "tools:dev": "yarn workspace tools dev",
-    "tools:watch": "yarn workspace tools watch",
-    "tools:build:watch": "yarn workspace tools build:watch",
+    "clone": "pnpm --filter tools clone",
+    "lib:pull": "pnpm --filter tools lib:pull",
+    "tools:dev": "pnpm --filter tools dev",
+    "tools:watch": "pnpm --filter tools watch",
+    "tools:build:watch": "pnpm --filter tools build:watch",
     "build": "rollup -c"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
-  },
-  "packageManager": "yarn@4.4.0+sha256.5f228cb28f2edb97d8c3b667fb7b2fdcf06c46798e25ea889dad9e0b4bc2e2c1"
+  }
 }

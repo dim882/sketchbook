@@ -1,0 +1,4 @@
+packages:
+  - 'sketches/*'
+  - 'lib'
+  - 'tools'

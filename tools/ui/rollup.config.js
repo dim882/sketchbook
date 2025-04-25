@@ -1,6 +1,4 @@
-import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import copy from 'rollup-plugin-copy';
 // import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import sucrase from '@rollup/plugin-sucrase';
