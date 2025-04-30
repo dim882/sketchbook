@@ -26,8 +26,6 @@ document.body.onload = () => {
       noise2D,
       noiseScale,
       particleSpeed,
-      width,
-      height,
     }),
     60
   );
@@ -38,12 +36,11 @@ interface ISketchData {
   noise2D: (x: number, y: number) => number;
   noiseScale: number;
   particleSpeed: number;
-  width: number;
-  height: number;
 }
 
 const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
-  const { particles, noise2D, noiseScale, particleSpeed, width, height } = data;
+  const { width, height } = context.canvas;
+  const { particles, noise2D, noiseScale, particleSpeed } = data;
 
   context.clearRect(0, 0, width, height);
   context.fillStyle = 'black';
@@ -65,7 +62,7 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
       maxVelocity: 40,
     });
 
-    // Handle edge wrapping
+    // Handle edge wrapping using the width and height from context.canvas
     if (particle.position.x < 0) particle.position.x = width;
     if (particle.position.x > width) particle.position.x = 0;
     if (particle.position.y < 0) particle.position.y = height;
@@ -81,6 +78,7 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
   }
 
   if (DEBUG) {
+    // Pass width and height obtained from context.canvas
     visualizeFlowField(context, width, height, noise2D, noiseScale, gridSize);
   }
 };
