@@ -58,7 +58,8 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
   const { particles, noise2D, noiseScale, particleSpeed, width, height } = data;
 
   // Clear the canvas
-  context.clearRect(0, 0, width, height);
+  context.fillStyle = 'black';
+  context.fillRect(0, 0, width, height);
 
   // Update and draw each particle
   for (let i = 0; i < particles.length; i++) {
@@ -99,7 +100,7 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
 
   // Visualize the flow field
   const gridSize = 40;
-  context.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+  context.strokeStyle = 'rgba(255, 255, 255, 0.9)';
   context.lineWidth = 1;
 
   for (let x = 0; x < width; x += gridSize) {
