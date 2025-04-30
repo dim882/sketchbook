@@ -67,9 +67,11 @@ function createTargetPath(item: string, targetDir: string): string {
   const parsedPath = path.parse(item);
   let targetFileName = item;
 
-  // Rename file if its base name matches the source sketch name
-  if (parsedPath.name === sourceName) {
-    targetFileName = `${targetName}${parsedPath.ext}`;
+  // Rename file if its base name starts with the source sketch name
+  if (parsedPath.name.startsWith(sourceName)) {
+    // Construct the new name: targetName + rest_of_original_name + extension
+    const restOfName = parsedPath.name.substring(sourceName.length); // e.g., ".utils" or ""
+    targetFileName = `${targetName}${restOfName}${parsedPath.ext}`; // e.g., "cloned.utils.ts" or "cloned.css"
   }
 
   return path.join(targetDir, targetFileName);
@@ -77,8 +79,10 @@ function createTargetPath(item: string, targetDir: string): string {
 
 function isTextFile(filePath: string): boolean {
   const ext = path.extname(filePath).toLowerCase();
+
   // Include specific filenames like rollup.config.js even without a standard text extension
   if (path.basename(filePath) === 'rollup.config.js') return true;
+
   return textFileExtensions.includes(ext);
 }
 
@@ -107,10 +111,8 @@ function setPackageName(packageJsonPath: string) {
 }
 
 function install() {
-  // Use the 'targetDir' variable which correctly points to ../sketches/targetName
   console.log(`Running pnpm install in ${targetDir}...`);
   try {
-    // Ensure commands run in the context of the target sketch directory
     execSync('pnpm install', { cwd: targetDir, stdio: 'inherit' });
   } catch (error) {
     console.error('Error running pnpm install:', error);
