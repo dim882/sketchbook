@@ -48,33 +48,32 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
 
   // Update and draw each particle
   for (let i = 0; i < particles.length; i++) {
-    let particle = particles[i];
+    const initialParticle = particles[i];
 
-    const { x, y } = particle.position;
+    const { x, y } = initialParticle.position;
     const noiseValue = noise2D(x * noiseScale, y * noiseScale);
     const angle = noiseValue * Math.PI * 2;
     const force = Vec.multiply(Vec.fromAngle(angle), particleSpeed);
 
-    particle = applyForce({
-      particle,
+    const particleAfterForce = applyForce({
+      particle: initialParticle,
       force,
       deltaTime: 1 / 60,
       maxVelocity: 40,
     });
 
-    handleEdges(particle, width, height);
+    const finalParticle = handleEdges(particleAfterForce, width, height);
 
     // Draw particle
     context.beginPath();
-    context.arc(particle.position.x, particle.position.y, 2, 0, 2 * Math.PI);
+    context.arc(finalParticle.position.x, finalParticle.position.y, 2, 0, 2 * Math.PI);
     context.fillStyle = 'white';
     context.fill();
 
-    particles[i] = particle;
+    particles[i] = finalParticle;
   }
 
   if (DEBUG) {
-    // Pass width and height obtained from context.canvas
     visualizeFlowField(context, width, height, noise2D, noiseScale, gridSize);
   }
 };

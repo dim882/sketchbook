@@ -47,8 +47,12 @@ export const applyForce = ({ particle, force, deltaTime = 1, maxVelocity }: Appl
 };
 
 export function handleEdges(particle: IParticle, width: number, height: number) {
-  if (particle.position.x < 0) particle.position.x = width;
-  if (particle.position.x > width) particle.position.x = 0;
-  if (particle.position.y < 0) particle.position.y = height;
-  if (particle.position.y > height) particle.position.y = 0;
+  return create({
+    position: {
+      x: particle.position.x < 0 ? width : particle.position.x > width ? 0 : particle.position.x,
+      y: particle.position.y < 0 ? height : particle.position.y > height ? 0 : particle.position.y,
+    },
+    velocity: particle.velocity,
+    mass: particle.mass,
+  });
 }
