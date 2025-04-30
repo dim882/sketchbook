@@ -21,6 +21,8 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "ramda": "^0.29.1"
+    "alea": "^1.0.1",
+    "ramda": "^0.29.1",
+    "simplex-noise": "^4.0.3"
   }
 }
