@@ -45,3 +45,31 @@ export function loop(renderFunc: IRenderFunc, fps = 60): void {
 
   requestAnimationFrame(animate);
 }
+
+export function visualizeFlowField(
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  noise2D: (x: number, y: number) => number,
+  noiseScale: number,
+  gridSize: number
+) {
+  context.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+  context.lineWidth = 1;
+
+  for (let x = 0; x < width; x += gridSize) {
+    for (let y = 0; y < height; y += gridSize) {
+      const noiseValue = noise2D(x * noiseScale, y * noiseScale);
+      const angle = noiseValue * Math.PI * 2;
+
+      context.save();
+      context.translate(x, y);
+      context.rotate(angle);
+      context.beginPath();
+      context.moveTo(0, 0);
+      context.lineTo(gridSize * 0.6, 0);
+      context.stroke();
+      context.restore();
+    }
+  }
+}

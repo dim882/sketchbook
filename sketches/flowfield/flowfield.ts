@@ -1,18 +1,22 @@
 import { type IParticle, create, applyForce } from './Particle';
-import { getCanvas, getCanvasContext, type IPointTuple, loop } from './flowfield.utils';
+import { getCanvas, getCanvasContext, type IPointTuple, loop, visualizeFlowField } from './flowfield.utils';
 import * as Vec from './Vector';
 import { createNoise2D } from 'simplex-noise';
 import alea from 'alea';
+
+// --- Configuration ---
+const DEBUG = true; // Set to true to visualize the flow field grid
+const particleCount = 500;
+const noiseScale = 0.005;
+const particleSpeed = 1;
+const gridSize = 40; // Grid size for visualization
+
+// --- Helper Function for Visualization ---
 
 document.body.onload = () => {
   const canvas = getCanvas();
   const context = getCanvasContext(canvas);
   const { width, height } = canvas;
-
-  // Configuration
-  const particleCount = 500;
-  const noiseScale = 0.005;
-  const particleSpeed = 1;
 
   // Create a seeded random number generator
   const prng = alea('flowfield-seed');
@@ -57,7 +61,8 @@ interface ISketchData {
 const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { particles, noise2D, noiseScale, particleSpeed, width, height } = data;
 
-  // Clear the canvas
+  // Clear the canvas and set background to black
+  context.clearRect(0, 0, width, height);
   context.fillStyle = 'black';
   context.fillRect(0, 0, width, height);
 
@@ -91,31 +96,15 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
     // Draw particle
     context.beginPath();
     context.arc(particle.position.x, particle.position.y, 2, 0, 2 * Math.PI);
-    context.fillStyle = 'white';
+    context.fillStyle = 'white'; // Keep particles white for contrast
     context.fill();
 
     // Update particle in array
     particles[i] = particle;
   }
 
-  // Visualize the flow field
-  const gridSize = 40;
-  context.strokeStyle = 'rgba(255, 255, 255, 0.9)';
-  context.lineWidth = 1;
-
-  for (let x = 0; x < width; x += gridSize) {
-    for (let y = 0; y < height; y += gridSize) {
-      const noiseValue = noise2D(x * noiseScale, y * noiseScale);
-      const angle = noiseValue * Math.PI * 2;
-
-      context.save();
-      context.translate(x, y);
-      context.rotate(angle);
-      context.beginPath();
-      context.moveTo(0, 0);
-      context.lineTo(gridSize * 0.6, 0);
-      context.stroke();
-      context.restore();
-    }
+  // Visualize the flow field only if DEBUG is true
+  if (DEBUG) {
+    visualizeFlowField(context, width, height, noise2D, noiseScale, gridSize);
   }
 };
