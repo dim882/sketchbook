@@ -45,3 +45,10 @@ export const applyForce = ({ particle, force, deltaTime = 1, maxVelocity }: Appl
     position: newPosition,
   };
 };
+
+export function handleEdges(particle: IParticle, width: number, height: number) {
+  if (particle.position.x < 0) particle.position.x = width;
+  if (particle.position.x > width) particle.position.x = 0;
+  if (particle.position.y < 0) particle.position.y = height;
+  if (particle.position.y > height) particle.position.y = 0;
+}

@@ -2,7 +2,7 @@ import { createNoise2D } from 'simplex-noise';
 import alea from 'alea';
 
 import { createParticles, getCanvas, getCanvasContext, loop, visualizeFlowField } from './flowfield.utils';
-import { type IParticle, applyForce } from './Particle';
+import { type IParticle, applyForce, handleEdges } from './Particle';
 import * as Vec from './Vector';
 
 const DEBUG = true;
@@ -62,11 +62,7 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
       maxVelocity: 40,
     });
 
-    // Handle edge wrapping using the width and height from context.canvas
-    if (particle.position.x < 0) particle.position.x = width;
-    if (particle.position.x > width) particle.position.x = 0;
-    if (particle.position.y < 0) particle.position.y = height;
-    if (particle.position.y > height) particle.position.y = 0;
+    handleEdges(particle, width, height);
 
     // Draw particle
     context.beginPath();
