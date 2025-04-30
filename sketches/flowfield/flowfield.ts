@@ -1,8 +1,9 @@
-import { type IParticle, create, applyForce } from './Particle';
-import { getCanvas, getCanvasContext, type IPointTuple, loop, visualizeFlowField } from './flowfield.utils';
-import * as Vec from './Vector';
 import { createNoise2D } from 'simplex-noise';
 import alea from 'alea';
+
+import { getCanvas, getCanvasContext, loop, visualizeFlowField } from './flowfield.utils';
+import { type IParticle, create, applyForce } from './Particle';
+import * as Vec from './Vector';
 
 const DEBUG = true;
 const gridSize = 40;
