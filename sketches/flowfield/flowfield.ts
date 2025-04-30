@@ -4,24 +4,17 @@ import * as Vec from './Vector';
 import { createNoise2D } from 'simplex-noise';
 import alea from 'alea';
 
-// --- Configuration ---
-const DEBUG = true; // Set to true to visualize the flow field grid
+const DEBUG = true;
+const gridSize = 40;
 const particleCount = 500;
 const noiseScale = 0.005;
 const particleSpeed = 1;
-const gridSize = 40; // Grid size for visualization
-
-// --- Helper Function for Visualization ---
 
 document.body.onload = () => {
   const canvas = getCanvas();
   const context = getCanvasContext(canvas);
   const { width, height } = canvas;
-
-  // Create a seeded random number generator
   const prng = alea('flowfield-seed');
-
-  // Create noise function
   const noise2D = createNoise2D(prng);
 
   // Create particles
@@ -35,7 +28,6 @@ document.body.onload = () => {
     );
   }
 
-  // Start animation loop
   loop(
     render(context, {
       particles,
@@ -61,7 +53,6 @@ interface ISketchData {
 const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { particles, noise2D, noiseScale, particleSpeed, width, height } = data;
 
-  // Clear the canvas and set background to black
   context.clearRect(0, 0, width, height);
   context.fillStyle = 'black';
   context.fillRect(0, 0, width, height);
@@ -69,18 +60,12 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
   // Update and draw each particle
   for (let i = 0; i < particles.length; i++) {
     let particle = particles[i];
+
     const { x, y } = particle.position;
-
-    // Get noise value at particle position
     const noiseValue = noise2D(x * noiseScale, y * noiseScale);
-
-    // Convert noise to angle (0 to 2π)
     const angle = noiseValue * Math.PI * 2;
-
-    // Create force vector from angle
     const force = Vec.multiply(Vec.fromAngle(angle), particleSpeed);
 
-    // Apply force to particle
     particle = applyForce({
       particle,
       force,
@@ -96,14 +81,12 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
     // Draw particle
     context.beginPath();
     context.arc(particle.position.x, particle.position.y, 2, 0, 2 * Math.PI);
-    context.fillStyle = 'white'; // Keep particles white for contrast
+    context.fillStyle = 'white';
     context.fill();
 
-    // Update particle in array
     particles[i] = particle;
   }
 
-  // Visualize the flow field only if DEBUG is true
   if (DEBUG) {
     visualizeFlowField(context, width, height, noise2D, noiseScale, gridSize);
   }
