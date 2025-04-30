@@ -101,9 +101,9 @@ function setPackageName(target: string, file: string) {
 
 function install() {
   try {
-    execSync(`cd ../sketches/${targetName} && yarn install`, { stdio: 'inherit' });
+    execSync(`cd ../sketches/${targetName} && pnpm install`, { stdio: 'inherit' });
   } catch (error) {
-    console.error('Error when running yarn install:', error);
+    console.error('Error when running pnpm install:', error);
   }
 }
 
