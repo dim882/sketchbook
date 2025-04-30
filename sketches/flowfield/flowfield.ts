@@ -48,20 +48,15 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
 
   // Update and draw each particle
   for (let i = 0; i < particles.length; i++) {
-    const initialParticle = particles[i];
-
-    const { x, y } = initialParticle.position;
+    const particle = particles[i];
+    const { x, y } = particle.position;
     const noiseValue = noise2D(x * noiseScale, y * noiseScale);
-    const angle = noiseValue * Math.PI * 2;
-    const force = Vec.multiply(Vec.fromAngle(angle), particleSpeed);
-
     const particleAfterForce = applyForce({
-      particle: initialParticle,
-      force,
+      particle,
+      force: Vec.multiply(Vec.fromAngle(noiseValue * Math.PI * 2), particleSpeed),
       deltaTime: 1 / 60,
       maxVelocity: 40,
     });
-
     const finalParticle = handleEdges(particleAfterForce, width, height);
 
     // Draw particle
