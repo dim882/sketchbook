@@ -54,7 +54,7 @@ export function createParticles(width: number, height: number, particleCount: nu
     particles.push(
       Particle.create({
         position: Vec.create(Math.random() * width, Math.random() * height),
-        mass: 1,
+        mass: 0.01,
       })
     );
   }

@@ -2,7 +2,7 @@ import { createNoise2D } from 'simplex-noise';
 import alea from 'alea';
 
 import { createParticles, getCanvas, getCanvasContext, loop, visualizeFlowField } from './flowfield.utils';
-import { type IParticle, create, applyForce } from './Particle';
+import { type IParticle, applyForce } from './Particle';
 import * as Vec from './Vector';
 
 const DEBUG = true;
@@ -62,6 +62,7 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
       particle,
       force,
       deltaTime: 1 / 60,
+      maxVelocity: 40,
     });
 
     // Handle edge wrapping
