@@ -1,7 +1,7 @@
 import { createNoise2D } from 'simplex-noise';
 import alea from 'alea';
 
-import { getCanvas, getCanvasContext, loop, visualizeFlowField } from './flowfield.utils';
+import { createParticles, getCanvas, getCanvasContext, loop, visualizeFlowField } from './flowfield.utils';
 import { type IParticle, create, applyForce } from './Particle';
 import * as Vec from './Vector';
 
@@ -15,19 +15,10 @@ document.body.onload = () => {
   const canvas = getCanvas();
   const context = getCanvasContext(canvas);
   const { width, height } = canvas;
+
   const prng = alea('flowfield-seed');
   const noise2D = createNoise2D(prng);
-
-  // Create particles
-  const particles: IParticle[] = [];
-  for (let i = 0; i < particleCount; i++) {
-    particles.push(
-      create({
-        position: Vec.create(Math.random() * width, Math.random() * height),
-        mass: 1,
-      })
-    );
-  }
+  const particles: IParticle[] = createParticles(width, height, particleCount);
 
   loop(
     render(context, {

@@ -1,3 +1,4 @@
+import * as Particle from './Particle.js';
 import * as Vec from './Vector.js';
 
 export type IPointTuple = [number, number];
@@ -44,6 +45,21 @@ export function loop(renderFunc: IRenderFunc, fps = 60): void {
   }
 
   requestAnimationFrame(animate);
+}
+
+export function createParticles(width: number, height: number, particleCount: number) {
+  const particles: Particle.IParticle[] = [];
+
+  for (let i = 0; i < particleCount; i++) {
+    particles.push(
+      Particle.create({
+        position: Vec.create(Math.random() * width, Math.random() * height),
+        mass: 1,
+      })
+    );
+  }
+
+  return particles;
 }
 
 export function visualizeFlowField(
