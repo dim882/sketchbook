@@ -1,4 +1,4 @@
-import type { IPointTuple } from './particles.utils';
+import type { IPointTuple } from './flowfield.utils';
 
 export interface IVector {
   x: number;

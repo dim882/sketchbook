@@ -1,10 +1,37 @@
-export type IRenderFunc = (t: number) => void;
-export type IPointTuple = [number, number];
+import * as Vec from './Vector.js';
 
-export function loop(render: IRenderFunc, fps = 60) {
-  const frameDuration = 1000 / fps;
+export type IPointTuple = [number, number];
+export type IRenderFunc = (t: number) => void;
+
+export function getCanvas(): HTMLCanvasElement {
+  const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+
+  if (!canvas) {
+    const newCanvas = document.createElement('canvas');
+    newCanvas.id = 'canvas';
+    newCanvas.width = window.innerWidth;
+    newCanvas.height = window.innerHeight;
+    document.body.appendChild(newCanvas);
+    return newCanvas;
+  }
+
+  return canvas;
+}
+
+export function getCanvasContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
+  const context = canvas.getContext('2d');
+
+  if (!context) {
+    throw new Error('Could not get canvas context');
+  }
+
+  return context;
+}
+
+export function loop(renderFunc: IRenderFunc, fps = 60): void {
+  let frameDuration = 1000 / fps;
   let lastFrameTime = 0;
-  let t = 0;
+  let frameCount = 0;
 
   function animate(time: number) {
     requestAnimationFrame(animate);
@@ -12,23 +39,9 @@ export function loop(render: IRenderFunc, fps = 60) {
     if (time - lastFrameTime < frameDuration) return;
     lastFrameTime = time;
 
-    render(t); // Assuming `context` is accessible in this scope
-    t++;
+    renderFunc(frameCount);
+    frameCount++;
   }
 
   requestAnimationFrame(animate);
 }
-
-export const getCanvas = (): HTMLCanvasElement => {
-  const canvas = document.querySelector('canvas');
-  if (!canvas) throw new Error('Canvas element not found');
-
-  return canvas;
-};
-
-export const getCanvasContext = (canvas: HTMLCanvasElement): CanvasRenderingContext2D => {
-  const context = canvas.getContext('2d');
-  if (!context) throw new Error('Could not get 2D context');
-
-  return context;
-};
