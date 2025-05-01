@@ -5,9 +5,12 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "get": "yarn add /Users/danimal/dev/self/functron/tarballs/package.tgz"
+    "get": "pnpm add /Users/danimal/dev/self/functron/tarballs/package.tgz",
+    "build": "rollup -c",
+    "clean": "rm -rf dist/*"
   },
   "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/ramda": "^0.29.12",

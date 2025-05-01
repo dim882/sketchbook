@@ -357,6 +357,9 @@ importers:
         specifier: ^3.6.2
         version: 3.6.2
     devDependencies:
+      '@rollup/plugin-babel':
+        specifier: ^6.0.4
+        version: 6.0.4(@babel/core@7.26.10)(@types/babel__core@7.20.5)(rollup@4.40.0)
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
