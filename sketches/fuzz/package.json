@@ -19,5 +19,9 @@
     "rambda": "^9.2.0",
     "ramda": "^0.29.1",
     "simplex-noise": "^4.0.2"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "clean": "rm -rf dist/*"
   }
 }

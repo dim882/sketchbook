@@ -19,5 +19,9 @@
     "functron": "^0.1.2",
     "rambda": "^9.2.0",
     "ramda": "^0.29.1"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "clean": "rm -rf dist/*"
   }
 }

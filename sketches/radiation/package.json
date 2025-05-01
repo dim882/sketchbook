@@ -14,5 +14,9 @@
   },
   "dependencies": {
     "ramda": "^0.30.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "clean": "rm -rf dist/*"
   }
 }

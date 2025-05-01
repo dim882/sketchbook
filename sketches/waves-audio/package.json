@@ -5,7 +5,9 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "watch": "rollup -c -w"
+    "watch": "rollup -c -w",
+    "build": "rollup -c",
+    "clean": "rm -rf dist/*"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",

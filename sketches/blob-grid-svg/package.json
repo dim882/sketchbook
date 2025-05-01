@@ -17,5 +17,9 @@
     "preact": "^10.25.4",
     "ramda": "^0.29.1",
     "simplex-noise": "^4.0.3"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "clean": "rm -rf dist/*"
   }
 }

@@ -7,7 +7,9 @@
   "scripts": {
     "watch": "rollup -c -w",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "build": "rollup -c",
+    "clean": "rm -rf dist/*"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
