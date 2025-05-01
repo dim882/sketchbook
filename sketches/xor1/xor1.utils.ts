@@ -1,4 +1,4 @@
-import { palette } from './palette';
+
 
 export interface IPoint {
   x: number;

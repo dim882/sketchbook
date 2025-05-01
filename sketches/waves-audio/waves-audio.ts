@@ -33,7 +33,7 @@ document.body.onload = async () => {
   window.addEventListener('resize', () => resizeCanvas(canvas));
 
   const renderers = await Promise.all(
-    audioDevices.map(async (device, i) => {
+    audioDevices.map(async (device) => {
       const audioStream = await captureAudioStream(device.deviceId);
       const getTimeData = make_getTimeData(
         audioContext,
@@ -47,7 +47,7 @@ document.body.onload = async () => {
 
   console.log(renderers);
 
-  function render(context: CanvasRenderingContext2D, t: number) {
+  function render(context: CanvasRenderingContext2D) {
     const { width, height } = context.canvas;
     const center: IPointTuple = [width / 2, height / 2];
 

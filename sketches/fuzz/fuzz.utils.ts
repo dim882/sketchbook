@@ -1,4 +1,4 @@
-import { hsl, formatHsl, Hsl } from 'culori';
+
 import { NoiseFunction2D } from 'simplex-noise';
 
 export type PseudoRandomNumberGenerator = () => number;

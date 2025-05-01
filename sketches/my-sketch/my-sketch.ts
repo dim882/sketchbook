@@ -1,4 +1,4 @@
-import { range, getInteger, createPRNG } from './utils.js';
+import { range, getInteger } from './utils.js';
 
 type IPointTuple = [number, number];
 

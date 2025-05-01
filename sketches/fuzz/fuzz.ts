@@ -39,7 +39,7 @@ setup(() => {
   render({ contexts, baseColor: color, noise2D: noise });
 });
 
-function render({ contexts, baseColor, noise2D }: IRenderArgs) {
+function render({ contexts, noise2D }: IRenderArgs) {
   const [mainContext, noiseDebugContext, ...scratchContexts] = contexts;
   const { width, height } = mainContext.canvas;
   const center: I2DTuple = [width / 2, height / 2];

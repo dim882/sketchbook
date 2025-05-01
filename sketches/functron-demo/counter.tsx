@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { createComponent, EventHandler, jsx, RenderFunc } from 'functron';
+import { createComponent, EventHandler, RenderFunc } from 'functron';
 
 console.log('counte--');
 

@@ -50,7 +50,7 @@ function handleToggle(this: HTMLElement, e: CustomEvent) {
   console.log('toggle???', e.detail.value);
 }
 
-function render(context: CanvasRenderingContext2D, baseColor: string) {
+function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 

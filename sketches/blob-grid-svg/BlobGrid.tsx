@@ -1,7 +1,7 @@
 import { JSX } from 'preact/jsx-runtime';
 import { useState, useEffect } from 'preact/hooks';
 import { createGrid, getInteger, createPRNG } from './blob-grid-svg.utils';
-import { createNoise2D, createNoise3D } from 'simplex-noise';
+import { createNoise3D } from 'simplex-noise';
 
 type IDimensions = {
   width: number;

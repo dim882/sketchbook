@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { createComponent, EventHandler, jsx, RenderFunc } from 'functron';
+import { createComponent, EventHandler, RenderFunc } from 'functron';
 import { getPalette, IPalette } from './palettes/personal-site';
 import './color-grid.css';
 

@@ -40,9 +40,9 @@ export const Right = <R>(x: R): IRight<R> => ({
 });
 
 export const Left = <L>(x: L): ILeft<L> => ({
-  chain: (f) => Left(x),
-  map: (f) => Left(x),
-  fold: (f, g) => f(x),
+  chain: () => Left(x),
+  map: () => Left(x),
+  fold: (f) => f(x),
   toString: () => `Left(${x})`,
 });
 
@@ -121,7 +121,7 @@ namespace Task {
   }
 
   export function rejected<T>(x: any): ITask<T> {
-    return Task<T>((rej, res) => rej(x));
+    return Task<T>((rej) => rej(x));
   }
 
   export function fromPromised<T, U>(fn: (...args: any[]) => Promise<T>): (...args: any[]) => ITask<T> {

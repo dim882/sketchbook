@@ -1,5 +1,5 @@
 import { IPoint, createOffscreenCanvas, drawConcentricRings, loop } from './xor1.utils';
-import { palette } from './palette';
+
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;

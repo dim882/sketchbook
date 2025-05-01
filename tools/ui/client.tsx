@@ -1,4 +1,4 @@
-import { h, hydrate } from 'preact';
+import { hydrate } from 'preact';
 import SketchList, { IDir } from './SketchList';
 
 declare global {

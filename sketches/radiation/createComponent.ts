@@ -28,14 +28,14 @@ export function createDecoratedComponent<AttributeNames extends string[], State>
     constructor(element) {
       shadowRoot = element.attachShadow(shadowDomSettings);
     },
-    connectedCallback: async (element) => {
+    connectedCallback: async () => {
       const content = typeof render === 'function' ? render(state) : render;
 
       shadowRoot.innerHTML = content;
 
       await applyCss(shadowRoot, cssPath, css);
     },
-    attributeChangedCallback: (element, attrName: string, oldVal: string, newVal: string) => {
+    attributeChangedCallback: (element) => {
       if (mapAttributesToState) {
         const newState = mapAttributesToState(getAttributes(element), state);
 

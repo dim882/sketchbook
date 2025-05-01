@@ -1,4 +1,4 @@
-import { h, render } from 'preact';
+import { render } from 'preact';
 import ColorPicker from './ColorPicker/ColorPicker';
 window.addEventListener('DOMContentLoaded', () => {
   const App = () => {
