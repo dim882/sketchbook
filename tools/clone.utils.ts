@@ -4,6 +4,21 @@ import { execSync } from 'child_process';
 
 const textFileExtensions = ['.ts', '.js', '.html', '.css', '.md', '.json', '.config.js'];
 
+export function getDirectoryNames(sourceName: string, targetName: string) {
+  const sourceDir = path.join(__dirname, '../sketches', sourceName);
+  const targetDir = path.join(__dirname, '../sketches', targetName);
+
+  if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
+    console.error(`Source sketch directory not found: ${sourceDir}`);
+    process.exit(1);
+  }
+
+  if (fs.existsSync(targetDir)) {
+    console.error(`Target sketch directory already exists: ${targetDir}`);
+    process.exit(1);
+  }
+  return { sourceDir, targetDir };
+}
 export function createTargetPath(item: string, targetDir: string, sourceName: string, targetName: string): string {
   const targetFileName = createTargetName(item, sourceName, targetName);
 

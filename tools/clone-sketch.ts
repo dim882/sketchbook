@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import {
   createTargetPath,
+  getDirectoryNames,
   install,
   isTextFile,
   replaceContentInFile,
@@ -24,18 +25,12 @@ if (!sourceName || !targetName) {
   process.exit(1);
 }
 
-const sourceDir = path.join(__dirname, '../sketches', sourceName);
-const targetDir = path.join(__dirname, '../sketches', targetName);
+const { sourceDir, targetDir } = getDirectoryNames(sourceName, targetName);
 
-if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
-  console.error(`Source sketch directory not found: ${sourceDir}`);
-  process.exit(1);
-}
+main(sourceDir, targetDir);
+install(targetDir);
 
-if (fs.existsSync(targetDir)) {
-  console.error(`Target sketch directory already exists: ${targetDir}`);
-  process.exit(1);
-}
+console.log(`Sketch './sketches/${targetName}' created successfully.`);
 
 function main(source: string, target: string) {
   if (!fs.existsSync(target)) {
@@ -72,8 +67,3 @@ function main(source: string, target: string) {
     }
   });
 }
-
-main(sourceDir, targetDir);
-install(targetDir);
-
-console.log(`Sketch './sketches/${targetName}' created successfully.`);
