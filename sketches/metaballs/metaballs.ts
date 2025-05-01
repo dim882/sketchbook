@@ -1,49 +1,11 @@
-import { IPointTuple, loop, createCanvas } from './utils';
-import * as Vec from './Vector';
-import { IVector } from './Vector';
-
-interface IMetaball {
-  position: IVector;
-  velocity: IVector;
-  radius: number;
-}
-
-const createMetaball = (x: number, y: number, vx: number, vy: number, radius: number): IMetaball => ({
-  position: { x, y },
-  velocity: { x: vx, y: vy },
-  radius,
-});
-
-const updateMetaball = (metaball: IMetaball, width: number, height: number): IMetaball => {
-  const newPosition = Vec.add(metaball.position, metaball.velocity);
-  const newVelocity = { ...metaball.velocity };
-
-  if (newPosition.x - metaball.radius < 0 || newPosition.x + metaball.radius > width) {
-    newVelocity.x = -newVelocity.x;
-  }
-
-  if (newPosition.y - metaball.radius < 0 || newPosition.y + metaball.radius > height) {
-    newVelocity.y = -newVelocity.y;
-  }
-
-  return {
-    position: Vec.add(metaball.position, newVelocity),
-    velocity: newVelocity,
-    radius: metaball.radius,
-  };
-};
-
-const calculateMetaballField = (x: number, y: number, metaballs: IMetaball[], threshold: number): boolean => {
-  const sum = metaballs.reduce((acc, ball) => {
-    const dx = x - ball.position.x;
-    const dy = y - ball.position.y;
-    const distanceSquared = dx * dx + dy * dy;
-
-    return acc + (ball.radius * ball.radius) / distanceSquared;
-  }, 0);
-
-  return sum > threshold;
-};
+import {
+  IMetaball,
+  loop,
+  createCanvas,
+  createMetaball,
+  updateMetaball,
+  calculateMetaballField,
+} from './metaballs.utils';
 
 document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -56,7 +18,7 @@ document.body.onload = () => {
 
   // Create metaballs
   const metaballs: IMetaball[] = [];
-  const metaballCount = 5;
+  const metaballCount = 15;
   const threshold = 1.0;
 
   for (let i = 0; i < metaballCount; i++) {

@@ -22,6 +22,8 @@ Avoid using `any` at all costs. If it's absolutely necessary, this is a case whe
 
 Imports should not contain the file extension.
 
+Sketch files should be focused on setup and the main render process. Utility functions should be put in a utils file.
+
 When creating a utils file, the name should be prefixed with the name of the sketch or system the utils are for. For example a `foo.ts` sketch would have a `foo.utils.ts` utils file.
 
 ## Code Formatting
