@@ -10,7 +10,10 @@ const sourceName = process.argv[2];
 const targetName = process.argv[3];
 
 if (!sourceName || !targetName) {
-  console.error('Usage: pnpm scaffold <source-sketch-name> <target-sketch-name>');
+  console.error('Usage: pnpm clone <source> <target>');
+  !sourceName && console.error('<source> not provided');
+  !targetName && console.error('<target> not provided');
+
   process.exit(1);
 }
 
