@@ -23,39 +23,39 @@ document.body.onload = () => {
     metaballs.push(Utils.createMetaball(x, y, vx, vy, radius));
   }
 
-  Utils.loop(context, render(metaballs, threshold, width, height), 60);
+  Utils.loop(context, render(metaballs, threshold), 60);
 };
 
-const render =
-  (metaballs: Utils.IMetaball[], threshold: number, width: number, height: number) =>
-  (context: CanvasRenderingContext2D, t: number) => {
-    // Update metaballs
-    for (let i = 0; i < metaballs.length; i++) {
-      metaballs[i] = Utils.updateMetaball(metaballs[i], width, height);
-    }
+const render = (metaballs: Utils.IMetaball[], threshold: number) => (context: CanvasRenderingContext2D, t: number) => {
+  const { width, height } = context.canvas;
 
-    context.clearRect(0, 0, width, height);
-    context.fillStyle = 'black';
-    context.fillRect(0, 0, width, height);
+  // Update metaballs
+  for (let i = 0; i < metaballs.length; i++) {
+    metaballs[i] = Utils.updateMetaball(metaballs[i], width, height);
+  }
 
-    // Create image data for direct pixel manipulation
-    const imageData = context.getImageData(0, 0, width, height);
-    const data = imageData.data;
+  context.clearRect(0, 0, width, height);
+  context.fillStyle = 'black';
+  context.fillRect(0, 0, width, height);
 
-    // Draw metaball field by manipulating pixels directly
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const index = (y * width + x) * 4;
-        const isInside = Utils.calculateMetaballField(x, y, metaballs, threshold);
+  // Create image data for direct pixel manipulation
+  const imageData = context.getImageData(0, 0, width, height);
+  const data = imageData.data;
 
-        if (isInside) {
-          data[index] = 0; // R
-          data[index + 1] = 120; // G
-          data[index + 2] = 255; // B
-          data[index + 3] = 255; // A
-        }
+  // Draw metaball field by manipulating pixels directly
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const index = (y * width + x) * 4;
+      const isInside = Utils.calculateMetaballField(x, y, metaballs, threshold);
+
+      if (isInside) {
+        data[index] = 0; // R
+        data[index + 1] = 120; // G
+        data[index + 2] = 255; // B
+        data[index + 3] = 255; // A
       }
     }
+  }
 
-    context.putImageData(imageData, 0, 0);
-  };
+  context.putImageData(imageData, 0, 0);
+};

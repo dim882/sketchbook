@@ -111,3 +111,7 @@ function copyDir(source: string, target: string) {
 ```
 
 Always place a linebreak before a return statement.
+
+### Miscellaneous
+
+If you're passing a canvas context into a function, there's no need to pass in the width and height as well. The function can get the width and height from the context.
