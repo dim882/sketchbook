@@ -59,3 +59,13 @@ export function install(targetDir: string) {
     console.error('Error running pnpm install:', error);
   }
 }
+
+export function replaceHtmlTitle(filePath: string, newTitle: string) {
+  try {
+    let content = fs.readFileSync(filePath, 'utf8');
+    content = content.replace(/<title>.*?<\/title>/i, `<title>${newTitle}</title>`);
+    fs.writeFileSync(filePath, content, 'utf8');
+  } catch (error) {
+    console.error(`Error replacing title in ${filePath}:`, error);
+  }
+}

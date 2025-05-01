@@ -2,7 +2,14 @@
 
 import fs from 'fs';
 import path from 'path';
-import { createTargetPath, install, isTextFile, replaceContentInFile, setPackageName } from './clone.utils';
+import {
+  createTargetPath,
+  install,
+  isTextFile,
+  replaceContentInFile,
+  replaceHtmlTitle,
+  setPackageName,
+} from './clone.utils';
 
 const excludedFiles = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
 
@@ -51,8 +58,14 @@ function main(source: string, target: string) {
     } else if (stats.isFile()) {
       fs.copyFileSync(sourcePath, targetPath);
 
-      if (path.basename(targetPath) === 'package.json') {
+      const baseName = path.basename(targetPath);
+      const extName = path.extname(targetPath);
+
+      if (baseName === 'package.json') {
         setPackageName(targetPath, targetName);
+      } else if (extName === '.html') {
+        replaceHtmlTitle(targetPath, targetName);
+        replaceContentInFile(targetPath, sourceName, targetName);
       } else if (isTextFile(targetPath)) {
         replaceContentInFile(targetPath, sourceName, targetName);
       }
