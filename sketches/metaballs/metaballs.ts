@@ -1,7 +1,7 @@
 import * as Utils from './metaballs.utils';
 
-const BACKGROUND_COLOR = 'black';
-const METABALL_COLOR = '#0078ff';
+const BACKGROUND_COLOR = '#fcfaf7';
+const METABALL_COLOR = '#c27770';
 const METABALL_COUNT = 20;
 const THRESHOLD = 0.2;
 
