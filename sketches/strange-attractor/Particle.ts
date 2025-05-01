@@ -1,0 +1,58 @@
+import * as Vector from './Vector';
+
+type OptionalExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
+
+// type Debug<T> = { [P in keyof T]: T[P] };
+// type ExpandedType = Debug<IParticleCreateArgs>;
+// let _: ExpandedType = null!;
+
+export interface IParticle {
+  position: Vector.IVector;
+  velocity: Vector.IVector;
+  mass: number;
+}
+
+type IParticleCreateArgs = OptionalExcept<IParticle, 'position'>;
+
+export const create = ({ position, velocity = Vector.create(0, 0), mass = 1 }: IParticleCreateArgs): IParticle => ({
+  position,
+  velocity,
+  mass,
+});
+
+export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
+
+type ApplyForceArgs = {
+  particle: IParticle;
+  force: Vector.IVector;
+  deltaTime?: number;
+  maxVelocity?: number;
+};
+
+export const applyForce = ({ particle, force, deltaTime = 1, maxVelocity }: ApplyForceArgs): IParticle => {
+  const acceleration = Vector.divide(force, particle.mass);
+  let newVelocity = Vector.add(particle.velocity, Vector.multiply(acceleration, deltaTime));
+
+  if (maxVelocity !== undefined) {
+    newVelocity = Vector.limit(newVelocity, maxVelocity);
+  }
+
+  const newPosition = Vector.add(particle.position, Vector.multiply(newVelocity, deltaTime));
+
+  return {
+    ...particle,
+    velocity: newVelocity,
+    position: newPosition,
+  };
+};
+
+export function handleEdges(particle: IParticle, width: number, height: number) {
+  return create({
+    position: {
+      x: particle.position.x < 0 ? width : particle.position.x > width ? 0 : particle.position.x,
+      y: particle.position.y < 0 ? height : particle.position.y > height ? 0 : particle.position.y,
+    },
+    velocity: particle.velocity,
+    mass: particle.mass,
+  });
+}

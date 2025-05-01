@@ -1,6 +1,14 @@
 # AI
 
-See [[README]].
+See [[./README.md]].
+
+## To create a new sketch with `clone`
+
+Pass the name of the sketch you want to copy, then the name to give the new sketch
+
+```
+$ pnpm clone <base sketch name> <my sketch name>
+```
 
 # Coding Standards
 
