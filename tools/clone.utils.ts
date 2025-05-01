@@ -2,7 +2,21 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 
-const textFileExtensions = ['.ts', '.js', '.html', '.css', '.md', '.json', '.config.js'];
+const FILE_EXTENSIONS = ['.ts', '.js', '.html', '.css', '.md', '.json', '.config.js'];
+
+export function getArgs() {
+  const sourceName = process.argv[2];
+  const targetName = process.argv[3];
+
+  if (!sourceName || !targetName) {
+    console.error('Usage: pnpm clone <source> <target>');
+    !sourceName && console.error('<source> not provided');
+    !targetName && console.error('<target> not provided');
+
+    process.exit(1);
+  }
+  return { sourceName, targetName };
+}
 
 export function getDirectoryNames(sourceName: string, targetName: string) {
   const sourceDir = path.join(__dirname, '../sketches', sourceName);
@@ -37,7 +51,7 @@ function createTargetName(item: string, sourceName: string, targetName: string) 
 }
 
 export function isTextFile(filePath: string): boolean {
-  return textFileExtensions.includes(path.extname(filePath));
+  return FILE_EXTENSIONS.includes(path.extname(filePath));
 }
 
 export function replaceContentInFile(filePath: string, searchValue: string, replaceValue: string) {

@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import {
   createTargetPath,
+  getArgs,
   getDirectoryNames,
   install,
   isTextFile,
@@ -12,19 +13,9 @@ import {
   setPackageName,
 } from './clone.utils';
 
-const excludedFiles = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
+const EXCLUDED_FILES = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
 
-const sourceName = process.argv[2];
-const targetName = process.argv[3];
-
-if (!sourceName || !targetName) {
-  console.error('Usage: pnpm clone <source> <target>');
-  !sourceName && console.error('<source> not provided');
-  !targetName && console.error('<target> not provided');
-
-  process.exit(1);
-}
-
+const { sourceName, targetName } = getArgs();
 const { sourceDir, targetDir } = getDirectoryNames(sourceName, targetName);
 
 main(sourceDir, targetDir);
@@ -40,7 +31,7 @@ function main(source: string, target: string) {
   const items = fs.readdirSync(source);
 
   items.forEach((item) => {
-    if (excludedFiles.includes(item)) {
+    if (EXCLUDED_FILES.includes(item)) {
       return;
     }
 
