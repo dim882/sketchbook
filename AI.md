@@ -153,3 +153,9 @@ const METABALL_COLOR = '#c27770';
 const METABALL_COUNT = 20;
 const THRESHOLD = 0.2;
 ```
+
+## Tool Scripts
+
+We use bun for running TypeScript scripts that are called by pnpm.
+
+If it's a one-off script, then running it with `npx tsx` is acceptable.

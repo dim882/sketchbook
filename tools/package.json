@@ -20,7 +20,8 @@
     "clone": "bun clone-sketch.ts",
     "lib:pull": "bun lib-pull.ts",
     "build": "rollup -c ./ui/rollup.config.js",
-    "build:watch": "rollup -c ./ui/rollup.config.js -w"
+    "build:watch": "rollup -c ./ui/rollup.config.js -w",
+    "build:all": "bun run build-all.ts"
   },
   "resolutions": {
     "rollup": "@rollup/wasm-node"
