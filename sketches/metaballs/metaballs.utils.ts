@@ -1,5 +1,9 @@
+import { converter } from 'culori';
+
 export type IRenderFunc = (context: CanvasRenderingContext2D, t: number) => void;
 export type IPointTuple = [number, number];
+
+const rgbConverter = converter('rgb');
 
 export interface IMetaball {
   position: IVector;
@@ -74,4 +78,17 @@ export const calculateMetaballField = (x: number, y: number, metaballs: IMetabal
   }, 0);
 
   return sum > threshold;
+};
+
+export const getRgbValues = (cssColor: string): { r: number; g: number; b: number; a: number } | null => {
+  const rgbColor = rgbConverter(cssColor);
+
+  if (!rgbColor) return null;
+
+  return {
+    r: Math.round(rgbColor.r * 255),
+    g: Math.round(rgbColor.g * 255),
+    b: Math.round(rgbColor.b * 255),
+    a: 255, // Full opacity
+  };
 };

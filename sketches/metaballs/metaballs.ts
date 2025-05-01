@@ -1,5 +1,4 @@
 import * as Utils from './metaballs.utils';
-import { converter } from 'culori';
 
 const BACKGROUND_COLOR = 'black';
 const METABALL_COLOR = '#0078ff';
@@ -41,16 +40,8 @@ const render = (metaballs: Utils.IMetaball[], threshold: number) => (context: Ca
   context.fillStyle = BACKGROUND_COLOR;
   context.fillRect(0, 0, width, height);
 
-  // Convert the CSS color to RGB values using culori
-  const rgbConverter = converter('rgb');
-  const rgbColor = rgbConverter(METABALL_COLOR);
-  if (!rgbColor) return;
-
-  // Scale the 0-1 values to 0-255 for canvas image data
-  const r = Math.round(rgbColor.r * 255);
-  const g = Math.round(rgbColor.g * 255);
-  const b = Math.round(rgbColor.b * 255);
-  const a = 255; // Full opacity
+  const rgbValues = Utils.getRgbValues(METABALL_COLOR);
+  if (!rgbValues) return;
 
   // Create image data for direct pixel manipulation
   const imageData = context.getImageData(0, 0, width, height);
@@ -63,10 +54,10 @@ const render = (metaballs: Utils.IMetaball[], threshold: number) => (context: Ca
       const isInside = Utils.calculateMetaballField(x, y, metaballs, threshold);
 
       if (isInside) {
-        data[index] = r; // R
-        data[index + 1] = g; // G
-        data[index + 2] = b; // B
-        data[index + 3] = a; // A
+        data[index] = rgbValues.r; // R
+        data[index + 1] = rgbValues.g; // G
+        data[index + 2] = rgbValues.b; // B
+        data[index + 3] = rgbValues.a; // A
       }
     }
   }
