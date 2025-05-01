@@ -41,17 +41,12 @@ export function createTargetPath(item: string, targetDir: string, sourceName: st
   return path.join(targetDir, targetFileName);
 }
 
-function createTargetName(item: string, sourceName: string, targetName: string) {
+function createTargetName(item: string, sourceName: string, targetName: string): string {
   const parsedPath = path.parse(item);
-  let targetFileName = item;
 
-  if (parsedPath.name.startsWith(sourceName)) {
-    const restOfName = parsedPath.name.substring(sourceName.length);
-
-    targetFileName = `${targetName}${restOfName}${parsedPath.ext}`;
-  }
-
-  return targetFileName;
+  return parsedPath.name.startsWith(sourceName)
+    ? `${targetName}${parsedPath.name.substring(sourceName.length)}${parsedPath.ext}`
+    : item;
 }
 
 export function isTextFile(filePath: string): boolean {
