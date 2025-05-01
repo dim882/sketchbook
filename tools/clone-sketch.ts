@@ -2,113 +2,50 @@
 
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
+import * as utils from './clone.utils';
 
-const excludedFiles = ['dist', 'node_modules', 'yarn.lock'];
+const EXCLUDED_FILES = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
 
-const sourceName = process.argv[2];
-const targetName = process.argv[3];
+const { sourceName, targetName } = utils.getArgs();
+const { sourceDir, targetDir } = utils.getDirectoryNames(sourceName, targetName);
 
-const sourceDir = path.join(__dirname, '../sketches', sourceName);
-const targetDir = path.join(__dirname, '../sketches', targetName);
+copyDir(sourceDir, targetDir);
+utils.install(targetDir);
 
-copyDirectory(sourceDir, targetDir);
-install();
+console.log(`Sketch './sketches/${targetName}' created successfully.`);
 
-console.log(`Sketch './sketches/${targetName}' created.`);
-
-function copyDirectory(source: string, targetDir: string) {
-  if (!fs.existsSync(targetDir)) {
-    fs.mkdirSync(targetDir);
+function copyDir(source: string, target: string) {
+  if (!fs.existsSync(target)) {
+    fs.mkdirSync(target, { recursive: true });
   }
 
-  const files = fs.readdirSync(source);
+  const items = fs.readdirSync(source);
 
-  files.forEach((file) => {
-    const sourcePath = path.join(source, file);
+  items.forEach((item) => {
+    if (EXCLUDED_FILES.includes(item)) {
+      return;
+    }
 
-    // Replace base.html with ${dirName}.html and base.ts with ${dirName}.ts
-    const targetPath = createTargetPath(file, targetDir);
+    const sourcePath = path.join(source, item);
+    const targetPath = utils.createTargetPath(item, target, sourceName, targetName);
+    const stats = fs.statSync(sourcePath);
 
-    if (!excludedFiles.includes(file)) {
-      if (fs.statSync(sourcePath).isDirectory()) {
-        copyDirectory(sourcePath, targetPath);
-      } else {
-        fs.copyFileSync(sourcePath, targetPath);
+    if (stats.isDirectory()) {
+      copyDir(sourcePath, targetPath);
+    } else if (stats.isFile()) {
+      fs.copyFileSync(sourcePath, targetPath);
+
+      const baseName = path.basename(targetPath);
+      const extName = path.extname(targetPath);
+
+      if (baseName === 'package.json') {
+        utils.setPackageName(targetPath, targetName);
+      } else if (extName === '.html') {
+        utils.replaceHtmlTitle(targetPath, targetName);
+        utils.replaceContentInFile(targetPath, sourceName, targetName);
+      } else if (utils.isTextFile(targetPath)) {
+        utils.replaceContentInFile(targetPath, sourceName, targetName);
       }
     }
-
-    if (file === 'package.json') {
-      setPackageName(targetDir, file);
-    }
-
-    // Replace any instances of sourceDir with targetDir in rollup files
-    if (file === 'rollup.config.js') {
-      fixRollupConfig(targetDir, file);
-    }
-
-    // Replace any instances of sourceDir with targetDir in HTML files
-    if (file.includes('.html')) {
-      fixHtmlFile(targetDir);
-    }
   });
-}
-
-// TODO: find a less hacky way to handle this
-function fixHtmlFile(target: string) {
-  const htmlPath = path.join(target, `${targetName}.html`);
-
-  try {
-    const htmlFile = readFile(htmlPath);
-    const updatedHtmlFile = htmlFile.replace(sourceName, targetName);
-
-    fs.writeFileSync(htmlPath, updatedHtmlFile);
-  } catch (error) {
-    console.error('Error processing rollup.config.js:', error);
-  }
-}
-
-// TODO: find a less hacky way to handle this
-function fixRollupConfig(target: string, file: string) {
-  const rollupConfigPath = path.join(target, file);
-
-  try {
-    const rollupConfig = readFile(rollupConfigPath);
-    const updatedRollupConfig = rollupConfig.replace(sourceName, targetName);
-
-    fs.writeFileSync(rollupConfigPath, updatedRollupConfig);
-  } catch (error) {
-    console.error('Error processing rollup.config.js:', error);
-  }
-}
-
-function readFile(rollupConfigPath: string) {
-  return fs.readFileSync(rollupConfigPath, 'utf8');
-}
-
-function setPackageName(target: string, file: string) {
-  const packageJsonPath = path.join(target, file);
-
-  try {
-    let packageData = fs.readFileSync(packageJsonPath, 'utf8');
-    let packageJson = JSON.parse(packageData);
-    packageJson.name = targetName; // Replace the `name` field with `targetDirName`
-    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2)); // Write back to the same file with formatting
-  } catch (error) {
-    console.error('Error processing package.json:', error);
-  }
-}
-
-function install() {
-  try {
-    execSync(`cd ../sketches/${targetName} && pnpm install`, { stdio: 'inherit' });
-  } catch (error) {
-    console.error('Error when running pnpm install:', error);
-  }
-}
-
-function createTargetPath(file: string, target: string) {
-  let targetFileName = file.replace(new RegExp(`^${sourceName}(.*)\\.(html|ts)$`), `${targetName}$1.$2`);
-
-  return path.join(target, targetFileName);
 }
