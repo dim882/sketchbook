@@ -49,9 +49,7 @@ function createTargetName(item: string, sourceName: string, targetName: string):
     : item;
 }
 
-export function isTextFile(filePath: string): boolean {
-  return FILE_EXTENSIONS.includes(path.extname(filePath));
-}
+export const isTextFile = (filePath: string) => FILE_EXTENSIONS.includes(path.extname(filePath));
 
 export function replaceContentInFile(filePath: string, searchValue: string, replaceValue: string) {
   try {
@@ -70,7 +68,6 @@ export function setPackageName(packageJsonPath: string, targetName: string) {
   try {
     const packageData = fs.readFileSync(packageJsonPath, 'utf8');
     const packageJson = JSON.parse(packageData);
-
     packageJson.name = targetName;
 
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
@@ -81,6 +78,7 @@ export function setPackageName(packageJsonPath: string, targetName: string) {
 
 export function install(targetDir: string) {
   console.log(`Running pnpm install in ${targetDir}...`);
+
   try {
     execSync('pnpm install', { cwd: targetDir, stdio: 'inherit' });
   } catch (error) {
