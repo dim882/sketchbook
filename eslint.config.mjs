@@ -10,7 +10,6 @@ export default defineConfig([
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/explicit-module-boundary-types': 'warn',
     },
   },
 ]);
