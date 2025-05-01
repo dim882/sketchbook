@@ -16,6 +16,8 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@types/culori": "^2.1.1",
+    "culori": "^4.0.1",
     "ramda": "^0.29.1"
   }
 }

@@ -446,6 +446,12 @@ importers:
 
   sketches/metaballs:
     dependencies:
+      '@types/culori':
+        specifier: ^2.1.1
+        version: 2.1.1
+      culori:
+        specifier: ^4.0.1
+        version: 4.0.1
       ramda:
         specifier: ^0.29.1
         version: 0.29.1
