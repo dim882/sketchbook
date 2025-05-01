@@ -35,9 +35,11 @@ export function replaceContentInFile(filePath: string, searchValue: string, repl
 
 export function setPackageName(packageJsonPath: string, targetName: string) {
   try {
-    let packageData = fs.readFileSync(packageJsonPath, 'utf8');
-    let packageJson = JSON.parse(packageData);
+    const packageData = fs.readFileSync(packageJsonPath, 'utf8');
+    const packageJson = JSON.parse(packageData);
+
     packageJson.name = targetName;
+
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
   } catch (error) {
     console.error(`Error processing package.json (${packageJsonPath}):`, error);
