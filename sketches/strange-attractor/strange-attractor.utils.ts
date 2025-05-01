@@ -1,5 +1,4 @@
 import { type IPoint, type IGenerateAttractorPointsOptions } from './types';
-import * as Vec from './Vector';
 
 export const getCanvas = (): HTMLCanvasElement => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;

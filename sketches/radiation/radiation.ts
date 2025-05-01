@@ -12,17 +12,16 @@ window.addEventListener('DOMContentLoaded', () => {
   // prettier-ignore
   const contexts = Array
     .from(document.querySelectorAll('canvas'))
-    .map((canvas) => canvas.getContext('2d'));
+    .map((canvas) => canvas.getContext('2d'))
+    .filter((ctx): ctx is CanvasRenderingContext2D => ctx !== null);
 
   render(contexts);
 });
-
 function render(contexts: CanvasRenderingContext2D[]) {
   const [mainContext, ...scratchContexts] = contexts;
   const { width, height } = mainContext.canvas;
   const center: IPointTuple = [width / 2, height / 2];
-  const GAP_SIZE = 40;
-  let startingSideLength = 500;
+  const startingSideLength = 500;
 
   addBackground(mainContext, width, height);
 
