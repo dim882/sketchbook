@@ -2,24 +2,15 @@
 
 import fs from 'fs';
 import path from 'path';
-import {
-  createTargetPath,
-  getArgs,
-  getDirectoryNames,
-  install,
-  isTextFile,
-  replaceContentInFile,
-  replaceHtmlTitle,
-  setPackageName,
-} from './clone.utils';
+import * as utils from './clone.utils';
 
 const EXCLUDED_FILES = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
 
-const { sourceName, targetName } = getArgs();
-const { sourceDir, targetDir } = getDirectoryNames(sourceName, targetName);
+const { sourceName, targetName } = utils.getArgs();
+const { sourceDir, targetDir } = utils.getDirectoryNames(sourceName, targetName);
 
 main(sourceDir, targetDir);
-install(targetDir);
+utils.install(targetDir);
 
 console.log(`Sketch './sketches/${targetName}' created successfully.`);
 
@@ -36,7 +27,7 @@ function main(source: string, target: string) {
     }
 
     const sourcePath = path.join(source, item);
-    const targetPath = createTargetPath(item, target, sourceName, targetName);
+    const targetPath = utils.createTargetPath(item, target, sourceName, targetName);
     const stats = fs.statSync(sourcePath);
 
     if (stats.isDirectory()) {
@@ -48,12 +39,12 @@ function main(source: string, target: string) {
       const extName = path.extname(targetPath);
 
       if (baseName === 'package.json') {
-        setPackageName(targetPath, targetName);
+        utils.setPackageName(targetPath, targetName);
       } else if (extName === '.html') {
-        replaceHtmlTitle(targetPath, targetName);
-        replaceContentInFile(targetPath, sourceName, targetName);
-      } else if (isTextFile(targetPath)) {
-        replaceContentInFile(targetPath, sourceName, targetName);
+        utils.replaceHtmlTitle(targetPath, targetName);
+        utils.replaceContentInFile(targetPath, sourceName, targetName);
+      } else if (utils.isTextFile(targetPath)) {
+        utils.replaceContentInFile(targetPath, sourceName, targetName);
       }
     }
   });
