@@ -1,7 +1,7 @@
-## To scaffold a new sketch and start the TypeScript watcher
+## To clone a new sketch
 
 Pass the name of the sketch you want to copy, then the name to give the new sketch
 
 ```
-$ yarn scaffold <base sketch name> <my sketch name>
+$ pnpm clone <base sketch name> <my sketch name>
 ```
