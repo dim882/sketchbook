@@ -16,6 +16,8 @@ Avoid mutation. Avoid using `let`.
 
 Do not intersperse comments throughout the code. Simply write code that is clearly understood. The user is an experienced programmer and doesn't need much explanation.
 
+It is important to NEVER FORGET THIS.
+
 ## TypeScript
 
 Avoid using `any` at all costs. If it's absolutely necessary, this is a case where a comment is NECESSARY to call it out.
@@ -112,7 +114,9 @@ function copyDir(source: string, target: string) {
 
 Always place a linebreak before a return statement.
 
-### Miscellaneous
+## Miscellaneous
+
+### Dimensions
 
 If you're passing a canvas context into a function, there's no need to pass in the width and height as well. The function can get the width and height from the context.
 
@@ -129,4 +133,15 @@ const height = canvas.height;
 
 ```
 const { width, height}  = canvas;
+```
+
+### Configuration
+
+Configuration variables should be at the top of the main sketch function, formatted in ALL_CAPS.
+
+```
+const BACKGROUND_COLOR = '#fcfaf7';
+const METABALL_COLOR = '#c27770';
+const METABALL_COUNT = 20;
+const THRESHOLD = 0.2;
 ```
