@@ -22,6 +22,8 @@ Avoid using `any` at all costs. If it's absolutely necessary, this is a case whe
 
 Imports should not contain the file extension.
 
+When creating a utils file, the name should be prefixed with the name of the sketch or system the utils are for. For example a `foo.ts` sketch would have a `foo.utils.ts` utils file.
+
 ## Code Formatting
 
 Place line breaks between significant parts of the code.
