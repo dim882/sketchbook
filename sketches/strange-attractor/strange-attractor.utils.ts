@@ -126,10 +126,16 @@ export const scalePointsToCanvas = (points: IPoint[], width: number, height: num
   const scaleY = (height - padding * 2) / (maxY - minY);
   const scale = Math.min(scaleX, scaleY);
 
+  // Calculate center offsets to properly center the attractor
+  const scaledWidth = (maxX - minX) * scale;
+  const scaledHeight = (maxY - minY) * scale;
+  const offsetX = (width - scaledWidth) / 2;
+  const offsetY = (height - scaledHeight) / 2;
+
   // Scale and center points
   return points.map((point) => ({
-    x: (point.x - minX) * scale + padding,
-    y: (point.y - minY) * scale + padding,
+    x: (point.x - minX) * scale + offsetX,
+    y: (point.y - minY) * scale + offsetY,
     z: point.z,
   }));
 };

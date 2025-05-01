@@ -9,7 +9,7 @@ const POINT_SIZE = 0.5;
 const POINT_OPACITY = 0.6;
 const ITERATIONS = 100000;
 const SKIP_ITERATIONS = 100;
-const ATTRACTOR_TYPE = 'lorenz'; // 'lorenz', 'aizawa', 'rossler', 'thomas'
+const ATTRACTOR_TYPE = 'rossler'; // 'lorenz', 'aizawa', 'rossler', 'thomas'
 
 // Lorenz attractor parameters
 const LORENZ_SIGMA = 10;
