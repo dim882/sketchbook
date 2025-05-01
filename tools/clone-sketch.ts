@@ -9,12 +9,12 @@ const EXCLUDED_FILES = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
 const { sourceName, targetName } = utils.getArgs();
 const { sourceDir, targetDir } = utils.getDirectoryNames(sourceName, targetName);
 
-main(sourceDir, targetDir);
+copyDir(sourceDir, targetDir);
 utils.install(targetDir);
 
 console.log(`Sketch './sketches/${targetName}' created successfully.`);
 
-function main(source: string, target: string) {
+function copyDir(source: string, target: string) {
   if (!fs.existsSync(target)) {
     fs.mkdirSync(target, { recursive: true });
   }
@@ -31,7 +31,7 @@ function main(source: string, target: string) {
     const stats = fs.statSync(sourcePath);
 
     if (stats.isDirectory()) {
-      main(sourcePath, targetPath);
+      copyDir(sourcePath, targetPath);
     } else if (stats.isFile()) {
       fs.copyFileSync(sourcePath, targetPath);
 
