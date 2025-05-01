@@ -14,7 +14,7 @@ export interface IVector {
 }
 
 export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps = 60) {
-  let frameDuration = 1000 / fps;
+  const frameDuration = 1000 / fps;
   let lastFrameTime = 0;
 
   let t = 0;
@@ -22,6 +22,7 @@ export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps
     requestAnimationFrame(animate);
 
     if (time - lastFrameTime < frameDuration) return;
+
     lastFrameTime = time;
 
     render(context, t);
@@ -29,14 +30,6 @@ export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps
   }
 
   requestAnimationFrame(animate);
-}
-
-export function createCanvas(width: number, height: number) {
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-
-  return canvas.getContext('2d', { willReadFrequently: true });
 }
 
 export const createMetaball = (x: number, y: number, vx: number, vy: number, radius: number): IMetaball => ({
@@ -50,6 +43,7 @@ export const updateMetaball = (metaball: IMetaball, width: number, height: numbe
     x: metaball.position.x + metaball.velocity.x,
     y: metaball.position.y + metaball.velocity.y,
   };
+
   const newVelocity = { ...metaball.velocity };
 
   if (newPosition.x - metaball.radius < 0 || newPosition.x + metaball.radius > width) {
