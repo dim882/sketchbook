@@ -2,8 +2,8 @@ import * as Utils from './metaballs.utils';
 
 const BACKGROUND_COLOR = 'black';
 const METABALL_COLOR = '#0078ff';
-const METABALL_COUNT = 15;
-const THRESHOLD = 1.0;
+const METABALL_COUNT = 20;
+const THRESHOLD = 0.2;
 
 document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
