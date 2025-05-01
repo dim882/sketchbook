@@ -20,6 +20,8 @@ Do not intersperse comments throughout the code. Simply write code that is clear
 
 Avoid using `any` at all costs. If it's absolutely necessary, this is a case where a comment is NECESSARY to call it out.
 
+Imports should not contain the file extension.
+
 ## Code Formatting
 
 Place line breaks between significant parts of the code.
