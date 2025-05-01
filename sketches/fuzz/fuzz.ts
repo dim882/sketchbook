@@ -25,7 +25,7 @@ setup(() => {
   console.log({ contexts });
   const noise = createNoise2D();
 
-  let color = localStorage.getItem('color');
+  const color = localStorage.getItem('color');
 
   pipe(
     () => getElement('sc-color-picker'),

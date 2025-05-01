@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   console.log('random', getFloat(Math.random));
 
-  let color = localStorage.getItem('color') ?? 'red';
+  const color = localStorage.getItem('color') ?? 'red';
 
   const log =
     <T>(tag: string) =>

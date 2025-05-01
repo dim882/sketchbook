@@ -1,7 +1,7 @@
 export type IRenderFunc = (context: CanvasRenderingContext2D, t: number) => void;
 
 export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps = 60) {
-  let frameDuration = 1000 / fps;
+  const frameDuration = 1000 / fps;
   let lastFrameTime = 0;
   let t = 0;
 

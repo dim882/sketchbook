@@ -30,7 +30,7 @@ export function getCanvasContext(canvas: HTMLCanvasElement): CanvasRenderingCont
 }
 
 export function loop(renderFunc: IRenderFunc, fps = 60): void {
-  let frameDuration = 1000 / fps;
+  const frameDuration = 1000 / fps;
   let lastFrameTime = 0;
   let frameCount = 0;
 
