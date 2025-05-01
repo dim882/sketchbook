@@ -5,6 +5,12 @@ import { execSync } from 'child_process';
 const textFileExtensions = ['.ts', '.js', '.html', '.css', '.md', '.json', '.config.js'];
 
 export function createTargetPath(item: string, targetDir: string, sourceName: string, targetName: string): string {
+  const targetFileName = createTargetName(item, sourceName, targetName);
+
+  return path.join(targetDir, targetFileName);
+}
+
+function createTargetName(item: string, sourceName: string, targetName: string) {
   const parsedPath = path.parse(item);
   let targetFileName = item;
 
@@ -12,8 +18,7 @@ export function createTargetPath(item: string, targetDir: string, sourceName: st
     const restOfName = parsedPath.name.substring(sourceName.length);
     targetFileName = `${targetName}${restOfName}${parsedPath.ext}`;
   }
-
-  return path.join(targetDir, targetFileName);
+  return targetFileName;
 }
 
 export function isTextFile(filePath: string): boolean {
