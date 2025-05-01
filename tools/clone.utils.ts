@@ -31,8 +31,10 @@ export function getDirectoryNames(sourceName: string, targetName: string) {
     console.error(`Target sketch directory already exists: ${targetDir}`);
     process.exit(1);
   }
+
   return { sourceDir, targetDir };
 }
+
 export function createTargetPath(item: string, targetDir: string, sourceName: string, targetName: string): string {
   const targetFileName = createTargetName(item, sourceName, targetName);
 
@@ -45,8 +47,10 @@ function createTargetName(item: string, sourceName: string, targetName: string) 
 
   if (parsedPath.name.startsWith(sourceName)) {
     const restOfName = parsedPath.name.substring(sourceName.length);
+
     targetFileName = `${targetName}${restOfName}${parsedPath.ext}`;
   }
+
   return targetFileName;
 }
 
@@ -91,9 +95,10 @@ export function install(targetDir: string) {
 
 export function replaceHtmlTitle(filePath: string, newTitle: string) {
   try {
-    let content = fs.readFileSync(filePath, 'utf8');
-    content = content.replace(/<title>.*?<\/title>/i, `<title>${newTitle}</title>`);
-    fs.writeFileSync(filePath, content, 'utf8');
+    const content = fs.readFileSync(filePath, 'utf8');
+    const newContent = content.replace(/<title>.*?<\/title>/i, `<title>${newTitle}</title>`);
+
+    fs.writeFileSync(filePath, newContent, 'utf8');
   } catch (error) {
     console.error(`Error replacing title in ${filePath}:`, error);
   }
