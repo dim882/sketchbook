@@ -128,6 +128,8 @@ Always place a linebreak before a return statement.
 
 If you're passing a canvas context into a function, there's no need to pass in the width and height as well. The function can get the width and height from the context.
 
+### Destructuring
+
 Use destructuring whenever it will make the code more concise:
 
 #### Bad
