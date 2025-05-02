@@ -8,7 +8,8 @@
     "tools:watch": "pnpm --filter tools watch",
     "tools:build:watch": "pnpm --filter tools build:watch",
     "build": "rollup -c",
-    "build:all": "pnpm --filter tools build:all"
+    "build:all": "pnpm --filter tools build:all",
+    "check": "tsc --noEmit sketches/**/*.ts sketches/**/*.tsx"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.5"
