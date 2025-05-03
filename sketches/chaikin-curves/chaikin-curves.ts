@@ -18,10 +18,11 @@ const sketch = () => {
   // Configuration
   const BACKGROUND_COLOR = '#ffffff';
   const LINE_COLOR = '#000000';
-  const GRID_SIZE = 20;
+  const GRID_SIZE = 40;
   const MAX_ITERATIONS = 1000;
   const CHAIKIN_ITERATIONS = 3;
   const LINE_WIDTH = 2;
+  console.log(MAX_ITERATIONS);
 
   // Clear canvas with background color
   ctx.fillStyle = BACKGROUND_COLOR;
