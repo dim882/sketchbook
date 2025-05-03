@@ -37,22 +37,22 @@ window.addEventListener('DOMContentLoaded', () => {
   function animate() {
     const { width, height } = canvas;
 
+    if (!context) {
+      return;
+    }
+
     // Clear canvas
     context.fillStyle = BACKGROUND_COLOR;
     context.fillRect(0, 0, width, height);
 
     // Update and draw boids
     flock = flock.map((boid) => {
-      // Apply flocking behavior
       let newBoid = utils.flock(boid, flock, flockParams);
 
-      // Update position
       newBoid = Boid.update(newBoid);
 
-      // Wrap around edges
       newBoid = Boid.wrap(newBoid, width, height);
 
-      // Draw the boid
       utils.drawBoid(context, newBoid);
 
       return newBoid;
