@@ -23,14 +23,6 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
-
   const flockParams = {
     separationDist: SEPARATION_DISTANCE,
     alignDist: ALIGNMENT_DISTANCE,

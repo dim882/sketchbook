@@ -141,6 +141,7 @@ export const drawBoid = (context: CanvasRenderingContext2D, boid: IBoid): void =
   context.translate(position.x, position.y);
   context.rotate(angle);
 
+  // Draw a triangular boid with consistent proportions
   context.beginPath();
   context.moveTo(size * 2, 0);
   context.lineTo(-size, size);
