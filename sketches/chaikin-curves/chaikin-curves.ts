@@ -1,10 +1,5 @@
 import * as utils from './chaikin-curves.utils';
 
-interface IPoint {
-  x: number;
-  y: number;
-}
-
 const sketch = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const ctx = canvas.getContext('2d');
@@ -15,7 +10,6 @@ const sketch = () => {
 
   const { width, height } = canvas;
 
-  // Configuration
   const BACKGROUND_COLOR = '#ffffff';
   const LINE_COLOR = '#000000';
   const GRID_SIZE = 40;
@@ -24,17 +18,13 @@ const sketch = () => {
   const LINE_WIDTH = 2;
   console.log(MAX_ITERATIONS);
 
-  // Clear canvas with background color
   ctx.fillStyle = BACKGROUND_COLOR;
   ctx.fillRect(0, 0, width, height);
 
-  // Generate random path
   const path = utils.generateRandomPath(width, height, GRID_SIZE, MAX_ITERATIONS);
 
-  // Apply Chaikin curve algorithm
   const smoothPath = utils.applyChaikinCurve(path, CHAIKIN_ITERATIONS);
 
-  // Draw the path
   ctx.strokeStyle = LINE_COLOR;
   ctx.lineWidth = LINE_WIDTH;
   ctx.beginPath();

@@ -77,9 +77,6 @@ export const generateRandomPath = (
   return path;
 };
 
-/**
- * Applies the Chaikin curve algorithm to smooth a path
- */
 export const applyChaikinCurve = (points: IPoint[], iterations: number): IPoint[] => {
   if (points.length < 2) {
     return points;
