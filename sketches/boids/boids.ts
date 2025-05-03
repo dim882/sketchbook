@@ -4,8 +4,8 @@ import * as utils from './boids.utils';
 import { IBoid } from './Boid';
 
 const BACKGROUND_COLOR = '#f5f5f5';
-const BOID_COUNT = 100;
-const SEPARATION_DISTANCE = 25;
+const BOID_COUNT = 1000;
+const SEPARATION_DISTANCE = 45;
 const ALIGNMENT_DISTANCE = 50;
 const COHESION_DISTANCE = 50;
 const SEPARATION_WEIGHT = 1.5;
