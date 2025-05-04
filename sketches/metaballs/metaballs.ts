@@ -2,8 +2,9 @@ import * as Utils from './metaballs.utils';
 
 const BACKGROUND_COLOR = '#fcfaf7';
 const METABALL_COLOR = '#c27770';
-const METABALL_COUNT = 20;
+const METABALL_COUNT = 11;
 const THRESHOLD = 0.2;
+export const PADDING = 200;
 
 document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -16,8 +17,9 @@ document.body.onload = () => {
 
   for (let i = 0; i < METABALL_COUNT; i++) {
     const radius = 30 + Math.random() * 20;
-    const x = radius + Math.random() * (width - 2 * radius);
-    const y = radius + Math.random() * (height - 2 * radius);
+    // Apply PADDING to the position calculations
+    const x = PADDING + radius + Math.random() * (width - 2 * radius - 2 * PADDING);
+    const y = PADDING + radius + Math.random() * (height - 2 * radius - 2 * PADDING);
     const vx = (Math.random() * 2 - 1) * 2;
     const vy = (Math.random() * 2 - 1) * 2;
 

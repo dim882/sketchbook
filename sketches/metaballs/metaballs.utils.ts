@@ -1,4 +1,5 @@
 import { converter } from 'culori';
+import { PADDING } from './metaballs';
 
 export type IRenderFunc = (context: CanvasRenderingContext2D, t: number) => void;
 export type IPointTuple = [number, number];
@@ -50,11 +51,11 @@ export const updateMetaball = (metaball: IMetaball, width: number, height: numbe
 
   const newVelocity = { ...metaball.velocity };
 
-  if (newPosition.x - metaball.radius < 0 || newPosition.x + metaball.radius > width) {
+  if (newPosition.x - metaball.radius < PADDING || newPosition.x + metaball.radius > width - PADDING) {
     newVelocity.x = -newVelocity.x;
   }
 
-  if (newPosition.y - metaball.radius < 0 || newPosition.y + metaball.radius > height) {
+  if (newPosition.y - metaball.radius < PADDING || newPosition.y + metaball.radius > height - PADDING) {
     newVelocity.y = -newVelocity.y;
   }
 
