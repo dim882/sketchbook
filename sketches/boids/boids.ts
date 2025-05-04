@@ -1,7 +1,5 @@
-import * as Vector from './Vector';
 import * as Boid from './Boid';
 import * as utils from './boids.utils';
-import { IBoid } from './Boid';
 
 const BACKGROUND_COLOR = '#f5f5f5';
 const BOID_COUNT = 1000;

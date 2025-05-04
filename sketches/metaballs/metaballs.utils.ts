@@ -80,10 +80,10 @@ export const calculateMetaballField = (x: number, y: number, metaballs: IMetabal
   return sum > threshold;
 };
 
-export const getRgbValues = (cssColor: string): { r: number; g: number; b: number; a: number } | null => {
+export const getRgbValues = (cssColor: string): { r: number; g: number; b: number; a: number } => {
   const rgbColor = rgbConverter(cssColor);
 
-  if (!rgbColor) return null;
+  if (!rgbColor) return { r: 0, g: 0, b: 0, a: 0 };
 
   return {
     r: Math.round(rgbColor.r * 255),
