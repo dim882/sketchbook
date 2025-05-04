@@ -12,7 +12,6 @@ document.body.onload = () => {
   if (!context) return;
 
   const { width, height } = canvas;
-
   const metaballs: Utils.IMetaball[] = [];
 
   for (let i = 0; i < METABALL_COUNT; i++) {
@@ -41,13 +40,12 @@ const render = (metaballs: Utils.IMetaball[], threshold: number) => (context: Ca
   context.fillRect(0, 0, width, height);
 
   const rgbValues = Utils.getRgbValues(METABALL_COLOR);
+
   if (!rgbValues) return;
 
-  // Create image data for direct pixel manipulation
   const imageData = context.getImageData(0, 0, width, height);
   const data = imageData.data;
 
-  // Draw metaball field by manipulating pixels directly
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const index = (y * width + x) * 4;
