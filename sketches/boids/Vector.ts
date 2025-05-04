@@ -1,4 +1,4 @@
-import type { IPointTuple } from './boids.utils';
+export type IPointTuple = [number, number];
 
 export interface IVector {
   x: number;
