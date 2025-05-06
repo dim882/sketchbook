@@ -1,9 +1,12 @@
 import { computeVoronoi, generatePoissonPoints, PseudoRandomNumberGenerator, Point } from './voronoi.utils';
+import { palette } from './palette';
 
 const prng: PseudoRandomNumberGenerator = Math.random;
 
+// Configuration
 const MIN_DIST = 50;
 const K = 30;
+const HUES = Object.keys(palette) as Array<keyof typeof palette>;
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -24,12 +27,13 @@ window.addEventListener('DOMContentLoaded', () => {
       { x: width, y: height },
       { x: 0, y: height },
     ];
+
     const diagram = computeVoronoi(points, boundingPolygon);
 
-    diagram.forEach(({ cell, site }) => {
+    diagram.forEach(({ cell }) => {
       context.beginPath();
-      cell.forEach((p, i) => {
-        if (i === 0) {
+      cell.forEach((p, idx) => {
+        if (idx === 0) {
           context.moveTo(p.x, p.y);
         } else {
           context.lineTo(p.x, p.y);
@@ -37,8 +41,11 @@ window.addEventListener('DOMContentLoaded', () => {
       });
       context.closePath();
 
-      context.fillStyle = `hsl(${prng() * 360}, 70%, 70%)`;
+      // pick a random hue category, then take the color at index 4
+      const hueKey = HUES[Math.floor(prng() * HUES.length)];
+      context.fillStyle = palette[hueKey][4];
       context.fill();
+
       context.strokeStyle = 'white';
       context.stroke();
     });
