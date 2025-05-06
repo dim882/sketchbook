@@ -1,18 +1,9 @@
-import { computeVoronoi } from './voronoi.utils';
-export type PseudoRandomNumberGenerator = () => number;
-export type IPointTuple = [number, number];
+import { computeVoronoi, generatePoissonPoints, PseudoRandomNumberGenerator, Point } from './voronoi.utils';
 
-const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
-  return (upper - lower) * generateNumber() + lower;
-};
+const prng: PseudoRandomNumberGenerator = Math.random;
 
-const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
-  return Math.floor(getFloat(generateNumber, lower, upper));
-};
-
-const prng = Math.random;
-
-const NUM_POINTS = 20;
+const MIN_DIST = 50;
+const K = 30;
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -25,31 +16,28 @@ window.addEventListener('DOMContentLoaded', () => {
   function render(context: CanvasRenderingContext2D) {
     const { width, height } = context.canvas;
 
-    const points = Array.from({ length: NUM_POINTS }, () => ({
-      x: getFloat(prng, 0, width),
-      y: getFloat(prng, 0, height),
-    }));
-    const boundingPolygon = [
+    const points: Point[] = generatePoissonPoints(width, height, MIN_DIST, prng, K);
+
+    const boundingPolygon: Point[] = [
       { x: 0, y: 0 },
       { x: width, y: 0 },
       { x: width, y: height },
       { x: 0, y: height },
     ];
     const diagram = computeVoronoi(points, boundingPolygon);
-    console.log(diagram);
 
     diagram.forEach(({ cell, site }) => {
       context.beginPath();
-      cell.forEach((point, index) => {
-        if (index === 0) {
-          context.moveTo(point.x, point.y);
+      cell.forEach((p, i) => {
+        if (i === 0) {
+          context.moveTo(p.x, p.y);
         } else {
-          context.lineTo(point.x, point.y);
+          context.lineTo(p.x, p.y);
         }
       });
       context.closePath();
 
-      context.fillStyle = `hsl(${getFloat(prng, 0, 360)}, 70%, 70%)`;
+      context.fillStyle = `hsl(${prng() * 360}, 70%, 70%)`;
       context.fill();
       context.strokeStyle = 'white';
       context.stroke();

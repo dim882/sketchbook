@@ -13,7 +13,7 @@ const initialModel: ICounterModel = {
   copiedColor: null,
 };
 
-console.log('b000??0');
+console.log(getPalette());
 
 const copyToClipboard: EventHandler<ICounterModel, MouseEvent> = (event, model) => {
   console.log(model);
