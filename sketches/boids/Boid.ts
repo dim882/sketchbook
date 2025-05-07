@@ -59,21 +59,21 @@ export const update = (boid: IBoid): IBoid => {
 export const wrap = (boid: IBoid, width: number, height: number): IBoid => {
   let x = boid.position.x;
   let y = boid.position.y;
-  let velocity = { ...boid.velocity };
 
-  if (boid.position.x < 0 || boid.position.x > width) {
-    velocity = { ...velocity, x: -velocity.x };
-    x = boid.position.x < 0 ? 0 : width;
+  if (boid.position.x < 0) {
+    x = 0;
+  } else if (boid.position.x > width) {
+    x = width;
   }
 
-  if (boid.position.y < 0 || boid.position.y > height) {
-    velocity = { ...velocity, y: -velocity.y };
-    y = boid.position.y < 0 ? 0 : height;
+  if (boid.position.y < 0) {
+    y = 0;
+  } else if (boid.position.y > height) {
+    y = height;
   }
 
   return {
     ...boid,
     position: Vector.create(x, y),
-    velocity: Vector.create(velocity.x, velocity.y),
   };
 };

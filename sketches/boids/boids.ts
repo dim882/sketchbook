@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Update and draw boids
     flock = flock.map((boid) => {
-      let newBoid = utils.flock(boid, flock, flockParams);
+      let newBoid = utils.flock(boid, flock, flockParams, width, height);
 
       newBoid = Boid.update(newBoid);
 

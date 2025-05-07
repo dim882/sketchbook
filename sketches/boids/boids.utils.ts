@@ -116,7 +116,9 @@ export const flock = (
     separationWeight: number;
     alignmentWeight: number;
     cohesionWeight: number;
-  }
+  },
+  width: number,
+  height: number
 ): IBoid => {
   const sep = separation(boid, boids, params.separationDist);
   const ali = alignment(boid, boids, params.alignDist);
@@ -129,6 +131,9 @@ export const flock = (
   let newBoid = Boid.applyForce(boid, separationForce);
   newBoid = Boid.applyForce(newBoid, alignmentForce);
   newBoid = Boid.applyForce(newBoid, cohesionForce);
+
+  const edgeForce = calculateEdgeForce(boid, width, height);
+  newBoid = Boid.applyForce(newBoid, edgeForce);
 
   return newBoid;
 };
@@ -152,4 +157,24 @@ export const drawBoid = (context: CanvasRenderingContext2D, boid: IBoid): void =
   context.fill();
 
   context.restore();
+};
+
+const calculateEdgeForce = (boid: IBoid, width: number, height: number): IVector => {
+  const EDGE_FORCE_STRENGTH = 0.3;
+  const EDGE_THRESHOLD = 50; // Distance from edge to start applying force
+  let force = Vector.create(0, 0);
+
+  if (boid.position.x < EDGE_THRESHOLD) {
+    force = Vector.add(force, Vector.create(EDGE_FORCE_STRENGTH, 0));
+  } else if (boid.position.x > width - EDGE_THRESHOLD) {
+    force = Vector.add(force, Vector.create(-EDGE_FORCE_STRENGTH, 0));
+  }
+
+  if (boid.position.y < EDGE_THRESHOLD) {
+    force = Vector.add(force, Vector.create(0, EDGE_FORCE_STRENGTH));
+  } else if (boid.position.y > height - EDGE_THRESHOLD) {
+    force = Vector.add(force, Vector.create(0, -EDGE_FORCE_STRENGTH));
+  }
+
+  return force;
 };
