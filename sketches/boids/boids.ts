@@ -3,13 +3,13 @@ import * as utils from './boids.utils';
 
 const BACKGROUND_COLOR = '#f5f5f5';
 const BOID_COUNT = 500;
-const SEPARATION_DISTANCE = 45;
+const SEPARATION_DISTANCE = 100;
 const ALIGNMENT_DISTANCE = 50;
 const COHESION_DISTANCE = 50;
 const SEPARATION_WEIGHT = 1.5;
 const ALIGNMENT_WEIGHT = 1.0;
 const COHESION_WEIGHT = 1.0;
-const PATH_LENGTH_LIMIT = 100; // Configurable path length limit
+const PATH_LENGTH_LIMIT = 20;
 
 const prng = Math.random;
 
@@ -66,7 +66,7 @@ window.addEventListener('DOMContentLoaded', () => {
       // Draw the boid's path
       context.beginPath();
       context.strokeStyle = newBoid.color;
-      context.lineWidth = 1;
+      context.lineWidth = 0.5;
 
       if (boidPaths[index].length > 1) {
         context.moveTo(boidPaths[index][0].x, boidPaths[index][0].y);
