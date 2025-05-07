@@ -2,14 +2,14 @@ import * as Boid from './Boid';
 import * as utils from './boids.utils';
 
 const BACKGROUND_COLOR = '#f5f5f5';
-const BOID_COUNT = 500;
+const BOID_COUNT = 100;
 const SEPARATION_DISTANCE = 100;
 const ALIGNMENT_DISTANCE = 50;
 const COHESION_DISTANCE = 50;
 const SEPARATION_WEIGHT = 1.5;
 const ALIGNMENT_WEIGHT = 1.0;
 const COHESION_WEIGHT = 1.0;
-const PATH_LENGTH_LIMIT = 20;
+const PATH_LENGTH_LIMIT = 100;
 
 const prng = Math.random;
 
@@ -44,8 +44,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     // Clear canvas
-    context.fillStyle = BACKGROUND_COLOR;
-    context.fillRect(0, 0, width, height);
+    // context.fillStyle = BACKGROUND_COLOR;
+    context.clearRect(0, 0, width, height);
 
     // Update and draw boids
     flock = flock.map((boid, index) => {
