@@ -9,6 +9,7 @@ const COHESION_DISTANCE = 50;
 const SEPARATION_WEIGHT = 1.5;
 const ALIGNMENT_WEIGHT = 1.0;
 const COHESION_WEIGHT = 1.0;
+const PATH_LENGTH_LIMIT = 100; // Configurable path length limit
 
 const prng = Math.random;
 
@@ -32,6 +33,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let flock = utils.createFlock(BOID_COUNT, canvas.width, canvas.height, prng);
 
+  // Store the paths of each boid
+  const boidPaths: { x: number; y: number }[][] = flock.map(() => []);
+
   function animate() {
     const { width, height } = canvas;
 
@@ -44,14 +48,34 @@ window.addEventListener('DOMContentLoaded', () => {
     context.fillRect(0, 0, width, height);
 
     // Update and draw boids
-    flock = flock.map((boid) => {
+    flock = flock.map((boid, index) => {
       let newBoid = utils.flock(boid, flock, flockParams, width, height);
 
       newBoid = Boid.update(newBoid);
 
       newBoid = Boid.wrap(newBoid, width, height);
 
-      utils.drawBoid(context, newBoid);
+      // Store the boid's position in its path
+      boidPaths[index].push({ x: newBoid.position.x, y: newBoid.position.y });
+
+      // Limit the path length
+      if (boidPaths[index].length > PATH_LENGTH_LIMIT) {
+        boidPaths[index].shift(); // Remove the oldest point
+      }
+
+      // Draw the boid's path
+      context.beginPath();
+      context.strokeStyle = newBoid.color;
+      context.lineWidth = 1;
+
+      if (boidPaths[index].length > 1) {
+        context.moveTo(boidPaths[index][0].x, boidPaths[index][0].y);
+        for (let i = 1; i < boidPaths[index].length; i++) {
+          context.lineTo(boidPaths[index][i].x, boidPaths[index][i].y);
+        }
+      }
+
+      context.stroke();
 
       return newBoid;
     });
