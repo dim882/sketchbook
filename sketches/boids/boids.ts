@@ -2,7 +2,7 @@ import * as Boid from './Boid';
 import * as utils from './boids.utils';
 
 const BACKGROUND_COLOR = '#f5f5f5';
-const BOID_COUNT = 1000;
+const BOID_COUNT = 300;
 const SEPARATION_DISTANCE = 45;
 const ALIGNMENT_DISTANCE = 50;
 const COHESION_DISTANCE = 50;
