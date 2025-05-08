@@ -28,6 +28,11 @@ export class Vector {
     return this;
   }
 
+  static addStatic(v1: Vector, v2: Vector): Vector {
+    const z = v1.z !== undefined && v2.z !== undefined ? v1.z + v2.z : v1.z;
+    return new Vector(v1.x + v2.x, v1.y + v2.y, z);
+  }
+
   subtract(v: Vector): Vector {
     this.x -= v.x;
     this.y -= v.y;
@@ -35,6 +40,11 @@ export class Vector {
       this.z -= v.z;
     }
     return this;
+  }
+
+  static subtractStatic(v1: Vector, v2: Vector): Vector {
+    const z = v1.z !== undefined && v2.z !== undefined ? v1.z - v2.z : v1.z;
+    return new Vector(v1.x - v2.x, v1.y - v2.y, z);
   }
 
   multiply(scalar: number): Vector {
@@ -46,6 +56,11 @@ export class Vector {
     return this;
   }
 
+  static multiplyStatic(v: Vector, scalar: number): Vector {
+    const z = v.z ? v.z * scalar : undefined;
+    return new Vector(v.x * scalar, v.y * scalar, z);
+  }
+
   divide(scalar: number): Vector {
     this.x /= scalar;
     this.y /= scalar;
@@ -53,6 +68,11 @@ export class Vector {
       this.z /= scalar;
     }
     return this;
+  }
+
+  static divideStatic(v: Vector, scalar: number): Vector {
+    const z = v.z ? v.z / scalar : undefined;
+    return new Vector(v.x / scalar, v.y / scalar, z);
   }
 
   equals(v: Vector): boolean {
@@ -71,6 +91,14 @@ export class Vector {
     return this;
   }
 
+  static normalizeStatic(v: Vector): Vector {
+    const mag = v.magnitude();
+    if (mag > 0) {
+      return Vector.divideStatic(v, mag);
+    }
+    return new Vector(0, 0);
+  }
+
   getMagnitudeSquared(): number {
     return this.x * this.x + this.y * this.y + (this.z ? this.z * this.z : 0);
   }
@@ -78,6 +106,10 @@ export class Vector {
   setMagnitude(magnitude: number): Vector {
     this.normalize().multiply(magnitude);
     return this;
+  }
+
+  static setMagnitudeStatic(v: Vector, magnitude: number): Vector {
+    return Vector.multiplyStatic(Vector.normalizeStatic(v), magnitude);
   }
 
   getMagnitude(): number {
@@ -90,6 +122,14 @@ export class Vector {
       this.normalize().multiply(max);
     }
     return this;
+  }
+
+  static limitStatic(v: Vector, max: number): Vector {
+    const mag = v.magnitude();
+    if (mag > max) {
+      return Vector.multiplyStatic(Vector.normalizeStatic(v), max);
+    }
+    return v.clone();
   }
 
   length(): number {
