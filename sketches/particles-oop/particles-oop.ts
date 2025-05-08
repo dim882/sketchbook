@@ -11,7 +11,7 @@ document.body.onload = () => {
   // Give the particle a stronger (random) initial velocity
   const initialAngle = Math.random() * Math.PI * 2;
   const initialVelocity = Vector.fromAngle(initialAngle).multiply(150);
-  const particle = new Particle({ position: Vector.fromTuple(center), velocity: initialVelocity });
+  const particle = Particle.create({ position: Vector.fromTuple(center), velocity: initialVelocity });
 
   loop(render(context, { particle, width, height }), 60);
 };
@@ -35,10 +35,7 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
     particle.velocity.y = -Math.sign(particle.position.y - height / 2) * Math.abs(particle.velocity.y);
   }
 
-  particle.applyForce({
-    force: new Vector(0, 0),
-    deltaTime: 1 / 60,
-  });
+  particle.update(1 / 60);
 
   context.clearRect(0, 0, width, height);
 
