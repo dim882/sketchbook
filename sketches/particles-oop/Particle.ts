@@ -41,13 +41,13 @@ export class Particle {
       this.velocity.limit(maxVelocity);
     }
 
-    this.position.add(this.velocity.clone().multiply(deltaTime));
+    this.position.add(Vector.multiplyStatic(this.velocity, deltaTime));
 
     return this;
   }
 
   update(deltaTime: number = 1, maxVelocity?: number): Particle {
-    this.position.add(this.velocity.clone().multiply(deltaTime));
+    this.position.add(Vector.multiplyStatic(this.velocity, deltaTime));
 
     if (maxVelocity !== undefined) {
       this.velocity.limit(maxVelocity);
