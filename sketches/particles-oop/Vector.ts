@@ -1,115 +1,112 @@
-import type { IPointTuple } from './particles-oop.utils';
+export type IPointTuple = [number, number];
 
-export interface IVector {
+export class Vector {
   x: number;
   y: number;
   z?: number;
+
+  constructor(x: number, y: number, z?: number) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
+
+  static create(x: number, y: number, z?: number): Vector {
+    return new Vector(x, y, z);
+  }
+
+  static fromRadians(angle: number): Vector {
+    return new Vector(Math.cos(angle), Math.sin(angle));
+  }
+
+  add(v: Vector): Vector {
+    return new Vector(this.x + v.x, this.y + v.y, this.z !== undefined && v.z !== undefined ? this.z + v.z : this.z);
+  }
+
+  subtract(v: Vector): Vector {
+    return new Vector(this.x - v.x, this.y - v.y, this.z !== undefined && v.z !== undefined ? this.z - v.z : this.z);
+  }
+
+  multiply(scalar: number): Vector {
+    return new Vector(this.x * scalar, this.y * scalar, this.z ? this.z * scalar : undefined);
+  }
+
+  divide(scalar: number): Vector {
+    return new Vector(this.x / scalar, this.y / scalar, this.z ? this.z / scalar : undefined);
+  }
+
+  equals(v: Vector): boolean {
+    return this.x === v.x && this.y === v.y && this.z === v.z;
+  }
+
+  magnitude(): number {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
+
+  normalize(): Vector {
+    const mag = this.magnitude();
+    return mag > 0 ? this.divide(mag) : new Vector(0, 0);
+  }
+
+  getMagnitudeSquared(): number {
+    return this.x * this.x + this.y * this.y + (this.z ? this.z * this.z : 0);
+  }
+
+  setMagnitude(magnitude: number): Vector {
+    return this.normalize().multiply(magnitude);
+  }
+
+  getMagnitude(): number {
+    return Math.sqrt(this.getMagnitudeSquared());
+  }
+
+  limit(max: number): Vector {
+    const mag = this.magnitude();
+    if (mag > max) {
+      return this.normalize().multiply(max);
+    }
+    return new Vector(this.x, this.y, this.z);
+  }
+
+  length(): number {
+    return Math.sqrt(this.dot(this));
+  }
+
+  dot(v: Vector): number {
+    return this.x * v.x + this.y * v.y + (this.z ? (v.z !== undefined ? this.z * v.z : 0) : 0);
+  }
+
+  distance(v: Vector): number {
+    return this.subtract(v).magnitude();
+  }
+
+  toArray(): number[] {
+    return [this.x, this.y, this.z ?? 0];
+  }
+
+  clone(): Vector {
+    return new Vector(this.x, this.y, this.z);
+  }
+
+  toAngle(): number {
+    return Math.atan2(this.y, this.x);
+  }
+
+  copy(): Vector {
+    return this.clone();
+  }
+
+  static fromAngle(angleRadians: number, length = 1): Vector {
+    const x = length * Math.cos(angleRadians);
+    const y = length * Math.sin(angleRadians);
+    return new Vector(x, y, 0);
+  }
+
+  static fromTuple([x, y]: IPointTuple): Vector {
+    return new Vector(x, y);
+  }
+
+  toTuple(): IPointTuple {
+    return [this.x, this.y];
+  }
 }
-
-export const create = (x: number, y: number, z?: number): IVector => (z === undefined ? { x, y } : { x, y, z });
-
-export const fromRadians = (angle: number) => create(Math.cos(angle), Math.sin(angle));
-
-export const add = (v1: IVector, v2: IVector): IVector => {
-  const z = v1.z !== undefined && v2.z !== undefined ? v1.z + v2.z : v1.z;
-
-  const vector = {
-    x: v1.x + v2.x,
-    y: v1.y + v2.y,
-  };
-
-  return z ? { ...vector, z } : vector;
-};
-
-export const subtract = (v1: IVector, v2: IVector): IVector => {
-  const x = v1.x - v2.x;
-  const y = v1.y - v2.y;
-  const z = v1.z !== undefined && v2.z !== undefined ? v1.z - v2.z : v1.z;
-
-  return { x, y, z };
-};
-
-export const multiply = (v: IVector | number, factor: IVector | number): IVector => {
-  if (typeof v === 'number') {
-    const x = v * (typeof factor === 'number' ? factor : factor.x);
-    const y = v * (typeof factor === 'number' ? factor : factor.y);
-    const z = v * (typeof factor === 'number' ? factor : factor.z || 1);
-
-    return { x, y, z };
-  }
-
-  const x = v.x * (typeof factor === 'number' ? factor : factor.x);
-  const y = v.y * (typeof factor === 'number' ? factor : factor.y);
-  const z = v.z ? (typeof factor === 'number' ? factor : factor.z || 1) : v.z;
-
-  return { x, y, z };
-};
-
-export const divide = (v: IVector | number, divisor: IVector | number): IVector => {
-  if (typeof v === 'number') {
-    const x = v / (typeof divisor === 'number' ? divisor : divisor.x);
-    const y = v / (typeof divisor === 'number' ? divisor : divisor.y);
-    const z = v / (typeof divisor === 'number' ? divisor : divisor.z || 1);
-
-    return { x, y, z };
-  }
-  const x = v.x / (typeof divisor === 'number' ? divisor : divisor.x);
-  const y = v.y / (typeof divisor === 'number' ? divisor : divisor.y);
-  const z = v.z ? (typeof divisor === 'number' ? divisor : divisor.z || 1) : v.z;
-
-  return { x, y, z };
-};
-
-export const equals = (v1: IVector, v2: IVector): boolean => v1.x === v2.x && v1.y === v2.y && v1.z === v2.z;
-
-export const normalize = (v: IVector): IVector => {
-  const length = getMagnitude(v);
-
-  if (length !== 0) {
-    return multiply(v, 1 / length);
-  }
-
-  return create(0, 0, 0);
-};
-
-export const getMagnitudeSquared = (v: IVector): number => v.x * v.x + v.y * v.y + (v.z ? v.z * v.z : 0);
-
-export const setMagnitude = (v: IVector, magnitude: number): IVector => multiply(normalize(v), magnitude);
-
-export const getMagnitude = (v: IVector): number => Math.sqrt(getMagnitudeSquared(v));
-
-export const limit = (v: IVector, value: number): IVector => {
-  const magnitudeSquared = getMagnitudeSquared(v);
-
-  if (magnitudeSquared > value * value) {
-    return multiply(normalize(v), value);
-  }
-
-  return v;
-};
-
-export const length = (v: IVector): number => Math.sqrt(dot(v, v));
-
-export const dot = (v1: IVector, v2: IVector): number =>
-  v1.x * v2.x + v1.y * v2.y + (v1.z ? (v2.z !== undefined ? v1.z * v2.z : 0) : 0);
-
-// Is this correct?
-export const toArray = (v: IVector): number[] => [v.x, v.y, v.z ?? 0];
-
-export const clone = (v: IVector): IVector => create(v.x, v.y, v.z);
-
-export const toAngle = (v: IVector): number => Math.atan2(v.y, v.x);
-
-export const copy = (v: IVector): IVector => clone(v);
-
-export const fromAngle = (angleRadians: number, length = 1): IVector => {
-  const x = length * Math.cos(angleRadians);
-  const y = length * Math.sin(angleRadians);
-  const z = 0;
-
-  return { x, y, z };
-};
-
-export const fromTuple = ([x, y]: IPointTuple): IVector => create(x, y);
-
-export const toTuple = (v: IVector): IPointTuple => [v.x, v.y];

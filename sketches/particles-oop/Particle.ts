@@ -1,47 +1,48 @@
-import * as Vector from './Vector';
-
-type OptionalExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
-
-// type Debug<T> = { [P in keyof T]: T[P] };
-// type ExpandedType = Debug<IParticleCreateArgs>;
-// let _: ExpandedType = null!;
+import { Vector } from './Vector';
 
 export interface IParticle {
-  position: Vector.IVector;
-  velocity: Vector.IVector;
+  position: Vector;
+  velocity: Vector;
   mass: number;
 }
 
-type IParticleCreateArgs = OptionalExcept<IParticle, 'position'>;
+export class Particle {
+  position: Vector;
+  velocity: Vector;
+  mass: number;
 
-export const create = ({ position, velocity = Vector.create(0, 0), mass = 1 }: IParticleCreateArgs): IParticle => ({
-  position,
-  velocity,
-  mass,
-});
-
-export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
-
-type ApplyForceArgs = {
-  particle: IParticle;
-  force: Vector.IVector;
-  deltaTime?: number;
-  maxVelocity?: number;
-};
-
-export const applyForce = ({ particle, force, deltaTime = 1, maxVelocity }: ApplyForceArgs): IParticle => {
-  const acceleration = Vector.divide(force, particle.mass);
-  let newVelocity = Vector.add(particle.velocity, Vector.multiply(acceleration, deltaTime));
-
-  if (maxVelocity !== undefined) {
-    newVelocity = Vector.limit(newVelocity, maxVelocity);
+  constructor(position: Vector, velocity?: Vector, mass: number = 1) {
+    this.position = position;
+    this.velocity = velocity || new Vector(0, 0);
+    this.mass = mass;
   }
 
-  const newPosition = Vector.add(particle.position, Vector.multiply(newVelocity, deltaTime));
+  static create({ position, velocity, mass = 1 }: { position: Vector; velocity?: Vector; mass?: number }): Particle {
+    return new Particle(position, velocity, mass);
+  }
 
-  return {
-    ...particle,
-    velocity: newVelocity,
-    position: newPosition,
-  };
-};
+  copy(): Particle {
+    return new Particle(this.position.clone(), this.velocity.clone(), this.mass);
+  }
+
+  applyForce({
+    force,
+    deltaTime = 1,
+    maxVelocity,
+  }: {
+    force: Vector;
+    deltaTime?: number;
+    maxVelocity?: number;
+  }): Particle {
+    const acceleration = force.divide(this.mass);
+    let newVelocity = this.velocity.add(acceleration.multiply(deltaTime));
+
+    if (maxVelocity !== undefined) {
+      newVelocity = newVelocity.limit(maxVelocity);
+    }
+
+    const newPosition = this.position.add(newVelocity.multiply(deltaTime));
+
+    return new Particle(newPosition, newVelocity, this.mass);
+  }
+}
