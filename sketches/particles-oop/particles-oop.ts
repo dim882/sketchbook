@@ -7,41 +7,54 @@ document.body.onload = () => {
   const context = getCanvasContext(canvas);
   const { width, height } = canvas;
   const center: IPointTuple = [width / 2, height / 2];
-  const particle = Particle.create({ position: Vector.fromTuple(center) });
-  let previousTime = 0;
-  let force: Vector = new Vector(0, 0);
 
-  loop(render(context, { particle, previousTime, force }), 60);
+  // Give the particle a stronger (random) initial velocity
+  const initialAngle = Math.random() * Math.PI * 2;
+  const initialVelocity = Vector.fromAngle(initialAngle).multiply(150);
+  const particle = Particle.create({ position: Vector.fromTuple(center), velocity: initialVelocity });
+
+  loop(render(context, { particle, width, height }), 60);
 };
 
 interface ISketchData {
   particle: Particle;
-  previousTime: number;
-  force: Vector;
+  width: number;
+  height: number;
 }
 
 const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { width, height } = context.canvas;
+  let { particle } = data;
 
-  if (t - data.previousTime >= 120) {
-    data.particle.velocity = new Vector(0, 0);
+  let velocity = particle.velocity;
 
-    const angle = Math.random() * Math.PI * 2;
-    const newForce = 100;
-
-    data.force = Vector.fromAngle(angle).multiply(newForce);
-    data.previousTime = t;
+  // Bounce back when it hits an edge
+  if (particle.position.x < 0 || particle.position.x > width) {
+    velocity = new Vector(
+      -Math.sign(particle.position.x - width / 2) * Math.abs(particle.velocity.x),
+      particle.velocity.y
+    );
   }
 
-  data.particle = data.particle.applyForce({
-    force: data.force,
+  if (particle.position.y < 0 || particle.position.y > height) {
+    velocity = new Vector(
+      particle.velocity.x,
+      -Math.sign(particle.position.y - height / 2) * Math.abs(particle.velocity.y)
+    );
+  }
+
+  particle = new Particle(particle.position, velocity, particle.mass);
+  particle = particle.applyForce({
+    force: new Vector(0, 0),
     deltaTime: 1 / 60,
   });
 
   context.clearRect(0, 0, width, height);
 
   context.beginPath();
-  context.arc(...data.particle.position.toTuple(), 10, 0, 2 * Math.PI);
+  context.arc(...particle.position.toTuple(), 10, 0, 2 * Math.PI);
   context.fillStyle = 'purple';
   context.fill();
+
+  data.particle = particle;
 };
