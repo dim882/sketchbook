@@ -1,9 +1,9 @@
 import type { IPointTuple } from './particles.utils';
 
 export interface IVector {
-  x: number;
-  y: number;
-  z?: number;
+  readonly x: number;
+  readonly y: number;
+  readonly z?: number;
 }
 
 export const create = (x: number, y: number, z?: number): IVector => (z === undefined ? { x, y } : { x, y, z });

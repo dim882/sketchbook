@@ -24,17 +24,19 @@ interface ISketchData {
 const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { width, height } = context.canvas;
 
+  let particle = data.particle;
+
   // Bounce off walls
-  if (data.particle.position.x < 0 || data.particle.position.x > width) {
-    data.particle.velocity.x = -data.particle.velocity.x;
+  if (particle.position.x < 0 || particle.position.x > width) {
+    particle = { ...particle, velocity: { ...particle.velocity, x: -particle.velocity.x } };
   }
 
-  if (data.particle.position.y < 0 || data.particle.position.y > height) {
-    data.particle.velocity.y = -data.particle.velocity.y;
+  if (particle.position.y < 0 || particle.position.y > height) {
+    particle = { ...particle, velocity: { ...particle.velocity, y: -particle.velocity.y } };
   }
 
-  data.particle = applyForce({
-    particle: data.particle,
+  particle = applyForce({
+    particle: particle,
     force: data.force,
     deltaTime: 1 / 60,
   });
@@ -42,7 +44,7 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
   context.clearRect(0, 0, width, height);
 
   context.beginPath();
-  context.arc(...Vec.toTuple(data.particle.position), 10, 0, 2 * Math.PI);
+  context.arc(...Vec.toTuple(particle.position), 10, 0, 2 * Math.PI);
   context.fillStyle = 'purple';
   context.fill();
 };
