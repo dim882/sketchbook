@@ -11,7 +11,7 @@ document.body.onload = () => {
   // Give the particle a stronger (random) initial velocity
   const initialAngle = Math.random() * Math.PI * 2;
   const initialVelocity = Vector.fromAngle(initialAngle).multiply(150);
-  const particle = Particle.create({ position: Vector.fromTuple(center), velocity: initialVelocity });
+  const particle = new Particle({ position: Vector.fromTuple(center), velocity: initialVelocity });
 
   loop(render(context, { particle, width, height }), 60);
 };
