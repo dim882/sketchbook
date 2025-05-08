@@ -20,19 +20,39 @@ export class Vector {
   }
 
   add(v: Vector): Vector {
-    return new Vector(this.x + v.x, this.y + v.y, this.z !== undefined && v.z !== undefined ? this.z + v.z : this.z);
+    this.x += v.x;
+    this.y += v.y;
+    if (this.z !== undefined && v.z !== undefined) {
+      this.z += v.z;
+    }
+    return this;
   }
 
   subtract(v: Vector): Vector {
-    return new Vector(this.x - v.x, this.y - v.y, this.z !== undefined && v.z !== undefined ? this.z - v.z : this.z);
+    this.x -= v.x;
+    this.y -= v.y;
+    if (this.z !== undefined && v.z !== undefined) {
+      this.z -= v.z;
+    }
+    return this;
   }
 
   multiply(scalar: number): Vector {
-    return new Vector(this.x * scalar, this.y * scalar, this.z ? this.z * scalar : undefined);
+    this.x *= scalar;
+    this.y *= scalar;
+    if (this.z) {
+      this.z *= scalar;
+    }
+    return this;
   }
 
   divide(scalar: number): Vector {
-    return new Vector(this.x / scalar, this.y / scalar, this.z ? this.z / scalar : undefined);
+    this.x /= scalar;
+    this.y /= scalar;
+    if (this.z) {
+      this.z /= scalar;
+    }
+    return this;
   }
 
   equals(v: Vector): boolean {
@@ -45,7 +65,10 @@ export class Vector {
 
   normalize(): Vector {
     const mag = this.magnitude();
-    return mag > 0 ? this.divide(mag) : new Vector(0, 0);
+    if (mag > 0) {
+      this.divide(mag);
+    }
+    return this;
   }
 
   getMagnitudeSquared(): number {
@@ -53,7 +76,8 @@ export class Vector {
   }
 
   setMagnitude(magnitude: number): Vector {
-    return this.normalize().multiply(magnitude);
+    this.normalize().multiply(magnitude);
+    return this;
   }
 
   getMagnitude(): number {
@@ -63,9 +87,9 @@ export class Vector {
   limit(max: number): Vector {
     const mag = this.magnitude();
     if (mag > max) {
-      return this.normalize().multiply(max);
+      this.normalize().multiply(max);
     }
-    return new Vector(this.x, this.y, this.z);
+    return this;
   }
 
   length(): number {
@@ -93,7 +117,7 @@ export class Vector {
   }
 
   copy(): Vector {
-    return this.clone();
+    return new Vector(this.x, this.y, this.z);
   }
 
   static fromAngle(angleRadians: number, length = 1): Vector {

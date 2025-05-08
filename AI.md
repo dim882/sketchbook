@@ -12,14 +12,6 @@ $ pnpm clone <base sketch name> <my sketch name>
 
 # Coding Standards
 
-## Favor a functional style
-
-OOP should be avoided.
-
-Focus on creating clearly defined, composable data structures, with small tightly focused functions that act on the data structures.
-
-Avoid mutation. Avoid using `let`.
-
 ## Commenting
 
 Do not intersperse comments throughout the code. Simply write code that is clearly understood. The user is an experienced programmer and doesn't need much explanation.

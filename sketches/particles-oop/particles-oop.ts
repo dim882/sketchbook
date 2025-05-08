@@ -26,25 +26,16 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
   const { width, height } = context.canvas;
   let { particle } = data;
 
-  let velocity = particle.velocity;
-
   // Bounce back when it hits an edge
   if (particle.position.x < 0 || particle.position.x > width) {
-    velocity = new Vector(
-      -Math.sign(particle.position.x - width / 2) * Math.abs(particle.velocity.x),
-      particle.velocity.y
-    );
+    particle.velocity.x = -Math.sign(particle.position.x - width / 2) * Math.abs(particle.velocity.x);
   }
 
   if (particle.position.y < 0 || particle.position.y > height) {
-    velocity = new Vector(
-      particle.velocity.x,
-      -Math.sign(particle.position.y - height / 2) * Math.abs(particle.velocity.y)
-    );
+    particle.velocity.y = -Math.sign(particle.position.y - height / 2) * Math.abs(particle.velocity.y);
   }
 
-  particle = new Particle(particle.position, velocity, particle.mass);
-  particle = particle.applyForce({
+  particle.applyForce({
     force: new Vector(0, 0),
     deltaTime: 1 / 60,
   });
@@ -55,6 +46,4 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
   context.arc(...particle.position.toTuple(), 10, 0, 2 * Math.PI);
   context.fillStyle = 'purple';
   context.fill();
-
-  data.particle = particle;
 };

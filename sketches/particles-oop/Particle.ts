@@ -35,14 +35,14 @@ export class Particle {
     maxVelocity?: number;
   }): Particle {
     const acceleration = force.divide(this.mass);
-    let newVelocity = this.velocity.add(acceleration.multiply(deltaTime));
+    this.velocity.add(acceleration.multiply(deltaTime));
 
     if (maxVelocity !== undefined) {
-      newVelocity = newVelocity.limit(maxVelocity);
+      this.velocity.limit(maxVelocity);
     }
 
-    const newPosition = this.position.add(newVelocity.multiply(deltaTime));
+    this.position.add(this.velocity.clone().multiply(deltaTime));
 
-    return new Particle(newPosition, newVelocity, this.mass);
+    return this;
   }
 }
