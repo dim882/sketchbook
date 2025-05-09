@@ -2,9 +2,9 @@ import { Particle } from './Particle';
 import { Vector } from './Vector';
 import { getCanvas, getCanvasContext, type IPointTuple, loop } from './particles-oop.utils.js';
 
-const INITIAL_SPEED = 250;
-const FPS = 60;
-const DELTA_TIME = 1 / FPS;
+export const INITIAL_SPEED = 250;
+export const FPS = 60;
+export const DELTA_TIME = 1 / FPS;
 
 document.body.onload = () => {
   const canvas = getCanvas();
