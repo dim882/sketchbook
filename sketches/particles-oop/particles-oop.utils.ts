@@ -37,22 +37,11 @@ export const getCanvasContext = (canvas: HTMLCanvasElement): CanvasRenderingCont
   return context;
 };
 
-export function handleEdges(particle: Particle, width: number, height: number) {
+export function handleEdges(particle: Particle, width: number, height: number): Vector {
   const { position, velocity, mass } = particle;
 
-  let force = Vector.create(0, 0);
+  const fx = position.x < 0 || position.x > width ? (-2 * velocity.x * mass) / DELTA_TIME : 0;
+  const fy = position.y < 0 || position.y > height ? (-2 * velocity.y * mass) / DELTA_TIME : 0;
 
-  if (position.x < 0 || position.x > width) {
-    const fx = (-2 * velocity.x * mass) / DELTA_TIME;
-
-    force = Vector.create(fx, 0);
-  }
-
-  if (position.y < 0 || position.y > height) {
-    const fy = (-2 * velocity.y * mass) / DELTA_TIME;
-
-    force = force.add(Vector.create(0, fy));
-  }
-
-  return force;
+  return Vector.create(fx, fy);
 }
