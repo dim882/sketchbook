@@ -31,23 +31,17 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
   const { width, height } = context.canvas;
   const dt = 1 / 60;
 
-  let particle = data.particle;
+  let { particle } = data;
+  const { position, velocity, mass } = particle;
 
-  let x = 0;
-  let y = 0;
-
-  // Compute impulse to reverse velocity component on collision
-  if (particle.position.x < 0 || particle.position.x > width) {
-    x = (-2 * particle.velocity.x * particle.mass) / dt;
-  }
-
-  if (particle.position.y < 0 || particle.position.y > height) {
-    y = (-2 * particle.velocity.y * particle.mass) / dt;
-  }
+  const force = Vector.create(
+    position.x < 0 || position.x > width ? (-2 * velocity.x * mass) / dt : 0,
+    position.y < 0 || position.y > height ? (-2 * velocity.y * mass) / dt : 0
+  );
 
   particle = applyForce({
     particle,
-    force: Vector.create(x, y),
+    force,
     deltaTime: dt,
   });
 
