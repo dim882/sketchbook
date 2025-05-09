@@ -31,12 +31,8 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
   const { width, height } = context.canvas;
 
   const { particle } = data;
-  const { position, velocity, mass } = particle;
 
-  const force = Vector.create(
-    position.x < 0 || position.x > width ? (-2 * velocity.x * mass) / DELTA_TIME : 0,
-    position.y < 0 || position.y > height ? (-2 * velocity.y * mass) / DELTA_TIME : 0
-  );
+  const force = handleEdges(particle, width, height);
 
   data.particle = applyForce({
     particle,
@@ -53,3 +49,13 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
   context.fillStyle = 'black';
   context.fill();
 };
+
+function handleEdges(particle: IParticle, width: number, height: number) {
+  const { position, velocity, mass } = particle;
+
+  const force = Vector.create(
+    position.x < 0 || position.x > width ? (-2 * velocity.x * mass) / DELTA_TIME : 0,
+    position.y < 0 || position.y > height ? (-2 * velocity.y * mass) / DELTA_TIME : 0
+  );
+  return force;
+}
