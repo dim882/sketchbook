@@ -1,12 +1,10 @@
-export type Point = { x: number; y: number };
-export type Polygon = Point[];
+export type IPoint = { x: number; y: number };
+export type Polygon = IPoint[];
 export type IPointTuple = [number, number];
 export type PseudoRandomNumberGenerator = () => number;
 
-import { palette } from './palette.ts';
-
 // Clip a convex polygon by a half-plane using Sutherland–Hodgman.
-const clipPolygon = (polygon: Polygon, isInside: (point: Point) => number): Polygon =>
+const clipPolygon = (polygon: Polygon, isInside: (point: IPoint) => number): Polygon =>
   polygon.reduce<Polygon>((accumulatedPoints, currentPoint, index, points) => {
     const previousPoint = points[(index - 1 + points.length) % points.length];
     const currentInside = isInside(currentPoint) <= 0;
@@ -18,7 +16,7 @@ const clipPolygon = (polygon: Polygon, isInside: (point: Point) => number): Poly
 
     if (previousInside && !currentInside) {
       const t = isInside(previousPoint) / (isInside(previousPoint) - isInside(currentPoint));
-      const intersection: Point = {
+      const intersection: IPoint = {
         x: previousPoint.x + t * (currentPoint.x - previousPoint.x),
         y: previousPoint.y + t * (currentPoint.y - previousPoint.y),
       };
@@ -28,7 +26,7 @@ const clipPolygon = (polygon: Polygon, isInside: (point: Point) => number): Poly
 
     if (!previousInside && currentInside) {
       const t = isInside(previousPoint) / (isInside(previousPoint) - isInside(currentPoint));
-      const intersection: Point = {
+      const intersection: IPoint = {
         x: previousPoint.x + t * (currentPoint.x - previousPoint.x),
         y: previousPoint.y + t * (currentPoint.y - previousPoint.y),
       };
@@ -41,12 +39,12 @@ const clipPolygon = (polygon: Polygon, isInside: (point: Point) => number): Poly
 
 // Compute the Voronoi cell for a given site by clipping the bounding polygon
 // with each half-plane that favors the current site over another site.
-const computeCell = (currentSite: Point, allSites: Point[], boundingPolygon: Polygon): Polygon =>
+const computeCell = (currentSite: IPoint, allSites: IPoint[], boundingPolygon: Polygon): Polygon =>
   allSites
     .filter((otherSite) => otherSite.x !== currentSite.x || otherSite.y !== currentSite.y)
     .reduce<Polygon>((cellPolygon, otherSite) => {
       // Returns a positive number if point is closer to otherSite, negative if closer to currentSite.
-      const halfPlaneTest = (point: Point) =>
+      const halfPlaneTest = (point: IPoint) =>
         2 * (otherSite.x - currentSite.x) * point.x +
         2 * (otherSite.y - currentSite.y) * point.y -
         (otherSite.x ** 2 - currentSite.x ** 2 + (otherSite.y ** 2 - currentSite.y ** 2));
@@ -54,7 +52,7 @@ const computeCell = (currentSite: Point, allSites: Point[], boundingPolygon: Pol
       return clipPolygon(cellPolygon, halfPlaneTest);
     }, boundingPolygon);
 
-export const computeVoronoi = (sites: Point[], boundingPolygon: Polygon): { site: Point; cell: Polygon }[] =>
+export const computeVoronoi = (sites: IPoint[], boundingPolygon: Polygon): { site: IPoint; cell: Polygon }[] =>
   sites.map((site) => ({
     site,
     cell: computeCell(site, sites, boundingPolygon),
@@ -67,22 +65,22 @@ export function generatePoissonPoints(
   minDist: number,
   prng: PseudoRandomNumberGenerator,
   k = 30
-): Point[] {
+): IPoint[] {
   const cellSize = minDist / Math.SQRT2;
   const gridCols = Math.ceil(width / cellSize);
   const gridRows = Math.ceil(height / cellSize);
-  const grid: (Point | null)[] = new Array(gridCols * gridRows).fill(null);
+  const grid: (IPoint | null)[] = new Array(gridCols * gridRows).fill(null);
 
-  const result: Point[] = [];
-  const active: Point[] = [];
+  const result: IPoint[] = [];
+  const active: IPoint[] = [];
 
-  function gridIndex(p: Point) {
+  function gridIndex(p: IPoint) {
     const gx = Math.floor(p.x / cellSize);
     const gy = Math.floor(p.y / cellSize);
     return gy * gridCols + gx;
   }
 
-  const initial: Point = { x: prng() * width, y: prng() * height };
+  const initial: IPoint = { x: prng() * width, y: prng() * height };
   result.push(initial);
   active.push(initial);
   grid[gridIndex(initial)] = initial;
@@ -95,7 +93,7 @@ export function generatePoissonPoints(
     for (let i = 0; i < k; i++) {
       const r = minDist * (1 + prng());
       const theta = 2 * Math.PI * prng();
-      const sample: Point = {
+      const sample: IPoint = {
         x: point.x + r * Math.cos(theta),
         y: point.y + r * Math.sin(theta),
       };
@@ -145,3 +143,45 @@ export function generatePoissonPoints(
 
   return result;
 }
+
+export const applyChaikinCurve = (points: IPoint[], iterations: number): IPoint[] => {
+  if (points.length < 2) {
+    return points;
+  }
+
+  let result = [...points];
+
+  for (let iter = 0; iter < iterations; iter++) {
+    const newPoints: IPoint[] = [];
+
+    // Keep the first point
+    newPoints.push(result[0]);
+
+    // Apply Chaikin's algorithm to each pair of points
+    for (let i = 0; i < result.length - 1; i++) {
+      const p0 = result[i];
+      const p1 = result[i + 1];
+
+      // Create two new points at 1/4 and 3/4 positions between p0 and p1
+      const q = {
+        x: p0.x * 0.75 + p1.x * 0.25,
+        y: p0.y * 0.75 + p1.y * 0.25,
+      };
+
+      const r = {
+        x: p0.x * 0.25 + p1.x * 0.75,
+        y: p0.y * 0.25 + p1.y * 0.75,
+      };
+
+      newPoints.push(q);
+      newPoints.push(r);
+    }
+
+    // Keep the last point
+    newPoints.push(result[result.length - 1]);
+
+    result = newPoints;
+  }
+
+  return result;
+};

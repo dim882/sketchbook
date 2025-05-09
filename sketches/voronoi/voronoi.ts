@@ -1,4 +1,4 @@
-import { computeVoronoi, generatePoissonPoints, PseudoRandomNumberGenerator, Point } from './voronoi.utils';
+import { computeVoronoi, generatePoissonPoints, PseudoRandomNumberGenerator, IPoint } from './voronoi.utils';
 import { palette } from './palette';
 
 const prng: PseudoRandomNumberGenerator = Math.random;
@@ -19,9 +19,9 @@ window.addEventListener('DOMContentLoaded', () => {
   function render(context: CanvasRenderingContext2D) {
     const { width, height } = context.canvas;
 
-    const points: Point[] = generatePoissonPoints(width, height, MIN_DIST, prng, K);
+    const points: IPoint[] = generatePoissonPoints(width, height, MIN_DIST, prng, K);
 
-    const boundingPolygon: Point[] = [
+    const boundingPolygon: IPoint[] = [
       { x: 0, y: 0 },
       { x: width, y: 0 },
       { x: width, y: height },
