@@ -4,6 +4,8 @@ import { getCanvas, getCanvasContext, type IPointTuple, loop } from './particles
 import * as Vec from './Vector';
 
 const INITIAL_SPEED = 150;
+const FPS = 60;
+const DELTA_TIME = 1 / FPS;
 
 document.body.onload = () => {
   const canvas = getCanvas();
@@ -18,8 +20,6 @@ document.body.onload = () => {
     particle: create({ position: Vec.fromTuple(center), velocity: initialForce }),
   };
 
-  const FPS = 60;
-
   loop(render(context, data), FPS);
 };
 
@@ -29,23 +29,20 @@ interface ISketchData {
 
 const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { width, height } = context.canvas;
-  const dt = 1 / 60;
 
-  let { particle } = data;
+  const { particle } = data;
   const { position, velocity, mass } = particle;
 
   const force = Vector.create(
-    position.x < 0 || position.x > width ? (-2 * velocity.x * mass) / dt : 0,
-    position.y < 0 || position.y > height ? (-2 * velocity.y * mass) / dt : 0
+    position.x < 0 || position.x > width ? (-2 * velocity.x * mass) / DELTA_TIME : 0,
+    position.y < 0 || position.y > height ? (-2 * velocity.y * mass) / DELTA_TIME : 0
   );
 
-  particle = applyForce({
+  data.particle = applyForce({
     particle,
     force,
-    deltaTime: dt,
+    deltaTime: DELTA_TIME,
   });
-
-  data.particle = particle;
 
   context.clearRect(0, 0, width, height);
 
