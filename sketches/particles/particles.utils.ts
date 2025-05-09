@@ -1,3 +1,7 @@
+import * as Vector from './Vector';
+import { IParticle } from './Particle';
+import { DELTA_TIME } from './particles';
+
 export type IRenderFunc = (t: number) => void;
 export type IPointTuple = [number, number];
 
@@ -32,3 +36,13 @@ export const getCanvasContext = (canvas: HTMLCanvasElement): CanvasRenderingCont
 
   return context;
 };
+
+export function handleEdges(particle: IParticle, width: number, height: number) {
+  const { position, velocity, mass } = particle;
+
+  const force = Vector.create(
+    position.x < 0 || position.x > width ? (-2 * velocity.x * mass) / DELTA_TIME : 0,
+    position.y < 0 || position.y > height ? (-2 * velocity.y * mass) / DELTA_TIME : 0
+  );
+  return force;
+}
