@@ -1,10 +1,16 @@
-import { computeVoronoi, generatePoissonPoints, PseudoRandomNumberGenerator, IPoint } from './voronoi.utils';
+import {
+  computeVoronoi,
+  generatePoissonPoints,
+  PseudoRandomNumberGenerator,
+  IPoint,
+  applyChaikinCurve,
+} from './voronoi.utils';
 import { palette } from './palette';
 
 const prng: PseudoRandomNumberGenerator = Math.random;
 
 // Configuration
-const MIN_DIST = 50;
+const MIN_DIST = 150;
 const K = 30;
 const HUES = Object.keys(palette) as Array<keyof typeof palette>;
 
@@ -32,7 +38,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     diagram.forEach(({ cell }) => {
       context.beginPath();
-      cell.forEach((p, idx) => {
+      applyChaikinCurve(cell, 10).forEach((p, idx) => {
         if (idx === 0) {
           context.moveTo(p.x, p.y);
         } else {

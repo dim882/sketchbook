@@ -110,6 +110,7 @@ export function generatePoissonPoints(
         for (let xOff = -1; xOff <= 1; xOff++) {
           const nx = gx + xOff;
           const ny = gy + yOff;
+
           if (nx >= 0 && nx < gridCols && ny >= 0 && ny < gridRows) {
             const neighbor = grid[ny * gridCols + nx];
             if (neighbor) {
