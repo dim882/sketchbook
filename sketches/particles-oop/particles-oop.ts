@@ -1,10 +1,11 @@
 import { Particle } from './Particle';
 import { Vector } from './Vector';
-import { getCanvas, getCanvasContext, loop, handleEdges } from './particles-oop.utils.js';
+import { getCanvas, getCanvasContext, loop, handleEdges } from './particles-oop.utils';
 
 export const INITIAL_SPEED = 250;
 export const FPS = 60;
 export const DELTA_TIME = 1 / FPS;
+export const PARTICLE_COLOR = 'blue';
 
 interface ISketchData {
   particle: Particle;
@@ -35,6 +36,6 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
 
   context.beginPath();
   context.arc(...particle.position.toTuple(), 10, 0, 2 * Math.PI);
-  context.fillStyle = 'red';
+  context.fillStyle = PARTICLE_COLOR;
   context.fill();
 };
