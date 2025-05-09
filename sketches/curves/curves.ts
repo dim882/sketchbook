@@ -17,11 +17,14 @@ function render(context: CanvasRenderingContext2D) {
 
   context.translate(0, height / 2);
 
-  context.beginPath();
-  context.moveTo(0, 0);
-  context.lineTo(width / 2, 0);
-  context.bezierCurveTo(width / 4, 0, (3 * width) / 4, 0, width, 0);
-  context.stroke();
+  drawCurve(context, width, 100, -100);
 
   context.restore();
+}
+
+function drawCurve(context: CanvasRenderingContext2D, width: number, y1: number, y2: number) {
+  context.beginPath();
+  context.moveTo(0, 0);
+  context.bezierCurveTo(width / 4, y1, (3 * width) / 4, y2, width, 0);
+  context.stroke();
 }
