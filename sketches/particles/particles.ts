@@ -11,13 +11,13 @@ document.body.onload = () => {
   const canvas = getCanvas();
   const context = getCanvasContext(canvas);
   const { width, height } = canvas;
-
-  const center: IPointTuple = [width / 2, height / 2];
   const angle = Math.random() * Math.PI * 2;
-  const initialForce = Vec.multiply(Vec.fromAngle(angle), INITIAL_SPEED);
 
   const data = {
-    particle: create({ position: Vec.fromTuple(center), velocity: initialForce }),
+    particle: create({
+      position: Vector.create(width / 2, height / 2),
+      velocity: Vec.multiply(Vec.fromAngle(angle), INITIAL_SPEED),
+    }),
   };
 
   loop(render(context, data), FPS);

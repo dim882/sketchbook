@@ -2,6 +2,10 @@ import { Particle } from './Particle';
 import { Vector } from './Vector';
 import { getCanvas, getCanvasContext, type IPointTuple, loop } from './particles-oop.utils.js';
 
+const INITIAL_SPEED = 250;
+const FPS = 60;
+const DELTA_TIME = 1 / FPS;
+
 document.body.onload = () => {
   const canvas = getCanvas();
   const context = getCanvasContext(canvas);
@@ -10,7 +14,7 @@ document.body.onload = () => {
 
   // Give the particle a stronger (random) initial velocity
   const initialAngle = Math.random() * Math.PI * 2;
-  const initialVelocity = Vector.fromAngle(initialAngle).multiply(150);
+  const initialVelocity = Vector.fromAngle(initialAngle).multiply(INITIAL_SPEED);
   const particle = Particle.create({ position: Vector.fromTuple(center), velocity: initialVelocity });
 
   loop(render(context, { particle, width, height }), 60);
@@ -35,7 +39,7 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
     particle.velocity.y = -Math.sign(particle.position.y - height / 2) * Math.abs(particle.velocity.y);
   }
 
-  particle.update(1 / 60);
+  particle.update(DELTA_TIME);
 
   context.clearRect(0, 0, width, height);
 
