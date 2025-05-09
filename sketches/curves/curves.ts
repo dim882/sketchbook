@@ -28,6 +28,6 @@ function render(context: CanvasRenderingContext2D) {
 function drawCurve(context: CanvasRenderingContext2D, width: number, y1: number, y2: number) {
   context.beginPath();
   context.moveTo(0, 0);
-  context.bezierCurveTo(width / 4, y1, (3 * width) / 4, y2, width, 0);
+  context.bezierCurveTo(width / 3, y1, (width * 2) / 3, y2, width, 0);
   context.stroke();
 }
