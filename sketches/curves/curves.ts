@@ -1,6 +1,7 @@
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
+const LINE_SPACE = 100;
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
@@ -17,7 +18,9 @@ function render(context: CanvasRenderingContext2D) {
 
   context.translate(0, height / 2);
 
-  drawCurve(context, width, 100, -100);
+  for (let y = LINE_SPACE; y < height; y += LINE_SPACE) {
+    drawCurve(context, width, y, -y);
+  }
 
   context.restore();
 }
