@@ -7,12 +7,15 @@ export const INITIAL_SPEED = 250;
 export const FPS = 60;
 export const DELTA_TIME = 1 / FPS;
 
+interface ISketchData {
+  particle: IParticle;
+}
+
 document.body.onload = () => {
   const canvas = getCanvas();
   const context = getCanvasContext(canvas);
   const { width, height } = canvas;
   const angle = Math.random() * Math.PI * 2;
-
   const data = {
     particle: create({
       position: Vector.create(width / 2, height / 2),
@@ -23,15 +26,11 @@ document.body.onload = () => {
   loop(render(context, data), FPS);
 };
 
-interface ISketchData {
-  particle: IParticle;
-}
-
 const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { width, height } = context.canvas;
-  const { particle } = data;
+  let { particle } = data;
 
-  data.particle = applyForce({
+  particle = applyForce({
     particle,
     force: handleEdges(particle, width, height),
     deltaTime: DELTA_TIME,
