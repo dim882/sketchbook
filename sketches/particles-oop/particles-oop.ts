@@ -41,6 +41,6 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
 
   context.beginPath();
   context.arc(...particle.position.toTuple(), 10, 0, 2 * Math.PI);
-  context.fillStyle = 'purple';
+  context.fillStyle = 'red';
   context.fill();
 };
