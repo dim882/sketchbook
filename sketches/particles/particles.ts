@@ -3,7 +3,7 @@ import { type IParticle, create, applyForce } from './Particle';
 import { getCanvas, getCanvasContext, type IPointTuple, loop } from './particles.utils';
 import * as Vec from './Vector';
 
-const INITIAL_SPEED = 150;
+const INITIAL_SPEED = 250;
 const FPS = 60;
 const DELTA_TIME = 1 / FPS;
 
@@ -43,6 +43,8 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
     force,
     deltaTime: DELTA_TIME,
   });
+
+  console.log(data.particle.velocity);
 
   context.clearRect(0, 0, width, height);
 
