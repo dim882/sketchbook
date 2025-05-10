@@ -2,13 +2,14 @@ import * as Vector from './Vector';
 import { IParticle } from './Particle';
 import { DELTA_TIME } from './particles';
 
-export type IRenderFunc = (t: number) => void;
+export type IRenderFunc<T> = (t: number, data: T) => T;
 export type IPointTuple = [number, number];
 
-export function loop(render: IRenderFunc, fps = 60) {
+export function loop<T>(render: IRenderFunc<T>, fps = 60, initialData: T) {
   const frameDuration = 1000 / fps;
   let lastFrameTime = 0;
   let t = 0;
+  let data = initialData;
 
   function animate(time: number) {
     requestAnimationFrame(animate);
@@ -16,7 +17,8 @@ export function loop(render: IRenderFunc, fps = 60) {
     if (time - lastFrameTime < frameDuration) return;
     lastFrameTime = time;
 
-    render(t); // Assuming `context` is accessible in this scope
+    // Keep data for the next iteration
+    data = render(t, data);
     t++;
   }
 

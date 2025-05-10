@@ -17,29 +17,35 @@ document.body.onload = () => {
   const context = getCanvasContext(canvas);
   const { width, height } = canvas;
   const angle = Math.random() * Math.PI * 2;
-  const data = {
+  const initialData = {
     particle: create({
       position: Vector.create(width / 2, height / 2),
       velocity: Vec.multiply(Vec.fromAngle(angle), INITIAL_SPEED),
     }),
   };
 
-  loop(render(context, data), FPS);
+  loop(render(context), FPS, initialData);
 };
 
-const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
-  const { width, height } = context.canvas;
-  let { particle } = data;
+const render =
+  (context: CanvasRenderingContext2D) =>
+  (t: number, data: ISketchData): ISketchData => {
+    const { width, height } = context.canvas;
+    const { particle } = data;
 
-  data.particle = applyForce({
-    particle,
-    force: handleEdges(particle, width, height),
-    deltaTime: DELTA_TIME,
-  });
+    const updatedParticle = applyForce({
+      particle,
+      force: handleEdges(particle, width, height),
+      deltaTime: DELTA_TIME,
+    });
 
-  context.clearRect(0, 0, width, height);
-  context.beginPath();
-  context.arc(...Vec.toTuple(particle.position), 10, 0, 2 * Math.PI);
-  context.fillStyle = PARTICLE_COLOR;
-  context.fill();
-};
+    context.clearRect(0, 0, width, height);
+    context.beginPath();
+    context.arc(...Vec.toTuple(updatedParticle.position), 10, 0, 2 * Math.PI);
+    context.fillStyle = PARTICLE_COLOR;
+    context.fill();
+
+    return {
+      particle: updatedParticle,
+    };
+  };
