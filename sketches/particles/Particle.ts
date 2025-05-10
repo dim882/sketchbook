@@ -2,10 +2,6 @@ import * as Vector from './Vector';
 
 type OptionalExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
 
-// type Debug<T> = { [P in keyof T]: T[P] };
-// type ExpandedType = Debug<IParticleCreateArgs>;
-// let _: ExpandedType = null!;
-
 export interface IParticle {
   position: Vector.IVector;
   velocity: Vector.IVector;
