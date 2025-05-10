@@ -5,7 +5,7 @@ import { getCanvas, getCanvasContext, loop, handleEdges } from './particles-oop.
 export const INITIAL_SPEED = 250;
 export const FPS = 60;
 export const DELTA_TIME = 1 / FPS;
-export const PARTICLE_COLOR = 'blue';
+export const PARTICLE_COLOR = 'black';
 
 interface ISketchData {
   particle: Particle;

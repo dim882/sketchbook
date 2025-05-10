@@ -1,22 +1,23 @@
 import * as Vector from './Vector';
 
-type OptionalExcept<T, K extends keyof T> = Pick<T, K> & Partial<Omit<T, K>>;
-
 export interface IParticle {
   position: Vector.IVector;
   velocity: Vector.IVector;
   mass: number;
 }
 
-type IParticleCreateArgs = OptionalExcept<IParticle, 'position'>;
-
-export const create = ({ position, velocity = Vector.create(0, 0), mass = 1 }: IParticleCreateArgs): IParticle => ({
+export const create = ({ position, velocity = Vector.create(0, 0), mass }: IParticle): IParticle => ({
   position,
   velocity,
   mass,
 });
 
-export const copy = (particle: IParticle): IParticle => create({ position: Vector.clone(particle.position) });
+export const copy = (particle: IParticle): IParticle =>
+  create({
+    position: Vector.clone(particle.position),
+    velocity: Vector.clone(particle.velocity),
+    mass: particle.mass,
+  });
 
 export const applyForce = ({
   particle,

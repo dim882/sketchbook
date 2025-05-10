@@ -21,6 +21,7 @@ document.body.onload = () => {
     particle: create({
       position: Vector.create(width / 2, height / 2),
       velocity: Vec.multiply(Vec.fromAngle(angle), INITIAL_SPEED),
+      mass: 1,
     }),
   };
 
