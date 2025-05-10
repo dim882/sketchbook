@@ -31,7 +31,7 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
   const { width, height } = context.canvas;
   let { particle } = data;
 
-  particle = applyForce({
+  data.particle = applyForce({
     particle,
     force: handleEdges(particle, width, height),
     deltaTime: DELTA_TIME,
