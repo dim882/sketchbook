@@ -1,5 +1,3 @@
-import palette from '../xor1/palette';
-
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
@@ -23,8 +21,15 @@ function render(context: CanvasRenderingContext2D) {
 
   context.translate(0, height / 2);
 
-  for (let y = LINE_SPACE, i = 0; y < height && i < palette.orange.length; y += LINE_SPACE, i++) {
-    drawCurve(context, width, y, -y, palette.orange[i]);
+  const myPalette = palette.orange.slice().reverse();
+
+  // prettier-ignore
+  for (
+    let y = height, i = 0; 
+    y > LINE_SPACE && i < myPalette.length; 
+    y -= LINE_SPACE, i++
+  ) {
+    drawCurve(context, width, y, -y, myPalette[i]);
   }
 
   context.restore();
