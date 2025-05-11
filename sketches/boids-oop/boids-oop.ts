@@ -5,9 +5,19 @@ import { getCanvas, getCanvasContext, loop, handleEdges } from './boids-oop.util
 export const INITIAL_SPEED = 100;
 export const FPS = 60;
 export const DELTA_TIME = 1 / FPS;
-export const BOID_COUNT = 400;
+export const BOID_COUNT = 500;
 export const BACKGROUND_COLOR = '#f5f5f5';
 export const BOID_COLOR = '#333';
+
+// Boid behavior configuration
+export const SEPARATION_WEIGHT = 2.0;
+export const ALIGNMENT_WEIGHT = 5.0;
+export const COHESION_WEIGHT = 10.2;
+
+// Other configuration
+export const MAX_SPEED = 3.5;
+export const MAX_FORCE = 0.05;
+export const BOID_SIZE = 5;
 
 interface ISketchData {
   boids: Boid[];
@@ -30,10 +40,13 @@ document.body.onload = () => {
       Boid.create({
         position,
         velocity,
-        maxSpeed: 3 + Math.random() * 2,
-        maxForce: 0.05 + Math.random() * 0.05,
-        size: 4 + Math.random() * 4,
+        maxSpeed: MAX_SPEED + Math.random() * 1,
+        maxForce: MAX_FORCE + Math.random() * 0.03,
+        size: BOID_SIZE + Math.random() * 2,
         color: BOID_COLOR,
+        separationWeight: SEPARATION_WEIGHT,
+        alignmentWeight: ALIGNMENT_WEIGHT,
+        cohesionWeight: COHESION_WEIGHT,
       })
     );
   }

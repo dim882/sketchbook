@@ -6,6 +6,9 @@ export class Boid extends Particle {
   maxForce: number;
   size: number;
   color: string;
+  separationWeight: number;
+  alignmentWeight: number;
+  cohesionWeight: number;
 
   constructor(
     position: Vector,
@@ -14,13 +17,19 @@ export class Boid extends Particle {
     maxSpeed: number = 4,
     maxForce: number = 0.1,
     size: number = 5,
-    color: string = '#333'
+    color: string = '#333',
+    separationWeight: number = 1.5,
+    alignmentWeight: number = 1.0,
+    cohesionWeight: number = 1.0
   ) {
     super(position, velocity, mass);
     this.maxSpeed = maxSpeed;
     this.maxForce = maxForce;
     this.size = size;
     this.color = color;
+    this.separationWeight = separationWeight;
+    this.alignmentWeight = alignmentWeight;
+    this.cohesionWeight = cohesionWeight;
   }
 
   static create({
@@ -31,6 +40,9 @@ export class Boid extends Particle {
     maxForce = 0.1,
     size = 5,
     color = '#333',
+    separationWeight = 1.5,
+    alignmentWeight = 1.0,
+    cohesionWeight = 1.0,
   }: {
     position: Vector;
     velocity?: Vector;
@@ -39,8 +51,22 @@ export class Boid extends Particle {
     maxForce?: number;
     size?: number;
     color?: string;
+    separationWeight?: number;
+    alignmentWeight?: number;
+    cohesionWeight?: number;
   }): Boid {
-    return new Boid(position, velocity, mass, maxSpeed, maxForce, size, color);
+    return new Boid(
+      position,
+      velocity,
+      mass,
+      maxSpeed,
+      maxForce,
+      size,
+      color,
+      separationWeight,
+      alignmentWeight,
+      cohesionWeight
+    );
   }
 
   applyBehaviors(boids: Boid[], deltaTime: number): void {
@@ -49,9 +75,9 @@ export class Boid extends Particle {
     const cohesion = this.cohesion(boids);
 
     // Apply weights to behaviors
-    separation.multiply(1.5);
-    alignment.multiply(1.0);
-    cohesion.multiply(1.0);
+    separation.multiply(this.separationWeight);
+    alignment.multiply(this.alignmentWeight);
+    cohesion.multiply(this.cohesionWeight);
 
     // Apply forces
     this.applyForce({ force: separation, deltaTime });
