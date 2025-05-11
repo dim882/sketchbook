@@ -3,9 +3,9 @@ export type IPointTuple = [number, number];
 export class Vector {
   x: number;
   y: number;
-  z?: number;
+  z: number;
 
-  constructor(x: number, y: number, z?: number) {
+  constructor(x: number, y: number, z: number = 0) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -62,9 +62,9 @@ export class Vector {
   }
 
   divide(scalar: number): Vector {
-    this.x /= scalar;
-    this.y /= scalar;
-    if (this.z) {
+    if (scalar !== 0) {
+      this.x /= scalar;
+      this.y /= scalar;
       this.z /= scalar;
     }
     return this;
@@ -80,7 +80,7 @@ export class Vector {
   }
 
   magnitude(): number {
-    return Math.sqrt(this.x * this.x + this.y * this.y);
+    return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
   }
 
   normalize(): Vector {
@@ -117,8 +117,7 @@ export class Vector {
   }
 
   limit(max: number): Vector {
-    const mag = this.magnitude();
-    if (mag > max) {
+    if (this.magnitude() > max) {
       this.normalize().multiply(max);
     }
     return this;
@@ -141,7 +140,10 @@ export class Vector {
   }
 
   distance(v: Vector): number {
-    return this.subtract(v).magnitude();
+    const dx = this.x - v.x;
+    const dy = this.y - v.y;
+    const dz = this.z - v.z;
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
   }
 
   toArray(): number[] {
@@ -166,11 +168,11 @@ export class Vector {
     return new Vector(x, y, 0);
   }
 
-  static fromTuple([x, y]: IPointTuple): Vector {
-    return new Vector(x, y);
+  static fromTuple([x, y, z = 0]: [number, number, number?]): Vector {
+    return new Vector(x, y, z);
   }
 
-  toTuple(): IPointTuple {
+  toTuple(): [number, number] {
     return [this.x, this.y];
   }
 }
