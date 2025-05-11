@@ -37,17 +37,18 @@ document.body.onload = () => {
     const velocity = Vector.fromAngle(initialAngle).multiply(INITIAL_SPEED);
 
     boids.push(
-      Boid.create({
+      new Boid(
         position,
         velocity,
-        maxSpeed: MAX_SPEED + Math.random() * 1,
-        maxForce: MAX_FORCE + Math.random() * 0.03,
-        size: BOID_SIZE + Math.random() * 2,
-        color: BOID_COLOR,
-        separationWeight: SEPARATION_WEIGHT,
-        alignmentWeight: ALIGNMENT_WEIGHT,
-        cohesionWeight: COHESION_WEIGHT,
-      })
+        1, // mass
+        MAX_SPEED + Math.random() * 1,
+        MAX_FORCE + Math.random() * 0.03,
+        BOID_SIZE + Math.random() * 2,
+        BOID_COLOR,
+        SEPARATION_WEIGHT,
+        ALIGNMENT_WEIGHT,
+        COHESION_WEIGHT
+      )
     );
   }
 

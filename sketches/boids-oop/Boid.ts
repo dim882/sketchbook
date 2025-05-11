@@ -32,43 +32,6 @@ export class Boid extends Particle {
     this.cohesionWeight = cohesionWeight;
   }
 
-  static create({
-    position,
-    velocity,
-    mass = 1,
-    maxSpeed = 4,
-    maxForce = 0.1,
-    size = 5,
-    color = '#333',
-    separationWeight = 1.5,
-    alignmentWeight = 1.0,
-    cohesionWeight = 1.0,
-  }: {
-    position: Vector;
-    velocity?: Vector;
-    mass?: number;
-    maxSpeed?: number;
-    maxForce?: number;
-    size?: number;
-    color?: string;
-    separationWeight?: number;
-    alignmentWeight?: number;
-    cohesionWeight?: number;
-  }): Boid {
-    return new Boid(
-      position,
-      velocity,
-      mass,
-      maxSpeed,
-      maxForce,
-      size,
-      color,
-      separationWeight,
-      alignmentWeight,
-      cohesionWeight
-    );
-  }
-
   applyBehaviors(boids: Boid[], deltaTime: number): void {
     const separation = this.separate(boids);
     const alignment = this.align(boids);
