@@ -4,9 +4,9 @@ import commonjs from '@rollup/plugin-commonjs';
 import sucrase from '@rollup/plugin-sucrase';
 
 export default {
-  input: './ui/client.tsx',
+  input: './src/ui/client.tsx',
   output: {
-    file: './public/dist/bundle.js',
+    file: './src/public/dist/bundle.js',
     format: 'es',
     sourcemap: true,
     globals: {

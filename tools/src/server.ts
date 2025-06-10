@@ -7,10 +7,10 @@ import SketchList from './ui/SketchList';
 
 const app = express();
 const port = 2000;
-const publicPath = path.join(__dirname, './public');
-const sketchesPath = path.join(__dirname, '../sketches');
-const makeSketchPath = (sketchName: string) => path.join(__dirname, '../sketches', sketchName, `${sketchName}.html`);
-const makeDistPath = (sketchName: string) => path.join(__dirname, '../sketches', sketchName, 'dist');
+const publicPath = path.join(__dirname, 'public');
+const sketchesPath = path.join(__dirname, '../../sketches');
+const makeSketchPath = (sketchName: string) => path.join(__dirname, '../../sketches', sketchName, `${sketchName}.html`);
+const makeDistPath = (sketchName: string) => path.join(__dirname, '../../sketches', sketchName, 'dist');
 
 app.use(express.static(publicPath));
 
@@ -35,10 +35,8 @@ app.get('/', async (req, res) => {
     );
 
     const sortedDirs = dirsWithTimestamps.sort((a, b) => a.name.localeCompare(b.name));
-    console.log(sortedDirs);
-
     const sketchListHtml = render(h(SketchList, { dirs: sortedDirs }));
-    const data = await fs.readFile(path.join(__dirname, './ui/index.html'), 'utf8');
+    const data = await fs.readFile(path.join(__dirname, 'ui/index.html'), 'utf8');
     const renderedHtml = data
       .replace('${sketchListPlaceholder}', sketchListHtml)
       .replace('${initialData}', JSON.stringify({ dirs: sortedDirs }));
