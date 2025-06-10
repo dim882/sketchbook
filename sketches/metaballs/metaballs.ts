@@ -17,6 +17,7 @@ document.body.onload = () => {
 
   for (let i = 0; i < METABALL_COUNT; i++) {
     const radius = 30 + Math.random() * 20;
+
     // Apply PADDING to the position calculations
     const x = PADDING + radius + Math.random() * (width - 2 * radius - 2 * PADDING);
     const y = PADDING + radius + Math.random() * (height - 2 * radius - 2 * PADDING);
