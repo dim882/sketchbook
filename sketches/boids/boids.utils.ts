@@ -161,7 +161,7 @@ export const drawBoid = (context: CanvasRenderingContext2D, boid: IBoid): void =
 
 const calculateEdgeForce = (boid: IBoid, width: number, height: number): IVector => {
   const EDGE_FORCE_STRENGTH = 0.3;
-  const EDGE_THRESHOLD = 150; // Distance from edge to start applying force
+  const EDGE_THRESHOLD = 100; // Distance from edge to start applying force
   let force = Vector.create(0, 0);
 
   if (boid.position.x < EDGE_THRESHOLD) {
