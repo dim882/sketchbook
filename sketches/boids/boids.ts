@@ -32,7 +32,13 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   let flock = utils.createFlock(BOID_COUNT, canvas.width, canvas.height, prng);
-  const boidPaths: { x: number; y: number }[][] = flock.map(() => []);
+
+  type IBoidPaths = {
+    x: number;
+    y: number;
+  }[][];
+
+  const boidPaths: IBoidPaths = flock.map(() => []);
 
   function animate() {
     if (!context) return;

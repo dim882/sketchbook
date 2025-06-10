@@ -5,7 +5,7 @@ import { createParticles, getCanvas, getCanvasContext, loop, visualizeFlowField 
 import { type IParticle, applyForce, handleEdges } from './Particle';
 import * as Vec from './Vector';
 
-const DEBUG = true;
+const DEBUG = false;
 const gridSize = 40;
 const particleCount = 500;
 const noiseScale = 0.005;
@@ -27,7 +27,7 @@ document.body.onload = () => {
       noiseScale,
       particleSpeed,
     }),
-    60
+    60,
   );
 };
 
@@ -55,7 +55,7 @@ const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: num
       particle,
       force: Vec.multiply(Vec.fromAngle(noiseValue * Math.PI * 2), particleSpeed),
       deltaTime: 1 / 60,
-      maxVelocity: 40,
+      maxVelocity: 540,
     });
     const finalParticle = handleEdges(particleAfterForce, width, height);
 
