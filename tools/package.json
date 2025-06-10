@@ -15,13 +15,13 @@
     "rollup": "^4.20.0"
   },
   "scripts": {
-    "dev": "bun --watch server.ts",
-    "watch": "bun watch.ts",
-    "clone": "bun clone-sketch.ts",
-    "lib:pull": "bun lib-pull.ts",
-    "build": "rollup -c ./ui/rollup.config.js",
-    "build:watch": "rollup -c ./ui/rollup.config.js -w",
-    "build:all": "bun run build-all.ts"
+    "dev": "bun --watch src/server.ts",
+    "watch": "bun src/watch.ts",
+    "clone": "bun src/clone-sketch.ts",
+    "lib:pull": "bun src/lib-pull.ts",
+    "build": "rollup -c ./src/ui/rollup.config.js",
+    "build:watch": "rollup -c ./src/ui/rollup.config.js -w",
+    "build:all": "bun run src/build-all.ts"
   },
   "resolutions": {
     "rollup": "@rollup/wasm-node"

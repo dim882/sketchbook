@@ -2,9 +2,14 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 // import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import sucrase from '@rollup/plugin-sucrase';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default {
-  input: './ui/client.tsx',
+  input: './src/ui/client.tsx',
   output: {
     file: './public/dist/bundle.js',
     format: 'es',
