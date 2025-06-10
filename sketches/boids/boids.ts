@@ -1,6 +1,11 @@
 import * as Boid from './Boid';
 import * as utils from './boids.utils';
 
+type IBoidPaths = {
+  x: number;
+  y: number;
+}[][];
+
 const BACKGROUND_COLOR = '#fcfaf7';
 const BOID_COUNT = 500;
 const SEPARATION_DISTANCE = 100;
@@ -32,12 +37,6 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   let flock = utils.createFlock(BOID_COUNT, canvas.width, canvas.height, prng);
-
-  type IBoidPaths = {
-    x: number;
-    y: number;
-  }[][];
-
   const boidPaths: IBoidPaths = flock.map(() => []);
 
   function animate() {
