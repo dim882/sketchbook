@@ -24,7 +24,12 @@ export const generateRandomPath = (
   const startRow = Math.floor(Math.random() * rows);
   let currentCol = startCol;
   let currentRow = startRow;
-  const path: IPoint[] = [{ x: currentCol * gridSize, y: currentRow * gridSize }];
+  const path: IPoint[] = [
+    {
+      x: currentCol * gridSize,
+      y: currentRow * gridSize,
+    },
+  ];
   const visited: boolean[][] = Array(cols)
     .fill(null)
     .map(() => Array(rows).fill(false));
