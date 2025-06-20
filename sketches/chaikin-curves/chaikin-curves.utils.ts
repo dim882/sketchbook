@@ -55,7 +55,9 @@ export const generateRandomPath = (
     currentCol += direction.dx;
     currentRow += direction.dy;
     visited[currentCol][currentRow] = true;
+
     path.push({ x: currentCol * gridSize, y: currentRow * gridSize });
+
     iterations++;
   }
 
@@ -84,7 +86,6 @@ export const applyChaikinCurve = (points: IPoint[], iterations: number): IPoint[
         x: p0.x * 0.75 + p1.x * 0.25,
         y: p0.y * 0.75 + p1.y * 0.25,
       };
-
       const r = {
         x: p0.x * 0.25 + p1.x * 0.75,
         y: p0.y * 0.25 + p1.y * 0.75,
