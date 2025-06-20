@@ -19,8 +19,8 @@
     "watch": "bun src/watch.ts",
     "clone": "bun src/clone-sketch.ts",
     "lib:pull": "bun src/lib-pull.ts",
-    "build": "rollup -c ./src/ui/rollup.config.js",
-    "build:watch": "rollup -c ./src/ui/rollup.config.js -w",
+    "ui:build": "rollup -c ./src/ui/rollup.config.js",
+    "ui:watch": "rollup -c ./src/ui/rollup.config.js -w",
     "build:all": "bun run src/build-all.ts"
   },
   "resolutions": {
