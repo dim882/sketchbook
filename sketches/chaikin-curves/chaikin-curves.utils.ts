@@ -47,9 +47,9 @@ export const generateRandomPath = (
         return false;
       }
 
-      // Prevent 180-degree turns (up after down, down after up)
-      if (lastDirection.dy === 1 && dir.dy === -1) return false; // Was going down, can't go up
-      if (lastDirection.dy === -1 && dir.dy === 1) return false; // Was going up, can't go down
+      // Prevent 180-degree turns (e.g., right then left, or up then down)
+      if (dir.dx !== 0 && dir.dx === -lastDirection.dx) return false;
+      if (dir.dy !== 0 && dir.dy === -lastDirection.dy) return false;
 
       return true;
     });
