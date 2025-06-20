@@ -137,9 +137,6 @@ const getAvailableDirections = ({
     if (dir.dx !== 0 && dir.dx === -lastDirection.dx) return false;
     if (dir.dy !== 0 && dir.dy === -lastDirection.dy) return false;
 
-    // Prevent leftward movement to ensure progress toward right edge
-    if (dir.dx === -1) return false;
-
     return true;
   });
 };
