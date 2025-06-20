@@ -12,65 +12,45 @@ export const generateRandomPath = (
   gridSize: number,
   maxIterations: number
 ): IPoint[] => {
-  // Calculate grid dimensions
-  const cols = Math.floor(width / gridSize);
-  const rows = Math.floor(height / gridSize);
-
-  // Initialize visited cells grid
-  const visited: boolean[][] = Array(cols)
-    .fill(null)
-    .map(() => Array(rows).fill(false));
-
-  // Possible directions: right, down, left, up
-  const directions = [
+  const DIRECTIONS = [
     { dx: 1, dy: 0 },
     { dx: 0, dy: 1 },
     { dx: -1, dy: 0 },
     { dx: 0, dy: -1 },
   ];
-
-  // Start at a random position
+  const cols = Math.floor(width / gridSize);
+  const rows = Math.floor(height / gridSize);
   const startCol = Math.floor(Math.random() * cols);
   const startRow = Math.floor(Math.random() * rows);
-
   let currentCol = startCol;
   let currentRow = startRow;
-
-  // Mark starting position as visited
-  visited[currentCol][currentRow] = true;
-
-  // Initialize path with starting point
   const path: IPoint[] = [{ x: currentCol * gridSize, y: currentRow * gridSize }];
+  const visited: boolean[][] = Array(cols)
+    .fill(null)
+    .map(() => Array(rows).fill(false));
+
+  visited[currentCol][currentRow] = true;
 
   let iterations = 0;
 
   while (iterations < maxIterations) {
-    // Find available directions
-    const availableDirections = directions.filter((dir) => {
+    const availableDirections = DIRECTIONS.filter((dir) => {
       const newCol = currentCol + dir.dx;
       const newRow = currentRow + dir.dy;
 
       return newCol >= 0 && newCol < cols && newRow >= 0 && newRow < rows && !visited[newCol][newRow];
     });
 
-    // If no available directions, break
     if (availableDirections.length === 0) {
       break;
     }
 
-    // Choose a random direction
     const direction = availableDirections[Math.floor(Math.random() * availableDirections.length)];
 
-    // Move to new position
     currentCol += direction.dx;
     currentRow += direction.dy;
-
-    // Mark as visited
     visited[currentCol][currentRow] = true;
-
-    // Add to path
     path.push({ x: currentCol * gridSize, y: currentRow * gridSize });
-
     iterations++;
   }
 
@@ -87,7 +67,6 @@ export const applyChaikinCurve = (points: IPoint[], iterations: number): IPoint[
   for (let iter = 0; iter < iterations; iter++) {
     const newPoints: IPoint[] = [];
 
-    // Keep the first point
     newPoints.push(result[0]);
 
     // Apply Chaikin's algorithm to each pair of points
