@@ -2,10 +2,10 @@ import * as utils from './chaikin-curves.utils';
 
 const BACKGROUND_COLOR = '#ffffff';
 const LINE_COLOR = '#000000';
-const GRID_SIZE = 40;
+const GRID_SIZE = 50;
 const MAX_ITERATIONS = 1000;
 const CHAIKIN_ITERATIONS = 3;
-const LINE_WIDTH = 2;
+const LINE_WIDTH = 20;
 
 const sketch = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
