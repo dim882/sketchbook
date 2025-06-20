@@ -160,7 +160,7 @@ const selectNextDirection = (availableDirections: IDirection[]): IDirection | un
   let random = Math.random() * totalWeight;
 
   for (let i = 0; i < weights.length; i++) {
-    random -= weights[i];
+    random = random - weights[i];
 
     if (random <= 0) {
       return availableDirections[i];
