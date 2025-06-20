@@ -2,8 +2,9 @@ import * as chokidar from 'chokidar';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { rollup, type RollupOptions } from '@rollup/wasm-node';
+import { log } from 'node:console';
 
-const ROOT_DIR = path.resolve(__dirname, '../');
+const ROOT_DIR = path.resolve(__dirname, '../../');
 const SKETCHES_DIR = path.join(ROOT_DIR, 'sketches');
 
 const watcher = makeWatcher(SKETCHES_DIR);
@@ -38,6 +39,7 @@ function makeWatcher(dir: string) {
     depth: 99,
   };
   const watchPaths = [dir, path.join(dir, './**/*')];
+  console.log(watchPaths);
 
   const watcher = chokidar.watch(watchPaths, watchOptions);
 
