@@ -24,31 +24,34 @@ export const generateRandomPath = (
   gridSize: number,
   maxIterations: number
 ): IPoint[] => {
-  const cols = Math.floor(width / gridSize);
-  const rows = Math.floor(height / gridSize);
+  const grid = {
+    cols: Math.floor(width / gridSize),
+    rows: Math.floor(height / gridSize),
+  };
 
-  const startCol = 0;
-  const startRow = Math.floor(Math.random() * rows);
-
-  let currentCol = startCol;
-  let currentRow = startRow;
+  let currentPosition = { col: 0, row: Math.floor(Math.random() * grid.rows) };
   let lastDirection: IDirection = { dx: 1, dy: 0 }; // Start with right direction
 
   const path: IPoint[] = [
     {
-      x: currentCol * gridSize,
-      y: currentRow * gridSize,
+      x: currentPosition.col * gridSize,
+      y: currentPosition.row * gridSize,
     },
   ];
 
   // First move is always to the right
-  currentCol += lastDirection.dx;
-  currentRow += lastDirection.dy;
-  path.push({ x: currentCol * gridSize, y: currentRow * gridSize });
+  currentPosition.col += lastDirection.dx;
+  currentPosition.row += lastDirection.dy;
+  path.push({ x: currentPosition.col * gridSize, y: currentPosition.row * gridSize });
 
   // Continue with random directions for remaining moves
-  for (let i = 1; i < maxIterations && currentCol < cols - 1; i++) {
-    const availableDirections = getAvailableDirections(currentCol, currentRow, cols, rows, lastDirection);
+  for (let i = 1; i < maxIterations && currentPosition.col < grid.cols - 1; i++) {
+    const availableDirections = getAvailableDirections({
+      currentPosition,
+      grid,
+      lastDirection,
+    });
+    console.log(availableDirections);
 
     const direction = selectNextDirection(availableDirections);
 
@@ -57,10 +60,10 @@ export const generateRandomPath = (
     }
 
     lastDirection = direction;
-    currentCol += direction.dx;
-    currentRow += direction.dy;
+    currentPosition.col += direction.dx;
+    currentPosition.row += direction.dy;
 
-    path.push({ x: currentCol * gridSize, y: currentRow * gridSize });
+    path.push({ x: currentPosition.col * gridSize, y: currentPosition.row * gridSize });
   }
 
   return path;
@@ -106,19 +109,21 @@ export const applyChaikinCurve = (points: IPoint[], iterations: number): IPoint[
   return result;
 };
 
-const getAvailableDirections = (
-  currentCol: number,
-  currentRow: number,
-  gridCols: number,
-  gridRows: number,
-  lastDirection: IDirection
-): IDirection[] => {
+const getAvailableDirections = ({
+  currentPosition,
+  grid,
+  lastDirection,
+}: {
+  currentPosition: { col: number; row: number };
+  grid: { cols: number; rows: number };
+  lastDirection: IDirection;
+}): IDirection[] => {
   return DIRECTIONS.filter((dir) => {
-    const newCol = currentCol + dir.dx;
-    const newRow = currentRow + dir.dy;
+    const newCol = currentPosition.col + dir.dx;
+    const newRow = currentPosition.row + dir.dy;
 
     // Check bounds
-    if (newCol < 0 || newCol >= gridCols || newRow < 0 || newRow >= gridRows) {
+    if (newCol < 0 || newCol >= grid.cols || newRow < 0 || newRow >= grid.rows) {
       return false;
     }
 
@@ -145,10 +150,12 @@ const selectNextDirection = (availableDirections: IDirection[]): IDirection | un
   });
 
   const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+
   let random = Math.random() * totalWeight;
 
   for (let i = 0; i < weights.length; i++) {
     random -= weights[i];
+
     if (random <= 0) {
       return availableDirections[i];
     }
