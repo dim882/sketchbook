@@ -4,7 +4,7 @@ interface IPoint {
 }
 
 /**
- * Generates a random path on a grid that doesn't overlap itself
+ * Generates a path that starts from the left edge and moves toward the right edge
  */
 export const generateRandomPath = (
   width: number,
@@ -13,48 +13,76 @@ export const generateRandomPath = (
   maxIterations: number
 ): IPoint[] => {
   const DIRECTIONS = [
-    { dx: 1, dy: 0 },
-    { dx: 0, dy: 1 },
-    { dx: -1, dy: 0 },
-    { dx: 0, dy: -1 },
+    { dx: 1, dy: 0 }, // Right
+    { dx: 0, dy: 1 }, // Down
+    { dx: 0, dy: -1 }, // Up
+    { dx: -1, dy: 0 }, // Left (with lower probability)
   ];
   const cols = Math.floor(width / gridSize);
   const rows = Math.floor(height / gridSize);
-  const startCol = Math.floor(Math.random() * cols);
+
+  // Start from the left edge (x = 0)
+  const startCol = 0;
   const startRow = Math.floor(Math.random() * rows);
   let currentCol = startCol;
   let currentRow = startRow;
+
   const path: IPoint[] = [
     {
       x: currentCol * gridSize,
       y: currentRow * gridSize,
     },
   ];
-  const visited: boolean[][] = Array(cols)
-    .fill(null)
-    .map(() => Array(rows).fill(false));
 
-  visited[currentCol][currentRow] = true;
-
+  let lastDirection = { dx: 0, dy: 0 };
   let iterations = 0;
 
-  while (iterations < maxIterations) {
+  while (iterations < maxIterations && currentCol < cols - 1) {
     const availableDirections = DIRECTIONS.filter((dir) => {
       const newCol = currentCol + dir.dx;
       const newRow = currentRow + dir.dy;
 
-      return newCol >= 0 && newCol < cols && newRow >= 0 && newRow < rows && !visited[newCol][newRow];
+      // Check bounds
+      if (newCol < 0 || newCol >= cols || newRow < 0 || newRow >= rows) {
+        return false;
+      }
+
+      // Prevent 180-degree turns (up after down, down after up)
+      if (lastDirection.dy === 1 && dir.dy === -1) return false; // Was going down, can't go up
+      if (lastDirection.dy === -1 && dir.dy === 1) return false; // Was going up, can't go down
+
+      return true;
     });
 
     if (availableDirections.length === 0) {
       break;
     }
 
-    const direction = availableDirections[Math.floor(Math.random() * availableDirections.length)];
+    // Weight the directions: right has highest probability, left has lowest
+    const weights = availableDirections.map((dir) => {
+      if (dir.dx === 1) return 3; // Right: highest weight
+      if (dir.dx === -1) return 1; // Left: lowest weight
+      return 2; // Up/Down: medium weight
+    });
+
+    // Select direction based on weights
+    const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+    let random = Math.random() * totalWeight;
+    let selectedIndex = 0;
+
+    for (let i = 0; i < weights.length; i++) {
+      random -= weights[i];
+      if (random <= 0) {
+        selectedIndex = i;
+        break;
+      }
+    }
+
+    const direction = availableDirections[selectedIndex];
+    lastDirection = direction;
 
     currentCol += direction.dx;
     currentRow += direction.dy;
-    visited[currentCol][currentRow] = true;
 
     path.push({ x: currentCol * gridSize, y: currentRow * gridSize });
 
