@@ -29,8 +29,14 @@ export const generateRandomPath = (
     rows: Math.floor(height / gridSize),
   };
 
-  let currentPosition = { col: 0, row: Math.floor(Math.random() * grid.rows) };
-  let lastDirection: IDirection = { dx: 1, dy: 0 }; // Start with right direction
+  let currentPosition = {
+    col: 0,
+    row: Math.floor(Math.random() * grid.rows),
+  };
+  let lastDirection: IDirection = {
+    dx: 1,
+    dy: 0,
+  }; // Start with right direction
 
   const path: IPoint[] = [
     {
