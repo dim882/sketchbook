@@ -8,6 +8,55 @@ const DIRECTIONS: readonly IDirection[] = [
 ];
 
 /**
+ * Determines the next direction for the path, switching between wandering and homing modes.
+ */
+const determineNextDirection = ({
+  grid,
+  position,
+  direction,
+  consecutiveSteps,
+  maxConsecutiveSteps,
+  hasReachedRightEdge,
+  startPosition,
+}: {
+  grid: IGrid;
+  position: IGridPosition;
+  direction: IDirection;
+  consecutiveSteps: number;
+  maxConsecutiveSteps: number;
+  hasReachedRightEdge: boolean;
+  startPosition: IGridPosition;
+}): IDirection | undefined => {
+  // Homing mode: Once past the start column on the return, move deterministically.
+  if (hasReachedRightEdge && position.col < startPosition.col) {
+    if (position.row !== startPosition.row) {
+      // Stage 1: Align Y-axis.
+      return {
+        dx: 0,
+        dy: Math.sign(startPosition.row - position.row),
+      };
+    } else {
+      // Stage 2: Align X-axis.
+      return {
+        dx: Math.sign(startPosition.col - position.col),
+        dy: 0,
+      };
+    }
+  }
+
+  // Wandering mode
+  const possibleDirections = getPossibleDirections({
+    grid,
+    position,
+    direction,
+    consecutiveSteps,
+    maxConsecutiveSteps,
+  });
+
+  return selectNextDirection(possibleDirections, hasReachedRightEdge);
+};
+
+/**
  * Generates a path that starts from the left edge and moves toward the right edge
  * Returns grid positions (col, row) rather than actual coordinates
  */
@@ -18,72 +67,49 @@ export const generateRandomGridPath = (
   edgeMargin: number
 ): IGridPosition[] => {
   const startPosition: IGridPosition = {
-    col: edgeMargin, // Start edgeMargin cells from the left
+    col: edgeMargin,
     row: Math.floor(grid.rows / 2),
   };
 
-  let position: IGridPosition = { ...startPosition };
-  let direction: IDirection = { dx: 1, dy: 0 }; // Always go right first
-  let consecutiveSteps = 1; // Track consecutive steps in current direction
-  let hasReachedRightEdge = false; // Track if we've reached the right edge
-  const path: IGridPosition[] = [position];
+  const path: IGridPosition[] = [startPosition];
 
-  for (let i = 0; i < maxIterations; i++) {
-    if (i > 0) {
-      let nextDirection: IDirection | undefined;
+  let position = { ...startPosition };
+  let direction: IDirection = { dx: 1, dy: 0 }; // Initial direction
+  let consecutiveSteps = 1;
+  let hasReachedRightEdge = false;
 
-      if (hasReachedRightEdge && position.col < startPosition.col) {
-        // Homing mode: once we are at or past the start column, move deterministically.
-        if (position.row !== startPosition.row) {
-          // Stage 1: Align Y-axis. Move vertically towards the start point's row.
-          const dy = Math.sign(startPosition.row - position.row);
-          nextDirection = { dx: 0, dy };
-        } else {
-          // Stage 2: Align X-axis. Move horizontally to the start point.
-          const dx = Math.sign(startPosition.col - position.col);
-          nextDirection = { dx, dy: 0 };
-        }
-      } else {
-        // Default wandering mode
-        const possibleDirections = getPossibleDirections({
-          grid,
-          position,
-          direction,
-          consecutiveSteps,
-          maxConsecutiveSteps,
-          hasReachedRightEdge,
-          startPosition,
-        });
-        nextDirection = selectNextDirection(possibleDirections, hasReachedRightEdge);
-      }
+  for (let i = 1; i < maxIterations; i++) {
+    const nextDirection = determineNextDirection({
+      grid,
+      position,
+      direction,
+      consecutiveSteps,
+      maxConsecutiveSteps,
+      hasReachedRightEdge,
+      startPosition,
+    });
 
-      if (!nextDirection) {
-        break;
-      }
-
-      // Reset or increment consecutive steps counter
-      if (nextDirection.dx === direction.dx && nextDirection.dy === direction.dy) {
-        consecutiveSteps++;
-      } else {
-        consecutiveSteps = 1;
-      }
-
-      direction = nextDirection;
+    if (!nextDirection) {
+      break;
     }
+
+    if (nextDirection.dx === direction.dx && nextDirection.dy === direction.dy) {
+      consecutiveSteps++;
+    } else {
+      consecutiveSteps = 1;
+    }
+    direction = nextDirection;
 
     position = {
       col: position.col + direction.dx,
       row: position.row + direction.dy,
     };
-
     path.push(position);
 
-    // Check if we've reached the right edge
     if (!hasReachedRightEdge && position.col >= grid.cols - edgeMargin) {
       hasReachedRightEdge = true;
     }
 
-    // Check if we've returned to the starting point
     if (hasReachedRightEdge && position.col === startPosition.col && position.row === startPosition.row) {
       break;
     }
@@ -122,16 +148,12 @@ const getPossibleDirections = ({
   direction,
   consecutiveSteps,
   maxConsecutiveSteps,
-  hasReachedRightEdge,
-  startPosition,
 }: {
   grid: IGrid;
   position: IGridPosition;
   direction: IDirection;
   consecutiveSteps: number;
   maxConsecutiveSteps: number;
-  hasReachedRightEdge: boolean;
-  startPosition: IGridPosition;
 }): IDirection[] => {
   return DIRECTIONS.filter((dir) => {
     const newCol = position.col + dir.dx;
