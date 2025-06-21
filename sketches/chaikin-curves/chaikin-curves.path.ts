@@ -30,16 +30,32 @@ export const generateRandomGridPath = (
 
   for (let i = 0; i < maxIterations; i++) {
     if (i > 0) {
-      const possibleDirections = getPossibleDirections({
-        grid,
-        position,
-        direction,
-        consecutiveSteps,
-        maxConsecutiveSteps,
-        hasReachedRightEdge,
-        startPosition,
-      });
-      const nextDirection = selectNextDirection(possibleDirections, hasReachedRightEdge);
+      let nextDirection: IDirection | undefined;
+
+      if (hasReachedRightEdge && position.col < startPosition.col) {
+        // Homing mode: once we are at or past the start column, move deterministically.
+        if (position.row !== startPosition.row) {
+          // Stage 1: Align Y-axis. Move vertically towards the start point's row.
+          const dy = Math.sign(startPosition.row - position.row);
+          nextDirection = { dx: 0, dy };
+        } else {
+          // Stage 2: Align X-axis. Move horizontally to the start point.
+          const dx = Math.sign(startPosition.col - position.col);
+          nextDirection = { dx, dy: 0 };
+        }
+      } else {
+        // Default wandering mode
+        const possibleDirections = getPossibleDirections({
+          grid,
+          position,
+          direction,
+          consecutiveSteps,
+          maxConsecutiveSteps,
+          hasReachedRightEdge,
+          startPosition,
+        });
+        nextDirection = selectNextDirection(possibleDirections, hasReachedRightEdge);
+      }
 
       if (!nextDirection) {
         break;
