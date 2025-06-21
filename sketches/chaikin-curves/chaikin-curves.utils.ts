@@ -8,17 +8,17 @@ interface IDirection {
   dy: number;
 }
 
+export interface IGrid {
+  cols: number;
+  rows: number;
+}
+
 const DIRECTIONS: readonly IDirection[] = [
   { dx: 1, dy: 0 }, // Right
   { dx: 0, dy: 1 }, // Down
   { dx: 0, dy: -1 }, // Up
   { dx: -1, dy: 0 }, // Left
 ];
-
-export interface IGrid {
-  cols: number;
-  rows: number;
-}
 
 /**
  * Generates a path that starts from the left edge and moves toward the right edge
