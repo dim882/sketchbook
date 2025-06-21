@@ -11,21 +11,39 @@ const DIRECTIONS: readonly IDirection[] = [
  * Generates a path that starts from the left edge and moves toward the right edge
  * Returns grid positions (col, row) rather than actual coordinates
  */
-export const generateRandomGridPath = (grid: IGrid, maxIterations: number): IGridPosition[] => {
+export const generateRandomGridPath = (
+  grid: IGrid,
+  maxIterations: number,
+  maxConsecutiveSteps: number
+): IGridPosition[] => {
   let position: IGridPosition = {
     col: 0,
     row: Math.floor(grid.rows / 2),
   };
   let direction: IDirection = { dx: 1, dy: 0 }; // Always go right first
+  let consecutiveSteps = 1; // Track consecutive steps in current direction
   const path: IGridPosition[] = [position];
 
   for (let i = 0; i < maxIterations && position.col < grid.cols; i++) {
     if (i > 0) {
-      const possibleDirections = getPossibleDirections({ grid, position, direction });
+      const possibleDirections = getPossibleDirections({
+        grid,
+        position,
+        direction,
+        consecutiveSteps,
+        maxConsecutiveSteps,
+      });
       const nextDirection = selectNextDirection(possibleDirections);
 
       if (!nextDirection) {
         break;
+      }
+
+      // Reset or increment consecutive steps counter
+      if (nextDirection.dx === direction.dx && nextDirection.dy === direction.dy) {
+        consecutiveSteps++;
+      } else {
+        consecutiveSteps = 1;
       }
 
       direction = nextDirection;
@@ -56,8 +74,8 @@ export const mapGridPathToCoordinates = (gridPath: IGridPosition[], gridSize: nu
  * Generates a random path and maps it to coordinates
  * This is a convenience function that combines the two operations
  */
-export const generateRandomPath = (grid: IGrid, maxIterations: number): IPoint[] => {
-  const gridPath = generateRandomGridPath(grid, maxIterations);
+export const generateRandomPath = (grid: IGrid, maxIterations: number, maxConsecutiveSteps: number): IPoint[] => {
+  const gridPath = generateRandomGridPath(grid, maxIterations, maxConsecutiveSteps);
   return mapGridPathToCoordinates(gridPath, grid.cellSize);
 };
 
@@ -65,10 +83,14 @@ const getPossibleDirections = ({
   position,
   grid,
   direction,
+  consecutiveSteps,
+  maxConsecutiveSteps,
 }: {
   grid: IGrid;
   position: IGridPosition;
   direction: IDirection;
+  consecutiveSteps: number;
+  maxConsecutiveSteps: number;
 }): IDirection[] => {
   return DIRECTIONS.filter((dir) => {
     const newCol = position.col + dir.dx;
@@ -82,6 +104,11 @@ const getPossibleDirections = ({
     // Prevent 180-degree turns
     if (dir.dx !== 0 && dir.dx === -direction.dx) return false;
     if (dir.dy !== 0 && dir.dy === -direction.dy) return false;
+
+    // Prevent continuing in the same direction if we've reached the limit
+    if (dir.dx === direction.dx && dir.dy === direction.dy && consecutiveSteps >= maxConsecutiveSteps) {
+      return false;
+    }
 
     return true;
   });
