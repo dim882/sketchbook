@@ -15,19 +15,15 @@ const DIRECTIONS: readonly IDirection[] = [
   { dx: -1, dy: 0 }, // Left
 ];
 
+export interface IGrid {
+  cols: number;
+  rows: number;
+}
+
 /**
  * Generates a path that starts from the left edge and moves toward the right edge
  */
-export const generateRandomPath = (
-  width: number,
-  height: number,
-  gridSize: number,
-  maxIterations: number
-): IPoint[] => {
-  const grid = {
-    cols: Math.floor(width / gridSize),
-    rows: Math.floor(height / gridSize),
-  };
+export const generateRandomPath = (grid: IGrid, gridSize: number, maxIterations: number): IPoint[] => {
   let lastDirection: IDirection = {
     dx: 1,
     dy: 0,
@@ -61,9 +57,7 @@ export const generateRandomPath = (
 
     const direction = selectNextDirection(availableDirections);
 
-    if (!direction) {
-      break;
-    }
+    if (!direction) break;
 
     lastDirection = direction;
     currentPosition.col += direction.dx;

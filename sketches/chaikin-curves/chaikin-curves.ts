@@ -19,7 +19,11 @@ const sketch = () => {
   context.fillStyle = BACKGROUND_COLOR;
   context.fillRect(0, 0, width, height);
 
-  const path = utils.generateRandomPath(width, height, GRID_SIZE, MAX_ITERATIONS);
+  const grid: utils.IGrid = {
+    cols: Math.floor(width / GRID_SIZE),
+    rows: Math.floor(height / GRID_SIZE),
+  };
+  const path = utils.generateRandomPath(grid, GRID_SIZE, MAX_ITERATIONS);
   const smoothPath = utils.applyChaikinCurve(path, CHAIKIN_ITERATIONS);
 
   if (smoothPath.length > 0) {
