@@ -14,35 +14,53 @@ const makeSketchHtmlPath = (sketchName: string) => path.join(makeDistPath(sketch
 
 app.use(express.static(publicPath));
 
+// Helper function to render the main page
+async function renderMainPage(sketchName?: string) {
+  const files = await fs.readdir(sketchesPath, { withFileTypes: true });
+  const dirsWithTimestamps = await Promise.all(
+    files
+      .filter((file) => file.isDirectory())
+      .map(async (dir) => {
+        const dirPath = path.join(sketchesPath, dir.name);
+        const files = await fs.readdir(dirPath);
+        const tsFiles = files.filter((file) => file.endsWith('.ts'));
+        const tsStats = await Promise.all(tsFiles.map((file) => fs.stat(path.join(dirPath, file))));
+        const lastModified = Math.max(...tsStats.map((stat) => stat.mtime.getTime()));
+
+        return {
+          name: dir.name,
+          lastModified,
+        };
+      })
+  );
+
+  const sortedDirs = dirsWithTimestamps.sort((a, b) => a.name.localeCompare(b.name));
+  console.log(sortedDirs);
+
+  const sketchListHtml = render(h(SketchList, { dirs: sortedDirs }));
+  const data = await fs.readFile(path.join(__dirname, './ui/index.html'), 'utf8');
+  const renderedHtml = data
+    .replace('${sketchListPlaceholder}', sketchListHtml)
+    .replace('${initialData}', JSON.stringify({ dirs: sortedDirs }))
+    .replace('${initialSketch}', sketchName || '');
+
+  return renderedHtml;
+}
+
 app.get('/', async (req, res) => {
   try {
-    const files = await fs.readdir(sketchesPath, { withFileTypes: true });
-    const dirsWithTimestamps = await Promise.all(
-      files
-        .filter((file) => file.isDirectory())
-        .map(async (dir) => {
-          const dirPath = path.join(sketchesPath, dir.name);
-          const files = await fs.readdir(dirPath);
-          const tsFiles = files.filter((file) => file.endsWith('.ts'));
-          const tsStats = await Promise.all(tsFiles.map((file) => fs.stat(path.join(dirPath, file))));
-          const lastModified = Math.max(...tsStats.map((stat) => stat.mtime.getTime()));
+    const renderedHtml = await renderMainPage();
+    res.send(renderedHtml);
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).send('Failed to process request');
+  }
+});
 
-          return {
-            name: dir.name,
-            lastModified,
-          };
-        })
-    );
-
-    const sortedDirs = dirsWithTimestamps.sort((a, b) => a.name.localeCompare(b.name));
-    console.log(sortedDirs);
-
-    const sketchListHtml = render(h(SketchList, { dirs: sortedDirs }));
-    const data = await fs.readFile(path.join(__dirname, './ui/index.html'), 'utf8');
-    const renderedHtml = data
-      .replace('${sketchListPlaceholder}', sketchListHtml)
-      .replace('${initialData}', JSON.stringify({ dirs: sortedDirs }));
-
+app.get('/nav/:sketchname', async (req, res) => {
+  try {
+    const sketchName = req.params.sketchname;
+    const renderedHtml = await renderMainPage(sketchName);
     res.send(renderedHtml);
   } catch (err) {
     console.error('Error:', err);
