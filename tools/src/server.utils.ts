@@ -9,10 +9,12 @@ export async function loadCSSModulesMapping() {
     const mappingPath = path.join(__dirname, './ui/css-modules-mapping.json');
     const mappingData = await fs.readFile(mappingPath, 'utf8');
     const mapping = JSON.parse(mappingData);
-    console.log('CSS modules mapping loaded:', mapping);
+    console.log('CSS modules mapping loaded');
+
     return mapping;
   } catch (err) {
     console.error('Error loading CSS modules mapping:', err);
+
     return {};
   }
 }
