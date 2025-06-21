@@ -3,9 +3,9 @@ interface IPoint {
   y: number;
 }
 
-interface IDirection {
-  dx: number;
-  dy: number;
+export interface IGrid {
+  cols: number;
+  rows: number;
 }
 
 interface IGridPosition {
@@ -13,9 +13,9 @@ interface IGridPosition {
   row: number;
 }
 
-export interface IGrid {
-  cols: number;
-  rows: number;
+interface IDirection {
+  dx: number;
+  dy: number;
 }
 
 const DIRECTIONS: readonly IDirection[] = [
