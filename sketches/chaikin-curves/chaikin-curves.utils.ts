@@ -39,29 +39,26 @@ export const generateRandomPath = (grid: IGrid, gridSize: number, maxIterations:
     },
   ];
 
-  // First move is always to the right
-  currentPosition.col += lastDirection.dx;
-  currentPosition.row += lastDirection.dy;
-  path.push({
-    x: currentPosition.col * gridSize,
-    y: currentPosition.row * gridSize,
-  });
-
   // Continue with random directions for remaining moves
-  for (let i = 1; i < maxIterations && currentPosition.col < grid.cols - 1; i++) {
-    const availableDirections = getAvailableDirections({
-      currentPosition,
-      grid,
-      lastDirection,
-    });
+  for (let i = 0; i < maxIterations && currentPosition.col < grid.cols - 1; i++) {
+    if (i === 0) {
+      currentPosition.col += lastDirection.dx;
+      currentPosition.row += lastDirection.dy;
+    } else {
+      const availableDirections = getAvailableDirections({
+        currentPosition,
+        grid,
+        lastDirection,
+      });
 
-    const direction = selectNextDirection(availableDirections);
+      const direction = selectNextDirection(availableDirections);
 
-    if (!direction) break;
+      if (!direction) break;
 
-    lastDirection = direction;
-    currentPosition.col += direction.dx;
-    currentPosition.row += direction.dy;
+      lastDirection = direction;
+      currentPosition.col += direction.dx;
+      currentPosition.row += direction.dy;
+    }
 
     path.push({
       x: currentPosition.col * gridSize,
