@@ -122,8 +122,8 @@ const getPossibleDirections = ({
   grid,
   direction,
 }: {
-  position: { col: number; row: number };
   grid: IGrid;
+  position: IGridPosition;
   direction: IDirection;
 }): IDirection[] => {
   return DIRECTIONS.filter((dir) => {
