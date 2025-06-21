@@ -9,8 +9,8 @@ const MAX_ITERATIONS = 1000;
 const CHAIKIN_ITERATIONS = 3;
 const LINE_WIDTH = 10;
 const PARALLEL_OFFSET = 7;
-const MAX_CONSECUTIVE_STEPS = 4;
-const EDGE_MARGIN = 3; // Grid cells to stay away from left and right edges
+const MAX_CONSECUTIVE_STEPS = 2;
+const EDGE_MARGIN = 3;
 
 const sketch = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
