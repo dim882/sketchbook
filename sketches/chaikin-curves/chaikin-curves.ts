@@ -5,7 +5,7 @@ const LINE_COLOR = '#000000';
 const GRID_CELL_SIZE = 50;
 const MAX_ITERATIONS = 1000;
 const CHAIKIN_ITERATIONS = 3;
-const LINE_WIDTH = 20;
+const LINE_WIDTH = 10;
 
 const sketch = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;

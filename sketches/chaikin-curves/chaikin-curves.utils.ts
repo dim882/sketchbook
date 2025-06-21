@@ -38,12 +38,14 @@ export const generateRandomGridPath = (grid: IGrid, maxIterations: number): IGri
   let direction: IDirection = { dx: 1, dy: 0 }; // Always go right first
   const path: IGridPosition[] = [position];
 
-  for (let i = 0; i < maxIterations && position.col < grid.cols - 1; i++) {
+  for (let i = 0; i < maxIterations && position.col < grid.cols; i++) {
     if (i > 0) {
       const possibleDirections = getPossibleDirections({ grid, position, direction });
       const nextDirection = selectNextDirection(possibleDirections);
 
-      if (!nextDirection) break;
+      if (!nextDirection) {
+        break;
+      }
 
       direction = nextDirection;
     }
@@ -132,7 +134,7 @@ const getPossibleDirections = ({
     const newRow = position.row + dir.dy;
 
     // Check bounds
-    if (newCol < 0 || newCol >= grid.cols || newRow < 0 || newRow >= grid.rows) {
+    if (newCol < 0 || newCol > grid.cols || newRow < 0 || newRow >= grid.rows) {
       return false;
     }
 
@@ -145,10 +147,6 @@ const getPossibleDirections = ({
 };
 
 const selectNextDirection = (availableDirections: IDirection[]): IDirection | undefined => {
-  if (availableDirections.length === 0) {
-    return undefined;
-  }
-
   const weights = availableDirections.map((dir) => {
     if (dir.dx === 1) return 3; // Right: highest weight
     if (dir.dx === -1) return 1; // Left: lowest weight
