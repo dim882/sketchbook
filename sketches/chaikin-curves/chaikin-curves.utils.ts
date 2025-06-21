@@ -8,6 +8,11 @@ interface IDirection {
   dy: number;
 }
 
+interface IGridPosition {
+  col: number;
+  row: number;
+}
+
 export interface IGrid {
   cols: number;
   rows: number;
@@ -22,22 +27,15 @@ const DIRECTIONS: readonly IDirection[] = [
 
 /**
  * Generates a path that starts from the left edge and moves toward the right edge
+ * Returns grid positions (col, row) rather than actual coordinates
  */
-export const generateRandomPath = (grid: IGrid, gridSize: number, maxIterations: number): IPoint[] => {
-  let direction: IDirection = {
-    dx: 1,
-    dy: 0,
-  };
-  let position = {
+export const generateRandomGridPath = (grid: IGrid, maxIterations: number): IGridPosition[] => {
+  let position: IGridPosition = {
     col: 0,
-    row: grid.rows / 2,
+    row: Math.floor(grid.rows / 2),
   };
-  const path: IPoint[] = [
-    {
-      x: position.col * gridSize,
-      y: position.row * gridSize,
-    },
-  ];
+  let direction: IDirection = { dx: 1, dy: 0 }; // Always go right first
+  const path: IGridPosition[] = [position];
 
   // Continue with random directions for remaining moves
   for (let i = 0; i < maxIterations && position.col < grid.cols - 1; i++) {
@@ -50,16 +48,34 @@ export const generateRandomPath = (grid: IGrid, gridSize: number, maxIterations:
       direction = nextDirection;
     }
 
-    position.col += direction.dx;
-    position.row += direction.dy;
+    position = {
+      col: position.col + direction.dx,
+      row: position.row + direction.dy,
+    };
 
-    path.push({
-      x: position.col * gridSize,
-      y: position.row * gridSize,
-    });
+    path.push(position);
   }
 
   return path;
+};
+
+/**
+ * Maps grid positions to actual x,y coordinates
+ */
+export const mapGridPathToCoordinates = (gridPath: IGridPosition[], gridSize: number): IPoint[] => {
+  return gridPath.map((position) => ({
+    x: position.col * gridSize,
+    y: position.row * gridSize,
+  }));
+};
+
+/**
+ * Generates a random path and maps it to coordinates
+ * This is a convenience function that combines the two operations
+ */
+export const generateRandomPath = (grid: IGrid, gridSize: number, maxIterations: number): IPoint[] => {
+  const gridPath = generateRandomGridPath(grid, maxIterations);
+  return mapGridPathToCoordinates(gridPath, gridSize);
 };
 
 export const applyChaikinCurve = (points: IPoint[], iterations: number): IPoint[] => {
