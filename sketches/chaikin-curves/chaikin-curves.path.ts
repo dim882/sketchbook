@@ -14,17 +14,18 @@ const DIRECTIONS: readonly IDirection[] = [
 export const generateRandomGridPath = (
   grid: IGrid,
   maxIterations: number,
-  maxConsecutiveSteps: number
+  maxConsecutiveSteps: number,
+  edgeMargin: number
 ): IGridPosition[] => {
   let position: IGridPosition = {
-    col: 0,
+    col: edgeMargin, // Start edgeMargin cells from the left
     row: Math.floor(grid.rows / 2),
   };
   let direction: IDirection = { dx: 1, dy: 0 }; // Always go right first
   let consecutiveSteps = 1; // Track consecutive steps in current direction
   const path: IGridPosition[] = [position];
 
-  for (let i = 0; i < maxIterations && position.col < grid.cols; i++) {
+  for (let i = 0; i < maxIterations && position.col < grid.cols - edgeMargin; i++) {
     if (i > 0) {
       const possibleDirections = getPossibleDirections({
         grid,
@@ -74,8 +75,13 @@ export const mapGridPathToCoordinates = (gridPath: IGridPosition[], gridSize: nu
  * Generates a random path and maps it to coordinates
  * This is a convenience function that combines the two operations
  */
-export const generateRandomPath = (grid: IGrid, maxIterations: number, maxConsecutiveSteps: number): IPoint[] => {
-  const gridPath = generateRandomGridPath(grid, maxIterations, maxConsecutiveSteps);
+export const generateRandomPath = (
+  grid: IGrid,
+  maxIterations: number,
+  maxConsecutiveSteps: number,
+  edgeMargin: number
+): IPoint[] => {
+  const gridPath = generateRandomGridPath(grid, maxIterations, maxConsecutiveSteps, edgeMargin);
   return mapGridPathToCoordinates(gridPath, grid.cellSize);
 };
 

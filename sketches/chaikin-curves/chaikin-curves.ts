@@ -10,6 +10,7 @@ const CHAIKIN_ITERATIONS = 3;
 const LINE_WIDTH = 10;
 const PARALLEL_OFFSET = 7;
 const MAX_CONSECUTIVE_STEPS = 2;
+const EDGE_MARGIN = 3; // Grid cells to stay away from left and right edges
 
 const sketch = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -28,7 +29,7 @@ const sketch = () => {
     rows: Math.floor(height / GRID_CELL_SIZE),
     cellSize: GRID_CELL_SIZE,
   };
-  const path = Path.generateRandomPath(grid, MAX_ITERATIONS, MAX_CONSECUTIVE_STEPS);
+  const path = Path.generateRandomPath(grid, MAX_ITERATIONS, MAX_CONSECUTIVE_STEPS, EDGE_MARGIN);
   const smoothPath = Drawing.applyChaikinCurve(path, CHAIKIN_ITERATIONS);
   context.lineCap = 'round';
 
