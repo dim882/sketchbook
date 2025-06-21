@@ -2,6 +2,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 // import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import sucrase from '@rollup/plugin-sucrase';
+import postcss from 'rollup-plugin-postcss';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -23,6 +24,16 @@ export default {
       extensions: ['.js', '.ts', '.tsx'],
     }),
     commonjs(),
+    postcss({
+      modules: {
+        generateScopedName: '[name]__[local]___[hash:base64:5]',
+      },
+      extract: true,
+      inject: true,
+      minimize: false,
+      sourceMap: true,
+      extensions: ['.css', '.module.css'],
+    }),
     sucrase({
       exclude: ['node_modules/**'],
       transforms: ['typescript', 'jsx'],

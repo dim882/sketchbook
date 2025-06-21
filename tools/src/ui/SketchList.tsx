@@ -1,6 +1,8 @@
 import { h, FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import { navigateToSketch } from './NavUtils';
+import styles from './SketchList.module.css';
+console.log('hhhhyyyee');
 
 export interface IDir {
   name: string;
@@ -25,22 +27,35 @@ const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
     e.preventDefault();
     navigateToSketch(sketchName);
   };
+  console.log(styles.list);
 
   return (
-    <div class="list">
-      <h1>Sketches</h1>
+    <div class={styles.list}>
+      <h1 class={styles.title}>Sketches</h1>
 
-      <button onClick={handleSort('alpha')}>Alphabetical</button>
-      <button onClick={handleSort('recent')}>Recent</button>
+      <div class={styles.sortButtons}>
+        <button
+          class={`${styles.sortButton} ${sortMethod === 'alpha' ? styles.active : ''}`}
+          onClick={handleSort('alpha')}
+        >
+          Alphabetical
+        </button>
+        <button
+          class={`${styles.sortButton} ${sortMethod === 'recent' ? styles.active : ''}`}
+          onClick={handleSort('recent')}
+        >
+          Recent
+        </button>
+      </div>
 
       <ul>
         {dirs.sort(sortBy(sortMethod)).map((dir) => (
-          <li key={dir.name}>
-            <a href={`/nav/${dir.name}`} onClick={handleSketchClick(dir.name)}>
+          <li key={dir.name} class={styles.listItem}>
+            <a href={`/nav/${dir.name}`} onClick={handleSketchClick(dir.name)} class={styles.link}>
               {dir.name}
             </a>
             &nbsp;
-            <a href={`/sketches/${dir.name}`} target="_blank" rel="noopener noreferrer" class="external-link">
+            <a href={`/sketches/${dir.name}`} target="_blank" rel="noopener noreferrer" class={styles.externalLink}>
               ↗
             </a>
           </li>

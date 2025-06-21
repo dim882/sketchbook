@@ -1054,6 +1054,9 @@ importers:
       '@types/node':
         specifier: ^20.12.11
         version: 20.17.31
+      rollup-plugin-postcss:
+        specifier: ^4.0.2
+        version: 4.0.2(postcss@8.5.3)
 
 packages:
 
