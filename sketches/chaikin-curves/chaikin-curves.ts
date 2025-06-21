@@ -2,7 +2,7 @@ import * as utils from './chaikin-curves.utils';
 
 const BACKGROUND_COLOR = '#ffffff';
 const LINE_COLOR = '#000000';
-const GRID_SIZE = 50;
+const GRID_CELL_SIZE = 50;
 const MAX_ITERATIONS = 1000;
 const CHAIKIN_ITERATIONS = 3;
 const LINE_WIDTH = 20;
@@ -20,10 +20,11 @@ const sketch = () => {
   context.fillRect(0, 0, width, height);
 
   const grid: utils.IGrid = {
-    cols: Math.floor(width / GRID_SIZE),
-    rows: Math.floor(height / GRID_SIZE),
+    cols: Math.floor(width / GRID_CELL_SIZE),
+    rows: Math.floor(height / GRID_CELL_SIZE),
+    cellSize: GRID_CELL_SIZE,
   };
-  const path = utils.generateRandomPath(grid, GRID_SIZE, MAX_ITERATIONS);
+  const path = utils.generateRandomPath(grid, MAX_ITERATIONS);
   const smoothPath = utils.applyChaikinCurve(path, CHAIKIN_ITERATIONS);
 
   if (smoothPath.length > 0) {

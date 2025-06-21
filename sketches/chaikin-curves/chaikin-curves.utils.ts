@@ -6,6 +6,7 @@ interface IPoint {
 export interface IGrid {
   cols: number;
   rows: number;
+  cellSize: number;
 }
 
 interface IGridPosition {
@@ -72,9 +73,9 @@ export const mapGridPathToCoordinates = (gridPath: IGridPosition[], gridSize: nu
  * Generates a random path and maps it to coordinates
  * This is a convenience function that combines the two operations
  */
-export const generateRandomPath = (grid: IGrid, gridSize: number, maxIterations: number): IPoint[] => {
+export const generateRandomPath = (grid: IGrid, maxIterations: number): IPoint[] => {
   const gridPath = generateRandomGridPath(grid, maxIterations);
-  return mapGridPathToCoordinates(gridPath, gridSize);
+  return mapGridPathToCoordinates(gridPath, grid.cellSize);
 };
 
 export const applyChaikinCurve = (points: IPoint[], iterations: number): IPoint[] => {
