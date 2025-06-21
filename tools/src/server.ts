@@ -9,8 +9,8 @@ const app = express();
 const port = 2000;
 const publicPath = path.join(__dirname, '../public');
 const sketchesPath = path.join(__dirname, '../../sketches');
-const makeSketchPath = (sketchName: string) => path.join(__dirname, '../../sketches', sketchName, `${sketchName}.html`);
 const makeDistPath = (sketchName: string) => path.join(__dirname, '../../sketches', sketchName, 'dist');
+const makeSketchHtmlPath = (sketchName: string) => path.join(makeDistPath(sketchName), `${sketchName}.html`);
 
 app.use(express.static(publicPath));
 
@@ -56,7 +56,8 @@ app.get('/sketches/:sketchName', (req, res) => {
     return res.status(404).send('Sketch name not provided');
   }
 
-  const sketchPath = makeSketchPath(sketchName);
+  const sketchPath = makeSketchHtmlPath(sketchName);
+  console.log({ sketchPath });
 
   res.sendFile(sketchPath, (err) => {
     if (err) {
