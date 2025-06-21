@@ -28,16 +28,14 @@ export const generateRandomPath = (
     cols: Math.floor(width / gridSize),
     rows: Math.floor(height / gridSize),
   };
-
+  let lastDirection: IDirection = {
+    dx: 1,
+    dy: 0,
+  };
   let currentPosition = {
     col: 0,
     row: Math.floor(Math.random() * grid.rows),
   };
-  let lastDirection: IDirection = {
-    dx: 1,
-    dy: 0,
-  }; // Start with right direction
-
   const path: IPoint[] = [
     {
       x: currentPosition.col * gridSize,
@@ -48,7 +46,10 @@ export const generateRandomPath = (
   // First move is always to the right
   currentPosition.col += lastDirection.dx;
   currentPosition.row += lastDirection.dy;
-  path.push({ x: currentPosition.col * gridSize, y: currentPosition.row * gridSize });
+  path.push({
+    x: currentPosition.col * gridSize,
+    y: currentPosition.row * gridSize,
+  });
 
   // Continue with random directions for remaining moves
   for (let i = 1; i < maxIterations && currentPosition.col < grid.cols - 1; i++) {
@@ -57,7 +58,6 @@ export const generateRandomPath = (
       grid,
       lastDirection,
     });
-    console.log(availableDirections);
 
     const direction = selectNextDirection(availableDirections);
 
@@ -69,7 +69,10 @@ export const generateRandomPath = (
     currentPosition.col += direction.dx;
     currentPosition.row += direction.dy;
 
-    path.push({ x: currentPosition.col * gridSize, y: currentPosition.row * gridSize });
+    path.push({
+      x: currentPosition.col * gridSize,
+      y: currentPosition.row * gridSize,
+    });
   }
 
   return path;
@@ -124,9 +127,9 @@ const getAvailableDirections = ({
   grid: { cols: number; rows: number };
   lastDirection: IDirection;
 }): IDirection[] => {
-  return DIRECTIONS.filter((dir) => {
-    const newCol = currentPosition.col + dir.dx;
-    const newRow = currentPosition.row + dir.dy;
+  return DIRECTIONS.filter((direction) => {
+    const newCol = currentPosition.col + direction.dx;
+    const newRow = currentPosition.row + direction.dy;
 
     // Check bounds
     if (newCol < 0 || newCol >= grid.cols || newRow < 0 || newRow >= grid.rows) {
@@ -134,8 +137,8 @@ const getAvailableDirections = ({
     }
 
     // Prevent 180-degree turns
-    if (dir.dx !== 0 && dir.dx === -lastDirection.dx) return false;
-    if (dir.dy !== 0 && dir.dy === -lastDirection.dy) return false;
+    if (direction.dx !== 0 && direction.dx === -lastDirection.dx) return false;
+    if (direction.dy !== 0 && direction.dy === -lastDirection.dy) return false;
 
     return true;
   });
