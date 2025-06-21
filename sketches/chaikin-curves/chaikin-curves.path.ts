@@ -1,4 +1,4 @@
-import { IDirection, IGrid, IGridPosition, IPoint } from './chaikin-curves.types';
+import { IDirection, IGrid, IGridPosition, IPoint, IVector } from './chaikin-curves.types';
 
 const DIRECTIONS: readonly IDirection[] = [
   { dx: 1, dy: 0 }, // Right
@@ -61,46 +61,6 @@ export const generateRandomPath = (grid: IGrid, maxIterations: number): IPoint[]
   return mapGridPathToCoordinates(gridPath, grid.cellSize);
 };
 
-export const applyChaikinCurve = (points: IPoint[], iterations: number): IPoint[] => {
-  if (points.length < 2) {
-    return points;
-  }
-
-  let result = [...points];
-
-  for (let iter = 0; iter < iterations; iter++) {
-    const newPoints: IPoint[] = [];
-
-    newPoints.push(result[0]);
-
-    // Apply Chaikin's algorithm to each pair of points
-    for (let i = 0; i < result.length - 1; i++) {
-      const p0 = result[i];
-      const p1 = result[i + 1];
-
-      // Create two new points at 1/4 and 3/4 positions between p0 and p1
-      const q = {
-        x: p0.x * 0.75 + p1.x * 0.25,
-        y: p0.y * 0.75 + p1.y * 0.25,
-      };
-      const r = {
-        x: p0.x * 0.25 + p1.x * 0.75,
-        y: p0.y * 0.25 + p1.y * 0.75,
-      };
-
-      newPoints.push(q);
-      newPoints.push(r);
-    }
-
-    // Keep the last point
-    newPoints.push(result[result.length - 1]);
-
-    result = newPoints;
-  }
-
-  return result;
-};
-
 const getPossibleDirections = ({
   position,
   grid,
@@ -149,3 +109,57 @@ const selectNextDirection = (availableDirections: IDirection[]): IDirection | un
   // Fallback in case of floating point inaccuracies, though it's unlikely to be reached.
   return availableDirections[availableDirections.length - 1];
 };
+
+export function calculateParallelPath(path: IPoint[], offset: number, side: 'left' | 'right'): IPoint[] {
+  if (path.length < 2) return path;
+
+  const parallelPath: IPoint[] = [];
+
+  for (let i = 0; i < path.length; i++) {
+    let perpendicular: IVector;
+
+    if (i === 0) {
+      // First point: use direction to next point
+      const dx = path[1].x - path[0].x;
+      const dy = path[1].y - path[0].y;
+      perpendicular = { x: -dy, y: dx };
+    } else if (i === path.length - 1) {
+      // Last point: use direction from previous point
+      const dx = path[i].x - path[i - 1].x;
+      const dy = path[i].y - path[i - 1].y;
+      perpendicular = { x: -dy, y: dx };
+    } else {
+      // Middle points: average the directions from previous and to next
+      const dx1 = path[i].x - path[i - 1].x;
+      const dy1 = path[i].y - path[i - 1].y;
+      const dx2 = path[i + 1].x - path[i].x;
+      const dy2 = path[i + 1].y - path[i].y;
+
+      // Average the perpendiculars
+      const perp1 = { x: -dy1, y: dx1 };
+      const perp2 = { x: -dy2, y: dx2 };
+      perpendicular = {
+        x: (perp1.x + perp2.x) / 2,
+        y: (perp1.y + perp2.y) / 2,
+      };
+    }
+
+    // Normalize the perpendicular vector
+    const length = Math.sqrt(perpendicular.x * perpendicular.x + perpendicular.y * perpendicular.y);
+    if (length > 0) {
+      perpendicular.x /= length;
+      perpendicular.y /= length;
+    }
+
+    // Apply offset in the correct direction
+    const offsetMultiplier = side === 'left' ? -1 : 1;
+    const offsetPoint = {
+      x: path[i].x + perpendicular.x * offset * offsetMultiplier,
+      y: path[i].y + perpendicular.y * offset * offsetMultiplier,
+    };
+
+    parallelPath.push(offsetPoint);
+  }
+
+  return parallelPath;
+}

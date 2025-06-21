@@ -28,12 +28,12 @@ const sketch = () => {
     cellSize: GRID_CELL_SIZE,
   };
   const path = Path.generateRandomPath(grid, MAX_ITERATIONS);
-  const smoothPath = Path.applyChaikinCurve(path, CHAIKIN_ITERATIONS);
+  const smoothPath = Drawing.applyChaikinCurve(path, CHAIKIN_ITERATIONS);
   context.lineCap = 'round';
 
   if (smoothPath.length > 0) {
-    const leftParallelPath = Drawing.calculateParallelPath(smoothPath, PARALLEL_OFFSET, 'left');
-    const rightParallelPath = Drawing.calculateParallelPath(smoothPath, PARALLEL_OFFSET, 'right');
+    const leftParallelPath = Path.calculateParallelPath(smoothPath, PARALLEL_OFFSET, 'left');
+    const rightParallelPath = Path.calculateParallelPath(smoothPath, PARALLEL_OFFSET, 'right');
 
     for (let i = 1; i < smoothPath.length; i++) {
       Drawing.drawLine(context, smoothPath, i, LINE_COLOR, LINE_WIDTH);
