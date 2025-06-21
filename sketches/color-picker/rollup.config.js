@@ -2,6 +2,7 @@ import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { babel } from '@rollup/plugin-babel';
 import postcss from 'rollup-plugin-postcss';
+import copy from 'rollup-plugin-copy';
 
 const commonPlugins = [
   nodeResolve(),
@@ -18,6 +19,9 @@ const commonPlugins = [
     extract: 'bundle.css',
     minimize: true,
     sourceMap: true,
+  }),
+  copy({
+    targets: [{ src: '*.html', dest: 'dist' }],
   }),
 ];
 

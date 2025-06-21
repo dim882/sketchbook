@@ -1,3 +1,4 @@
+import copy from 'rollup-plugin-copy';
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
@@ -8,5 +9,12 @@ export default {
     format: 'module',
     sourcemap: false,
   },
-  plugins: [nodeResolve(), typescript()],
+  plugins: [nodeResolve(), typescript(),
+    copy({
+      targets: [
+        { src: 'src/*.css', dest: 'dist' },
+        { src: 'src/*.html', dest: 'dist' },
+      ],
+    }),
+],
 };
