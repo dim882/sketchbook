@@ -1,5 +1,8 @@
 import { h, FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
+import { navigateToSketch } from './NavUtils';
+
+console.log('fooooo');
 
 export interface IDir {
   name: string;
@@ -14,24 +17,6 @@ type SortMethod = 'recent' | 'alpha';
 
 function sortBy(sortMethod: string): (a: IDir, b: IDir) => number {
   return (a, b) => (sortMethod === 'recent' ? b.lastModified - a.lastModified : a.name.localeCompare(b.name));
-}
-
-// Shared function to load a sketch into the iframe
-export function loadSketch(sketchName: string) {
-  const iframe = document.querySelector('iframe[name="sketchFrame"]') as HTMLIFrameElement;
-  if (iframe) {
-    iframe.src = `/sketches/${sketchName}`;
-  }
-}
-
-// Function to update URL and load sketch
-function navigateToSketch(sketchName: string) {
-  // Update URL without page reload
-  const newUrl = `/nav/${sketchName}`;
-  window.history.pushState({ sketchName }, '', newUrl);
-
-  // Load the sketch
-  loadSketch(sketchName);
 }
 
 const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {

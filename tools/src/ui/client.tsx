@@ -1,9 +1,13 @@
 import { h, hydrate } from 'preact';
-import SketchList, { IDir, loadSketch } from './SketchList';
+import SketchList, { IDir } from './SketchList';
+import { loadSketch } from './NavUtils';
 
 declare global {
   interface Window {
-    __INITIAL_DATA__: { dirs: IDir[]; initialSketch: string | null };
+    __INITIAL_DATA__: {
+      dirs: IDir[];
+      initialSketch: string | null;
+    };
   }
 }
 
@@ -16,6 +20,7 @@ window.addEventListener('popstate', (event) => {
   } else {
     // If no sketch in state, clear the iframe
     const iframe = document.querySelector('iframe[name="sketchFrame"]') as HTMLIFrameElement;
+
     if (iframe) {
       iframe.src = 'about:blank';
     }
