@@ -28,28 +28,16 @@ const sketch = () => {
   const smoothPath = utils.applyChaikinCurve(path, CHAIKIN_ITERATIONS);
 
   if (smoothPath.length > 0) {
-    context.lineCap = 'round';
+    context.strokeStyle = LINE_COLOR;
+    context.lineWidth = LINE_WIDTH;
+    context.beginPath();
+    context.moveTo(smoothPath[0].x, smoothPath[0].y);
 
     for (let i = 1; i < smoothPath.length; i++) {
-      drawLine(context, smoothPath, i, BACKGROUND_COLOR, 15);
-      drawLine(context, smoothPath, i, LINE_COLOR, LINE_WIDTH);
+      context.lineTo(smoothPath[i].x, smoothPath[i].y);
     }
+    context.stroke();
   }
 };
 
 window.addEventListener('load', sketch);
-
-function drawLine(
-  context: CanvasRenderingContext2D,
-  smoothPath: utils.IPoint[],
-  i: number,
-  strokeStyle: string | CanvasGradient | CanvasPattern,
-  lineWidth: number
-) {
-  context.strokeStyle = strokeStyle;
-  context.lineWidth = lineWidth;
-  context.beginPath();
-  context.moveTo(smoothPath[i - 1].x, smoothPath[i - 1].y);
-  context.lineTo(smoothPath[i].x, smoothPath[i].y);
-  context.stroke();
-}
