@@ -9,12 +9,14 @@ export default {
     format: 'module',
     sourcemap: true,
   },
-  plugins: [nodeResolve(), typescript(),
+  plugins: [
+    nodeResolve(),
+    typescript(),
     copy({
       targets: [
-        { src: 'src/*.css', dest: 'dist' },
-        { src: 'src/*.html', dest: 'dist' },
+        { src: './*.css', dest: 'dist' },
+        { src: './*.html', dest: 'dist' },
       ],
     }),
-],
+  ],
 };
