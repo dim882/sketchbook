@@ -37,10 +37,9 @@ export const generateRandomGridPath = (grid: IGrid, maxIterations: number): IGri
   let direction: IDirection = { dx: 1, dy: 0 }; // Always go right first
   const path: IGridPosition[] = [position];
 
-  // Continue with random directions for remaining moves
   for (let i = 0; i < maxIterations && position.col < grid.cols - 1; i++) {
     if (i > 0) {
-      const possibleDirections = getPossibleDirections({ grid, currentPosition: position, lastDirection: direction });
+      const possibleDirections = getPossibleDirections({ grid, position, direction });
       const nextDirection = selectNextDirection(possibleDirections);
 
       if (!nextDirection) break;
@@ -119,17 +118,17 @@ export const applyChaikinCurve = (points: IPoint[], iterations: number): IPoint[
 };
 
 const getPossibleDirections = ({
-  currentPosition,
+  position,
   grid,
-  lastDirection,
+  direction,
 }: {
-  currentPosition: { col: number; row: number };
-  grid: { cols: number; rows: number };
-  lastDirection: IDirection;
+  position: { col: number; row: number };
+  grid: IGrid;
+  direction: IDirection;
 }): IDirection[] => {
-  return DIRECTIONS.filter((direction) => {
-    const newCol = currentPosition.col + direction.dx;
-    const newRow = currentPosition.row + direction.dy;
+  return DIRECTIONS.filter((dir) => {
+    const newCol = position.col + dir.dx;
+    const newRow = position.row + dir.dy;
 
     // Check bounds
     if (newCol < 0 || newCol >= grid.cols || newRow < 0 || newRow >= grid.rows) {
@@ -137,8 +136,8 @@ const getPossibleDirections = ({
     }
 
     // Prevent 180-degree turns
-    if (direction.dx !== 0 && direction.dx === -lastDirection.dx) return false;
-    if (direction.dy !== 0 && direction.dy === -lastDirection.dy) return false;
+    if (dir.dx !== 0 && dir.dx === -direction.dx) return false;
+    if (dir.dy !== 0 && dir.dy === -direction.dy) return false;
 
     return true;
   });
