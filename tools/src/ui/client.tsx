@@ -3,8 +3,7 @@ import SketchList, { IDir, loadSketch } from './SketchList';
 
 declare global {
   interface Window {
-    __INITIAL_DATA__: { dirs: IDir[] };
-    __INITIAL_SKETCH__: string;
+    __INITIAL_DATA__: { dirs: IDir[]; initialSketch: string | null };
   }
 }
 
@@ -24,8 +23,8 @@ window.addEventListener('popstate', (event) => {
 });
 
 // Load initial sketch if provided
-if (window.__INITIAL_SKETCH__) {
-  loadSketch(window.__INITIAL_SKETCH__);
+if (initialData.initialSketch) {
+  loadSketch(initialData.initialSketch);
 }
 
 hydrate(<SketchList dirs={initialData.dirs} />, document.getElementById('sketchList') as HTMLElement);

@@ -41,8 +41,7 @@ async function renderMainPage(sketchName?: string) {
   const data = await fs.readFile(path.join(__dirname, './ui/index.html'), 'utf8');
   const renderedHtml = data
     .replace('${sketchListPlaceholder}', sketchListHtml)
-    .replace('${initialData}', JSON.stringify({ dirs: sortedDirs }))
-    .replace('${initialSketch}', sketchName || '');
+    .replace('${initialData}', JSON.stringify({ dirs: sortedDirs, initialSketch: sketchName || null }));
 
   return renderedHtml;
 }
