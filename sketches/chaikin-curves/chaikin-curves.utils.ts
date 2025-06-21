@@ -41,24 +41,17 @@ export const generateRandomPath = (grid: IGrid, gridSize: number, maxIterations:
 
   // Continue with random directions for remaining moves
   for (let i = 0; i < maxIterations && currentPosition.col < grid.cols - 1; i++) {
-    if (i === 0) {
-      currentPosition.col += lastDirection.dx;
-      currentPosition.row += lastDirection.dy;
-    } else {
-      const availableDirections = getAvailableDirections({
-        currentPosition,
-        grid,
-        lastDirection,
-      });
-
-      const direction = selectNextDirection(availableDirections);
+    if (i > 0) {
+      const possibleDirections = getPossibleDirections({ grid, currentPosition, lastDirection });
+      const direction = selectNextDirection(possibleDirections);
 
       if (!direction) break;
 
       lastDirection = direction;
-      currentPosition.col += direction.dx;
-      currentPosition.row += direction.dy;
     }
+
+    currentPosition.col += lastDirection.dx;
+    currentPosition.row += lastDirection.dy;
 
     path.push({
       x: currentPosition.col * gridSize,
@@ -109,7 +102,7 @@ export const applyChaikinCurve = (points: IPoint[], iterations: number): IPoint[
   return result;
 };
 
-const getAvailableDirections = ({
+const getPossibleDirections = ({
   currentPosition,
   grid,
   lastDirection,
