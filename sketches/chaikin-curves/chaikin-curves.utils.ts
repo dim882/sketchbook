@@ -30,7 +30,7 @@ export const generateRandomPath = (grid: IGrid, gridSize: number, maxIterations:
   };
   let currentPosition = {
     col: 0,
-    row: Math.floor(Math.random() * grid.rows),
+    row: grid.rows / 2,
   };
   const path: IPoint[] = [
     {
