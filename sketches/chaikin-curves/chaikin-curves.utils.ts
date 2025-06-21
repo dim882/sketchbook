@@ -24,38 +24,38 @@ const DIRECTIONS: readonly IDirection[] = [
  * Generates a path that starts from the left edge and moves toward the right edge
  */
 export const generateRandomPath = (grid: IGrid, gridSize: number, maxIterations: number): IPoint[] => {
-  let lastDirection: IDirection = {
+  let direction: IDirection = {
     dx: 1,
     dy: 0,
   };
-  let currentPosition = {
+  let position = {
     col: 0,
     row: grid.rows / 2,
   };
   const path: IPoint[] = [
     {
-      x: currentPosition.col * gridSize,
-      y: currentPosition.row * gridSize,
+      x: position.col * gridSize,
+      y: position.row * gridSize,
     },
   ];
 
   // Continue with random directions for remaining moves
-  for (let i = 0; i < maxIterations && currentPosition.col < grid.cols - 1; i++) {
+  for (let i = 0; i < maxIterations && position.col < grid.cols - 1; i++) {
     if (i > 0) {
-      const possibleDirections = getPossibleDirections({ grid, currentPosition, lastDirection });
-      const direction = selectNextDirection(possibleDirections);
+      const possibleDirections = getPossibleDirections({ grid, currentPosition: position, lastDirection: direction });
+      const nextDirection = selectNextDirection(possibleDirections);
 
-      if (!direction) break;
+      if (!nextDirection) break;
 
-      lastDirection = direction;
+      direction = nextDirection;
     }
 
-    currentPosition.col += lastDirection.dx;
-    currentPosition.row += lastDirection.dy;
+    position.col += direction.dx;
+    position.row += direction.dy;
 
     path.push({
-      x: currentPosition.col * gridSize,
-      y: currentPosition.row * gridSize,
+      x: position.col * gridSize,
+      y: position.row * gridSize,
     });
   }
 
