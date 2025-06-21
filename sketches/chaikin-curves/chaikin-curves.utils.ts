@@ -3,6 +3,11 @@ export interface IPoint {
   y: number;
 }
 
+interface IVector {
+  x: number;
+  y: number;
+}
+
 export interface IGrid {
   cols: number;
   rows: number;
@@ -190,7 +195,7 @@ export function calculateParallelPath(path: IPoint[], offset: number, side: 'lef
   const parallelPath: IPoint[] = [];
 
   for (let i = 0; i < path.length; i++) {
-    let perpendicular: { x: number; y: number };
+    let perpendicular: IVector;
 
     if (i === 0) {
       // First point: use direction to next point
