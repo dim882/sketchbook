@@ -17,15 +17,18 @@ export const generateRandomGridPath = (
   maxConsecutiveSteps: number,
   edgeMargin: number
 ): IGridPosition[] => {
-  let position: IGridPosition = {
+  const startPosition: IGridPosition = {
     col: edgeMargin, // Start edgeMargin cells from the left
     row: Math.floor(grid.rows / 2),
   };
+
+  let position: IGridPosition = { ...startPosition };
   let direction: IDirection = { dx: 1, dy: 0 }; // Always go right first
   let consecutiveSteps = 1; // Track consecutive steps in current direction
+  let hasReachedRightEdge = false; // Track if we've reached the right edge
   const path: IGridPosition[] = [position];
 
-  for (let i = 0; i < maxIterations && position.col < grid.cols - edgeMargin; i++) {
+  for (let i = 0; i < maxIterations; i++) {
     if (i > 0) {
       const possibleDirections = getPossibleDirections({
         grid,
@@ -33,8 +36,10 @@ export const generateRandomGridPath = (
         direction,
         consecutiveSteps,
         maxConsecutiveSteps,
+        hasReachedRightEdge,
+        startPosition,
       });
-      const nextDirection = selectNextDirection(possibleDirections);
+      const nextDirection = selectNextDirection(possibleDirections, hasReachedRightEdge);
 
       if (!nextDirection) {
         break;
@@ -56,6 +61,16 @@ export const generateRandomGridPath = (
     };
 
     path.push(position);
+
+    // Check if we've reached the right edge
+    if (!hasReachedRightEdge && position.col >= grid.cols - edgeMargin) {
+      hasReachedRightEdge = true;
+    }
+
+    // Check if we've returned to the starting point
+    if (hasReachedRightEdge && position.col === startPosition.col && position.row === startPosition.row) {
+      break;
+    }
   }
 
   return path;
@@ -91,12 +106,16 @@ const getPossibleDirections = ({
   direction,
   consecutiveSteps,
   maxConsecutiveSteps,
+  hasReachedRightEdge,
+  startPosition,
 }: {
   grid: IGrid;
   position: IGridPosition;
   direction: IDirection;
   consecutiveSteps: number;
   maxConsecutiveSteps: number;
+  hasReachedRightEdge: boolean;
+  startPosition: IGridPosition;
 }): IDirection[] => {
   return DIRECTIONS.filter((dir) => {
     const newCol = position.col + dir.dx;
@@ -120,11 +139,22 @@ const getPossibleDirections = ({
   });
 };
 
-const selectNextDirection = (availableDirections: IDirection[]): IDirection | undefined => {
+const selectNextDirection = (
+  availableDirections: IDirection[],
+  hasReachedRightEdge: boolean
+): IDirection | undefined => {
   const weights = availableDirections.map((dir) => {
-    if (dir.dx === 1) return 3; // Right: highest weight
-    if (dir.dx === -1) return 1; // Left: lowest weight
-    return 2; // Up/Down: medium weight
+    if (hasReachedRightEdge) {
+      // On return journey, favor going left
+      if (dir.dx === -1) return 3; // Left: highest weight
+      if (dir.dx === 1) return 1; // Right: lowest weight
+      return 2; // Up/Down: medium weight
+    } else {
+      // On outward journey, favor going right
+      if (dir.dx === 1) return 3; // Right: highest weight
+      if (dir.dx === -1) return 1; // Left: lowest weight
+      return 2; // Up/Down: medium weight
+    }
   });
 
   const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
