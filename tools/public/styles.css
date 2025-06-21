@@ -21,6 +21,36 @@ body {
   padding-right: 20px;
 }
 
+.list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.list li a {
+  text-decoration: none;
+  color: #333;
+}
+
+.list li a:hover {
+  text-decoration: underline;
+}
+
+.external-link {
+  font-size: 12px;
+  color: #666;
+  text-decoration: none;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+.external-link:hover {
+  background-color: #f0f0f0;
+  text-decoration: none;
+}
+
 .preview {
   flex-grow: 1;
 }

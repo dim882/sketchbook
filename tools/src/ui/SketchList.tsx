@@ -2,8 +2,6 @@ import { h, FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import { navigateToSketch } from './NavUtils';
 
-console.log('fooooo');
-
 export interface IDir {
   name: string;
   lastModified: number;
@@ -40,6 +38,10 @@ const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
           <li key={dir.name}>
             <a href={`/nav/${dir.name}`} onClick={handleSketchClick(dir.name)}>
               {dir.name}
+            </a>
+            &nbsp;
+            <a href={`/sketches/${dir.name}`} target="_blank" rel="noopener noreferrer" class="external-link">
+              ↗
             </a>
           </li>
         ))}
