@@ -1,5 +1,6 @@
-import * as utils from './chaikin-curves.utils';
-import { calculateParallelPath, drawLine } from './chaikin-curves.utils';
+import * as Path from './chaikin-curves.path';
+import * as Drawing from './chaikin-curves.drawing';
+import { IGrid } from './chaikin-curves.types';
 
 const BACKGROUND_COLOR = '#ffffff';
 const LINE_COLOR = '#000000';
@@ -21,25 +22,23 @@ const sketch = () => {
   context.fillStyle = BACKGROUND_COLOR;
   context.fillRect(0, 0, width, height);
 
-  const grid: utils.IGrid = {
+  const grid: IGrid = {
     cols: Math.floor(width / GRID_CELL_SIZE),
     rows: Math.floor(height / GRID_CELL_SIZE),
     cellSize: GRID_CELL_SIZE,
   };
-  const path = utils.generateRandomPath(grid, MAX_ITERATIONS);
-  const smoothPath = utils.applyChaikinCurve(path, CHAIKIN_ITERATIONS);
+  const path = Path.generateRandomPath(grid, MAX_ITERATIONS);
+  const smoothPath = Path.applyChaikinCurve(path, CHAIKIN_ITERATIONS);
   context.lineCap = 'round';
 
   if (smoothPath.length > 0) {
-    // Calculate parallel paths
-    const leftParallelPath = calculateParallelPath(smoothPath, PARALLEL_OFFSET, 'left');
-    const rightParallelPath = calculateParallelPath(smoothPath, PARALLEL_OFFSET, 'right');
+    const leftParallelPath = Drawing.calculateParallelPath(smoothPath, PARALLEL_OFFSET, 'left');
+    const rightParallelPath = Drawing.calculateParallelPath(smoothPath, PARALLEL_OFFSET, 'right');
 
-    // Draw main path on top
     for (let i = 1; i < smoothPath.length; i++) {
-      drawLine(context, smoothPath, i, LINE_COLOR, LINE_WIDTH);
-      drawLine(context, leftParallelPath, i, BACKGROUND_COLOR, LINE_WIDTH / 2);
-      drawLine(context, rightParallelPath, i, BACKGROUND_COLOR, LINE_WIDTH / 2);
+      Drawing.drawLine(context, smoothPath, i, LINE_COLOR, LINE_WIDTH);
+      Drawing.drawLine(context, leftParallelPath, i, BACKGROUND_COLOR, LINE_WIDTH / 2);
+      Drawing.drawLine(context, rightParallelPath, i, BACKGROUND_COLOR, LINE_WIDTH / 2);
     }
   }
 };
