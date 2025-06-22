@@ -1,10 +1,4 @@
-import * as Boid from './Boid';
 import * as utils from './boids.utils';
-
-type IBoidPaths = {
-  x: number;
-  y: number;
-}[][];
 
 const BACKGROUND_COLOR = '#fcfaf7';
 const BOID_COUNT = 500;
@@ -25,7 +19,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const context = canvas.getContext('2d');
 
   let flock = utils.createFlock(BOID_COUNT, canvas.width, canvas.height, prng);
-  const boidPaths: IBoidPaths = flock.map(() => []);
+  const boidPaths: utils.IBoidPaths = flock.map(() => []);
 
   function animate() {
     if (!context) return;
@@ -46,19 +40,7 @@ window.addEventListener('DOMContentLoaded', () => {
         boidPaths[index].shift();
       }
 
-      context.beginPath();
-      context.strokeStyle = newBoid.color;
-      context.lineWidth = 0.5;
-
-      if (boidPaths[index].length > 1) {
-        context.moveTo(boidPaths[index][0].x, boidPaths[index][0].y);
-
-        for (let i = 1; i < boidPaths[index].length; i++) {
-          context.lineTo(boidPaths[index][i].x, boidPaths[index][i].y);
-        }
-      }
-
-      context.stroke();
+      utils.drawWoim(context, newBoid, boidPaths, index);
 
       return newBoid;
     });

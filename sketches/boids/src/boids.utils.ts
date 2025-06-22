@@ -5,6 +5,27 @@ import { IVector } from './Vector';
 
 export type PseudoRandomNumberGenerator = () => number;
 
+export type IBoidPaths = {
+  x: number;
+  y: number;
+}[][];
+
+export function drawWoim(context: CanvasRenderingContext2D, newBoid: Boid.IBoid, boidPaths: IBoidPaths, index: number) {
+  context.beginPath();
+  context.strokeStyle = newBoid.color;
+  context.lineWidth = 0.5;
+
+  if (boidPaths[index].length > 1) {
+    context.moveTo(boidPaths[index][0].x, boidPaths[index][0].y);
+
+    for (let i = 1; i < boidPaths[index].length; i++) {
+      context.lineTo(boidPaths[index][i].x, boidPaths[index][i].y);
+    }
+  }
+
+  context.stroke();
+}
+
 export const createFlock = (
   count: number,
   width: number,
