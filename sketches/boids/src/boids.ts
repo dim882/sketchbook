@@ -51,7 +51,6 @@ window.addEventListener('DOMContentLoaded', () => {
       let newBoid = utils.flock(boid, flock, flockParams, width, height);
 
       newBoid = Boid.update(newBoid);
-      newBoid = Boid.wrap(newBoid, width, height);
 
       boidPaths[index].push(newBoid.position);
 

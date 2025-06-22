@@ -55,25 +55,3 @@ export const update = (boid: IBoid): IBoid => {
     acceleration: Vector.create(0, 0),
   };
 };
-
-export const wrap = (boid: IBoid, width: number, height: number): IBoid => {
-  let x = boid.position.x;
-  let y = boid.position.y;
-
-  if (boid.position.x < 0) {
-    x = 0;
-  } else if (boid.position.x > width) {
-    x = width;
-  }
-
-  if (boid.position.y < 0) {
-    y = 0;
-  } else if (boid.position.y > height) {
-    y = height;
-  }
-
-  return {
-    ...boid,
-    position: Vector.create(x, y),
-  };
-};
