@@ -11,15 +11,7 @@ export interface IBoid {
   color: string;
 }
 
-export interface IBoidCreateArgs {
-  position: IVector;
-  velocity?: IVector;
-  acceleration?: IVector;
-  maxSpeed?: number;
-  maxForce?: number;
-  size?: number;
-  color?: string;
-}
+export type IBoidCreateArgs = Pick<IBoid, 'position'> & Partial<IBoid>;
 
 export const create = ({
   position,
