@@ -34,7 +34,6 @@ async function initializeServer() {
         paths.sketches(),
         paths.uiIndex(),
         SketchListWithStyles,
-        styles,
         req.params.sketchname
       );
       res.send(renderedHtml);

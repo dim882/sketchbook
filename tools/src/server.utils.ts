@@ -35,8 +35,7 @@ export async function loadCSSModulesMapping() {
   }
 }
 
-// Helper function to get sketch directories with timestamps
-export async function getSketchDirs(sketchesPath: string) {
+export async function getSketchDirsData(sketchesPath: string) {
   const files = await fs.readdir(sketchesPath, { withFileTypes: true });
   const dirsWithTimestamps = await Promise.all(
     files
@@ -58,23 +57,25 @@ export async function getSketchDirs(sketchesPath: string) {
   return dirsWithTimestamps.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-// Helper function to render the main page
 export async function renderMainPage(
   sketchesPath: string,
   htmlTemplatePath: string,
   SketchListComponent: any,
-  styles: any,
   sketchName?: string
 ) {
-  const sortedDirs = await getSketchDirs(sketchesPath);
+  const sortedDirs = await getSketchDirsData(sketchesPath);
 
   // Create SketchList with processed styles
   const sketchListHtml = render(h(SketchListComponent, { dirs: sortedDirs }));
 
   const data = await fs.readFile(htmlTemplatePath, 'utf8');
-  const renderedHtml = data
-    .replace('${sketchListPlaceholder}', sketchListHtml)
-    .replace('${initialData}', JSON.stringify({ dirs: sortedDirs, initialSketch: sketchName || null }));
+  const renderedHtml = data.replace('${sketchListPlaceholder}', sketchListHtml).replace(
+    '${initialData}',
+    JSON.stringify({
+      dirs: sortedDirs,
+      initialSketch: sketchName || null,
+    })
+  );
 
   return renderedHtml;
 }
