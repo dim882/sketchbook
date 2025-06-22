@@ -2,7 +2,7 @@ import * as utils from './boids.utils';
 
 const BACKGROUND_COLOR = '#fcfaf7';
 const BOID_COUNT = 500;
-const PATH_LENGTH_LIMIT = 20;
+const WOIM_LENGTH = 20;
 const FLOCK_PARAMS = {
   separationDist: 100,
   alignDist: 50,
@@ -33,7 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
     flock = flock.map((boid, index) => {
       const newBoid = utils.flock(boid, flock, FLOCK_PARAMS, width, height);
 
-      boidPaths = utils.updateBoidPath(boidPaths, index, newBoid.position, PATH_LENGTH_LIMIT);
+      boidPaths = utils.updateBoidPath(boidPaths, index, newBoid.position, WOIM_LENGTH);
 
       utils.drawWoim(context, newBoid, boidPaths, index);
 
