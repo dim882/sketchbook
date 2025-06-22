@@ -8,12 +8,12 @@ export interface FlockParams {
 }
 
 export const FLOCK_PARAMS: FlockParams = {
-  separationDist: 100,
-  alignDist: 50,
-  cohesionDist: 50,
-  separationWeight: 1.5,
-  alignmentWeight: 1,
-  cohesionWeight: 1,
+  separationDist: {{separationDist}},
+  alignDist: {{alignDist}},
+  cohesionDist: {{cohesionDist}},
+  separationWeight: {{separationWeight}},
+  alignmentWeight: {{alignmentWeight}},
+  cohesionWeight: {{cohesionWeight}},
 };
 
 export const BOID_COUNT = 500;

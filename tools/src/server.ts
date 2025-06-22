@@ -91,7 +91,33 @@ async function initializeServer() {
       const paramsPath = path.join(sketchesPath, sketchName, 'src', `${sketchName}.params.ts`);
 
       const fileContent = await fs.readFile(paramsPath, 'utf-8');
-      res.json({ content: fileContent });
+
+      // Extract FLOCK_PARAMS from the file content
+      const match = fileContent.match(/export const FLOCK_PARAMS[^}]+}/s);
+      if (!match) {
+        return res.status(500).json({ error: 'Could not parse parameters from file' });
+      }
+
+      const paramsText = match[0];
+
+      // Extract individual values using regex
+      const extractNumber = (text: string, paramName: string): number => {
+        const regex = new RegExp(`${paramName}:\\s*(\\d+(?:\\.\\d+)?)`);
+        const match = text.match(regex);
+        if (!match) throw new Error(`Could not find ${paramName}`);
+        return parseFloat(match[1]);
+      };
+
+      const params = {
+        separationDist: extractNumber(paramsText, 'separationDist'),
+        alignDist: extractNumber(paramsText, 'alignDist'),
+        cohesionDist: extractNumber(paramsText, 'cohesionDist'),
+        separationWeight: extractNumber(paramsText, 'separationWeight'),
+        alignmentWeight: extractNumber(paramsText, 'alignmentWeight'),
+        cohesionWeight: extractNumber(paramsText, 'cohesionWeight'),
+      };
+
+      res.json({ params });
     } catch (err) {
       console.error('Error reading params:', err);
       res.status(404).json({ error: 'Parameters file not found' });
@@ -102,14 +128,23 @@ async function initializeServer() {
   app.post('/api/sketches/:sketchName/params', async (req, res) => {
     try {
       const { sketchName } = req.params;
-      const { content } = req.body;
+      const { params } = req.body;
 
-      if (!content || typeof content !== 'string') {
-        return res.status(400).json({ error: 'Invalid content' });
+      if (!params || typeof params !== 'object') {
+        return res.status(400).json({ error: 'Invalid parameters' });
       }
 
+      // Read the template file
+      const templatePath = path.join(sketchesPath, sketchName, 'src', `${sketchName}.params.tpl`);
+      let template = await fs.readFile(templatePath, 'utf-8');
+
+      // Substitute parameter values
+      Object.entries(params).forEach(([key, value]) => {
+        template = template.replace(new RegExp(`{{${key}}}`, 'g'), value.toString());
+      });
+
       const paramsPath = path.join(sketchesPath, sketchName, 'src', `${sketchName}.params.ts`);
-      await fs.writeFile(paramsPath, content, 'utf-8');
+      await fs.writeFile(paramsPath, template, 'utf-8');
 
       res.json({ success: true });
     } catch (err) {

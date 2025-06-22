@@ -25,44 +25,11 @@ export class ParamsUI {
       if (!response.ok) throw new Error('Failed to load parameters');
 
       const data = await response.json();
-      const params = this.parseParamsFromFile(data.content);
-      this.populateForm(params);
+      this.populateForm(data.params);
     } catch (error) {
       console.error('Error loading parameters:', error);
       this.showStatus('Error loading parameters', 'error');
     }
-  }
-
-  private parseParamsFromFile(content: string): FlockParams {
-    // Simple regex to extract FLOCK_PARAMS object
-    const match = content.match(/export const FLOCK_PARAMS[\s\S]+?};/);
-    if (!match) throw new Error('Could not parse parameters');
-
-    const paramsText = match[0];
-
-    // Extract individual values using regex
-    const separationDist = this.extractNumber(paramsText, 'separationDist');
-    const alignDist = this.extractNumber(paramsText, 'alignDist');
-    const cohesionDist = this.extractNumber(paramsText, 'cohesionDist');
-    const separationWeight = this.extractNumber(paramsText, 'separationWeight');
-    const alignmentWeight = this.extractNumber(paramsText, 'alignmentWeight');
-    const cohesionWeight = this.extractNumber(paramsText, 'cohesionWeight');
-
-    return {
-      separationDist,
-      alignDist,
-      cohesionDist,
-      separationWeight,
-      alignmentWeight,
-      cohesionWeight,
-    };
-  }
-
-  private extractNumber(text: string, paramName: string): number {
-    const regex = new RegExp(`${paramName}:\\s*(\\d+(?:\\.\\d+)?)`);
-    const match = text.match(regex);
-    if (!match) throw new Error(`Could not find ${paramName}`);
-    return parseFloat(match[1]);
   }
 
   private populateForm(params: FlockParams) {
@@ -74,41 +41,14 @@ export class ParamsUI {
     (document.getElementById('cohesionWeight') as HTMLInputElement).value = params.cohesionWeight.toString();
   }
 
-  private generateParamsFile(params: FlockParams): string {
-    return `export interface FlockParams {
-  separationDist: number;
-  alignDist: number;
-  cohesionDist: number;
-  separationWeight: number;
-  alignmentWeight: number;
-  cohesionWeight: number;
-}
-
-export const FLOCK_PARAMS: FlockParams = {
-  separationDist: ${params.separationDist},
-  alignDist: ${params.alignDist},
-  cohesionDist: ${params.cohesionDist},
-  separationWeight: ${params.separationWeight},
-  alignmentWeight: ${params.alignmentWeight},
-  cohesionWeight: ${params.cohesionWeight},
-};
-
-export const BOID_COUNT = 500;
-export const WOIM_LENGTH = 20;
-export const BACKGROUND_COLOR = '#fcfaf7';
-`;
-  }
-
   private async saveParams(params: FlockParams) {
     try {
-      const fileContent = this.generateParamsFile(params);
-
       const response = await fetch('/api/sketches/boids/params', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content: fileContent }),
+        body: JSON.stringify({ params }),
       });
 
       if (!response.ok) throw new Error('Failed to save parameters');
