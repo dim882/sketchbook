@@ -7,7 +7,7 @@ interface FlockParams {
   cohesionWeight: number;
 }
 
-class ParamsUI {
+export class ParamsUI {
   private form: HTMLFormElement;
   private statusDiv: HTMLDivElement;
 
@@ -153,8 +153,3 @@ export const BACKGROUND_COLOR = '#fcfaf7';
     });
   }
 }
-
-// Initialize the params UI when the DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  new ParamsUI();
-});

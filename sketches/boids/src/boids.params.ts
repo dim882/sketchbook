@@ -8,14 +8,14 @@ export interface FlockParams {
 }
 
 export const FLOCK_PARAMS: FlockParams = {
-  separationDist: 100,
+  separationDist: 120,
   alignDist: 50,
   cohesionDist: 50,
   separationWeight: 1.5,
-  alignmentWeight: 1.0,
-  cohesionWeight: 1.0,
+  alignmentWeight: 1,
+  cohesionWeight: 1,
 };
 
 export const BOID_COUNT = 500;
 export const WOIM_LENGTH = 20;
-export const BACKGROUND_COLOR = "#fcfaf7";
+export const BACKGROUND_COLOR = '#fcfaf7';

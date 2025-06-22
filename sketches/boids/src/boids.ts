@@ -1,11 +1,15 @@
 import * as utils from './boids.utils';
 import { FLOCK_PARAMS, BOID_COUNT, WOIM_LENGTH, BACKGROUND_COLOR } from './boids.params';
+import { ParamsUI } from './params-ui';
 
 const prng = Math.random;
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
+
+  // Initialize the parameters UI
+  new ParamsUI();
 
   let flock = utils.createFlock(BOID_COUNT, canvas.width, canvas.height, prng);
   let boidPaths: utils.IBoidPaths = flock.map(() => []);
