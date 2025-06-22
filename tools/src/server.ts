@@ -9,8 +9,18 @@ const app = express();
 const port = 2000;
 const publicPath = path.join(__dirname, '../public');
 const sketchesPath = path.join(__dirname, '../../sketches');
-const makeDistPath = (sketchName: string) => path.join(__dirname, '../../sketches', sketchName, 'dist');
-const makeSketchHtmlPath = (sketchName: string) => path.join(makeDistPath(sketchName), `${sketchName}.html`);
+
+// Helper functions for sketch paths
+const getSketchPath = (sketchName: string) => path.join(sketchesPath, sketchName);
+const getDistPath = (sketchName: string) => path.join(getSketchPath(sketchName), 'dist');
+const getSrcPath = (sketchName: string) => path.join(getSketchPath(sketchName), 'src');
+const getHtmlPath = (sketchName: string) => path.join(getDistPath(sketchName), `${sketchName}.html`);
+const getParamsPath = (sketchName: string) => path.join(getSrcPath(sketchName), `${sketchName}.params.ts`);
+const getTemplatePath = (sketchName: string) => path.join(getSrcPath(sketchName), `${sketchName}.params.tpl`);
+const getServerHandlerPath = (sketchName: string) => path.join(getSrcPath(sketchName), `${sketchName}.server.js`);
+
+// Helper function for UI paths
+const getUiIndexPath = () => path.join(__dirname, './ui/index.html');
 
 app.use(express.json());
 app.use(express.static(publicPath));
@@ -24,12 +34,7 @@ async function initializeServer() {
 
   app.get('/', async (req, res) => {
     try {
-      const renderedHtml = await renderMainPage(
-        sketchesPath,
-        path.join(__dirname, './ui/index.html'),
-        SketchListWithStyles,
-        styles
-      );
+      const renderedHtml = await renderMainPage(sketchesPath, getUiIndexPath(), SketchListWithStyles, styles);
       res.send(renderedHtml);
     } catch (err) {
       console.error('Error:', err);
@@ -42,7 +47,7 @@ async function initializeServer() {
       const sketchName = req.params.sketchname;
       const renderedHtml = await renderMainPage(
         sketchesPath,
-        path.join(__dirname, './ui/index.html'),
+        getUiIndexPath(),
         SketchListWithStyles,
         styles,
         sketchName
@@ -60,7 +65,7 @@ async function initializeServer() {
       return res.status(404).send('Sketch name not provided');
     }
 
-    const sketchPath = makeSketchHtmlPath(sketchName);
+    const sketchPath = getHtmlPath(sketchName);
 
     res.sendFile(sketchPath, (err) => {
       if (err) {
@@ -73,7 +78,7 @@ async function initializeServer() {
   // Serve static files from each sketch's dist directory
   app.use('/sketches/:sketchName/dist', (req, res, next) => {
     const { sketchName } = req.params;
-    const distPath = makeDistPath(sketchName);
+    const distPath = getDistPath(sketchName);
 
     express.static(distPath, {
       setHeaders: (res, path) => {
@@ -88,12 +93,11 @@ async function initializeServer() {
   app.get('/api/sketches/:sketchName/params', async (req, res) => {
     try {
       const { sketchName } = req.params;
-      const paramsPath = path.join(sketchesPath, sketchName, 'src', `${sketchName}.params.ts`);
-
+      const paramsPath = getParamsPath(sketchName);
       const fileContent = await fs.readFile(paramsPath, 'utf-8');
 
       // Import the sketch-specific handler
-      const sketchHandler = await import(path.join(sketchesPath, sketchName, 'src', `${sketchName}.server.js`));
+      const sketchHandler = await import(getServerHandlerPath(sketchName));
       const params = sketchHandler.getParams(fileContent);
 
       res.json({ params });
@@ -114,7 +118,7 @@ async function initializeServer() {
       }
 
       // Read the template file
-      const templatePath = path.join(sketchesPath, sketchName, 'src', `${sketchName}.params.tpl`);
+      const templatePath = getTemplatePath(sketchName);
       let template = await fs.readFile(templatePath, 'utf-8');
 
       // Substitute parameter values
@@ -122,7 +126,7 @@ async function initializeServer() {
         template = template.replace(new RegExp(`{{${key}}}`, 'g'), value.toString());
       });
 
-      const paramsPath = path.join(sketchesPath, sketchName, 'src', `${sketchName}.params.ts`);
+      const paramsPath = getParamsPath(sketchName);
       await fs.writeFile(paramsPath, template, 'utf-8');
 
       res.json({ success: true });
