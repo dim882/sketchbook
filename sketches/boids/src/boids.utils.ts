@@ -130,27 +130,6 @@ export const flock = (
   return forces.reduce((currentBoid, force) => Boid.applyForce(currentBoid, force), boid);
 };
 
-export const drawBoid = (context: CanvasRenderingContext2D, boid: IBoid): void => {
-  const { position, velocity, size, color } = boid;
-  const angle = Math.atan2(velocity.y, velocity.x);
-
-  context.save();
-  context.translate(position.x, position.y);
-  context.rotate(angle);
-
-  // Draw a triangular boid with consistent proportions
-  context.beginPath();
-  context.moveTo(size * 2, 0);
-  context.lineTo(-size, size);
-  context.lineTo(-size, -size);
-  context.closePath();
-
-  context.fillStyle = color;
-  context.fill();
-
-  context.restore();
-};
-
 const calculateEdgeForce = (boid: IBoid, width: number, height: number): IVector => {
   const EDGE_FORCE_STRENGTH = 0.3;
   const EDGE_THRESHOLD = 100; // Distance from edge to start applying force
