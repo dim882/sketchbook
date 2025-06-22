@@ -15,7 +15,6 @@ export const createFlock = (
 
   for (let i = 0; i < count; i++) {
     const position = Vector.create(prng() * width, prng() * height);
-
     const velocity = Vector.create((prng() * 2 - 1) * 2, (prng() * 2 - 1) * 2);
 
     boids.push(Boid.create({ position, velocity }));
@@ -33,6 +32,7 @@ export const separation = (boid: IBoid, boids: IBoid[], desiredSeparation: numbe
 
     if (d > 0 && d < desiredSeparation) {
       const diff = Vector.normalize(Vector.subtract(boid.position, other.position));
+
       steer = Vector.add(steer, Vector.divide(diff, d));
       count++;
     }
@@ -68,12 +68,12 @@ export const alignment = (boid: IBoid, boids: IBoid[], neighborDistance: number)
     sum = Vector.divide(sum, count);
     sum = Vector.normalize(sum);
     sum = Vector.multiply(sum, boid.maxSpeed);
-
     const steer = Vector.subtract(sum, boid.velocity);
+
     return Vector.limit(steer, boid.maxForce);
   }
 
-  return Vector.create(0, 0);
+  return sum;
 };
 
 export const cohesion = (boid: IBoid, boids: IBoid[], neighborDistance: number): IVector => {
