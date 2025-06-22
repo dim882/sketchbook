@@ -1,16 +1,5 @@
 import * as utils from './boids.utils';
-
-const BACKGROUND_COLOR = '#fcfaf7';
-const BOID_COUNT = 500;
-const WOIM_LENGTH = 20;
-const FLOCK_PARAMS = {
-  separationDist: 100,
-  alignDist: 50,
-  cohesionDist: 50,
-  separationWeight: 1.5,
-  alignmentWeight: 1.0,
-  cohesionWeight: 1.0,
-};
+import { FLOCK_PARAMS, BOID_COUNT, WOIM_LENGTH, BACKGROUND_COLOR } from './boids.params';
 
 const prng = Math.random;
 
