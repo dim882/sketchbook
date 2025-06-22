@@ -7,11 +7,9 @@ import SketchList from './ui/SketchList';
 
 const app = express();
 const port = 2000;
-const publicPath = path.join(__dirname, '../public');
-const sketchesPath = path.join(__dirname, '../../sketches');
 
 app.use(express.json());
-app.use(express.static(publicPath));
+app.use(express.static(paths.public()));
 
 // Initialize server with CSS modules mapping
 async function initializeServer() {
@@ -22,7 +20,7 @@ async function initializeServer() {
 
   app.get('/', async (req, res) => {
     try {
-      const renderedHtml = await renderMainPage(sketchesPath, paths.uiIndex(), SketchListWithStyles, styles);
+      const renderedHtml = await renderMainPage(paths.sketches(), paths.uiIndex(), SketchListWithStyles, styles);
       res.send(renderedHtml);
     } catch (err) {
       console.error('Error:', err);
@@ -34,7 +32,7 @@ async function initializeServer() {
     try {
       const sketchName = req.params.sketchname;
       const renderedHtml = await renderMainPage(
-        sketchesPath,
+        paths.sketches(),
         paths.uiIndex(),
         SketchListWithStyles,
         styles,
