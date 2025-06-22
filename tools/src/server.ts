@@ -2,25 +2,13 @@ import express from 'express';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import { h } from 'preact';
-import { loadCSSModulesMapping, renderMainPage } from './server.utils';
+import { loadCSSModulesMapping, renderMainPage, paths } from './server.utils';
 import SketchList from './ui/SketchList';
 
 const app = express();
 const port = 2000;
 const publicPath = path.join(__dirname, '../public');
 const sketchesPath = path.join(__dirname, '../../sketches');
-
-// Helper functions for sketch paths
-const getSketchPath = (sketchName: string) => path.join(sketchesPath, sketchName);
-const getDistPath = (sketchName: string) => path.join(getSketchPath(sketchName), 'dist');
-const getSrcPath = (sketchName: string) => path.join(getSketchPath(sketchName), 'src');
-const getHtmlPath = (sketchName: string) => path.join(getDistPath(sketchName), `${sketchName}.html`);
-const getParamsPath = (sketchName: string) => path.join(getSrcPath(sketchName), `${sketchName}.params.ts`);
-const getTemplatePath = (sketchName: string) => path.join(getSrcPath(sketchName), `${sketchName}.params.tpl`);
-const getServerHandlerPath = (sketchName: string) => path.join(getSrcPath(sketchName), `${sketchName}.server.js`);
-
-// Helper function for UI paths
-const getUiIndexPath = () => path.join(__dirname, './ui/index.html');
 
 app.use(express.json());
 app.use(express.static(publicPath));
@@ -34,7 +22,7 @@ async function initializeServer() {
 
   app.get('/', async (req, res) => {
     try {
-      const renderedHtml = await renderMainPage(sketchesPath, getUiIndexPath(), SketchListWithStyles, styles);
+      const renderedHtml = await renderMainPage(sketchesPath, paths.uiIndex(), SketchListWithStyles, styles);
       res.send(renderedHtml);
     } catch (err) {
       console.error('Error:', err);
@@ -47,7 +35,7 @@ async function initializeServer() {
       const sketchName = req.params.sketchname;
       const renderedHtml = await renderMainPage(
         sketchesPath,
-        getUiIndexPath(),
+        paths.uiIndex(),
         SketchListWithStyles,
         styles,
         sketchName
@@ -65,7 +53,7 @@ async function initializeServer() {
       return res.status(404).send('Sketch name not provided');
     }
 
-    const sketchPath = getHtmlPath(sketchName);
+    const sketchPath = paths.html(sketchName);
 
     res.sendFile(sketchPath, (err) => {
       if (err) {
@@ -78,7 +66,7 @@ async function initializeServer() {
   // Serve static files from each sketch's dist directory
   app.use('/sketches/:sketchName/dist', (req, res, next) => {
     const { sketchName } = req.params;
-    const distPath = getDistPath(sketchName);
+    const distPath = paths.dist(sketchName);
 
     express.static(distPath, {
       setHeaders: (res, path) => {
@@ -93,11 +81,11 @@ async function initializeServer() {
   app.get('/api/sketches/:sketchName/params', async (req, res) => {
     try {
       const { sketchName } = req.params;
-      const paramsPath = getParamsPath(sketchName);
+      const paramsPath = paths.params(sketchName);
       const fileContent = await fs.readFile(paramsPath, 'utf-8');
 
       // Import the sketch-specific handler
-      const sketchHandler = await import(getServerHandlerPath(sketchName));
+      const sketchHandler = await import(paths.serverHandler(sketchName));
       const params = sketchHandler.getParams(fileContent);
 
       res.json({ params });
@@ -118,7 +106,7 @@ async function initializeServer() {
       }
 
       // Read the template file
-      const templatePath = getTemplatePath(sketchName);
+      const templatePath = paths.template(sketchName);
       let template = await fs.readFile(templatePath, 'utf-8');
 
       // Substitute parameter values
@@ -126,7 +114,7 @@ async function initializeServer() {
         template = template.replace(new RegExp(`{{${key}}}`, 'g'), value.toString());
       });
 
-      const paramsPath = getParamsPath(sketchName);
+      const paramsPath = paths.params(sketchName);
       await fs.writeFile(paramsPath, template, 'utf-8');
 
       res.json({ success: true });
