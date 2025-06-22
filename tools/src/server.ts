@@ -92,30 +92,9 @@ async function initializeServer() {
 
       const fileContent = await fs.readFile(paramsPath, 'utf-8');
 
-      // Extract FLOCK_PARAMS from the file content
-      const match = fileContent.match(/export const FLOCK_PARAMS[^}]+}/s);
-      if (!match) {
-        return res.status(500).json({ error: 'Could not parse parameters from file' });
-      }
-
-      const paramsText = match[0];
-
-      // Extract individual values using regex
-      const extractNumber = (text: string, paramName: string): number => {
-        const regex = new RegExp(`${paramName}:\\s*(\\d+(?:\\.\\d+)?)`);
-        const match = text.match(regex);
-        if (!match) throw new Error(`Could not find ${paramName}`);
-        return parseFloat(match[1]);
-      };
-
-      const params = {
-        separationDist: extractNumber(paramsText, 'separationDist'),
-        alignDist: extractNumber(paramsText, 'alignDist'),
-        cohesionDist: extractNumber(paramsText, 'cohesionDist'),
-        separationWeight: extractNumber(paramsText, 'separationWeight'),
-        alignmentWeight: extractNumber(paramsText, 'alignmentWeight'),
-        cohesionWeight: extractNumber(paramsText, 'cohesionWeight'),
-      };
+      // Import the sketch-specific handler
+      const sketchHandler = await import(path.join(sketchesPath, sketchName, 'src', `${sketchName}.server.js`));
+      const params = sketchHandler.getParams(fileContent);
 
       res.json({ params });
     } catch (err) {
