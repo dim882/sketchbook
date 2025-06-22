@@ -164,3 +164,20 @@ const calculateEdgeForce = (boid: IBoid, width: number, height: number): IVector
     y < distance ? edgeForce : y > height - distance ? -edgeForce : 0
   );
 };
+
+export function updateBoidPath(
+  boidPaths: IBoidPaths,
+  index: number,
+  position: Vector.IVector,
+  pathLengthLimit: number
+): IBoidPaths {
+  const newPaths = [...boidPaths];
+  newPaths[index] = [...boidPaths[index], position];
+
+  // Limit the path length
+  if (newPaths[index].length > pathLengthLimit) {
+    newPaths[index] = newPaths[index].slice(1);
+  }
+
+  return newPaths;
+}

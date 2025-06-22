@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const context = canvas.getContext('2d');
 
   let flock = utils.createFlock(BOID_COUNT, canvas.width, canvas.height, prng);
-  const boidPaths: utils.IBoidPaths = flock.map(() => []);
+  let boidPaths: utils.IBoidPaths = flock.map(() => []);
 
   function animate() {
     if (!context) return;
@@ -33,12 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
     flock = flock.map((boid, index) => {
       const newBoid = utils.flock(boid, flock, FLOCK_PARAMS, width, height);
 
-      boidPaths[index].push(newBoid.position);
-
-      // Limit the path length
-      if (boidPaths[index].length > PATH_LENGTH_LIMIT) {
-        boidPaths[index].shift();
-      }
+      boidPaths = utils.updateBoidPath(boidPaths, index, newBoid.position, PATH_LENGTH_LIMIT);
 
       utils.drawWoim(context, newBoid, boidPaths, index);
 
