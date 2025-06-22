@@ -80,16 +80,15 @@ export class ParamsUI {
       e.preventDefault();
 
       const formData = new FormData(this.form);
-      const params: FlockParams = {
+
+      this.saveParams({
         separationDist: parseFloat(formData.get('separationDist') as string),
         alignDist: parseFloat(formData.get('alignDist') as string),
         cohesionDist: parseFloat(formData.get('cohesionDist') as string),
         separationWeight: parseFloat(formData.get('separationWeight') as string),
         alignmentWeight: parseFloat(formData.get('alignmentWeight') as string),
         cohesionWeight: parseFloat(formData.get('cohesionWeight') as string),
-      };
-
-      this.saveParams(params);
+      });
     });
   }
 }
