@@ -129,7 +129,8 @@ export const flock = (
     calculateEdgeForce(boid, width, height),
   ];
 
-  return forces.reduce((currentBoid, force) => Boid.applyForce(currentBoid, force), boid);
+  const boidWithForces = forces.reduce((currentBoid, force) => Boid.applyForce(currentBoid, force), boid);
+  return Boid.update(boidWithForces);
 };
 
 const calculateEdgeForce = (boid: IBoid, width: number, height: number): IVector => {

@@ -37,9 +37,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Update and draw boids
     flock = flock.map((boid, index) => {
-      let newBoid = utils.flock(boid, flock, FLOCK_PARAMS, width, height);
-
-      newBoid = Boid.update(newBoid);
+      const newBoid = utils.flock(boid, flock, FLOCK_PARAMS, width, height);
 
       boidPaths[index].push(newBoid.position);
 
