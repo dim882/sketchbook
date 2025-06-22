@@ -14,7 +14,7 @@ const COHESION_DISTANCE = 50;
 const SEPARATION_WEIGHT = 1.5;
 const ALIGNMENT_WEIGHT = 1.0;
 const COHESION_WEIGHT = 1.0;
-const PATH_LENGTH_LIMIT = 10;
+const PATH_LENGTH_LIMIT = 20;
 
 const prng = Math.random;
 
@@ -24,7 +24,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (!context) {
     console.error('Could not get canvas context');
-    return;
   }
 
   const flockParams = {

@@ -120,22 +120,14 @@ export const flock = (
   width: number,
   height: number
 ): IBoid => {
-  const sep = separation(boid, boids, params.separationDist);
-  const ali = alignment(boid, boids, params.alignDist);
-  const coh = cohesion(boid, boids, params.cohesionDist);
+  const forces = [
+    Vector.multiply(separation(boid, boids, params.separationDist), params.separationWeight),
+    Vector.multiply(alignment(boid, boids, params.alignDist), params.alignmentWeight),
+    Vector.multiply(cohesion(boid, boids, params.cohesionDist), params.cohesionWeight),
+    calculateEdgeForce(boid, width, height),
+  ];
 
-  const separationForce = Vector.multiply(sep, params.separationWeight);
-  const alignmentForce = Vector.multiply(ali, params.alignmentWeight);
-  const cohesionForce = Vector.multiply(coh, params.cohesionWeight);
-
-  let newBoid = Boid.applyForce(boid, separationForce);
-  newBoid = Boid.applyForce(newBoid, alignmentForce);
-  newBoid = Boid.applyForce(newBoid, cohesionForce);
-
-  const edgeForce = calculateEdgeForce(boid, width, height);
-  newBoid = Boid.applyForce(newBoid, edgeForce);
-
-  return newBoid;
+  return forces.reduce((currentBoid, force) => Boid.applyForce(currentBoid, force), boid);
 };
 
 export const drawBoid = (context: CanvasRenderingContext2D, boid: IBoid): void => {
