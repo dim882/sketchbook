@@ -30,13 +30,12 @@ async function initializeServer() {
 
   app.get('/nav/:sketchname', async (req, res) => {
     try {
-      const sketchName = req.params.sketchname;
       const renderedHtml = await renderMainPage(
         paths.sketches(),
         paths.uiIndex(),
         SketchListWithStyles,
         styles,
-        sketchName
+        req.params.sketchname
       );
       res.send(renderedHtml);
     } catch (err) {
@@ -63,8 +62,7 @@ async function initializeServer() {
 
   // Serve static files from each sketch's dist directory
   app.use('/sketches/:sketchName/dist', (req, res, next) => {
-    const { sketchName } = req.params;
-    const distPath = paths.dist(sketchName);
+    const distPath = paths.dist(req.params.sketchName);
 
     express.static(distPath, {
       setHeaders: (res, path) => {
