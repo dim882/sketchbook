@@ -131,20 +131,18 @@ export const flock = (
 };
 
 const calculateEdgeForce = (boid: IBoid, width: number, height: number): IVector => {
-  const EDGE_FORCE_STRENGTH = 0.3;
-  const EDGE_THRESHOLD = 100; // Distance from edge to start applying force
-  let force = Vector.create(0, 0);
+  const edgeForce = 0.3;
+  const threshold = 100; // Distance from edge to start applying force
+  const { x } = boid.position;
 
-  if (boid.position.x < EDGE_THRESHOLD) {
-    force = Vector.add(force, Vector.create(EDGE_FORCE_STRENGTH, 0));
-  } else if (boid.position.x > width - EDGE_THRESHOLD) {
-    force = Vector.add(force, Vector.create(-EDGE_FORCE_STRENGTH, 0));
-  }
+  const xForce = Vector.create(x < threshold ? edgeForce : x > width - threshold ? -edgeForce : 0, 0);
 
-  if (boid.position.y < EDGE_THRESHOLD) {
-    force = Vector.add(force, Vector.create(0, EDGE_FORCE_STRENGTH));
-  } else if (boid.position.y > height - EDGE_THRESHOLD) {
-    force = Vector.add(force, Vector.create(0, -EDGE_FORCE_STRENGTH));
+  let force = xForce;
+
+  if (boid.position.y < threshold) {
+    force = Vector.add(force, Vector.create(0, edgeForce));
+  } else if (boid.position.y > height - threshold) {
+    force = Vector.add(force, Vector.create(0, -edgeForce));
   }
 
   return force;
