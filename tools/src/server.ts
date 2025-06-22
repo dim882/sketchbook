@@ -50,9 +50,7 @@ async function initializeServer() {
       return res.status(404).send('Sketch name not provided');
     }
 
-    const sketchPath = paths.html(sketchName);
-
-    res.sendFile(sketchPath, (err) => {
+    res.sendFile(paths.html(sketchName), (err) => {
       if (err) {
         console.error('Error sending file:', err);
         res.status(404).send('Sketch not found');
@@ -62,9 +60,7 @@ async function initializeServer() {
 
   // Serve static files from each sketch's dist directory
   app.use('/sketches/:sketchName/dist', (req, res, next) => {
-    const distPath = paths.dist(req.params.sketchName);
-
-    express.static(distPath, {
+    express.static(paths.dist(req.params.sketchName), {
       setHeaders: (res, path) => {
         if (path.endsWith('.css')) {
           res.setHeader('Content-Type', 'text/css');
@@ -77,8 +73,7 @@ async function initializeServer() {
   app.get('/api/sketches/:sketchName/params', async (req, res) => {
     try {
       const { sketchName } = req.params;
-      const paramsPath = paths.params(sketchName);
-      const fileContent = await fs.readFile(paramsPath, 'utf-8');
+      const fileContent = await fs.readFile(paths.params(sketchName), 'utf-8');
 
       // Import the sketch-specific handler
       const sketchHandler = await import(paths.serverHandler(sketchName));
@@ -101,9 +96,7 @@ async function initializeServer() {
         return res.status(400).json({ error: 'Invalid parameters' });
       }
 
-      // Read the template file
-      const templatePath = paths.template(sketchName);
-      let template = await fs.readFile(templatePath, 'utf-8');
+      let template = await fs.readFile(paths.template(sketchName), 'utf-8');
 
       // Substitute parameter values
       Object.entries(params).forEach(([key, value]) => {
@@ -125,7 +118,6 @@ async function initializeServer() {
   });
 }
 
-// Start the server
 initializeServer().catch((err) => {
   console.error('Failed to initialize server:', err);
   process.exit(1);
