@@ -14,10 +14,12 @@ export const createFlock = (
   const boids: IBoid[] = [];
 
   for (let i = 0; i < count; i++) {
-    const position = Vector.create(prng() * width, prng() * height);
-    const velocity = Vector.create((prng() * 2 - 1) * 2, (prng() * 2 - 1) * 2);
-
-    boids.push(Boid.create({ position, velocity }));
+    boids.push(
+      Boid.create({
+        position: Vector.create(prng() * width, prng() * height),
+        velocity: Vector.create((prng() * 2 - 1) * 2, (prng() * 2 - 1) * 2),
+      })
+    );
   }
 
   return boids;
