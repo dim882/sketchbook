@@ -6,7 +6,7 @@
 body {
   height: 100vh;
   margin: 0;
-  background: #000;
+  background: #fcfaf7;
 }
 
 .blobs {
@@ -19,8 +19,8 @@ body {
 }
 
 .blob {
+  background: #b94f46;
   position: absolute;
-  background: #333;
   border-radius: 100%;
   translate: -50% -50%;
 }

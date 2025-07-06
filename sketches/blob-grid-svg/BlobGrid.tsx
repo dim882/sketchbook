@@ -1,7 +1,7 @@
 import { JSX } from 'preact/jsx-runtime';
 import { useState, useEffect } from 'preact/hooks';
-import { createGrid, getInteger, createPRNG } from './blob-grid-svg.utils';
-import { createNoise2D, createNoise3D } from 'simplex-noise';
+import { createGrid, createPRNG } from './blob-grid-svg.utils';
+import { createNoise3D } from 'simplex-noise';
 
 type IDimensions = {
   width: number;
@@ -15,10 +15,6 @@ const getNoise = createNoise3D(prng);
 function App(): JSX.Element {
   const [dimensions, setDimensions] = useState<IDimensions>({ width: 0, height: 0 });
   const [wheelPosition, setWheelPosition] = useState(0);
-  const formHue = getInteger(prng, 0, 270);
-  const backgroundHue = formHue + 180;
-  const backgroundColor = `lch(95% 40% ${backgroundHue})`;
-  const fillColor = `lch(40% 50% ${formHue})`;
   const CELL_SIZE = 100;
   const SIZE_LIMIT = 120;
   const NOISE_SCALE = 0.001;
@@ -58,15 +54,15 @@ function App(): JSX.Element {
   return (
     <div class="blobs">
       {grid.map((point) => {
-        const size = getNoise(point[0] * NOISE_SCALE, point[1] * NOISE_SCALE, wheelPosition * NOISE_SCALE * 0.1) * 200;
+        const noise = getNoise(point[0] * NOISE_SCALE, point[1] * NOISE_SCALE, wheelPosition * NOISE_SCALE * 0.1) * 175;
 
         const style = {
           left: point[0],
           top: point[1],
-          width: size > SIZE_LIMIT ? SIZE_LIMIT : size,
-          height: size > SIZE_LIMIT ? SIZE_LIMIT : size,
+          width: noise > SIZE_LIMIT ? SIZE_LIMIT : noise,
+          height: noise > SIZE_LIMIT ? SIZE_LIMIT : noise,
           // backgroundColor: `rgba(100, 100, 100 )`,
-          display: size > 0 ? 'block' : 'none',
+          display: noise > 0 ? 'block' : 'none',
         };
 
         return (
