@@ -1,6 +1,11 @@
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
+const GRID_CELL_SIZE = 50;
+const CIRCLE_RADIUS = 8;
+const BACKGROUND_COLOR = '#fcfaf7';
+const CIRCLE_COLOR = '#333333';
+
 const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
   return (upper - lower) * generateNumber() + lower;
 };
@@ -21,23 +26,27 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function render(context: CanvasRenderingContext2D) {
-  console.log('foo');
-
   const { width, height } = context.canvas;
-  const center: IPointTuple = [width / 2, height / 2];
 
-  const formHue = getInteger(prng, 0, 270);
-  const backgroundHue = formHue + 180;
-
-  context.fillStyle = `lch(60% 10% ${backgroundHue})`;
+  context.fillStyle = BACKGROUND_COLOR;
   context.fillRect(0, 0, width, height);
 
-  const fillColor = 'rgb(87, 218, 92)'; //`lch(60% 30% ${formHue} / 1)`;
+  const cols = Math.floor(width / GRID_CELL_SIZE);
+  const rows = Math.floor(height / GRID_CELL_SIZE);
 
-  context.fillStyle = fillColor;
-  context.save();
-  context.translate(width / 4, height / 4);
-  context.fillRect(0, 0, ...center);
+  const startX = (width - cols * GRID_CELL_SIZE) / 2 + GRID_CELL_SIZE / 2;
+  const startY = (height - rows * GRID_CELL_SIZE) / 2 + GRID_CELL_SIZE / 2;
 
-  context.restore();
+  context.fillStyle = CIRCLE_COLOR;
+
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const x = startX + col * GRID_CELL_SIZE;
+      const y = startY + row * GRID_CELL_SIZE;
+
+      context.beginPath();
+      context.arc(x, y, CIRCLE_RADIUS, 0, Math.PI * 2);
+      context.fill();
+    }
+  }
 }
