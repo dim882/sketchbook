@@ -54,9 +54,9 @@ function render(context: CanvasRenderingContext2D) {
       console.log(radius);
 
       if (radius < 0.1) {
-        context.fillStyle = 'red';
+        context.fillStyle = '#b94f46';
         context.beginPath();
-        context.arc(x, y, radius * 200, 0, Math.PI * 2);
+        context.arc(x, y, radius * 100, 0, Math.PI * 2);
         context.fill();
       }
     }
