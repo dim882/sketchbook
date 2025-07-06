@@ -19,8 +19,8 @@ export function getArgs() {
 }
 
 export function getDirectoryNames(sourceName: string, targetName: string) {
-  const sourceDir = path.join(__dirname, '../sketches', sourceName);
-  const targetDir = path.join(__dirname, '../sketches', targetName);
+  const sourceDir = path.join(__dirname, '../../sketches', sourceName);
+  const targetDir = path.join(__dirname, '../../sketches', targetName);
 
   if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
     console.error(`Source sketch directory not found: ${sourceDir}`);
