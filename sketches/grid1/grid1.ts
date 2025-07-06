@@ -37,8 +37,6 @@ function render(context: CanvasRenderingContext2D) {
   const startX = (width - cols * GRID_CELL_SIZE) / 2 + GRID_CELL_SIZE / 2;
   const startY = (height - rows * GRID_CELL_SIZE) / 2 + GRID_CELL_SIZE / 2;
 
-  context.fillStyle = CIRCLE_COLOR;
-
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
       const x = startX + col * GRID_CELL_SIZE;
@@ -46,13 +44,21 @@ function render(context: CanvasRenderingContext2D) {
 
       // const wave =  * Math.sin(y * 0.1);
       const coefficient = Math.abs(Math.sin(x * 1.7)) * Math.abs(Math.sin(y * 2.9));
-      console.log(coefficient);
 
-      const radius = CIRCLE_RADIUS_BASE * coefficient;
+      const radius = CIRCLE_RADIUS_BASE * coefficient * 1.4;
 
+      context.fillStyle = CIRCLE_COLOR;
       context.beginPath();
       context.arc(x, y, radius, 0, Math.PI * 2);
       context.fill();
+      console.log(radius);
+
+      if (radius < 0.1) {
+        context.fillStyle = 'red';
+        context.beginPath();
+        context.arc(x, y, radius * 200, 0, Math.PI * 2);
+        context.fill();
+      }
     }
   }
 }
