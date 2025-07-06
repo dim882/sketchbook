@@ -42,7 +42,6 @@ function render(context: CanvasRenderingContext2D) {
       const x = startX + col * GRID_CELL_SIZE;
       const y = startY + row * GRID_CELL_SIZE;
 
-      // const wave =  * Math.sin(y * 0.1);
       const coefficient = Math.abs(Math.sin(x * 1.7)) * Math.abs(Math.sin(y * 2.9));
 
       const radius = CIRCLE_RADIUS_BASE * coefficient * 1.4;
@@ -53,7 +52,7 @@ function render(context: CanvasRenderingContext2D) {
       context.fill();
       console.log(radius);
 
-      if (radius < 0.1) {
+      if (radius < 0.15) {
         context.fillStyle = '#b94f46';
         context.beginPath();
         context.arc(x, y, radius * 100, 0, Math.PI * 2);
