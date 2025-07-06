@@ -2,7 +2,7 @@ export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
 const GRID_CELL_SIZE = 50;
-const CIRCLE_RADIUS = 8;
+const CIRCLE_RADIUS_BASE = 4;
 const BACKGROUND_COLOR = '#fcfaf7';
 const CIRCLE_COLOR = '#333333';
 
@@ -44,8 +44,11 @@ function render(context: CanvasRenderingContext2D) {
       const x = startX + col * GRID_CELL_SIZE;
       const y = startY + row * GRID_CELL_SIZE;
 
-      const wave = Math.sin(x * 0.02) * Math.sin(y * 0.02);
-      const radius = CIRCLE_RADIUS + wave * 3;
+      // const wave =  * Math.sin(y * 0.1);
+      const coefficient = Math.abs(Math.sin(x * 1.7));
+      console.log(coefficient);
+
+      const radius = CIRCLE_RADIUS_BASE * coefficient;
 
       context.beginPath();
       context.arc(x, y, radius, 0, Math.PI * 2);
