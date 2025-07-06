@@ -45,10 +45,10 @@ function render(context: CanvasRenderingContext2D) {
       const x = startX + col * GRID_CELL_SIZE;
       const y = startY + row * GRID_CELL_SIZE;
 
-      const xCoefficient = Math.abs(Math.sin(row * 0.15) * 2.1);
-      const yCoefficient = Math.abs(Math.sin(col * 0.2) * 2.1);
+      const rowCoefficient = Math.abs(Math.sin(row * 0.15) * 2.1);
+      const colCoefficient = Math.abs(Math.sin(col * 0.2) * 2.8);
 
-      const radius = CIRCLE_RADIUS_BASE * xCoefficient * yCoefficient;
+      const radius = CIRCLE_RADIUS_BASE * rowCoefficient * colCoefficient;
 
       context.fillStyle = CIRCLE_COLOR;
       context.beginPath();
