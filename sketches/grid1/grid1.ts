@@ -45,7 +45,7 @@ function render(context: CanvasRenderingContext2D) {
       const y = startY + row * GRID_CELL_SIZE;
 
       // const wave =  * Math.sin(y * 0.1);
-      const coefficient = Math.abs(Math.sin(x * 1.7));
+      const coefficient = Math.abs(Math.sin(x * 1.7)) * Math.abs(Math.sin(y * 2.9));
       console.log(coefficient);
 
       const radius = CIRCLE_RADIUS_BASE * coefficient;
