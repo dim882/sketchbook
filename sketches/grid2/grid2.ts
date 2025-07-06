@@ -54,7 +54,6 @@ function render(context: CanvasRenderingContext2D) {
       context.beginPath();
       context.arc(x, y, radius, 0, Math.PI * 2);
       context.fill();
-      console.log(radius);
     }
   }
 }
