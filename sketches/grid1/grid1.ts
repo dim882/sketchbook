@@ -44,8 +44,11 @@ function render(context: CanvasRenderingContext2D) {
       const x = startX + col * GRID_CELL_SIZE;
       const y = startY + row * GRID_CELL_SIZE;
 
+      const wave = Math.sin(x * 0.02) * Math.sin(y * 0.02);
+      const radius = CIRCLE_RADIUS + wave * 3;
+
       context.beginPath();
-      context.arc(x, y, CIRCLE_RADIUS, 0, Math.PI * 2);
+      context.arc(x, y, radius, 0, Math.PI * 2);
       context.fill();
     }
   }
