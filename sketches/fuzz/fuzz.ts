@@ -21,11 +21,15 @@ interface IRenderArgs {
 }
 
 setup(() => {
-  const contexts = getElement('canvas').map((canvas) => canvas.getContext('2d'));
-  console.log({ contexts });
+  const contexts = getElement('canvas')
+    .map((canvas) => canvas.getContext('2d'))
+    .filter((el) => el !== null);
+  if (contexts.length < 1) {
+    return;
+  }
   const noise = createNoise2D();
 
-  let color = localStorage.getItem('color');
+  let color = localStorage.getItem('color') || '#fff';
 
   pipe(
     () => getElement('sc-color-picker'),
