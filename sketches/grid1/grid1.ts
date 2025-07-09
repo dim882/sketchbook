@@ -33,15 +33,6 @@ function render(context: CanvasRenderingContext2D) {
   context.fillStyle = BACKGROUND_COLOR;
   context.fillRect(0, 0, width, height);
 
-  // Draw large blob circle in bottom third, slightly left of center
-  const blobRadius = Math.min(width, height) * 0.2;
-  const blobX = width * 0.75;
-  const blobY = height * 0.66;
-  context.fillStyle = BLOB_COLOR;
-  context.beginPath();
-  context.arc(blobX, blobY, blobRadius, 0, Math.PI);
-  context.fill();
-
   const cols = Math.floor(width / GRID_CELL_SIZE);
   const rows = Math.floor(height / GRID_CELL_SIZE);
 
