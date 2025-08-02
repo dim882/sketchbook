@@ -1,5 +1,15 @@
 export type IPointTuple = [number, number];
 
+export type PseudoRandomNumberGenerator = () => number;
+
+const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
+  return (upper - lower) * generateNumber() + lower;
+};
+
+export const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
+  return Math.floor(getFloat(generateNumber, lower, upper));
+};
+
 const featurePointsCache = new Map<string, IPointTuple[]>();
 
 const hash = (x: number, y: number): string => {

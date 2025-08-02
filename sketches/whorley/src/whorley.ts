@@ -1,15 +1,5 @@
 import * as utils from './whorley.utils';
-
-export type PseudoRandomNumberGenerator = () => number;
-export type IPointTuple = utils.IPointTuple;
-
-const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
-  return (upper - lower) * generateNumber() + lower;
-};
-
-const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
-  return Math.floor(getFloat(generateNumber, lower, upper));
-};
+import { getInteger } from './whorley.utils';
 
 const prng = Math.random;
 
@@ -24,7 +14,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
-  const center: IPointTuple = [width / 2, height / 2];
 
   const formHue = getInteger(prng, 0, 270);
   const backgroundHue = formHue + 180;
