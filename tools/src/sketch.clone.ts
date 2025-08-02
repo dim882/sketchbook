@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import * as utils from './clone.utils';
+import * as utils from './sketch.clone.utils';
 
 const EXCLUDED_FILES = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
 
