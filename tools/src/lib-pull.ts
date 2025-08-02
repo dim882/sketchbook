@@ -15,4 +15,4 @@ fs.copy(libPath, sketchLibPath, {
   filter: (src: string) => !src.endsWith('package.json'),
 })
   .then(() => console.log(`Copied lib to ${sketchName}`))
-  .catch((err: Error) => console.error('Error copying lib:', err));
+  .catch((err: Error) => console.error(`Error copying lib to ${sketchLibPath}:`, err));
