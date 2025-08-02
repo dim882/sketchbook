@@ -1,5 +1,7 @@
 import { IPointTuple, loop } from './animation.utils.js';
 
+interface ISketchData {}
+
 document.body.onload = () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
@@ -9,7 +11,7 @@ document.body.onload = () => {
   }
 };
 
-function render(context: CanvasRenderingContext2D, t: number) {
+const render = (context: CanvasRenderingContext2D, data: ISketchData) => (t: number) => {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
   const radius = Math.floor(Math.abs(Math.sin(t * 0.05) * 100));
@@ -23,4 +25,4 @@ function render(context: CanvasRenderingContext2D, t: number) {
   context.arc(...center, radius, 0, 2 * Math.PI);
   context.fillStyle = 'red';
   context.fill();
-}
+};
