@@ -35,7 +35,7 @@ function render(context: CanvasRenderingContext2D) {
   const imageData = context.createImageData(width, height);
   const data = imageData.data;
 
-  const scale = 0.02;
+  const scale = 0.002;
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
