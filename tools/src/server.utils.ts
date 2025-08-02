@@ -37,19 +37,22 @@ export async function loadCSSModulesMapping() {
 
 async function getAllTsFiles(dirPath: string): Promise<string[]> {
   const items = await fs.readdir(dirPath, { withFileTypes: true });
-  const files: string[] = [];
 
-  for (const item of items) {
-    const itemPath = path.join(dirPath, item.name);
+  const files = await Promise.all(
+    items.map(async (item) => {
+      const itemPath = path.join(dirPath, item.name);
 
-    if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
-      files.push(...(await getAllTsFiles(itemPath)));
-    } else if (item.isFile() && (item.name.endsWith('.ts') || item.name.endsWith('.tsx'))) {
-      files.push(itemPath);
-    }
-  }
+      if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
+        return getAllTsFiles(itemPath);
+      } else if (item.isFile() && (item.name.endsWith('.ts') || item.name.endsWith('.tsx'))) {
+        return [itemPath];
+      }
 
-  return files;
+      return [];
+    })
+  );
+
+  return files.flat();
 }
 
 async function getLastModifiedTime(dirPath: string): Promise<number> {
