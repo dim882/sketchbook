@@ -47,15 +47,5 @@ export default {
       jsxPragma: 'h',
       production: true,
     }),
-    // babel({
-    //   babelHelpers: 'bundled',
-    //   extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    // }),
-    // copy({
-    //   targets: [
-    //     { src: '*.css', dest: 'dist' },
-    //     { src: '*.html', dest: 'dist' },
-    //   ],
-    // }),
   ],
 };
