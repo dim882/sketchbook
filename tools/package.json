@@ -6,13 +6,13 @@
   "type": "module",
   "scripts": {
     "dev": "npm-run-all --parallel watch serve ui:watch",
+    "clone": "bun src/sketch.clone.ts",
+    "build": "bun run src/sketches.build.ts",
+    "lib:pull": "bun src/lib-pull.ts",
     "serve": "bun --watch src/server.ts",
     "watch": "bun src/watch.ts",
-    "clone": "bun src/sketch.clone.ts",
-    "lib:pull": "bun src/lib-pull.ts",
     "ui:build": "rollup -c ./src/ui/rollup.config.js",
-    "ui:watch": "rollup -c ./src/ui/rollup.config.js -w",
-    "build": "bun run src/sketches.build.ts"
+    "ui:watch": "rollup -c ./src/ui/rollup.config.js -w"
   },
   "resolutions": {
     "rollup": "@rollup/wasm-node"
