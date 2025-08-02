@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { buildSketch } from './sketch.build.utils';
 import * as utils from './sketch.clone.utils';
 
 const EXCLUDED_FILES = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
@@ -11,8 +12,11 @@ const { sourceDir, targetDir } = utils.getDirectoryNames(sourceName, targetName)
 
 copyDir(sourceDir, targetDir);
 utils.install(targetDir);
-
 console.log(`Sketch './sketches/${targetName}' created successfully.`);
+// Build the sketch after installation
+buildSketch(targetDir);
+
+console.log(`Sketch './sketches/${targetName}' built successfully.`);
 
 function copyDir(source: string, target: string) {
   if (!fs.existsSync(target)) {
