@@ -4,15 +4,13 @@ A collection of creative coding sketches and tools.
 
 ## Development
 
-### Tools Commands
+### Available Commands
 
-- `dev`: Starts the development server with hot reloading
-- `watch`: Watches for changes in sketch files and rebuilds as needed
-- `clone`: Creates a new sketch from a template: `pnpm clone <base sketch name> <my sketch name>`
-- `build`: Builds the UI bundle once
-- `build:watch`: Builds the UI bundle and watches for changes
-- `build:all`: Builds all sketches and the UI bundle
-- `lib:pull`: Updates the shared library code
+- `pnpm dev`: Starts the development server with hot reloading, file watching, and UI building
+- `pnpm clone <base sketch name> <my sketch name>`: Creates a new sketch from a template
+- `pnpm lib:pull`: Updates the shared library code
+- `pnpm build`: Builds all sketches and the UI bundle
+- `pnpm check`: Runs TypeScript type checking on sketch files
 
 ## Parameter Editing
 

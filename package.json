@@ -1,15 +1,11 @@
 {
   "private": true,
   "scripts": {
-    "dev": "npm-run-all --parallel tools:watch tools:dev tools:ui:watch",
+    "dev": "pnpm --filter tools dev",
+    "check": "tsc --noEmit sketches/**/*.ts sketches/**/*.tsx",
     "clone": "pnpm --filter tools clone",
     "lib:pull": "pnpm --filter tools lib:pull",
-    "tools:dev": "pnpm --filter tools dev",
-    "tools:watch": "pnpm --filter tools watch",
-    "tools:ui:watch": "pnpm --filter tools ui:watch",
-    "build": "rollup -c",
-    "build:all": "pnpm --filter tools build:all",
-    "check": "tsc --noEmit sketches/**/*.ts sketches/**/*.tsx"
+    "build": "pnpm --filter tools build:all"
   },
   "devDependencies": {
     "@types/node": "^20.12.11",
