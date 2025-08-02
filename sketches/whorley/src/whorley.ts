@@ -16,14 +16,9 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
 
   const formHue = utils.getInteger(prng, 0, 270);
-  const backgroundHue = formHue + 180;
-
   const imageData = context.createImageData(width, height);
   const data = imageData.data;
-
   const scale = 0.002;
-
-  const colors: (Rgb | undefined)[] = [];
 
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -33,7 +28,6 @@ function render(context: CanvasRenderingContext2D) {
       const lightness = 90 - noiseValue * 80; // Invert lightness: high noise = light, low noise = dark
       const colorString = `lch(${lightness}% ${30 * noiseValue} ${formHue})`;
       const color = rgb(colorString);
-      colors.push(color);
 
       if (color) {
         data[index] = Math.floor(color.r * 255); // R
@@ -43,7 +37,6 @@ function render(context: CanvasRenderingContext2D) {
       }
     }
   }
-  console.log(colors);
 
   context.putImageData(imageData, 0, 0);
 }
