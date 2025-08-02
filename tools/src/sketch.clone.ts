@@ -13,7 +13,7 @@ const { sourceDir, targetDir } = utils.getDirectoryNames(sourceName, targetName)
 copyDir(sourceDir, targetDir);
 utils.install(targetDir);
 console.log(`Sketch './sketches/${targetName}' created successfully.`);
-// Build the sketch after installation
+
 buildSketch(targetDir);
 
 console.log(`Sketch './sketches/${targetName}' built successfully.`);
