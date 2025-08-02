@@ -35,6 +35,35 @@ export async function loadCSSModulesMapping() {
   }
 }
 
+async function getAllTsFiles(dirPath: string): Promise<string[]> {
+  const items = await fs.readdir(dirPath, { withFileTypes: true });
+  const files: string[] = [];
+
+  for (const item of items) {
+    const itemPath = path.join(dirPath, item.name);
+
+    if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
+      files.push(...(await getAllTsFiles(itemPath)));
+    } else if (item.isFile() && (item.name.endsWith('.ts') || item.name.endsWith('.tsx'))) {
+      files.push(itemPath);
+    }
+  }
+
+  return files;
+}
+
+async function getLastModifiedTime(dirPath: string): Promise<number> {
+  const tsFiles = await getAllTsFiles(dirPath);
+
+  if (tsFiles.length === 0) {
+    return 0;
+  }
+
+  const tsStats = await Promise.all(tsFiles.map((file) => fs.stat(file)));
+
+  return Math.max(...tsStats.map((stat) => stat.mtime.getTime()));
+}
+
 export async function getSketchDirsData(sketchesPath: string) {
   const files = await fs.readdir(sketchesPath, { withFileTypes: true });
 
@@ -43,36 +72,7 @@ export async function getSketchDirsData(sketchesPath: string) {
       .filter((file) => file.isDirectory())
       .map(async (dir) => {
         const dirPath = path.join(sketchesPath, dir.name);
-
-        // Get all TypeScript files recursively
-        const getAllTsFiles = async (dirPath: string): Promise<string[]> => {
-          const items = await fs.readdir(dirPath, { withFileTypes: true });
-          const files: string[] = [];
-
-          for (const item of items) {
-            const itemPath = path.join(dirPath, item.name);
-
-            if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
-              files.push(...(await getAllTsFiles(itemPath)));
-            } else if (item.isFile() && (item.name.endsWith('.ts') || item.name.endsWith('.tsx'))) {
-              files.push(itemPath);
-            }
-          }
-
-          return files;
-        };
-
-        const tsFiles = await getAllTsFiles(dirPath);
-
-        if (tsFiles.length === 0) {
-          return {
-            name: dir.name,
-            lastModified: 0,
-          };
-        }
-
-        const tsStats = await Promise.all(tsFiles.map((file) => fs.stat(file)));
-        const lastModified = Math.max(...tsStats.map((stat) => stat.mtime.getTime()));
+        const lastModified = await getLastModifiedTime(dirPath);
 
         return {
           name: dir.name,
@@ -80,8 +80,6 @@ export async function getSketchDirsData(sketchesPath: string) {
         };
       })
   );
-
-  console.log(dirsWithTimestamps);
 
   return dirsWithTimestamps.sort((a, b) => a.name.localeCompare(b.name));
 }
