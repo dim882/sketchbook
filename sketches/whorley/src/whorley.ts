@@ -1,5 +1,5 @@
 import * as utils from './whorley.utils';
-import { getInteger } from './whorley.utils';
+import { lch, rgb } from 'culori';
 
 const prng = Math.random;
 
@@ -15,11 +15,8 @@ window.addEventListener('DOMContentLoaded', () => {
 function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
 
-  const formHue = getInteger(prng, 0, 270);
+  const formHue = utils.getInteger(prng, 0, 270);
   const backgroundHue = formHue + 180;
-
-  context.fillStyle = `lch(60% 10% ${backgroundHue})`;
-  context.fillRect(0, 0, width, height);
 
   const imageData = context.createImageData(width, height);
   const data = imageData.data;
@@ -31,12 +28,15 @@ function render(context: CanvasRenderingContext2D) {
       const noiseValue = utils.whorleyNoise(x * scale, y * scale);
       const index = (y * width + x) * 4;
 
-      const intensity = Math.floor(noiseValue * 255);
+      const colorString = `lch(90% ${30 * noiseValue} ${formHue})`;
+      const color = rgb(colorString);
 
-      data[index] = intensity; // R
-      data[index + 1] = intensity; // G
-      data[index + 2] = intensity; // B
-      data[index + 3] = 255; // A
+      if (color) {
+        data[index] = Math.floor(color.r * 255); // R
+        data[index + 1] = Math.floor(color.g * 255); // G
+        data[index + 2] = Math.floor(color.b * 255); // B
+        data[index + 3] = 255; // A
+      }
     }
   }
 
