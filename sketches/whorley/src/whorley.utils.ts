@@ -25,7 +25,7 @@ const pseudoRandom = (x: number, y: number, offset: number): number => {
 const distance = (a: IPointTuple, b: IPointTuple): number => {
   const dx = a[0] - b[0];
   const dy = a[1] - b[1];
-  return Math.sqrt(dx * dx + dy * dy);
+  return dx * dx + dy * dy; // Use squared distance to avoid sqrt
 };
 
 const getFeaturePoints = (gridX: number, gridY: number): IPointTuple[] => {
@@ -67,5 +67,5 @@ export const whorleyNoise = (x: number, y: number): number => {
     }
   }
 
-  return Math.min(minDistance * 2, 1);
+  return Math.min(Math.sqrt(minDistance) * 2, 1); // Apply sqrt only once at the end
 };

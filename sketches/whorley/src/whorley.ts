@@ -20,21 +20,44 @@ function render(context: CanvasRenderingContext2D) {
   const data = imageData.data;
   const scale = 0.002;
 
+  // Pre-calculate color values to avoid repeated string parsing
+  const colorCache = new Map<number, [number, number, number]>();
+
+  const getColor = (noiseValue: number): [number, number, number] => {
+    const roundedNoise = Math.round(noiseValue * 1000) / 1000; // Round to 3 decimal places for caching
+
+    if (colorCache.has(roundedNoise)) {
+      return colorCache.get(roundedNoise)!;
+    }
+
+    const lightness = 90 - noiseValue * 80;
+    const colorString = `lch(${lightness}% ${30 * noiseValue} ${formHue})`;
+    const color = rgb(colorString);
+
+    if (color) {
+      const rgbValues: [number, number, number] = [
+        Math.floor(color.r * 255),
+        Math.floor(color.g * 255),
+        Math.floor(color.b * 255),
+      ];
+      colorCache.set(roundedNoise, rgbValues);
+      return rgbValues;
+    }
+
+    return [0, 0, 0]; // Fallback to black
+  };
+
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const noiseValue = utils.whorleyNoise(x * scale, y * scale);
       const index = (y * width + x) * 4;
 
-      const lightness = 90 - noiseValue * 80; // Invert lightness: high noise = light, low noise = dark
-      const colorString = `lch(${lightness}% ${30 * noiseValue} ${formHue})`;
-      const color = rgb(colorString);
+      const [r, g, b] = getColor(noiseValue);
 
-      if (color) {
-        data[index] = Math.floor(color.r * 255); // R
-        data[index + 1] = Math.floor(color.g * 255); // G
-        data[index + 2] = Math.floor(color.b * 255); // B
-        data[index + 3] = 255; // A
-      }
+      data[index] = r; // R
+      data[index + 1] = g; // G
+      data[index + 2] = b; // B
+      data[index + 3] = 255; // A
     }
   }
 
