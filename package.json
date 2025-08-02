@@ -5,7 +5,7 @@
     "check": "tsc --noEmit sketches/**/*.ts sketches/**/*.tsx",
     "clone": "pnpm --filter tools clone",
     "lib:pull": "pnpm --filter tools lib:pull",
-    "build": "pnpm --filter tools build:all"
+    "build": "pnpm --filter tools build"
   },
   "devDependencies": {
     "@types/node": "^20.12.11",

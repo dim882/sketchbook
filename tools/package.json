@@ -8,11 +8,11 @@
     "dev": "npm-run-all --parallel watch serve ui:watch",
     "serve": "bun --watch src/server.ts",
     "watch": "bun src/watch.ts",
-    "clone": "bun src/clone-sketch.ts",
+    "clone": "bun src/sketch.clone.ts",
     "lib:pull": "bun src/lib-pull.ts",
     "ui:build": "rollup -c ./src/ui/rollup.config.js",
     "ui:watch": "rollup -c ./src/ui/rollup.config.js -w",
-    "build:all": "bun run src/build-all.ts"
+    "build": "bun run src/sketches.build.ts"
   },
   "resolutions": {
     "rollup": "@rollup/wasm-node"
