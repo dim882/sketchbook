@@ -1,3 +1,5 @@
+import { rgb } from 'culori';
+
 export type IPointTuple = [number, number];
 
 export type PseudoRandomNumberGenerator = () => number;
@@ -67,5 +69,33 @@ export const whorleyNoise = (x: number, y: number): number => {
     }
   }
 
-  return Math.min(Math.sqrt(minDistance) * 2, 1); // Apply sqrt only once at the end
+  return Math.min(Math.sqrt(minDistance) * 2, 1);
+};
+
+export const createColorFactory = (formHue: number) => {
+  const colorCache = new Map<number, [number, number, number]>();
+
+  return (noiseValue: number): [number, number, number] => {
+    const roundedNoise = Math.round(noiseValue * 1000) / 1000; // Round to 3 decimal places for caching
+
+    if (colorCache.has(roundedNoise)) {
+      return colorCache.get(roundedNoise)!;
+    }
+
+    const lightness = 90 - noiseValue * 80;
+    const colorString = `lch(${lightness}% ${30 * noiseValue} ${formHue})`;
+    const color = rgb(colorString);
+
+    if (color) {
+      const rgbValues: [number, number, number] = [
+        Math.floor(color.r * 255),
+        Math.floor(color.g * 255),
+        Math.floor(color.b * 255),
+      ];
+      colorCache.set(roundedNoise, rgbValues);
+      return rgbValues;
+    }
+
+    return [0, 0, 0]; // Fallback to black
+  };
 };
