@@ -7,6 +7,9 @@ const prng = Math.random;
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
+  if (!context) {
+    return;
+  }
 
   // Initialize the parameters UI
   new ParamsUI();
@@ -32,9 +35,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       return newBoid;
     });
-
-    requestAnimationFrame(animate);
   }
 
-  animate();
+  utils.loop(context, animate);
 });
