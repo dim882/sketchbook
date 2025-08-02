@@ -12,7 +12,7 @@ const sketchLibPath = path.resolve(__dirname, '..', 'sketches', sketchName, 'lib
 
 fs.copy(libPath, sketchLibPath, {
   overwrite: true,
-  filter: (src) => !src.endsWith('package.json'),
+  filter: (src: string) => !src.endsWith('package.json'),
 })
   .then(() => console.log(`Copied lib to ${sketchName}`))
-  .catch((err) => console.error('Error copying lib:', err));
+  .catch((err: Error) => console.error('Error copying lib:', err));
