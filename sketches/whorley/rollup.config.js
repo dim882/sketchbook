@@ -3,7 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
 
 export default {
-  input: 'whorley.ts',
+  input: 'src/whorley.ts',
   output: {
     file: 'dist/bundle.js',
     format: 'es',
@@ -12,12 +12,12 @@ export default {
   plugins: [
     nodeResolve(),
     typescript({
-      include: ['../../lib/**/*.ts', '**/*.ts'],
+      include: ['../../lib/**/*.ts', 'src/**/*.ts'],
     }),
     copy({
       targets: [
-        { src: '*.css', dest: 'dist' },
-        { src: '*.html', dest: 'dist' },
+        { src: 'src/*.css', dest: 'dist' },
+        { src: 'src/*.html', dest: 'dist' },
       ],
     }),
   ],
