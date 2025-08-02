@@ -7,11 +7,11 @@ const prng = Math.random;
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
+
   if (!context) {
     return;
   }
 
-  // Initialize the parameters UI
   new ParamsUI();
 
   let flock = utils.createFlock(BOID_COUNT, canvas.width, canvas.height, prng);
@@ -25,7 +25,6 @@ window.addEventListener('DOMContentLoaded', () => {
     context.fillStyle = BACKGROUND_COLOR;
     context.clearRect(0, 0, width, height);
 
-    // Update and draw boids
     flock = flock.map((boid, index) => {
       const newBoid = utils.flock(boid, flock, FLOCK_PARAMS, width, height);
 
