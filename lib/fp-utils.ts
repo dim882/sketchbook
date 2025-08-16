@@ -86,7 +86,11 @@ function Task<T>(fork: Fork<T>): ITask<T> {
   return {
     fork,
     ap<U>(other: ITask<(value: T) => U>): ITask<U> {
-      return Task<U>((rej, res) => fork(rej, (f) => other.fork(rej, (x) => res(f(x)))));
+      return Task<U>((rej, res) => 
+        fork(rej, (value: T) => 
+          other.fork(rej, (fn: (value: T) => U) => res(fn(value)))
+        )
+      );
     },
     map<U>(f: (value: T) => U): ITask<U> {
       return Task<U>((rej, res) => fork(rej, (x) => res(f(x))));
