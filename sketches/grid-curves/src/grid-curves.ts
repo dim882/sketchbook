@@ -1,6 +1,6 @@
-import * as Path from './chaikin-curves.path';
-import * as Drawing from './chaikin-curves.drawing';
-import { IGrid } from './chaikin-curves.types';
+import * as Path from './grid-curves.path';
+import * as Drawing from './grid-curves.drawing';
+import { IGrid } from './grid-curves.types';
 
 const BACKGROUND_COLOR = '#ffffff';
 const LINE_COLOR = '#000000';

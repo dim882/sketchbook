@@ -1,4 +1,4 @@
-import { IDirection, IGrid, IGridPosition, IPoint, IVector } from './chaikin-curves.types';
+import { IDirection, IGrid, IGridPosition, IPoint, IVector } from './grid-curves.types';
 
 const DIRECTIONS: readonly IDirection[] = [
   { dx: 1, dy: 0 }, // Right

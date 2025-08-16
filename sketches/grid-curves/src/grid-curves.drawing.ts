@@ -1,4 +1,4 @@
-import { IPoint, IVector } from './chaikin-curves.types';
+import { IPoint, IVector } from './grid-curves.types';
 
 export function drawLine(
   context: CanvasRenderingContext2D,

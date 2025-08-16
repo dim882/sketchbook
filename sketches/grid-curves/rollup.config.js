@@ -3,7 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
 
 export default {
-  input: 'src/chaikin-curves.ts',
+  input: 'src/grid-curves.ts',
   output: {
     file: 'dist/bundle.js',
     format: 'es',
