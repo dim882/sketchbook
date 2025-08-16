@@ -8,36 +8,7 @@ const DIRECTIONS: readonly IDirection[] = [
 ];
 
 /**
- * Determines the next direction for the path, prioritizing unexplored areas
- */
-const determineNextDirection = ({
-  grid,
-  position,
-  direction,
-  consecutiveSteps,
-  maxConsecutiveSteps,
-  visitedCells,
-}: {
-  grid: IGrid;
-  position: IGridPosition;
-  direction: IDirection;
-  consecutiveSteps: number;
-  maxConsecutiveSteps: number;
-  visitedCells: Set<string>;
-}): IDirection | undefined => {
-  const possibleDirections = getPossibleDirections({
-    grid,
-    position,
-    direction,
-    consecutiveSteps,
-    maxConsecutiveSteps,
-  });
-
-  return selectNextDirection(possibleDirections, position, visitedCells, grid);
-};
-
-/**
- * Generates a path that fills the canvas without returning to start
+ * Generates a path that fills the canvas without backtracking
  * Continues until at least 50% of cells are filled
  */
 export const generateRandomGridPath = (
@@ -62,10 +33,10 @@ export const generateRandomGridPath = (
   let consecutiveSteps = 1;
 
   const totalCells = grid.cols * grid.rows;
-  const targetCells = Math.ceil(totalCells * 0.9);
+  const targetCells = Math.ceil(totalCells * 0.5); // 50% coverage target
 
   for (let i = 1; i < maxIterations && visitedCells.size < targetCells; i++) {
-    const nextDirection = determineNextDirection({
+    const possibleDirections = getPossibleDirections({
       grid,
       position,
       direction,
@@ -74,22 +45,15 @@ export const generateRandomGridPath = (
       visitedCells,
     });
 
-    if (!nextDirection) {
-      // If no valid direction, try to find any unvisited adjacent cell
-      const fallbackDirection = findFallbackDirection(position, grid, visitedCells);
-      if (!fallbackDirection) {
-        break; // No more moves possible
-      }
-      direction = fallbackDirection;
-      consecutiveSteps = 1;
-    } else {
-      if (nextDirection.dx === direction.dx && nextDirection.dy === direction.dy) {
-        consecutiveSteps++;
-      } else {
-        consecutiveSteps = 1;
-      }
-      direction = nextDirection;
+    if (possibleDirections.length === 0) {
+      break; // No valid moves available
     }
+
+    // Choose random direction from available options
+    const randomIndex = Math.floor(Math.random() * possibleDirections.length);
+    const nextDirection = possibleDirections[randomIndex];
+
+    direction = nextDirection;
 
     position = {
       col: position.col + direction.dx,
@@ -101,31 +65,6 @@ export const generateRandomGridPath = (
   }
 
   return path;
-};
-
-/**
- * Finds a fallback direction when normal pathfinding fails
- */
-const findFallbackDirection = (
-  position: IGridPosition,
-  grid: IGrid,
-  visitedCells: Set<string>
-): IDirection | undefined => {
-  const cellKey = (pos: IGridPosition) => `${pos.col},${pos.row}`;
-
-  for (const dir of DIRECTIONS) {
-    const newCol = position.col + dir.dx;
-    const newRow = position.row + dir.dy;
-
-    if (newCol >= 0 && newCol < grid.cols && newRow >= 0 && newRow < grid.rows) {
-      const newPos = { col: newCol, row: newRow };
-      if (!visitedCells.has(cellKey(newPos))) {
-        return dir;
-      }
-    }
-  }
-
-  return undefined;
 };
 
 /**
@@ -158,19 +97,21 @@ const getPossibleDirections = ({
   direction,
   consecutiveSteps,
   maxConsecutiveSteps,
+  visitedCells,
 }: {
   grid: IGrid;
   position: IGridPosition;
   direction: IDirection;
   consecutiveSteps: number;
   maxConsecutiveSteps: number;
+  visitedCells: Set<string>;
 }): IDirection[] => {
   return DIRECTIONS.filter((dir) => {
     const newCol = position.col + dir.dx;
     const newRow = position.row + dir.dy;
 
     // Check bounds
-    if (newCol < 0 || newCol > grid.cols || newRow < 0 || newRow >= grid.rows) {
+    if (newCol < 0 || newCol >= grid.cols || newRow < 0 || newRow >= grid.rows) {
       return false;
     }
 
@@ -185,53 +126,6 @@ const getPossibleDirections = ({
 
     return true;
   });
-};
-
-const selectNextDirection = (
-  availableDirections: IDirection[],
-  position: IGridPosition,
-  visitedCells: Set<string>,
-  grid: IGrid
-): IDirection | undefined => {
-  const weights = availableDirections.map((dir) => {
-    const newCol = position.col + dir.dx;
-    const newRow = position.row + dir.dy;
-
-    if (newCol < 0 || newCol >= grid.cols || newRow < 0 || newRow >= grid.rows) {
-      return 0; // Out of bounds
-    }
-
-    if (visitedCells.has(`${newCol},${newRow}`)) {
-      return 0; // Already visited
-    }
-
-    // Prioritize unvisited cells
-    if (dir.dx === 0 && dir.dy === 1) return 10; // Down
-    if (dir.dx === 0 && dir.dy === -1) return 10; // Up
-    if (dir.dx === 1 && dir.dy === 0) return 10; // Right
-    if (dir.dx === -1 && dir.dy === 0) return 10; // Left
-
-    // Fallback weights
-    if (dir.dx === 0) return 5; // Up/Down
-    if (dir.dy === 0) return 5; // Left/Right
-
-    return 1; // Default weight
-  });
-
-  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0 as number);
-
-  let random = Math.random() * totalWeight;
-
-  for (let i = 0; i < weights.length; i++) {
-    random = random - weights[i];
-
-    if (random <= 0) {
-      return availableDirections[i];
-    }
-  }
-
-  // Fallback in case of floating point inaccuracies, though it's unlikely to be reached.
-  return availableDirections[availableDirections.length - 1];
 };
 
 export function calculateParallelPath(path: IPoint[], offset: number, side: 'left' | 'right'): IPoint[] {
