@@ -5,7 +5,7 @@ import { IGrid } from './grid-curves-2.types';
 const BACKGROUND_COLOR = '#ffffff';
 const LINE_COLOR = '#000000';
 const GRID_CELL_SIZE = 50;
-const MAX_ITERATIONS = 1000;
+const MAX_ITERATIONS = 15000;
 const CHAIKIN_ITERATIONS = 3;
 const LINE_WIDTH = 10;
 const PARALLEL_OFFSET = 7;

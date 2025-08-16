@@ -8,7 +8,7 @@ const DIRECTIONS: readonly IDirection[] = [
 ];
 
 /**
- * Determines the next direction for the path, switching between wandering and homing modes.
+ * Determines the next direction for the path, prioritizing unexplored areas
  */
 const determineNextDirection = ({
   grid,
@@ -16,35 +16,15 @@ const determineNextDirection = ({
   direction,
   consecutiveSteps,
   maxConsecutiveSteps,
-  hasReachedRightEdge,
-  startPosition,
+  visitedCells,
 }: {
   grid: IGrid;
   position: IGridPosition;
   direction: IDirection;
   consecutiveSteps: number;
   maxConsecutiveSteps: number;
-  hasReachedRightEdge: boolean;
-  startPosition: IGridPosition;
+  visitedCells: Set<string>;
 }): IDirection | undefined => {
-  // Homing mode: Once past the start column on the return, move deterministically.
-  if (hasReachedRightEdge && position.col < startPosition.col) {
-    if (position.row !== startPosition.row) {
-      // Stage 1: Align Y-axis.
-      return {
-        dx: 0,
-        dy: Math.sign(startPosition.row - position.row),
-      };
-    } else {
-      // Stage 2: Align X-axis.
-      return {
-        dx: Math.sign(startPosition.col - position.col),
-        dy: 0,
-      };
-    }
-  }
-
-  // Wandering mode
   const possibleDirections = getPossibleDirections({
     grid,
     position,
@@ -53,12 +33,12 @@ const determineNextDirection = ({
     maxConsecutiveSteps,
   });
 
-  return selectNextDirection(possibleDirections, hasReachedRightEdge);
+  return selectNextDirection(possibleDirections, position, visitedCells, grid);
 };
 
 /**
- * Generates a path that starts from the left edge and moves toward the right edge
- * Returns grid positions (col, row) rather than actual coordinates
+ * Generates a path that fills the canvas without returning to start
+ * Continues until at least 50% of cells are filled
  */
 export const generateRandomGridPath = (
   grid: IGrid,
@@ -72,50 +52,80 @@ export const generateRandomGridPath = (
   };
 
   const path: IGridPosition[] = [startPosition];
+  const visitedCells = new Set<string>();
+  const cellKey = (pos: IGridPosition) => `${pos.col},${pos.row}`;
+
+  visitedCells.add(cellKey(startPosition));
 
   let position = { ...startPosition };
   let direction: IDirection = { dx: 1, dy: 0 }; // Initial direction
   let consecutiveSteps = 1;
-  let hasReachedRightEdge = false;
 
-  for (let i = 1; i < maxIterations; i++) {
+  const totalCells = grid.cols * grid.rows;
+  const targetCells = Math.ceil(totalCells * 0.9);
+
+  for (let i = 1; i < maxIterations && visitedCells.size < targetCells; i++) {
     const nextDirection = determineNextDirection({
       grid,
       position,
       direction,
       consecutiveSteps,
       maxConsecutiveSteps,
-      hasReachedRightEdge,
-      startPosition,
+      visitedCells,
     });
 
     if (!nextDirection) {
-      break;
-    }
-
-    if (nextDirection.dx === direction.dx && nextDirection.dy === direction.dy) {
-      consecutiveSteps++;
-    } else {
+      // If no valid direction, try to find any unvisited adjacent cell
+      const fallbackDirection = findFallbackDirection(position, grid, visitedCells);
+      if (!fallbackDirection) {
+        break; // No more moves possible
+      }
+      direction = fallbackDirection;
       consecutiveSteps = 1;
+    } else {
+      if (nextDirection.dx === direction.dx && nextDirection.dy === direction.dy) {
+        consecutiveSteps++;
+      } else {
+        consecutiveSteps = 1;
+      }
+      direction = nextDirection;
     }
-    direction = nextDirection;
 
     position = {
       col: position.col + direction.dx,
       row: position.row + direction.dy,
     };
+
     path.push(position);
-
-    if (!hasReachedRightEdge && position.col >= grid.cols - edgeMargin) {
-      hasReachedRightEdge = true;
-    }
-
-    if (hasReachedRightEdge && position.col === startPosition.col && position.row === startPosition.row) {
-      break;
-    }
+    visitedCells.add(cellKey(position));
   }
 
   return path;
+};
+
+/**
+ * Finds a fallback direction when normal pathfinding fails
+ */
+const findFallbackDirection = (
+  position: IGridPosition,
+  grid: IGrid,
+  visitedCells: Set<string>
+): IDirection | undefined => {
+  const cellKey = (pos: IGridPosition) => `${pos.col},${pos.row}`;
+
+  for (const dir of DIRECTIONS) {
+    const newCol = position.col + dir.dx;
+    const newRow = position.row + dir.dy;
+
+    if (newCol >= 0 && newCol < grid.cols && newRow >= 0 && newRow < grid.rows) {
+      const newPos = { col: newCol, row: newRow };
+      if (!visitedCells.has(cellKey(newPos))) {
+        return dir;
+      }
+    }
+  }
+
+  return undefined;
 };
 
 /**
@@ -179,23 +189,36 @@ const getPossibleDirections = ({
 
 const selectNextDirection = (
   availableDirections: IDirection[],
-  hasReachedRightEdge: boolean
+  position: IGridPosition,
+  visitedCells: Set<string>,
+  grid: IGrid
 ): IDirection | undefined => {
   const weights = availableDirections.map((dir) => {
-    if (hasReachedRightEdge) {
-      // On return journey, favor going left
-      if (dir.dx === -1) return 3; // Left: highest weight
-      if (dir.dx === 1) return 1; // Right: lowest weight
-      return 2; // Up/Down: medium weight
-    } else {
-      // On outward journey, favor going right
-      if (dir.dx === 1) return 3; // Right: highest weight
-      if (dir.dx === -1) return 1; // Left: lowest weight
-      return 2; // Up/Down: medium weight
+    const newCol = position.col + dir.dx;
+    const newRow = position.row + dir.dy;
+
+    if (newCol < 0 || newCol >= grid.cols || newRow < 0 || newRow >= grid.rows) {
+      return 0; // Out of bounds
     }
+
+    if (visitedCells.has(`${newCol},${newRow}`)) {
+      return 0; // Already visited
+    }
+
+    // Prioritize unvisited cells
+    if (dir.dx === 0 && dir.dy === 1) return 10; // Down
+    if (dir.dx === 0 && dir.dy === -1) return 10; // Up
+    if (dir.dx === 1 && dir.dy === 0) return 10; // Right
+    if (dir.dx === -1 && dir.dy === 0) return 10; // Left
+
+    // Fallback weights
+    if (dir.dx === 0) return 5; // Up/Down
+    if (dir.dy === 0) return 5; // Left/Right
+
+    return 1; // Default weight
   });
 
-  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+  const totalWeight = weights.reduce((sum, weight) => sum + weight, 0 as number);
 
   let random = Math.random() * totalWeight;
 
