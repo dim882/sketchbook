@@ -16,8 +16,6 @@ $ pnpm clone <base sketch name> <my sketch name>
 
 Do not intersperse comments throughout the code. Simply write code that is clearly understood. The user is an experienced programmer and doesn't need much explanation.
 
-It is important to NEVER FORGET THIS.
-
 ## TypeScript
 
 Avoid using `any` at all costs. If it's absolutely necessary, this is a case where a comment is NECESSARY to call it out.
