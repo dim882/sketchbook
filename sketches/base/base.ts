@@ -13,23 +13,22 @@ const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, uppe
 
 // Initialize PRNG with seed
 const seed = ensureSeedInUrl();
-const makeRnd = prng(seed);
+let makeRand = prng(seed);
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
 
-  // Add event handler for change-seed button
   const changeSeedButton = document.querySelector('.change-seed') as HTMLButtonElement;
+
   if (changeSeedButton) {
     changeSeedButton.addEventListener('click', () => {
       const newSeed = generateRandomSeed();
+
       setSeedInUrl(newSeed);
-      // Reinitialize PRNG with new seed
-      const newMakeRnd = prng(newSeed);
-      // Update the global makeRnd reference
-      Object.assign(makeRnd, newMakeRnd);
-      // Re-render with new seed
+
+      makeRand = prng(newSeed);
+
       if (context) {
         render(context);
       }
@@ -45,7 +44,7 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const formHue = getInteger(makeRnd, 0, 270);
+  const formHue = getInteger(makeRand, 0, 270);
   const backgroundHue = formHue + 180;
 
   context.fillStyle = `lch(60% 50% ${backgroundHue})`;
