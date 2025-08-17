@@ -1,4 +1,4 @@
-import alea from './pnrg';
+import prng from './pnrg';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
@@ -10,9 +10,7 @@ const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, uppe
   return Math.floor(getFloat(generateNumber, lower, upper));
 };
 
-console.log('foo!');
-
-const prng = alea('foo?');
+const makeRnd = prng('foo?');
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -27,7 +25,7 @@ function render(context: CanvasRenderingContext2D) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const formHue = getInteger(prng, 0, 270);
+  const formHue = getInteger(makeRnd, 0, 270);
   const backgroundHue = formHue + 180;
 
   context.fillStyle = `lch(60% 50% ${backgroundHue})`;
