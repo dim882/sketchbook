@@ -1,3 +1,4 @@
+import alea from 'alea';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
@@ -9,7 +10,9 @@ const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, uppe
   return Math.floor(getFloat(generateNumber, lower, upper));
 };
 
-const prng = Math.random;
+console.log('foo');
+
+const prng = alea('foo');
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
