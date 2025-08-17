@@ -12,7 +12,7 @@ const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, uppe
 
 console.log('foo!');
 
-const prng = alea('f00oo');
+const prng = alea('foo?');
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;

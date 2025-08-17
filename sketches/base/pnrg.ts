@@ -8,8 +8,6 @@ export interface RandomGenerator {
   fract53: () => number;
   version: string;
   args: any[];
-  exportState: () => [number, number, number, number];
-  importState: (state: [number, number, number, number]) => void;
 }
 
 export interface MashFunction {
@@ -87,26 +85,8 @@ export function Alea(...args: any[]): RandomGenerator {
   random.version = 'Alea 0.9';
   random.args = args;
 
-  // my own additions to sync state between two generators
-  random.exportState = function (): [number, number, number, number] {
-    return [s0, s1, s2, c];
-  };
-  random.importState = function (i: [number, number, number, number]): void {
-    s0 = +i[0] || 0;
-    s1 = +i[1] || 0;
-    s2 = +i[2] || 0;
-    c = +i[3] || 0;
-  };
-
   return random;
 }
-
-// Static method to import state
-Alea.importState = function (i: [number, number, number, number]): RandomGenerator {
-  const random = new (Alea as any)();
-  random.importState(i);
-  return random;
-};
 
 // Default export
 export default Alea;
