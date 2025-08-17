@@ -26,11 +26,11 @@ function render(context: CanvasRenderingContext2D) {
     radius
   );
 
-  gradient.addColorStop(0, '#ffffff'); // Bright highlight
-  gradient.addColorStop(0.3, '#f0f0f0'); // Light area
-  gradient.addColorStop(0.6, '#d0d0d0'); // Mid-tone
-  gradient.addColorStop(0.8, '#a0a0a0'); // Shadow area
-  gradient.addColorStop(1, '#606060'); // Dark shadow
+  gradient.addColorStop(0, '#ffffff');
+  gradient.addColorStop(0.3, '#f0f0f0');
+  gradient.addColorStop(0.6, '#d0d0d0');
+  gradient.addColorStop(0.8, '#a0a0a0');
+  gradient.addColorStop(1, '#606060');
 
   context.beginPath();
   context.arc(centerX, centerY, radius, 0, Math.PI * 2);
