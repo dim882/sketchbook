@@ -1,5 +1,6 @@
-// From http://baagoe.com/en/RandomMusings/javascript/
-// Converted to TypeScript with proper exports
+// From https://github.com/coverslide/node-alea
+// Which is from http://baagoe.com/en/RandomMusings/javascript/
+// Converted to TypeScript and esm
 
 export interface RandomGenerator {
   (): number;
@@ -23,7 +24,9 @@ function Mash(): MashFunction {
 
     for (let i = 0; i < data.length; i++) {
       n += data.charCodeAt(i);
+
       let h = 0.02519603282416938 * n;
+
       n = h >>> 0;
       h -= n;
       h *= n;
@@ -101,5 +104,4 @@ export function Alea(...args: any[]): RandomGenerator {
   return random;
 }
 
-// Default export
 export default Alea;
