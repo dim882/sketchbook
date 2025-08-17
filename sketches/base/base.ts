@@ -2,6 +2,29 @@ import prng from './pnrg';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
+// Seed management functions
+const getSeedFromUrl = (): string => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('seed') || '';
+};
+
+const generateRandomSeed = (): string => {
+  return Math.random().toString(36).substring(2, 8);
+};
+
+const ensureSeedInUrl = (): string => {
+  const existingSeed = getSeedFromUrl();
+  if (existingSeed) {
+    return existingSeed;
+  }
+
+  const newSeed = generateRandomSeed();
+  const url = new URL(window.location.href);
+  url.searchParams.set('seed', newSeed);
+  window.history.replaceState({}, '', url.toString());
+  return newSeed;
+};
+
 const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
   return (upper - lower) * generateNumber() + lower;
 };
@@ -10,7 +33,9 @@ const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, uppe
   return Math.floor(getFloat(generateNumber, lower, upper));
 };
 
-const makeRnd = prng('foo?');
+// Initialize PRNG with seed
+const seed = ensureSeedInUrl();
+const makeRnd = prng(seed);
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
