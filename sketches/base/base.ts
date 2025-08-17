@@ -1,33 +1,7 @@
 import prng from './pnrg';
+import { ensureSeedInUrl, generateRandomSeed, setSeedInUrl } from './base.seed';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
-
-// Seed management functions
-const getSeedFromUrl = (): string => {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get('seed') || '';
-};
-
-const generateRandomSeed = (): string => {
-  return Math.random().toString(36).substring(2, 8);
-};
-
-const setSeedInUrl = (seed: string): void => {
-  const url = new URL(window.location.href);
-  url.searchParams.set('seed', seed);
-  window.history.replaceState({}, '', url.toString());
-};
-
-const ensureSeedInUrl = (): string => {
-  const existingSeed = getSeedFromUrl();
-  if (existingSeed) {
-    return existingSeed;
-  }
-
-  const newSeed = generateRandomSeed();
-  setSeedInUrl(newSeed);
-  return newSeed;
-};
 
 const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
   return (upper - lower) * generateNumber() + lower;
