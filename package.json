@@ -4,7 +4,6 @@
     "dev": "pnpm --filter tools dev",
     "check": "tsc --noEmit sketches/**/*.ts sketches/**/*.tsx",
     "clone": "pnpm --filter tools clone",
-    "lib:pull": "pnpm --filter tools lib:pull",
     "build": "pnpm --filter tools build"
   },
   "devDependencies": {
