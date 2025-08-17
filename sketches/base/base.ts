@@ -12,6 +12,12 @@ const generateRandomSeed = (): string => {
   return Math.random().toString(36).substring(2, 8);
 };
 
+const setSeedInUrl = (seed: string): void => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('seed', seed);
+  window.history.replaceState({}, '', url.toString());
+};
+
 const ensureSeedInUrl = (): string => {
   const existingSeed = getSeedFromUrl();
   if (existingSeed) {
@@ -19,9 +25,7 @@ const ensureSeedInUrl = (): string => {
   }
 
   const newSeed = generateRandomSeed();
-  const url = new URL(window.location.href);
-  url.searchParams.set('seed', newSeed);
-  window.history.replaceState({}, '', url.toString());
+  setSeedInUrl(newSeed);
   return newSeed;
 };
 
@@ -40,6 +44,23 @@ const makeRnd = prng(seed);
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
+
+  // Add event handler for change-seed button
+  const changeSeedButton = document.querySelector('.change-seed') as HTMLButtonElement;
+  if (changeSeedButton) {
+    changeSeedButton.addEventListener('click', () => {
+      const newSeed = generateRandomSeed();
+      setSeedInUrl(newSeed);
+      // Reinitialize PRNG with new seed
+      const newMakeRnd = prng(newSeed);
+      // Update the global makeRnd reference
+      Object.assign(makeRnd, newMakeRnd);
+      // Re-render with new seed
+      if (context) {
+        render(context);
+      }
+    });
+  }
 
   if (context) {
     render(context);
