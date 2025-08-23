@@ -1,4 +1,3 @@
-import prng from './pnrg';
 import { createSeedState } from './base.seed';
 import { getInteger } from './base.utils';
 export type PseudoRandomNumberGenerator = () => number;
@@ -9,7 +8,6 @@ const seedState = createSeedState();
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
-
   const changeSeedButton = document.querySelector('.change-seed') as HTMLButtonElement;
 
   if (changeSeedButton) {
