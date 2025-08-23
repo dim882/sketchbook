@@ -3,7 +3,6 @@ import { ensureSeedInUrl, getInteger, createSeedState, handleSeedChange } from '
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
-// Initialize PRNG with seed
 const seed = ensureSeedInUrl();
 const seedState = createSeedState(seed, prng);
 

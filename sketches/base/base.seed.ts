@@ -31,7 +31,6 @@ export const ensureSeedInUrl = (): string => {
   return newSeed;
 };
 
-// Utility functions for random number generation
 export const getFloat = (generateNumber: () => number, lower = 0, upper = 1) => {
   return (upper - lower) * generateNumber() + lower;
 };
@@ -40,7 +39,6 @@ export const getInteger = (generateNumber: () => number, lower = 0, upper = 1) =
   return Math.floor(getFloat(generateNumber, lower, upper));
 };
 
-// Functional state management
 export const createSeedState = (initialSeed: string, prngFn: (seed: string) => () => number) => {
   let currentRand = prngFn(initialSeed);
 
@@ -54,7 +52,6 @@ export const createSeedState = (initialSeed: string, prngFn: (seed: string) => (
   };
 };
 
-// Standalone event handler function
 export const handleSeedChange = (
   context: CanvasRenderingContext2D | null,
   seedState: ReturnType<typeof createSeedState>,
