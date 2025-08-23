@@ -1,8 +1,9 @@
-// Seed management functions
+const QUERY_STRING_SEED = 'seed';
+
 export const getSeedFromUrl = (): string => {
   const urlParams = new URLSearchParams(window.location.search);
 
-  return urlParams.get('seed') || '';
+  return urlParams.get(QUERY_STRING_SEED) || '';
 };
 
 export const generateRandomSeed = (): string => {
@@ -12,7 +13,7 @@ export const generateRandomSeed = (): string => {
 export const setSeedInUrl = (seed: string): void => {
   const url = new URL(window.location.href);
 
-  url.searchParams.set('seed', seed);
+  url.searchParams.set(QUERY_STRING_SEED, seed);
   window.history.replaceState({}, '', url.toString());
 };
 

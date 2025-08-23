@@ -15,6 +15,19 @@ const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, uppe
 const seed = ensureSeedInUrl();
 let makeRand = prng(seed);
 
+// Standalone event handler function
+function handleSeedChange(context: CanvasRenderingContext2D | null) {
+  return () => {
+    const newSeed = generateRandomSeed();
+    setSeedInUrl(newSeed);
+    makeRand = prng(newSeed);
+
+    if (context) {
+      render(context, makeRand);
+    }
+  };
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
@@ -22,25 +35,15 @@ window.addEventListener('DOMContentLoaded', () => {
   const changeSeedButton = document.querySelector('.change-seed') as HTMLButtonElement;
 
   if (changeSeedButton) {
-    changeSeedButton.addEventListener('click', () => {
-      const newSeed = generateRandomSeed();
-
-      setSeedInUrl(newSeed);
-
-      makeRand = prng(newSeed);
-
-      if (context) {
-        render(context);
-      }
-    });
+    changeSeedButton.addEventListener('click', handleSeedChange(context));
   }
 
   if (context) {
-    render(context);
+    render(context, makeRand);
   }
 });
 
-function render(context: CanvasRenderingContext2D) {
+function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGenerator) {
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
