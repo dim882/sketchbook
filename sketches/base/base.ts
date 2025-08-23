@@ -8,20 +8,17 @@ const seedState = createSeedState();
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
   const context = canvas.getContext('2d');
-  const changeSeedButton = document.querySelector('.change-seed') as HTMLButtonElement;
 
   if (!context) {
     return;
   }
 
-  if (changeSeedButton) {
-    changeSeedButton.addEventListener(
-      'click',
-      seedState.handleSeedChange((newRand) => {
-        render(context, newRand);
-      })
-    );
-  }
+  document.querySelector('.change-seed')?.addEventListener(
+    'click',
+    seedState.handleSeedChange((newRand) => {
+      render(context, newRand);
+    })
+  );
 
   render(context, seedState.getRand());
 });
