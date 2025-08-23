@@ -1,3 +1,4 @@
+import { PseudoRandomNumberGenerator } from './base';
 import prng from './pnrg';
 
 const QUERY_STRING_SEED = 'seed';
@@ -38,27 +39,23 @@ export const createSeedState = () => {
   let currentSeed = initialSeed;
   let currentRand = prng(initialSeed);
 
+  function changeSeed(newSeed: string) {
+    setSeedInUrl(newSeed);
+    currentSeed = newSeed;
+    currentRand = prng(newSeed);
+
+    return currentRand;
+  }
+
   return {
     getRand: () => currentRand,
     getSeed: () => currentSeed,
-    changeSeed: (newSeed: string) => {
-      setSeedInUrl(newSeed);
-      currentSeed = newSeed;
-      currentRand = prng(newSeed);
-      return currentRand;
-    },
-    handleSeedChange: (callback: (rand: () => number) => void) => {
+    changeSeed,
+    handleSeedChange: (callback: (rand: PseudoRandomNumberGenerator) => void) => {
       return () => {
         const newRand = changeSeed(generateRandomSeed());
         callback(newRand);
       };
     },
   };
-
-  function changeSeed(newSeed: string) {
-    setSeedInUrl(newSeed);
-    currentSeed = newSeed;
-    currentRand = prng(newSeed);
-    return currentRand;
-  }
 };
