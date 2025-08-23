@@ -10,20 +10,20 @@ window.addEventListener('DOMContentLoaded', () => {
   const context = canvas.getContext('2d');
   const changeSeedButton = document.querySelector('.change-seed') as HTMLButtonElement;
 
+  if (!context) {
+    return;
+  }
+
   if (changeSeedButton) {
     changeSeedButton.addEventListener(
       'click',
       seedState.handleSeedChange((newRand) => {
-        if (context) {
-          render(context, newRand);
-        }
+        render(context, newRand);
       })
     );
   }
 
-  if (context) {
-    render(context, seedState.getRand());
-  }
+  render(context, seedState.getRand());
 });
 
 function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGenerator) {
