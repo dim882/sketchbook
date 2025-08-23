@@ -30,3 +30,26 @@ export const ensureSeedInUrl = (): string => {
 
   return newSeed;
 };
+
+// Utility functions for random number generation
+export const getFloat = (generateNumber: () => number, lower = 0, upper = 1) => {
+  return (upper - lower) * generateNumber() + lower;
+};
+
+export const getInteger = (generateNumber: () => number, lower = 0, upper = 1) => {
+  return Math.floor(getFloat(generateNumber, lower, upper));
+};
+
+// Functional state management
+export const createSeedState = (initialSeed: string, prngFn: (seed: string) => () => number) => {
+  let currentRand = prngFn(initialSeed);
+
+  return {
+    getRand: () => currentRand,
+    changeSeed: (newSeed: string) => {
+      setSeedInUrl(newSeed);
+      currentRand = prngFn(newSeed);
+      return currentRand;
+    },
+  };
+};

@@ -1,29 +1,18 @@
 import prng from './pnrg';
-import { ensureSeedInUrl, generateRandomSeed, setSeedInUrl } from './base.seed';
+import { ensureSeedInUrl, generateRandomSeed, setSeedInUrl, getFloat, getInteger, createSeedState } from './base.seed';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
-const getFloat = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
-  return (upper - lower) * generateNumber() + lower;
-};
-
-const getInteger = (generateNumber: PseudoRandomNumberGenerator, lower = 0, upper = 1) => {
-  return Math.floor(getFloat(generateNumber, lower, upper));
-};
-
 // Initialize PRNG with seed
 const seed = ensureSeedInUrl();
-let makeRand = prng(seed);
+const seedState = createSeedState(seed, prng);
 
-// Standalone event handler function
 function handleSeedChange(context: CanvasRenderingContext2D | null) {
   return () => {
-    const newSeed = generateRandomSeed();
-    setSeedInUrl(newSeed);
-    makeRand = prng(newSeed);
+    const newRand = seedState.changeSeed(generateRandomSeed());
 
     if (context) {
-      render(context, makeRand);
+      render(context, newRand);
     }
   };
 }
@@ -39,7 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   if (context) {
-    render(context, makeRand);
+    render(context, seedState.getRand());
   }
 });
 
@@ -47,7 +36,7 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  const formHue = getInteger(makeRand, 0, 270);
+  const formHue = getInteger(rand, 0, 270);
   const backgroundHue = formHue + 180;
 
   context.fillStyle = `lch(60% 50% ${backgroundHue})`;
