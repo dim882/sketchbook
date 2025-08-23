@@ -1,3 +1,5 @@
+import prng from './pnrg';
+
 const QUERY_STRING_SEED = 'seed';
 
 export const getSeedFromUrl = (): string => {
@@ -31,10 +33,10 @@ export const ensureSeedInUrl = (): string => {
   return newSeed;
 };
 
-export const createSeedState = (prngFn: (seed: string) => () => number) => {
+export const createSeedState = () => {
   const initialSeed = ensureSeedInUrl();
   let currentSeed = initialSeed;
-  let currentRand = prngFn(initialSeed);
+  let currentRand = prng(initialSeed);
 
   return {
     getRand: () => currentRand,
@@ -42,7 +44,7 @@ export const createSeedState = (prngFn: (seed: string) => () => number) => {
     changeSeed: (newSeed: string) => {
       setSeedInUrl(newSeed);
       currentSeed = newSeed;
-      currentRand = prngFn(newSeed);
+      currentRand = prng(newSeed);
       return currentRand;
     },
   };

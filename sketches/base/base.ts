@@ -4,7 +4,7 @@ import { getInteger } from './base.utils';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
-const seedState = createSeedState(prng);
+const seedState = createSeedState();
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;
