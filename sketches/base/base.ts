@@ -1,5 +1,6 @@
 import prng from './pnrg';
-import { ensureSeedInUrl, getInteger, createSeedState, handleSeedChange } from './base.seed';
+import { ensureSeedInUrl, createSeedState, handleSeedChange } from './base.seed';
+import { getInteger } from './base.utils';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 

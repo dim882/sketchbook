@@ -31,14 +31,6 @@ export const ensureSeedInUrl = (): string => {
   return newSeed;
 };
 
-export const getFloat = (generateNumber: () => number, lower = 0, upper = 1) => {
-  return (upper - lower) * generateNumber() + lower;
-};
-
-export const getInteger = (generateNumber: () => number, lower = 0, upper = 1) => {
-  return Math.floor(getFloat(generateNumber, lower, upper));
-};
-
 export const createSeedState = (initialSeed: string, prngFn: (seed: string) => () => number) => {
   let currentRand = prngFn(initialSeed);
 
