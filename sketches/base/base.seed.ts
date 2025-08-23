@@ -47,16 +47,10 @@ export const createSeedState = () => {
       currentRand = prng(newSeed);
       return currentRand;
     },
-    handleSeedChange: (
-      context: CanvasRenderingContext2D | null,
-      render: (context: CanvasRenderingContext2D, rand: () => number) => void
-    ) => {
+    handleSeedChange: (callback: (rand: () => number) => void) => {
       return () => {
         const newRand = changeSeed(generateRandomSeed());
-
-        if (context) {
-          render(context, newRand);
-        }
+        callback(newRand);
       };
     },
   };

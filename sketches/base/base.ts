@@ -13,7 +13,14 @@ window.addEventListener('DOMContentLoaded', () => {
   const changeSeedButton = document.querySelector('.change-seed') as HTMLButtonElement;
 
   if (changeSeedButton) {
-    changeSeedButton.addEventListener('click', seedState.handleSeedChange(context, render));
+    changeSeedButton.addEventListener(
+      'click',
+      seedState.handleSeedChange((newRand) => {
+        if (context) {
+          render(context, newRand);
+        }
+      })
+    );
   }
 
   if (context) {
