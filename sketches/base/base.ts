@@ -1,5 +1,5 @@
 import prng from './pnrg';
-import { createSeedState, handleSeedChange } from './base.seed';
+import { createSeedState } from './base.seed';
 import { getInteger } from './base.utils';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
@@ -13,7 +13,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const changeSeedButton = document.querySelector('.change-seed') as HTMLButtonElement;
 
   if (changeSeedButton) {
-    changeSeedButton.addEventListener('click', handleSeedChange(context, seedState, render));
+    changeSeedButton.addEventListener('click', seedState.handleSeedChange(context, render));
   }
 
   if (context) {

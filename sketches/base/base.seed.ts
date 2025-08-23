@@ -47,19 +47,24 @@ export const createSeedState = () => {
       currentRand = prng(newSeed);
       return currentRand;
     },
-  };
-};
+    handleSeedChange: (
+      context: CanvasRenderingContext2D | null,
+      render: (context: CanvasRenderingContext2D, rand: () => number) => void
+    ) => {
+      return () => {
+        const newRand = changeSeed(generateRandomSeed());
 
-export const handleSeedChange = (
-  context: CanvasRenderingContext2D | null,
-  seedState: ReturnType<typeof createSeedState>,
-  render: (context: CanvasRenderingContext2D, rand: () => number) => void
-) => {
-  return () => {
-    const newRand = seedState.changeSeed(generateRandomSeed());
-
-    if (context) {
-      render(context, newRand);
-    }
+        if (context) {
+          render(context, newRand);
+        }
+      };
+    },
   };
+
+  function changeSeed(newSeed: string) {
+    setSeedInUrl(newSeed);
+    currentSeed = newSeed;
+    currentRand = prng(newSeed);
+    return currentRand;
+  }
 };
