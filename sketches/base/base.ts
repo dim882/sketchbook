@@ -3,6 +3,10 @@ import { getInteger } from './base.utils';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
+const bindEvent = (selector: string, eventName: string, callback: () => void) => {
+  document.querySelector(selector)?.addEventListener(eventName, callback);
+};
+
 const seedState = createSeedState();
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -13,11 +17,10 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  document.querySelector('.change-seed')?.addEventListener(
+  bindEvent(
+    '.change-seed',
     'click',
-    seedState.handleSeedChange((newRand) => {
-      render(context, newRand);
-    })
+    seedState.handleSeedChange((newRand) => render(context, newRand))
   );
 
   render(context, seedState.getRand());
