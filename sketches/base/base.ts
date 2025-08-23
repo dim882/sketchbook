@@ -1,11 +1,10 @@
 import prng from './pnrg';
-import { ensureSeedInUrl, createSeedState, handleSeedChange } from './base.seed';
+import { createSeedState, handleSeedChange } from './base.seed';
 import { getInteger } from './base.utils';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
-const seed = ensureSeedInUrl();
-const seedState = createSeedState(seed, prng);
+const seedState = createSeedState(prng);
 
 window.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement;

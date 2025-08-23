@@ -31,13 +31,17 @@ export const ensureSeedInUrl = (): string => {
   return newSeed;
 };
 
-export const createSeedState = (initialSeed: string, prngFn: (seed: string) => () => number) => {
+export const createSeedState = (prngFn: (seed: string) => () => number) => {
+  const initialSeed = ensureSeedInUrl();
+  let currentSeed = initialSeed;
   let currentRand = prngFn(initialSeed);
 
   return {
     getRand: () => currentRand,
+    getSeed: () => currentSeed,
     changeSeed: (newSeed: string) => {
       setSeedInUrl(newSeed);
+      currentSeed = newSeed;
       currentRand = prngFn(newSeed);
       return currentRand;
     },
