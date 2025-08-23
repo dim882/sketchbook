@@ -1,11 +1,7 @@
 import { createSeedState } from './base.seed';
-import { getInteger } from './base.utils';
+import { bindEvent, getInteger } from './base.utils';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
-
-const bindEvent = (selector: string, eventName: string, callback: () => void) => {
-  document.querySelector(selector)?.addEventListener(eventName, callback);
-};
 
 const seedState = createSeedState();
 
