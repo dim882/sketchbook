@@ -53,3 +53,18 @@ export const createSeedState = (initialSeed: string, prngFn: (seed: string) => (
     },
   };
 };
+
+// Standalone event handler function
+export const handleSeedChange = (
+  context: CanvasRenderingContext2D | null,
+  seedState: ReturnType<typeof createSeedState>,
+  render: (context: CanvasRenderingContext2D, rand: () => number) => void
+) => {
+  return () => {
+    const newRand = seedState.changeSeed(generateRandomSeed());
+
+    if (context) {
+      render(context, newRand);
+    }
+  };
+};
