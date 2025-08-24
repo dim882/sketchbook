@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
   bindEvent(
     '.change-seed',
     'click',
-    seedState.handleSeedChange((newRand) => render(context, newRand))
+    seedState.handleSeedChange((prng) => render(context, prng))
   );
 
   render(context, seedState.prng);
