@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', () => {
     seedState.handleSeedChange((newRand) => render(context, newRand))
   );
 
-  render(context, seedState.getRand());
+  render(context, seedState.prng);
 });
 
 function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGenerator) {
