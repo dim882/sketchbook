@@ -35,9 +35,8 @@ export const ensureSeedInUrl = (): string => {
 };
 
 export const createSeedState = () => {
-  const initialSeed = ensureSeedInUrl();
-  let currentSeed = initialSeed;
-  let currentRand = prng(initialSeed);
+  let currentSeed = ensureSeedInUrl();
+  let currentRand = prng(currentSeed);
 
   function createNewPrng() {
     const newSeed = generateRandomSeed();
