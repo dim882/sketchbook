@@ -39,12 +39,12 @@ export const createSeedState = () => {
   let currentSeed = initialSeed;
   let currentRand = prng(initialSeed);
 
-  function changeSeed() {
+  function createNewPrng() {
     const newSeed = generateRandomSeed();
 
-    setSeedInUrl(newSeed);
     currentSeed = newSeed;
     currentRand = prng(newSeed);
+    setSeedInUrl(newSeed);
 
     return currentRand;
   }
@@ -52,11 +52,10 @@ export const createSeedState = () => {
   return {
     getRand: () => currentRand,
     getSeed: () => currentSeed,
-    changeSeed,
+    changeSeed: createNewPrng,
     handleSeedChange: (callback: (rand: PseudoRandomNumberGenerator) => void) => {
       return () => {
-        const newRand = changeSeed();
-        callback(newRand);
+        callback(createNewPrng());
       };
     },
   };
