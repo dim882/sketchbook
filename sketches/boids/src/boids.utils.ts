@@ -5,7 +5,7 @@ import { IVector } from './Vector';
 
 export type PseudoRandomNumberGenerator = () => number;
 
-export type IBoidPath = {
+export type IPath = {
   x: number;
   y: number;
 }[];
@@ -23,22 +23,22 @@ export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps
     if (time - lastFrameTime < frameDuration) return;
     lastFrameTime = time;
 
-    render(context, t); // Assuming `context` is accessible in this scope
+    render(context, t);
     t++;
   }
 
   requestAnimationFrame(animate);
 }
 
-export function drawWoim(context: CanvasRenderingContext2D, color: string, boidPath: IBoidPath) {
+export function drawPath(context: CanvasRenderingContext2D, color: string, path: IPath) {
   context.beginPath();
   context.strokeStyle = color;
   context.lineWidth = 0.5;
 
-  context.moveTo(boidPath[0].x, boidPath[0].y);
+  context.moveTo(path[0].x, path[0].y);
 
-  for (let i = 1; i < boidPath.length; i++) {
-    context.lineTo(boidPath[i].x, boidPath[i].y);
+  for (let i = 1; i < path.length; i++) {
+    context.lineTo(path[i].x, path[i].y);
   }
 
   context.stroke();
@@ -185,11 +185,11 @@ const calculateEdgeForce = (boid: IBoid, width: number, height: number): IVector
 };
 
 export function appendPositionToPath(
-  boidPaths: IBoidPath[],
+  boidPaths: IPath[],
   index: number,
   position: Vector.IVector,
   pathLengthLimit: number
-): IBoidPath[] {
+): IPath[] {
   const newPaths = [...boidPaths];
   newPaths[index].push(position);
 
