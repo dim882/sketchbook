@@ -18,6 +18,10 @@ export const multiply = (v: IVector, scalar: number): IVector => create(v.x * sc
 
 export const divide = (v: IVector, scalar: number): IVector => create(v.x / scalar, v.y / scalar);
 
+// Vector-vector operations
+export const multiplyVectors = (v1: IVector, v2: IVector): IVector => create(v1.x * v2.x, v1.y * v2.y);
+export const divideVectors = (v1: IVector, v2: IVector): IVector => create(v1.x / v2.x, v1.y / v2.y);
+
 export const equals = (v1: IVector, v2: IVector): boolean => v1.x === v2.x && v1.y === v2.y && v1.z === v2.z;
 
 export const magnitude = (v: IVector): number => Math.sqrt(v.x * v.x + v.y * v.y);

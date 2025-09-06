@@ -1,12 +1,14 @@
-import * as Vector from './Vector';
+import { describe, it } from 'node:test';
+import assert from 'node:assert';
+import * as Vector from './Vector.js';
 
 describe('Vector', () => {
   describe('fromRadians', () => {
     it('should create a vector from radians', () => {
       const v = Vector.fromRadians(Math.PI / 4);
 
-      expect(v.x).toBeCloseTo(Math.sqrt(2) / 2);
-      expect(v.y).toBeCloseTo(Math.sqrt(2) / 2);
+      assert.ok(Math.abs(v.x - Math.sqrt(2) / 2) < 0.0001);
+      assert.ok(Math.abs(v.y - Math.sqrt(2) / 2) < 0.0001);
     });
   });
 
@@ -15,15 +17,15 @@ describe('Vector', () => {
       const v = Vector.create(2, 3);
       const result = Vector.multiply(v, 2);
 
-      expect(result).toEqual({ x: 4, y: 6 });
+      assert.deepStrictEqual(result, { x: 4, y: 6 });
     });
 
     it('should multiply two vectors', () => {
       const v1 = Vector.create(2, 3);
       const v2 = Vector.create(4, 5);
-      const result = Vector.multiply(v1, v2);
+      const result = Vector.multiplyVectors(v1, v2);
 
-      expect(result).toEqual({ x: 8, y: 15 });
+      assert.deepStrictEqual(result, { x: 8, y: 15 });
     });
   });
 
@@ -32,15 +34,15 @@ describe('Vector', () => {
       const v = Vector.create(4, 6);
       const result = Vector.divide(v, 2);
 
-      expect(result).toEqual({ x: 2, y: 3 });
+      assert.deepStrictEqual(result, { x: 2, y: 3 });
     });
 
     it('should divide two vectors', () => {
       const v1 = Vector.create(8, 15);
       const v2 = Vector.create(2, 3);
-      const result = Vector.divide(v1, v2);
+      const result = Vector.divideVectors(v1, v2);
 
-      expect(result).toEqual({ x: 4, y: 5 });
+      assert.deepStrictEqual(result, { x: 4, y: 5 });
     });
   });
 
@@ -49,14 +51,14 @@ describe('Vector', () => {
       const v1 = Vector.create(1, 2, 3);
       const v2 = Vector.create(1, 2, 3);
 
-      expect(Vector.equals(v1, v2)).toBe(true);
+      assert.strictEqual(Vector.equals(v1, v2), true);
     });
 
     it('should return false for different vectors', () => {
       const v1 = Vector.create(1, 2, 3);
       const v2 = Vector.create(1, 2, 4);
 
-      expect(Vector.equals(v1, v2)).toBe(false);
+      assert.strictEqual(Vector.equals(v1, v2), false);
     });
   });
 
@@ -65,8 +67,8 @@ describe('Vector', () => {
       const v = Vector.create(3, 4);
       const result = Vector.normalize(v);
 
-      expect(result.x).toBeCloseTo(0.6);
-      expect(result.y).toBeCloseTo(0.8);
+      assert.ok(Math.abs(result.x - 0.6) < 0.0001);
+      assert.ok(Math.abs(result.y - 0.8) < 0.0001);
     });
   });
 
@@ -74,7 +76,7 @@ describe('Vector', () => {
     it('should return the squared magnitude of a vector', () => {
       const v = Vector.create(3, 4);
 
-      expect(Vector.getMagnitudeSquared(v)).toBe(25);
+      assert.strictEqual(Vector.getMagnitudeSquared(v), 25);
     });
   });
 
@@ -83,8 +85,8 @@ describe('Vector', () => {
       const v = Vector.create(3, 4);
       const result = Vector.setMagnitude(v, 10);
 
-      expect(result.x).toBeCloseTo(6);
-      expect(result.y).toBeCloseTo(8);
+      assert.ok(Math.abs(result.x - 6) < 0.0001);
+      assert.ok(Math.abs(result.y - 8) < 0.0001);
     });
   });
 
@@ -92,7 +94,7 @@ describe('Vector', () => {
     it('should return the magnitude of a vector', () => {
       const v = Vector.create(3, 4);
 
-      expect(Vector.getMagnitude(v)).toBe(5);
+      assert.strictEqual(Vector.getMagnitude(v), 5);
     });
   });
 
@@ -101,8 +103,8 @@ describe('Vector', () => {
       const v = Vector.create(3, 4);
       const result = Vector.limit(v, 4);
 
-      expect(result.x).toBeCloseTo(2.4);
-      expect(result.y).toBeCloseTo(3.2);
+      assert.ok(Math.abs(result.x - 2.4) < 0.0001);
+      assert.ok(Math.abs(result.y - 3.2) < 0.0001);
     });
   });
 
@@ -110,7 +112,7 @@ describe('Vector', () => {
     it('should return the length of a vector', () => {
       const v = Vector.create(3, 4);
 
-      expect(Vector.length(v)).toBe(5);
+      assert.strictEqual(Vector.length(v), 5);
     });
   });
 
@@ -119,7 +121,7 @@ describe('Vector', () => {
       const v1 = Vector.create(1, 2);
       const v2 = Vector.create(3, 4);
 
-      expect(Vector.dot(v1, v2)).toBe(11);
+      assert.strictEqual(Vector.dot(v1, v2), 11);
     });
   });
 
@@ -127,7 +129,7 @@ describe('Vector', () => {
     it('should convert a vector to an array', () => {
       const v = Vector.create(1, 2, 3);
 
-      expect(Vector.toArray(v)).toEqual([1, 2, 3]);
+      assert.deepStrictEqual(Vector.toArray(v), [1, 2, 3]);
     });
   });
 
@@ -136,8 +138,8 @@ describe('Vector', () => {
       const v = Vector.create(1, 2, 3);
       const clone = Vector.clone(v);
 
-      expect(clone).toEqual(v);
-      expect(clone).not.toBe(v);
+      assert.deepStrictEqual(clone, v);
+      assert.notStrictEqual(clone, v);
     });
   });
 
@@ -145,7 +147,7 @@ describe('Vector', () => {
     it('should return the angle of a vector', () => {
       const v = Vector.create(1, 1);
 
-      expect(Vector.toAngle(v)).toBeCloseTo(Math.PI / 4);
+      assert.ok(Math.abs(Vector.toAngle(v) - Math.PI / 4) < 0.0001);
     });
   });
 
@@ -153,8 +155,8 @@ describe('Vector', () => {
     it('should create a vector from an angle', () => {
       const v = Vector.fromAngle(Math.PI / 4, Math.sqrt(2));
 
-      expect(v.x).toBeCloseTo(1);
-      expect(v.y).toBeCloseTo(1);
+      assert.ok(Math.abs(v.x - 1) < 0.0001);
+      assert.ok(Math.abs(v.y - 1) < 0.0001);
     });
   });
 
@@ -162,7 +164,7 @@ describe('Vector', () => {
     it('should create a vector from a tuple', () => {
       const v = Vector.fromTuple([1, 2]);
 
-      expect(v).toEqual({ x: 1, y: 2 });
+      assert.deepStrictEqual(v, { x: 1, y: 2 });
     });
   });
 
@@ -170,7 +172,7 @@ describe('Vector', () => {
     it('should convert a vector to a tuple', () => {
       const v = Vector.create(1, 2);
 
-      expect(Vector.toTuple(v)).toEqual([1, 2]);
+      assert.deepStrictEqual(Vector.toTuple(v), [1, 2]);
     });
   });
 });

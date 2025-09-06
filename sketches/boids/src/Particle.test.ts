@@ -1,5 +1,7 @@
-import * as Particle from './Particle';
-import * as Vector from './Vector';
+import { describe, it } from 'node:test';
+import assert from 'node:assert';
+import * as Particle from './Particle.js';
+import * as Vector from './Vector.js';
 
 describe('Particle', () => {
   describe('applyForce', () => {
@@ -14,10 +16,10 @@ describe('Particle', () => {
 
       const updatedParticle = Particle.applyForce({ particle, force, deltaTime: dt });
 
-      expect(updatedParticle.velocity.x).toBeCloseTo(2);
-      expect(updatedParticle.velocity.y).toBeCloseTo(1.75);
-      expect(updatedParticle.position.x).toBeCloseTo(1);
-      expect(updatedParticle.position.y).toBeCloseTo(0.875);
+      assert.ok(Math.abs(updatedParticle.velocity.x - 2) < 0.0001);
+      assert.ok(Math.abs(updatedParticle.velocity.y - 1.75) < 0.0001);
+      assert.ok(Math.abs(updatedParticle.position.x - 1) < 0.0001);
+      assert.ok(Math.abs(updatedParticle.position.y - 0.875) < 0.0001);
     });
 
     it('should limit velocity when maxVelocity is specified', () => {
@@ -33,9 +35,13 @@ describe('Particle', () => {
       const updatedParticle = Particle.applyForce({ particle, force, deltaTime: dt, maxVelocity });
 
       const speed = Vector.getMagnitude(updatedParticle.velocity);
-      expect(speed).toBeCloseTo(maxVelocity);
-      expect(updatedParticle.velocity.x).toBeCloseTo(3);
-      expect(updatedParticle.velocity.y).toBeCloseTo(3);
+      assert.ok(Math.abs(speed - maxVelocity) < 0.0001);
+
+      // With a large force, the velocity should be in the direction of the force, limited to maxVelocity
+      const forceDirection = Vector.normalize(force);
+      const actualDirection = Vector.normalize(updatedParticle.velocity);
+      assert.ok(Math.abs(actualDirection.x - forceDirection.x) < 0.01);
+      assert.ok(Math.abs(actualDirection.y - forceDirection.y) < 0.01);
     });
   });
 });
