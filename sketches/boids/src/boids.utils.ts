@@ -190,7 +190,7 @@ export function updateBoidPath(
   pathLengthLimit: number
 ): IBoidPath[] {
   const newPaths = [...boidPaths];
-  newPaths[index] = [...boidPaths[index], position];
+  newPaths[index].push(position);
 
   // Limit the path length
   if (newPaths[index].length > pathLengthLimit) {
