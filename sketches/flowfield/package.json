@@ -6,8 +6,6 @@
   "type": "module",
   "scripts": {
     "watch": "rollup -c -w",
-    "test": "jest",
-    "test:watch": "jest --watch",
     "build": "rollup -c",
     "clean": "rm -rf dist/*"
   },
