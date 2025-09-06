@@ -16,21 +16,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   let flock = utils.createFlock(BOID_COUNT, canvas.width, canvas.height, prng);
   let boidPaths: utils.IPath[] = flock.map(() => []);
-  let animationId: number | null = null;
-  const animationDuration = 2000;
-  const startTime = Date.now();
 
   function animate() {
     if (!context) return;
-
-    // Check if 4 seconds have passed
-    if (Date.now() - startTime >= animationDuration) {
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-      }
-      return;
-    }
 
     const { width, height } = canvas;
 
@@ -46,9 +34,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       return newBoid;
     });
-
-    animationId = requestAnimationFrame(animate);
   }
 
-  animate();
+  utils.loop(context, animate, 60, 2000);
 });
