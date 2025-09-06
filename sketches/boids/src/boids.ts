@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       boidPaths = utils.updateBoidPath(boidPaths, index, newBoid.position, WOIM_LENGTH);
 
-      utils.drawWoim(context, newBoid, boidPaths, index);
+      utils.drawWoim(context, '#000', boidPaths, index);
 
       return newBoid;
     });

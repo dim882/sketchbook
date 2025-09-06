@@ -30,9 +30,9 @@ export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps
   requestAnimationFrame(animate);
 }
 
-export function drawWoim(context: CanvasRenderingContext2D, newBoid: Boid.IBoid, boidPaths: IBoidPaths, index: number) {
+export function drawWoim(context: CanvasRenderingContext2D, color: string, boidPaths: IBoidPaths, index: number) {
   context.beginPath();
-  context.strokeStyle = newBoid.color;
+  context.strokeStyle = color;
   context.lineWidth = 0.5;
 
   if (boidPaths[index].length > 1) {
