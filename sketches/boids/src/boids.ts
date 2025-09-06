@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
   new ParamsUI();
 
   let flock = utils.createFlock(BOID_COUNT, canvas.width, canvas.height, prng);
-  let boidPaths: utils.IBoidPaths = flock.map(() => []);
+  let boidPaths: utils.IBoidPath[] = flock.map(() => []);
 
   function animate() {
     if (!context) return;
@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       boidPaths = utils.updateBoidPath(boidPaths, index, newBoid.position, WOIM_LENGTH);
 
-      utils.drawWoim(context, '#000', boidPaths, index);
+      utils.drawWoim(context, '#000', boidPaths[index]);
 
       return newBoid;
     });
