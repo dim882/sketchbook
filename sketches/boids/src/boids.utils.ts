@@ -183,7 +183,7 @@ const calculateEdgeForce = (boid: IBoid, width: number, height: number): IVector
   );
 };
 
-export function updateBoidPath(
+export function appendPositionToPath(
   boidPaths: IBoidPath[],
   index: number,
   position: Vector.IVector,

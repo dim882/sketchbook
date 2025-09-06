@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
     flock = flock.map((boid, index) => {
       const newBoid = utils.flock(boid, flock, FLOCK_PARAMS, width, height);
 
-      boidPaths = utils.updateBoidPath(boidPaths, index, newBoid.position, WOIM_LENGTH);
+      boidPaths = utils.appendPositionToPath(boidPaths, index, newBoid.position, WOIM_LENGTH);
 
       utils.drawWoim(context, '#000', boidPaths[index]);
 
