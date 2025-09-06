@@ -50,18 +50,14 @@ export const createFlock = (
   height: number,
   prng: PseudoRandomNumberGenerator
 ): IBoid[] => {
-  const boids: IBoid[] = [];
-
-  for (let i = 0; i < count; i++) {
-    boids.push(
+  return Array(count)
+    .fill(null)
+    .map(() =>
       Boid.create({
         position: Vector.create(prng() * width, prng() * height),
         velocity: Vector.create((prng() * 2 - 1) * 2, (prng() * 2 - 1) * 2),
       })
     );
-  }
-
-  return boids;
 };
 
 export const separation = (boid: IBoid, boids: IBoid[], desiredSeparation: number): IVector => {
