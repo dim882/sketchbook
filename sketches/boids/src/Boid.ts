@@ -36,7 +36,7 @@ export const applyForce = (boid: IBoid, force: IVector): IBoid => ({
   acceleration: Vector.add(boid.acceleration, force),
 });
 
-export const update = (boid: IBoid): IBoid => {
+export const updatePosition = (boid: IBoid): IBoid => {
   const velocity = Vector.limit(Vector.add(boid.velocity, boid.acceleration), boid.maxSpeed);
   const position = Vector.add(boid.position, velocity);
 
