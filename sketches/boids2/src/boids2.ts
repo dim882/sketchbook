@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
   new ParamsUI();
 
   const center = { x: canvas.width / 2, y: canvas.height / 2 };
-  let flock = utils.createFlock(center, 200, prng);
+  let flock = utils.createFlock(BOID_COUNT, center, 200, prng);
   let boidPaths: utils.IPath[] = flock.map(() => []);
 
   function animate() {
@@ -37,5 +37,5 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  utils.loop(context, animate, 60, 2000);
+  utils.loop(context, animate, 60, 1000);
 });
