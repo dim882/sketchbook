@@ -1,7 +1,10 @@
 import palettes from 'nice-color-palettes';
 import * as utils from './boids2.utils';
+import { createSeedState } from './boids2.seed';
 import { FLOCK_PARAMS, BOID_COUNT, WOIM_LENGTH as PATH_MAX_LENGTH, BACKGROUND_COLOR, DURATION } from './boids2.params';
 import { ParamsUI } from './boids2.params.ui';
+
+const seedState = createSeedState();
 
 const prng = Math.random;
 
@@ -12,6 +15,14 @@ window.addEventListener('DOMContentLoaded', () => {
   if (!context) {
     return;
   }
+
+  utils.bindEvent(
+    '.change-seed',
+    'click',
+    seedState.handleSeedChange((prng) => {
+      utils.loop(context, animate, 60, DURATION);
+    })
+  );
 
   new ParamsUI();
 
@@ -37,6 +48,4 @@ window.addEventListener('DOMContentLoaded', () => {
       return newBoid;
     });
   }
-
-  utils.loop(context, animate, 60, DURATION);
 });

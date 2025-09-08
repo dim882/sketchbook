@@ -12,6 +12,10 @@ export type IPath = {
 
 export type IRenderFunc = (context: CanvasRenderingContext2D, t: number) => void;
 
+export const bindEvent = (selector: string, eventName: string, callback: () => void) => {
+  document.querySelector(selector)?.addEventListener(eventName, callback);
+};
+
 export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps = 60, duration?: number) {
   let frameDuration = 1000 / fps;
   let lastFrameTime = 0;
