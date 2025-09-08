@@ -16,6 +16,7 @@ export const FLOCK_PARAMS: FlockParams = {
   cohesionWeight: 1,
 };
 
-export const BOID_COUNT = 500;
+export const BOID_COUNT = 1000;
 export const WOIM_LENGTH = 20;
-export const BACKGROUND_COLOR = '#fcfaf7'; 
+export const BACKGROUND_COLOR = '#fcfaf7';
+export const DURATION = 1200;

@@ -1,5 +1,6 @@
+import palettes from 'nice-color-palettes';
 import * as utils from './boids2.utils';
-import { FLOCK_PARAMS, BOID_COUNT, WOIM_LENGTH as PATH_MAX_LENGTH, BACKGROUND_COLOR } from './boids2.params';
+import { FLOCK_PARAMS, BOID_COUNT, WOIM_LENGTH as PATH_MAX_LENGTH, BACKGROUND_COLOR, DURATION } from './boids2.params';
 import { ParamsUI } from './boids2.params.ui';
 
 const prng = Math.random;
@@ -37,5 +38,5 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  utils.loop(context, animate, 60, 1000);
+  utils.loop(context, animate, 60, DURATION);
 });
