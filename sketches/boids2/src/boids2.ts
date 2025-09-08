@@ -48,4 +48,6 @@ window.addEventListener('DOMContentLoaded', () => {
       return newBoid;
     });
   }
+
+  utils.loop(context, animate, 60, DURATION);
 });

@@ -20,16 +20,16 @@ export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps
   let frameDuration = 1000 / fps;
   let lastFrameTime = 0;
   let animationId: number | null = null;
+  let t = 0;
+
   const startTime = Date.now();
 
-  let t = 0;
   function animate(time: number) {
     // Check if duration has been exceeded
-    if (duration && Date.now() - startTime >= duration) {
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-      }
+    if (animationId && duration && Date.now() - startTime >= duration) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+
       return;
     }
 
@@ -43,6 +43,8 @@ export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps
   }
 
   animationId = requestAnimationFrame(animate);
+
+  return animationId;
 }
 
 export function drawPath(context: CanvasRenderingContext2D, color: string, path: IPath) {
