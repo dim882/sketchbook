@@ -2,6 +2,7 @@ import * as Vector from './Vector';
 import * as Boid from './Boid';
 import { IBoid } from './Boid';
 import { IVector } from './Vector';
+import { BOID_COUNT } from './boids2.params';
 
 export type PseudoRandomNumberGenerator = () => number;
 
@@ -56,19 +57,27 @@ export function drawPath(context: CanvasRenderingContext2D, color: string, path:
 }
 
 export const createFlock = (
-  count: number,
-  width: number,
-  height: number,
+  center: { x: number; y: number },
+  distance: number,
   prng: PseudoRandomNumberGenerator
 ): IBoid[] => {
-  return Array(count)
+  return Array(BOID_COUNT)
     .fill(null)
-    .map(() =>
-      Boid.create({
-        position: Vector.create(prng() * width, prng() * height),
+    .map(() => {
+      // Choose random angle (0 to 2π)
+      const angle = prng() * Math.PI * 2;
+      // Choose random distance from center (0 to max distance)
+      const randomDistance = prng() * distance;
+
+      // Calculate position relative to center
+      const x = center.x + Math.cos(angle) * randomDistance;
+      const y = center.y + Math.sin(angle) * randomDistance;
+
+      return Boid.create({
+        position: Vector.create(x, y),
         velocity: Vector.create((prng() * 2 - 1) * 2, (prng() * 2 - 1) * 2),
-      })
-    );
+      });
+    });
 };
 
 export const separation = (boid: IBoid, boids2: IBoid[], desiredSeparation: number): IVector => {
