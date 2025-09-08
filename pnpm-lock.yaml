@@ -261,6 +261,12 @@ importers:
 
   sketches/boids2:
     dependencies:
+      culori:
+        specifier: ^4.0.1
+        version: 4.0.1
+      nice-color-palettes:
+        specifier: ^4.0.0
+        version: 4.0.0
       ramda:
         specifier: ^0.29.1
         version: 0.29.1
@@ -3888,6 +3894,9 @@ packages:
   negotiator@0.6.3:
     resolution: {integrity: sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==}
     engines: {node: '>= 0.6'}
+
+  nice-color-palettes@4.0.0:
+    resolution: {integrity: sha512-lP/4LoL0Q9L9JX1UMb80BYbRCqZPnLqzuBCPI7mpqIw1HQjt/jk/U8SJF28EmudAZkJ5zG65x2HYla9wvmdxbw==}
 
   nice-try@1.0.5:
     resolution: {integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==}
@@ -8136,6 +8145,8 @@ snapshots:
     optional: true
 
   negotiator@0.6.3: {}
+
+  nice-color-palettes@4.0.0: {}
 
   nice-try@1.0.5: {}
 
