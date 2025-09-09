@@ -19,7 +19,7 @@ export const bindEvent = (selector: string, eventName: string, callback: () => v
 export function loop(context: CanvasRenderingContext2D, render: IRenderFunc, fps = 60, duration?: number) {
   let frameDuration = 1000 / fps;
   let lastFrameTime = 0;
-  let animationId: number | null = null;
+  let animationId: number | null;
   let t = 0;
 
   const startTime = Date.now();
