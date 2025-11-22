@@ -1,6 +1,4 @@
-import prng from './pnrg';
-
-export type PseudoRandomNumberGenerator = () => number;
+import prng, { IRandomGenerator } from './random';
 
 const QUERY_STRING_SEED = 'seed';
 
@@ -53,7 +51,7 @@ export const createSeedState = () => {
     prng: currentPrng,
     seed: currentSeed,
     changeSeed: createNewPrng,
-    handleSeedChange: (callback: (rand: PseudoRandomNumberGenerator) => void) => {
+    handleSeedChange: (callback: (rand: IRandomGenerator) => void) => {
       return () => {
         callback(createNewPrng());
       };

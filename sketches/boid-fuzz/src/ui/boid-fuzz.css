@@ -31,15 +31,25 @@ canvas {
   color: #333;
 }
 
+.params-sidebar h3 {
+  margin: 30px 0 15px 0;
+  color: #333;
+  font-size: 16px;
+}
+
 .param-group {
-  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
 .param-group label {
-  display: block;
-  margin-bottom: 5px;
   font-weight: 500;
   color: #555;
+  text-align: right;
+  padding-right: 10px;
 }
 
 .param-group input {
@@ -50,7 +60,21 @@ canvas {
   font-size: 14px;
 }
 
-.param-group input:focus {
+.param-group input[type="color"] {
+  padding: 2px;
+  width: 60px;
+  height: 32px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.param-group input[type="color"]:focus {
+  outline: 2px solid #007acc;
+  outline-offset: 2px;
+}
+
+.param-group input:not([type="color"]):focus {
   outline: none;
   border-color: #007acc;
 }
@@ -87,4 +111,40 @@ canvas {
   background: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+.fps-display {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.fps-display h3 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.fps-stat {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.fps-stat:last-child {
+  margin-bottom: 0;
+}
+
+.fps-stat label {
+  color: #555;
+  font-weight: 500;
+}
+
+.fps-stat span {
+  color: #333;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
 } 

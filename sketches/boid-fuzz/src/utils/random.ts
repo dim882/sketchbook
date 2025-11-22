@@ -2,7 +2,7 @@
 // Which is from http://baagoe.com/en/RandomMusings/javascript/
 // Converted to TypeScript and esm
 
-export interface RandomGenerator {
+export interface IRandomGenerator {
   (): number;
   next: () => number;
   uint32: () => number;
@@ -11,15 +11,15 @@ export interface RandomGenerator {
   args: any[];
 }
 
-export interface MashFunction {
+export interface IMashFunction {
   (data: any): number;
   version: string;
 }
 
-function Mash(): MashFunction {
+function Mash(): IMashFunction {
   let n = 0xefc8249d;
 
-  const mash: MashFunction = (data: any): number => {
+  const mash: IMashFunction = (data: any): number => {
     data = data.toString();
 
     for (let i = 0; i < data.length; i++) {
@@ -43,7 +43,7 @@ function Mash(): MashFunction {
   return mash;
 }
 
-export function Alea(...args: any[]): RandomGenerator {
+export function Alea(...args: any[]): IRandomGenerator {
   // Johannes Baagøe <baagoe@baagoe.com>, 2010
   let s0 = 0;
   let s1 = 0;
@@ -79,7 +79,7 @@ export function Alea(...args: any[]): RandomGenerator {
     }
   }
 
-  const random: RandomGenerator = (): number => {
+  const random: IRandomGenerator = (): number => {
     const t = 2091639 * s0 + c * 2.3283064365386963e-10; // 2^-32
 
     s0 = s1;

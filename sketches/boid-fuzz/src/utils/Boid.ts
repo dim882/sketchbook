@@ -9,9 +9,10 @@ export interface IBoid {
   maxForce: number;
   size: number;
   color: string;
+  path: IVector[];
 }
 
-export type IBoidCreateArgs = Pick<IBoid, 'position'> & Partial<IBoid>;
+export interface IBoidCreateArgs extends Pick<IBoid, 'position'>, Partial<Omit<IBoid, 'position'>> {}
 
 export const create = ({
   position,
@@ -21,6 +22,7 @@ export const create = ({
   maxForce = 0.1,
   size = 5,
   color = '#333',
+  path = [],
 }: IBoidCreateArgs): IBoid => ({
   position,
   velocity,
@@ -29,21 +31,20 @@ export const create = ({
   maxForce,
   size,
   color,
+  path,
 });
 
-export const applyForce = (boid: IBoid, force: IVector): IBoid => ({
-  ...boid,
-  acceleration: Vector.add(boid.acceleration, force),
-});
+export const applyForce = (boid: IBoid, force: IVector): IBoid => {
+  Vector.addInto(boid.acceleration, force);
+  return boid;
+};
 
 export const updatePosition = (boid: IBoid): IBoid => {
-  const velocity = Vector.limit(Vector.add(boid.velocity, boid.acceleration), boid.maxSpeed);
-  const position = Vector.add(boid.position, velocity);
+  Vector.addInto(boid.velocity, boid.acceleration);
+  Vector.limitInto(boid.velocity, boid.maxSpeed);
+  Vector.addInto(boid.position, boid.velocity);
+  boid.acceleration.x = 0;
+  boid.acceleration.y = 0;
 
-  return {
-    ...boid,
-    position,
-    velocity,
-    acceleration: Vector.create(0, 0),
-  };
+  return boid;
 };

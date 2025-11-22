@@ -175,4 +175,128 @@ describe('Vector', () => {
       assert.deepStrictEqual(Vector.toTuple(v), [1, 2]);
     });
   });
+
+  describe('addInto', () => {
+    it('should add v2 into v1 and return v1', () => {
+      const v1 = Vector.create(2, 3);
+      const v2 = Vector.create(4, 5);
+      const result = Vector.addInto(v1, v2);
+
+      assert.strictEqual(result, v1);
+      assert.deepStrictEqual(v1, { x: 6, y: 8 });
+    });
+  });
+
+  describe('subtractInto', () => {
+    it('should subtract v2 from v1 and return v1', () => {
+      const v1 = Vector.create(8, 10);
+      const v2 = Vector.create(3, 4);
+      const result = Vector.subtractInto(v1, v2);
+
+      assert.strictEqual(result, v1);
+      assert.deepStrictEqual(v1, { x: 5, y: 6 });
+    });
+  });
+
+  describe('multiplyInto', () => {
+    it('should multiply v by scalar and return v', () => {
+      const v = Vector.create(2, 3);
+      const result = Vector.multiplyInto(v, 2);
+
+      assert.strictEqual(result, v);
+      assert.deepStrictEqual(v, { x: 4, y: 6 });
+    });
+  });
+
+  describe('divideInto', () => {
+    it('should divide v by scalar and return v', () => {
+      const v = Vector.create(8, 12);
+      const result = Vector.divideInto(v, 2);
+
+      assert.strictEqual(result, v);
+      assert.deepStrictEqual(v, { x: 4, y: 6 });
+    });
+  });
+
+  describe('multiplyVectorsInto', () => {
+    it('should multiply v1 by v2 and return v1', () => {
+      const v1 = Vector.create(2, 3);
+      const v2 = Vector.create(4, 5);
+      const result = Vector.multiplyVectorsInto(v1, v2);
+
+      assert.strictEqual(result, v1);
+      assert.deepStrictEqual(v1, { x: 8, y: 15 });
+    });
+  });
+
+  describe('divideVectorsInto', () => {
+    it('should divide v1 by v2 and return v1', () => {
+      const v1 = Vector.create(8, 15);
+      const v2 = Vector.create(2, 3);
+      const result = Vector.divideVectorsInto(v1, v2);
+
+      assert.strictEqual(result, v1);
+      assert.deepStrictEqual(v1, { x: 4, y: 5 });
+    });
+  });
+
+  describe('normalizeInto', () => {
+    it('should normalize v and return v', () => {
+      const v = Vector.create(3, 4);
+      const result = Vector.normalizeInto(v);
+
+      assert.strictEqual(result, v);
+      assert.ok(Math.abs(v.x - 0.6) < 0.0001);
+      assert.ok(Math.abs(v.y - 0.8) < 0.0001);
+    });
+
+    it('should set zero vector when magnitude is zero', () => {
+      const v = Vector.create(0, 0);
+      const result = Vector.normalizeInto(v);
+
+      assert.strictEqual(result, v);
+      assert.deepStrictEqual(v, { x: 0, y: 0 });
+    });
+  });
+
+  describe('setMagnitudeInto', () => {
+    it('should set the magnitude of v and return v', () => {
+      const v = Vector.create(3, 4);
+      const result = Vector.setMagnitudeInto(v, 10);
+
+      assert.strictEqual(result, v);
+      assert.ok(Math.abs(v.x - 6) < 0.0001);
+      assert.ok(Math.abs(v.y - 8) < 0.0001);
+    });
+
+    it('should set zero vector when original magnitude is zero', () => {
+      const v = Vector.create(0, 0);
+      const result = Vector.setMagnitudeInto(v, 10);
+
+      assert.strictEqual(result, v);
+      assert.deepStrictEqual(v, { x: 0, y: 0 });
+    });
+  });
+
+  describe('limitInto', () => {
+    it('should limit the magnitude of v and return v when magnitude exceeds max', () => {
+      const v = Vector.create(3, 4);
+      const result = Vector.limitInto(v, 4);
+
+      assert.strictEqual(result, v);
+      assert.ok(Math.abs(v.x - 2.4) < 0.0001);
+      assert.ok(Math.abs(v.y - 3.2) < 0.0001);
+    });
+
+    it('should not modify v when magnitude is less than max', () => {
+      const v = Vector.create(1, 2);
+      const originalX = v.x;
+      const originalY = v.y;
+      const result = Vector.limitInto(v, 10);
+
+      assert.strictEqual(result, v);
+      assert.strictEqual(v.x, originalX);
+      assert.strictEqual(v.y, originalY);
+    });
+  });
 });

@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import { h } from 'preact';
-import { loadCSSModulesMapping, renderMainPage, paths } from './server.utils';
+import { loadCSSModulesMapping, renderMainPage, paths, getSketchParams } from './server.utils';
 import SketchList from './ui/SketchList';
 
 const app = express();
@@ -11,11 +11,9 @@ const port = 2000;
 app.use(express.json());
 app.use(express.static(paths.public()));
 
-// Initialize server with CSS modules mapping
 async function initializeServer() {
   const styles = await loadCSSModulesMapping();
 
-  // Create a SketchList component with styles for SSR
   const SketchListWithStyles = (props: any) => h(SketchList, { ...props, styles });
 
   app.get('/', async (req, res) => {
@@ -57,7 +55,6 @@ async function initializeServer() {
     });
   });
 
-  // Serve static files from each sketch's dist directory
   app.use('/sketches/:sketchName/dist', (req, res, next) => {
     express.static(paths.dist(req.params.sketchName), {
       setHeaders: (res, path) => {
@@ -68,24 +65,19 @@ async function initializeServer() {
     })(req, res, next);
   });
 
-  // API endpoint to get parameters for a sketch
   app.get('/api/sketches/:sketchName/params', async (req, res) => {
     try {
       const { sketchName } = req.params;
-      const fileContent = await fs.readFile(paths.params(sketchName), 'utf-8');
-
-      // Import the sketch-specific handler
-      const sketchHandler = await import(paths.serverHandler(sketchName));
-      const params = sketchHandler.getParams(fileContent);
+      const params = await getSketchParams(sketchName);
 
       res.json({ params });
     } catch (err) {
       console.error('Error reading params:', err);
+
       res.status(404).json({ error: 'Parameters file not found' });
     }
   });
 
-  // API endpoint to update parameters for a sketch
   app.post('/api/sketches/:sketchName/params', async (req, res) => {
     try {
       const { sketchName } = req.params;
@@ -97,13 +89,11 @@ async function initializeServer() {
 
       let template = await fs.readFile(paths.template(sketchName), 'utf-8');
 
-      // Substitute parameter values
       Object.entries(params).forEach(([key, value]) => {
         template = template.replace(new RegExp(`{{${key}}}`, 'g'), value.toString());
       });
 
-      const paramsPath = paths.params(sketchName);
-      await fs.writeFile(paramsPath, template, 'utf-8');
+      await fs.writeFile(paths.params(sketchName), template, 'utf-8');
 
       res.json({ success: true });
     } catch (err) {

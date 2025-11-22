@@ -3,7 +3,7 @@ import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default {
-  input: 'src/boids2.ts',
+  input: 'src/boid-fuzz.ts',
   output: {
     file: 'dist/bundle.js',
     format: 'module',
@@ -11,10 +11,13 @@ export default {
   },
   plugins: [
     nodeResolve(),
-    typescript(),
+    typescript({
+      target: 'ES2015',
+      module: 'ESNext',
+    }),
     copy({
       targets: [
-        { src: 'src/*.css', dest: 'dist' },
+        { src: 'src/ui/*.css', dest: 'dist' },
         { src: 'src/*.html', dest: 'dist' },
       ],
     }),

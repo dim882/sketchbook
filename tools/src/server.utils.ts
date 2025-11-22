@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { h } from 'preact';
 import render from 'preact-render-to-string';
+import { SketchServerHandler } from './server.sketch.types';
 
 const sketchesPath = path.join(__dirname, '../../sketches');
 
@@ -107,4 +108,11 @@ export async function renderMainPage(
   );
 
   return renderedHtml;
+}
+
+export async function getSketchParams(sketchName: string) {
+  const fileContent = await fs.readFile(paths.params(sketchName), 'utf-8');
+  const sketchHandler = (await import(paths.serverHandler(sketchName))) as { default: SketchServerHandler };
+
+  return sketchHandler.default.getParams(fileContent);
 }
