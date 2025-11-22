@@ -1,3 +1,4 @@
+import { getCanvas } from '@dim882/sketchlib';
 import * as utils from './utils/boid-fuzz.utils';
 import * as flockUtils from './utils/flock';
 import { createSeedState } from './utils/seed';

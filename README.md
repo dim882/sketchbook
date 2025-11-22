@@ -11,6 +11,9 @@ A collection of creative coding sketches and tools.
 - `pnpm lib:pull`: Updates the shared library code
 - `pnpm build`: Builds all sketches and the UI bundle
 - `pnpm check`: Runs TypeScript type checking on sketch files
+- `pnpm lib:publish:patch`: Publishes the lib package with a patch version bump (0.1.0 → 0.1.1)
+- `pnpm lib:publish:minor`: Publishes the lib package with a minor version bump (0.1.0 → 0.2.0)
+- `pnpm lib:publish:major`: Publishes the lib package with a major version bump (0.1.0 → 1.0.0)
 
 ## Parameter Editing
 

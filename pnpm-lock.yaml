@@ -228,6 +228,46 @@ importers:
         specifier: ^5.4.5
         version: 5.8.3
 
+  sketches/boid-fuzz:
+    dependencies:
+      '@dim882/sketchlib':
+        specifier: ^0.1.0
+        version: 0.1.0
+      culori:
+        specifier: ^4.0.1
+        version: 4.0.1
+      nice-color-palettes:
+        specifier: ^4.0.0
+        version: 4.0.0
+      ramda:
+        specifier: ^0.29.1
+        version: 0.29.1
+    devDependencies:
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.2.3
+        version: 15.3.1(rollup@4.40.0)
+      '@rollup/plugin-typescript':
+        specifier: ^11.1.6
+        version: 11.1.6(rollup@4.40.0)(tslib@2.8.1)(typescript@5.8.3)
+      '@types/ramda':
+        specifier: ^0.29.12
+        version: 0.29.12
+      rollup:
+        specifier: ^4.14.3
+        version: 4.40.0
+      rollup-plugin-copy:
+        specifier: ^3.5.0
+        version: 3.5.0
+      tslib:
+        specifier: ^2.6.2
+        version: 2.8.1
+      tsx:
+        specifier: ^4.20.5
+        version: 4.20.5
+      typescript:
+        specifier: ^5.4.5
+        version: 5.8.3
+
   sketches/boids:
     dependencies:
       ramda:
@@ -1894,6 +1934,9 @@ packages:
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  '@dim882/sketchlib@0.1.0':
+    resolution: {integrity: sha512-qH+NgwMxrCPzqCCaP3YBABk4hBBqpmQ9dTQJWGcnbs30dM2VLnBd8fYnmCGQLMRBaPgydqFTT/7up9ANtKW5Og==}
 
   '@esbuild/aix-ppc64@0.25.9':
     resolution: {integrity: sha512-OaGtL73Jck6pBKjNIe24BnFE6agGl+6KxDtTfHhy1HmhthfKouEcOhqpSL64K4/0WCtbKFLOdzD/44cJ4k9opA==}
@@ -5797,6 +5840,8 @@ snapshots:
       '@babel/helper-validator-identifier': 7.25.9
 
   '@bcoe/v8-coverage@0.2.3': {}
+
+  '@dim882/sketchlib@0.1.0': {}
 
   '@esbuild/aix-ppc64@0.25.9':
     optional: true
