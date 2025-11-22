@@ -17,7 +17,7 @@ export const FLOCK_PARAMS: IFlockParams = {
 };
 
 export const BOID_COUNT = 200;
-export const WOIM_LENGTH = 5;
+export const WOIM_LENGTH = 20;
 export const BACKGROUND_COLOR = '#121212'; 
 
 export const BOID_COLOR = '#e8c9c9';
