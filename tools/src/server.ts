@@ -1,3 +1,6 @@
+// Initialize CSS modules hook BEFORE any other imports that might import CSS
+import './css-modules-init';
+
 import express from 'express';
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -18,7 +21,7 @@ async function initializeServer() {
 
   app.get('/', async (req, res) => {
     try {
-      const renderedHtml = await renderMainPage(paths.sketches(), paths.uiIndex(), SketchListWithStyles, styles);
+      const renderedHtml = await renderMainPage(paths.sketches(), paths.uiIndex(), SketchListWithStyles);
       res.send(renderedHtml);
     } catch (err) {
       console.error('Error:', err);
