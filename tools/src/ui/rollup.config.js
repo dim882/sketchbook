@@ -4,9 +4,6 @@ import commonjs from '@rollup/plugin-commonjs';
 import sucrase from '@rollup/plugin-sucrase';
 import postcss from 'rollup-plugin-postcss';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 export default {
   input: './src/ui/client.tsx',
   output: {
