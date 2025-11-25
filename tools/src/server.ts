@@ -15,13 +15,13 @@ async function renderMainPage(sketchName?: string) {
     dirs: await getSketchDirsData(paths.sketches()),
     initialSketch: sketchName || null,
   });
+
   return htmlTemplate.replace('${initialData}', initialData);
 }
 
 app.get('/', async (req, res) => {
   try {
-    const html = await renderMainPage();
-    res.send(html);
+    res.send(await renderMainPage());
   } catch (err) {
     console.error('Error:', err);
     res.status(500).send('Failed to process request');
@@ -30,8 +30,7 @@ app.get('/', async (req, res) => {
 
 app.get('/nav/:sketchname', async (req, res) => {
   try {
-    const html = await renderMainPage(req.params.sketchname);
-    res.send(html);
+    res.send(await renderMainPage(req.params.sketchname));
   } catch (err) {
     console.error('Error:', err);
     res.status(500).send('Failed to process request');
@@ -40,6 +39,7 @@ app.get('/nav/:sketchname', async (req, res) => {
 
 app.get('/sketches/:sketchName', (req, res) => {
   const sketchName = req.params.sketchName;
+
   if (!sketchName) {
     return res.status(404).send('Sketch name not provided');
   }
