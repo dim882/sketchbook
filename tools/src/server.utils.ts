@@ -4,6 +4,7 @@ import fg from 'fast-glob';
 import { h } from 'preact';
 import render from 'preact-render-to-string';
 import { SketchServerHandler } from './server.sketch.types';
+import { IDir } from './ui/SketchList';
 
 const sketchesPath = path.join(__dirname, '../../sketches');
 
@@ -54,7 +55,7 @@ async function getLastModifiedTime(dirPath: string): Promise<number> {
   return Math.max(...tsStats.map((stat) => stat.mtime.getTime()));
 }
 
-export async function getSketchDirsData(sketchesPath: string) {
+export async function getSketchDirsData(sketchesPath: string): Promise<IDir[]> {
   const files = await fs.readdir(sketchesPath, { withFileTypes: true });
 
   const dirsWithTimestamps = await Promise.all(
@@ -80,18 +81,19 @@ export async function renderMainPage(
   SketchListComponent: any,
   sketchName?: string
 ) {
-  const sortedDirs = await getSketchDirsData(sketchesPath);
-
-  const sketchListHtml = render(h(SketchListComponent, { dirs: sortedDirs }));
-
-  const data = await fs.readFile(htmlTemplatePath, 'utf8');
-  const renderedHtml = data.replace('${sketchListPlaceholder}', sketchListHtml).replace(
-    '${initialData}',
-    JSON.stringify({
-      dirs: sortedDirs,
-      initialSketch: sketchName || null,
-    })
-  );
+  const directoryData = await getSketchDirsData(sketchesPath);
+  const sketchListHtml = render(h(SketchListComponent, { dirs: directoryData }));
+  const htmlTemplate = await fs.readFile(htmlTemplatePath, 'utf8');
+  // prettier-ignore
+  const renderedHtml = htmlTemplate
+    .replace('${sketchListPlaceholder}', sketchListHtml)
+    .replace(
+      '${initialData}',
+      JSON.stringify({
+        dirs: directoryData,
+        initialSketch: sketchName || null,
+      })
+    );
 
   return renderedHtml;
 }
