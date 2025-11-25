@@ -4,6 +4,7 @@ import fg from 'fast-glob';
 import { h } from 'preact';
 import render from 'preact-render-to-string';
 import { SketchServerHandler } from './server.sketch.types';
+import SketchList from './ui/SketchList';
 import { IDir } from './ui/SketchList';
 
 const sketchesPath = path.join(__dirname, '../../sketches');
@@ -78,7 +79,7 @@ export async function getSketchDirsData(sketchesPath: string): Promise<IDir[]> {
 export async function renderMainPage(
   sketchesPath: string,
   htmlTemplatePath: string,
-  SketchListComponent: any,
+  SketchListComponent: typeof SketchList,
   sketchName?: string
 ) {
   const directoryData = await getSketchDirsData(sketchesPath);
@@ -87,8 +88,7 @@ export async function renderMainPage(
   // prettier-ignore
   const renderedHtml = htmlTemplate
     .replace('${sketchListPlaceholder}', sketchListHtml)
-    .replace(
-      '${initialData}',
+    .replace('${initialData}',
       JSON.stringify({
         dirs: directoryData,
         initialSketch: sketchName || null,
