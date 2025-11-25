@@ -9,15 +9,18 @@ const port = 2000;
 app.use(express.json());
 app.use(express.static(paths.public()));
 
+async function renderMainPage(sketchName?: string) {
+  const htmlTemplate = await fs.readFile(paths.uiIndex(), 'utf8');
+  const initialData = JSON.stringify({
+    dirs: await getSketchDirsData(paths.sketches()),
+    initialSketch: sketchName || null,
+  });
+  return htmlTemplate.replace('${initialData}', initialData);
+}
+
 app.get('/', async (req, res) => {
   try {
-    const htmlTemplate = await fs.readFile(paths.uiIndex(), 'utf8');
-    const sketchName = req.query.sketch as string | undefined;
-    const initialData = JSON.stringify({
-      dirs: await getSketchDirsData(paths.sketches()),
-      initialSketch: sketchName || null,
-    });
-    const html = htmlTemplate.replace('${initialData}', initialData);
+    const html = await renderMainPage();
     res.send(html);
   } catch (err) {
     console.error('Error:', err);
@@ -27,12 +30,7 @@ app.get('/', async (req, res) => {
 
 app.get('/nav/:sketchname', async (req, res) => {
   try {
-    const htmlTemplate = await fs.readFile(paths.uiIndex(), 'utf8');
-    const initialData = JSON.stringify({
-      dirs: await getSketchDirsData(paths.sketches()),
-      initialSketch: req.params.sketchname || null,
-    });
-    const html = htmlTemplate.replace('${initialData}', initialData);
+    const html = await renderMainPage(req.params.sketchname);
     res.send(html);
   } catch (err) {
     console.error('Error:', err);
