@@ -52,13 +52,7 @@ app.get('/sketches/:sketchName', (req, res) => {
 });
 
 app.use('/sketches/:sketchName/dist', (req, res, next) => {
-  express.static(paths.dist(req.params.sketchName), {
-    setHeaders: (res, path) => {
-      if (path.endsWith('.css')) {
-        res.setHeader('Content-Type', 'text/css');
-      }
-    },
-  })(req, res, next);
+  express.static(paths.dist(req.params.sketchName))(req, res, next);
 });
 
 app.get('/api/sketches/:sketchName/params', async (req, res) => {
