@@ -1,4 +1,4 @@
-import { h, hydrate } from 'preact';
+import { h, render } from 'preact';
 import SketchList, { IDir } from './SketchList';
 import { loadSketch } from './NavUtils';
 
@@ -32,4 +32,4 @@ if (initialData.initialSketch) {
   loadSketch(initialData.initialSketch);
 }
 
-hydrate(<SketchList dirs={initialData.dirs} />, document.getElementById('sketchList') as HTMLElement);
+render(<SketchList dirs={initialData.dirs} />, document.getElementById('sketchList') as HTMLElement);

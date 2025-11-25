@@ -1,10 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import fg from 'fast-glob';
-import { h } from 'preact';
-import render from 'preact-render-to-string';
 import { SketchServerHandler } from './server.sketch.types';
-import SketchList from './ui/SketchList';
 import { IDir } from './ui/SketchList';
 
 const sketchesPath = path.join(__dirname, '../../sketches');
@@ -22,16 +19,6 @@ export const paths = {
   template: (sketchName: string) => path.join(sketchesPath, sketchName, 'src', `${sketchName}.params.tpl`),
   serverHandler: (sketchName: string) => path.join(sketchesPath, sketchName, 'src', `${sketchName}.server.js`),
 };
-
-export async function loadCSSModulesMapping() {
-  try {
-    const styles = await import('./ui/SketchList.module.css');
-
-    return styles.default;
-  } catch (err) {
-    console.error('Error loading CSS modules:', err);
-  }
-}
 
 async function getLastModifiedTime(dirPath: string): Promise<number> {
   const tsFiles = await fg(['**/*.{ts,tsx}'], {
@@ -65,27 +52,6 @@ export async function getSketchDirsData(sketchesPath: string): Promise<IDir[]> {
   );
 
   return dirsWithTimestamps.sort((a, b) => a.name.localeCompare(b.name));
-}
-
-export async function renderMainPage(
-  sketchesPath: string,
-  htmlTemplatePath: string,
-  SketchListComponent: typeof SketchList,
-  sketchName?: string
-) {
-  const directoryData = await getSketchDirsData(sketchesPath);
-  const sketchListHtml = render(h(SketchListComponent, { dirs: directoryData }));
-  const htmlTemplate = await fs.readFile(htmlTemplatePath, 'utf8');
-
-  // prettier-ignore
-  return htmlTemplate
-    .replace('${sketchListPlaceholder}', sketchListHtml)
-    .replace('${initialData}',
-      JSON.stringify({
-        dirs: directoryData,
-        initialSketch: sketchName || null,
-      })
-    );
 }
 
 export async function getSketchParams(sketchName: string) {

@@ -10,7 +10,6 @@ export interface IDir {
 
 export interface SketchListProps {
   dirs: IDir[];
-  styles?: any; // For server-side rendering
 }
 
 type SortMethod = 'recent' | 'alpha';
@@ -19,7 +18,7 @@ function sortBy(sortMethod: string): (a: IDir, b: IDir) => number {
   return (a, b) => (sortMethod === 'recent' ? b.lastModified - a.lastModified : a.name.localeCompare(b.name));
 }
 
-const SketchList: FunctionComponent<SketchListProps> = ({ dirs, styles: serverStyles }) => {
+const SketchList: FunctionComponent<SketchListProps> = ({ dirs }) => {
   const [sortMethod, setSortMethod] = useState<SortMethod>('alpha');
   const handleSort = (method: SortMethod) => () => setSortMethod(method);
 
@@ -28,22 +27,19 @@ const SketchList: FunctionComponent<SketchListProps> = ({ dirs, styles: serverSt
     navigateToSketch(sketchName);
   };
 
-  // Use server styles if provided, otherwise use imported styles
-  const classNames = serverStyles || styles;
-
   return (
-    <div class={classNames.list}>
-      <h1 class={classNames.title}>Sketches</h1>
+    <div class={styles.list}>
+      <h1 class={styles.title}>Sketches</h1>
 
-      <div class={classNames.sortButtons}>
+      <div class={styles.sortButtons}>
         <button
-          class={`${classNames.sortButton} ${sortMethod === 'alpha' ? classNames.active : ''}`}
+          class={`${styles.sortButton} ${sortMethod === 'alpha' ? styles.active : ''}`}
           onClick={handleSort('alpha')}
         >
           Alphabetical
         </button>
         <button
-          class={`${classNames.sortButton} ${sortMethod === 'recent' ? classNames.active : ''}`}
+          class={`${styles.sortButton} ${sortMethod === 'recent' ? styles.active : ''}`}
           onClick={handleSort('recent')}
         >
           Recent
@@ -52,12 +48,12 @@ const SketchList: FunctionComponent<SketchListProps> = ({ dirs, styles: serverSt
 
       <ul>
         {dirs.sort(sortBy(sortMethod)).map((dir) => (
-          <li key={dir.name} class={classNames.listItem}>
-            <a href={`/nav/${dir.name}`} onClick={handleSketchClick(dir.name)} class={classNames.link}>
+          <li key={dir.name} class={styles.listItem}>
+            <a href={`/nav/${dir.name}`} onClick={handleSketchClick(dir.name)} class={styles.link}>
               {dir.name}
             </a>
             &nbsp;
-            <a href={`/sketches/${dir.name}`} target="_blank" rel="noopener noreferrer" class={classNames.externalLink}>
+            <a href={`/sketches/${dir.name}`} target="_blank" rel="noopener noreferrer" class={styles.externalLink}>
               ↗
             </a>
           </li>
