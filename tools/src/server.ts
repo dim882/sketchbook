@@ -1,5 +1,4 @@
 import express from 'express';
-import path from 'node:path';
 import fs from 'node:fs/promises';
 import { paths, getSketchParams, getSketchDirsData } from './server.utils';
 
@@ -38,7 +37,7 @@ app.get('/nav/:sketchname', async (req, res) => {
 });
 
 app.get('/sketches/:sketchName', (req, res) => {
-  const sketchName = req.params.sketchName;
+  const { sketchName } = req.params;
 
   if (!sketchName) {
     return res.status(404).send('Sketch name not provided');
@@ -64,10 +63,9 @@ app.use('/sketches/:sketchName/dist', (req, res, next) => {
 
 app.get('/api/sketches/:sketchName/params', async (req, res) => {
   try {
-    const { sketchName } = req.params;
-    const params = await getSketchParams(sketchName);
-
-    res.json({ params });
+    res.json({
+      params: await getSketchParams(req.params.sketchName),
+    });
   } catch (err) {
     console.error('Error reading params:', err);
 
@@ -95,6 +93,7 @@ app.post('/api/sketches/:sketchName/params', async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error('Error writing params:', err);
+
     res.status(500).json({ error: 'Failed to write parameters' });
   }
 });
