@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import fg from 'fast-glob';
 import { h } from 'preact';
 import render from 'preact-render-to-string';
 import { SketchServerHandler } from './server.sketch.types';
@@ -36,28 +37,13 @@ export async function loadCSSModulesMapping() {
   }
 }
 
-async function getAllTsFiles(dirPath: string): Promise<string[]> {
-  const items = await fs.readdir(dirPath, { withFileTypes: true });
-
-  const files = await Promise.all(
-    items.map(async (item) => {
-      const itemPath = path.join(dirPath, item.name);
-
-      if (item.isDirectory() && !item.name.startsWith('.') && item.name !== 'node_modules') {
-        return getAllTsFiles(itemPath);
-      } else if (item.isFile() && (item.name.endsWith('.ts') || item.name.endsWith('.tsx'))) {
-        return [itemPath];
-      }
-
-      return [];
-    })
-  );
-
-  return files.flat();
-}
-
 async function getLastModifiedTime(dirPath: string): Promise<number> {
-  const tsFiles = await getAllTsFiles(dirPath);
+  const tsFiles = await fg(['**/*.{ts,tsx}'], {
+    cwd: dirPath,
+    absolute: true,
+    ignore: ['node_modules/**'],
+    dot: false,
+  });
 
   if (tsFiles.length === 0) {
     return 0;
