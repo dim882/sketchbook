@@ -57,12 +57,9 @@ export async function getSketchDirsData(sketchesPath: string): Promise<IDir[]> {
     files
       .filter((file) => file.isDirectory())
       .map(async (dir) => {
-        const dirPath = path.join(sketchesPath, dir.name);
-        const lastModified = await getLastModifiedTime(dirPath);
-
         return {
           name: dir.name,
-          lastModified,
+          lastModified: await getLastModifiedTime(path.join(sketchesPath, dir.name)),
         };
       })
   );
@@ -79,8 +76,9 @@ export async function renderMainPage(
   const directoryData = await getSketchDirsData(sketchesPath);
   const sketchListHtml = render(h(SketchListComponent, { dirs: directoryData }));
   const htmlTemplate = await fs.readFile(htmlTemplatePath, 'utf8');
+
   // prettier-ignore
-  const renderedHtml = htmlTemplate
+  return htmlTemplate
     .replace('${sketchListPlaceholder}', sketchListHtml)
     .replace('${initialData}',
       JSON.stringify({
@@ -88,8 +86,6 @@ export async function renderMainPage(
         initialSketch: sketchName || null,
       })
     );
-
-  return renderedHtml;
 }
 
 export async function getSketchParams(sketchName: string) {
