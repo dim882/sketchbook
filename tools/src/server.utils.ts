@@ -9,7 +9,7 @@ const sketchesPath = path.join(__dirname, '../../sketches');
 // Path utilities
 export const paths = {
   public: () => path.join(__dirname, '../public'),
-  uiIndex: () => path.join(__dirname, './ui/index.html'),
+  uiIndex: () => path.join(__dirname, './ui/index.html.tpl'),
   sketches: () => sketchesPath,
   sketch: (sketchName: string) => path.join(sketchesPath, sketchName),
   dist: (sketchName: string) => path.join(sketchesPath, sketchName, 'dist'),
