@@ -33,7 +33,14 @@ const ensureSeedInUrl = (): string => {
   return newSeed;
 };
 
-export const createSeedState = () => {
+export interface ISeedState {
+  prng: IRandomGenerator;
+  seed: string;
+  changeSeed: () => IRandomGenerator;
+  handleSeedChange: (callback: (rand: IRandomGenerator) => void) => () => void;
+}
+
+export const createSeedState = (): ISeedState => {
   let currentSeed = ensureSeedInUrl();
   let currentPrng = prng(currentSeed);
 

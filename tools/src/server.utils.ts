@@ -21,7 +21,7 @@ export const paths = {
 };
 
 async function getLastModifiedTime(dirPath: string): Promise<number> {
-  const tsFiles = await fg(['**/*.{ts,tsx}'], {
+  const tsFiles = await fg(['**/*.{ts,tsx,html}'], {
     cwd: dirPath,
     absolute: true,
     ignore: ['node_modules/**'],
