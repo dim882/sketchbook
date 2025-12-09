@@ -3,6 +3,17 @@ import { getFloat } from './random';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
+export interface IVector {
+  x: number;
+  y: number;
+}
+
+export interface IMetaball {
+  position: IVector;
+  velocity: IVector;
+  radius: number;
+}
+
 export function getRandomEdgePoint(rand: PseudoRandomNumberGenerator, width: number, height: number): IPointTuple {
   const edge = Math.floor(rand() * 4); // 0: top, 1: right, 2: bottom, 3: left
 
@@ -58,3 +69,15 @@ export function getOppositeEdgePoint(
 
   return [center[0] + dir[0] * t, center[1] + dir[1] * t];
 }
+
+export const calculateMetaballField = (x: number, y: number, metaballs: IMetaball[], threshold: number): boolean => {
+  const sum = metaballs.reduce((acc, ball) => {
+    const dx = x - ball.position.x;
+    const dy = y - ball.position.y;
+    const distanceSquared = dx * dx + dy * dy;
+
+    return acc + (ball.radius * ball.radius) / distanceSquared;
+  }, 0);
+
+  return sum > threshold;
+};
