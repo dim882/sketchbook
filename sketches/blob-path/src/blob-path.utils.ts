@@ -26,7 +26,6 @@ export function normalizeVector([dx, dy]: IPointTuple): IPointTuple {
 }
 
 export function getOppositeEdgePoint(
-  start: IPointTuple,
   dir: IPointTuple,
   width: number,
   height: number,
