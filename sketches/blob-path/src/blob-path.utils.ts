@@ -79,3 +79,21 @@ export const calculateMetaball = (x: number, y: number, metaballs: IMetaball[]):
     return acc + (ball.radius * ball.radius) / distanceSquared;
   }, 0);
 };
+
+export function createOffscreenCanvas(
+  width: number,
+  height: number
+): {
+  canvas: HTMLCanvasElement;
+  context: CanvasRenderingContext2D;
+} | null {
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  const context = canvas.getContext('2d', { willReadFrequently: true });
+
+  if (!context) return null;
+
+  return { canvas, context };
+}

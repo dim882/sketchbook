@@ -5,6 +5,7 @@ import {
   getOppositeEdgePoint,
   normalizeVector,
   calculateMetaball,
+  createOffscreenCanvas,
   type IPointTuple,
   type PseudoRandomNumberGenerator,
   type IMetaball,
@@ -58,8 +59,8 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
     (opposite2[0] - point2[0]) * (opposite2[0] - point2[0]) + (opposite2[1] - point2[1]) * (opposite2[1] - point2[1])
   );
 
-  const step1 = totalDist1 / STEP_COUNT + 4;
-  const step2 = totalDist2 / STEP_COUNT + 4;
+  const step1 = totalDist1 / STEP_COUNT;
+  const step2 = totalDist2 / STEP_COUNT;
 
   const offscreenCanvases: HTMLCanvasElement[] = [];
 
@@ -67,12 +68,10 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
     const current1: IPointTuple = [point1[0] + dir1[0] * step1 * i, point1[1] + dir1[1] * step1 * i];
     const current2: IPointTuple = [point2[0] + dir2[0] * step2 * i, point2[1] + dir2[1] * step2 * i];
 
-    const offscreenCanvas = document.createElement('canvas');
-    offscreenCanvas.width = width;
-    offscreenCanvas.height = height;
-    const offscreenContext = offscreenCanvas.getContext('2d', { willReadFrequently: true });
+    const offscreen = createOffscreenCanvas(width, height);
+    if (!offscreen) continue;
 
-    if (!offscreenContext) continue;
+    const { canvas: offscreenCanvas, context: offscreenContext } = offscreen;
 
     const metaballs: IMetaball[] = [
       {
