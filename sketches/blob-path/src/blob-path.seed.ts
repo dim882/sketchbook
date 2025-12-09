@@ -1,5 +1,5 @@
 import { PseudoRandomNumberGenerator } from './blob-path';
-import prng from './pnrg';
+import prng from './random';
 
 const QUERY_STRING_SEED = 'seed';
 

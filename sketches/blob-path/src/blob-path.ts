@@ -1,5 +1,6 @@
 import { createSeedState } from './blob-path.seed';
-import { bindEvent, getFloat } from './blob-path.utils';
+import { bindEvent, getFloat } from './random';
+
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
