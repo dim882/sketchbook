@@ -38,7 +38,7 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
   const { width, height } = context.canvas;
   const center: IPointTuple = [width / 2, height / 2];
 
-  context.fillStyle = '#fcfaf7';
+  context.fillStyle = '#6c8693';
   context.fillRect(0, 0, width, height);
 
   const point1: IPointTuple = getRandomEdgePoint(rand, width, height);
@@ -91,6 +91,11 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
     const imageData = offscreenContext.createImageData(width, height);
     const data = imageData.data;
 
+    const averageRadius = metaballs.reduce((sum, ball) => sum + ball.radius, 0) / metaballs.length;
+    const baseThreshold = 0.2;
+    const rangeWidth = 0.01 - (averageRadius / 50) * (0.01 - 0.003);
+    const thresholdMax = baseThreshold + rangeWidth;
+
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const index = (y * width + x) * 4;
@@ -100,6 +105,11 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
           data[index] = 0; // r
           data[index + 1] = 0; // g
           data[index + 2] = 0; // b
+          data[index + 3] = 255; // a
+        } else if (sum > thresholdMax) {
+          data[index] = 252; // r
+          data[index + 1] = 250; // g
+          data[index + 2] = 247; // b
           data[index + 3] = 255; // a
         } else {
           data[index + 3] = 0; // transparent
