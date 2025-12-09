@@ -4,8 +4,10 @@ import {
   getRandomEdgePoint,
   getOppositeEdgePoint,
   normalizeVector,
+  calculateMetaballField,
   type IPointTuple,
   type PseudoRandomNumberGenerator,
+  type IMetaball,
 } from './blob-path.utils';
 
 export type { PseudoRandomNumberGenerator, IPointTuple };
@@ -57,16 +59,56 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
   const step1 = totalDist1 / 10;
   const step2 = totalDist2 / 10;
 
+  const offscreenCanvases: HTMLCanvasElement[] = [];
+
   for (let i = 0; i < 10; i++) {
     const current1: IPointTuple = [point1[0] + dir1[0] * step1 * i, point1[1] + dir1[1] * step1 * i];
     const current2: IPointTuple = [point2[0] + dir2[0] * step2 * i, point2[1] + dir2[1] * step2 * i];
 
-    context.beginPath();
-    context.arc(current1[0], current1[1], 5, 0, Math.PI * 2);
-    context.fill();
+    const offscreenCanvas = document.createElement('canvas');
+    offscreenCanvas.width = width;
+    offscreenCanvas.height = height;
+    const offscreenContext = offscreenCanvas.getContext('2d', { willReadFrequently: true });
 
-    context.beginPath();
-    context.arc(current2[0], current2[1], 5, 0, Math.PI * 2);
-    context.fill();
+    if (!offscreenContext) continue;
+
+    const metaballs: IMetaball[] = [
+      {
+        position: { x: current1[0], y: current1[1] },
+        velocity: { x: 0, y: 0 },
+        radius: 50,
+      },
+      {
+        position: { x: current2[0], y: current2[1] },
+        velocity: { x: 0, y: 0 },
+        radius: 50,
+      },
+    ];
+
+    const imageData = offscreenContext.createImageData(width, height);
+    const data = imageData.data;
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const index = (y * width + x) * 4;
+        const isInMetaball = calculateMetaballField(x, y, metaballs, 1.0);
+
+        if (isInMetaball) {
+          data[index] = 0; // r
+          data[index + 1] = 0; // g
+          data[index + 2] = 0; // b
+          data[index + 3] = 255; // a
+        } else {
+          data[index + 3] = 0; // transparent
+        }
+      }
+    }
+
+    offscreenContext.putImageData(imageData, 0, 0);
+    offscreenCanvases.push(offscreenCanvas);
+  }
+
+  for (const offscreenCanvas of offscreenCanvases) {
+    context.drawImage(offscreenCanvas, 0, 0);
   }
 }
