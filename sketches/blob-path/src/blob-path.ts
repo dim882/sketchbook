@@ -1,8 +1,14 @@
 import { createSeedState } from './blob-path.seed';
-import { bindEvent, getFloat } from './random';
+import { bindEvent } from './random';
+import {
+  getRandomEdgePoint,
+  getOppositeEdgePoint,
+  normalizeVector,
+  type IPointTuple,
+  type PseudoRandomNumberGenerator,
+} from './blob-path.utils';
 
-export type PseudoRandomNumberGenerator = () => number;
-export type IPointTuple = [number, number];
+export type { PseudoRandomNumberGenerator, IPointTuple };
 
 const seedState = createSeedState();
 
@@ -21,28 +27,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   render(context, seedState.prng);
 });
-
-function getRandomEdgePoint(rand: PseudoRandomNumberGenerator, width: number, height: number): IPointTuple {
-  const edge = Math.floor(rand() * 4); // 0: top, 1: right, 2: bottom, 3: left
-
-  switch (edge) {
-    case 0: // top
-      return [getFloat(rand, 0, width), 0];
-    case 1: // right
-      return [width, getFloat(rand, 0, height)];
-    case 2: // bottom
-      return [getFloat(rand, 0, width), height];
-    case 3: // left
-      return [0, getFloat(rand, 0, height)];
-    default:
-      return [0, 0];
-  }
-}
-
-function normalizeVector([dx, dy]: IPointTuple): IPointTuple {
-  const length = Math.sqrt(dx * dx + dy * dy);
-  return length === 0 ? [0, 0] : [dx / length, dy / length];
-}
 
 function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGenerator) {
   const { width, height } = context.canvas;
@@ -63,38 +47,8 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
   const dir1 = normalizeVector(vec1);
   const dir2 = normalizeVector(vec2);
 
-  // Find opposite edge intersection points by extending direction from center
-  const getOppositeEdgePoint = (start: IPointTuple, dir: IPointTuple, width: number, height: number): IPointTuple => {
-    // Extend from center in the same direction
-    const maxDist = Math.max(width, height) * 2;
-    let t = maxDist;
-
-    // Find intersection with opposite edge
-    if (dir[0] > 0) {
-      // Moving right, intersect with right edge
-      const tRight = (width - center[0]) / dir[0];
-      if (tRight > 0 && tRight < t) t = tRight;
-    } else if (dir[0] < 0) {
-      // Moving left, intersect with left edge
-      const tLeft = -center[0] / dir[0];
-      if (tLeft > 0 && tLeft < t) t = tLeft;
-    }
-
-    if (dir[1] > 0) {
-      // Moving down, intersect with bottom edge
-      const tBottom = (height - center[1]) / dir[1];
-      if (tBottom > 0 && tBottom < t) t = tBottom;
-    } else if (dir[1] < 0) {
-      // Moving up, intersect with top edge
-      const tTop = -center[1] / dir[1];
-      if (tTop > 0 && tTop < t) t = tTop;
-    }
-
-    return [center[0] + dir[0] * t, center[1] + dir[1] * t];
-  };
-
-  const opposite1 = getOppositeEdgePoint(point1, dir1, width, height);
-  const opposite2 = getOppositeEdgePoint(point2, dir2, width, height);
+  const opposite1 = getOppositeEdgePoint(point1, dir1, width, height, center);
+  const opposite2 = getOppositeEdgePoint(point2, dir2, width, height, center);
 
   // Calculate total distance from start to opposite edge
   const totalDist1 = Math.sqrt(
