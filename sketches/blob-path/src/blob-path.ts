@@ -6,6 +6,7 @@ import {
   normalizeVector,
   calculateMetaball,
   createOffscreenCanvas,
+  isWithinThreshold,
   type IPointTuple,
   type PseudoRandomNumberGenerator,
   type IMetaball,
@@ -94,7 +95,7 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
         const index = (y * width + x) * 4;
         const sum = calculateMetaball(x, y, metaballs);
 
-        if (sum > 0.2 && sum < 0.203) {
+        if (isWithinThreshold(sum, metaballs)) {
           data[index] = 0; // r
           data[index + 1] = 0; // g
           data[index + 2] = 0; // b

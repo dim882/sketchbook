@@ -97,3 +97,11 @@ export function createOffscreenCanvas(
 
   return { canvas, context };
 }
+
+export function isWithinThreshold(sum: number, metaballs: IMetaball[]): boolean {
+  const averageRadius = metaballs.reduce((sum, ball) => sum + ball.radius, 0) / metaballs.length;
+  const baseThreshold = 0.2;
+  const rangeWidth = 0.01 - (averageRadius / 50) * (0.01 - 0.003);
+
+  return sum > baseThreshold && sum < baseThreshold + rangeWidth;
+}
