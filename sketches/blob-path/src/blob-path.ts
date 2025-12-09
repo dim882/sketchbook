@@ -73,16 +73,19 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
 
     const { canvas: offscreenCanvas, context: offscreenContext } = offscreen;
 
+    const radius1 = 30 + 20 * Math.sin((i / STEP_COUNT) * Math.PI * 2);
+    const radius2 = 30 + 20 * Math.sin((i / STEP_COUNT) * Math.PI * 2 + Math.PI / 2);
+
     const metaballs: IMetaball[] = [
       {
         position: { x: current1[0], y: current1[1] },
         velocity: { x: 0, y: 0 },
-        radius: 50,
+        radius: radius1,
       },
       {
         position: { x: current2[0], y: current2[1] },
         velocity: { x: 0, y: 0 },
-        radius: 50,
+        radius: radius2,
       },
     ];
 
