@@ -14,6 +14,8 @@ export type { PseudoRandomNumberGenerator, IPointTuple };
 
 const seedState = createSeedState();
 
+const STEP_COUNT = 50;
+
 window.addEventListener('DOMContentLoaded', () => {
   const context = document.querySelector('canvas')?.getContext('2d');
 
@@ -56,12 +58,12 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
     (opposite2[0] - point2[0]) * (opposite2[0] - point2[0]) + (opposite2[1] - point2[1]) * (opposite2[1] - point2[1])
   );
 
-  const step1 = totalDist1 / 10;
-  const step2 = totalDist2 / 10;
+  const step1 = totalDist1 / STEP_COUNT + 4;
+  const step2 = totalDist2 / STEP_COUNT + 4;
 
   const offscreenCanvases: HTMLCanvasElement[] = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < STEP_COUNT; i++) {
     const current1: IPointTuple = [point1[0] + dir1[0] * step1 * i, point1[1] + dir1[1] * step1 * i];
     const current2: IPointTuple = [point2[0] + dir2[0] * step2 * i, point2[1] + dir2[1] * step2 * i];
 
@@ -93,7 +95,7 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
         const index = (y * width + x) * 4;
         const sum = calculateMetaball(x, y, metaballs);
 
-        if (sum > 0.2 && sum < 0.206) {
+        if (sum > 0.2 && sum < 0.203) {
           data[index] = 0; // r
           data[index + 1] = 0; // g
           data[index + 2] = 0; // b
