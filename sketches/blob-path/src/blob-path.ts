@@ -47,8 +47,8 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
   const dir1 = normalizeVector(vec1);
   const dir2 = normalizeVector(vec2);
 
-  const opposite1 = getOppositeEdgePoint(point1, dir1, width, height, center);
-  const opposite2 = getOppositeEdgePoint(point2, dir2, width, height, center);
+  const opposite1 = getOppositeEdgePoint(dir1, width, height, center);
+  const opposite2 = getOppositeEdgePoint(dir2, width, height, center);
 
   // Calculate total distance from start to opposite edge
   const totalDist1 = Math.sqrt(
