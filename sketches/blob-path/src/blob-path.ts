@@ -4,7 +4,7 @@ import {
   getRandomEdgePoint,
   getOppositeEdgePoint,
   normalizeVector,
-  calculateMetaballField,
+  calculateMetaball,
   type IPointTuple,
   type PseudoRandomNumberGenerator,
   type IMetaball,
@@ -91,9 +91,9 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const index = (y * width + x) * 4;
-        const isInMetaball = calculateMetaballField(x, y, metaballs, 1.0);
+        const sum = calculateMetaball(x, y, metaballs);
 
-        if (isInMetaball) {
+        if (sum > 0.2 && sum < 0.206) {
           data[index] = 0; // r
           data[index + 1] = 0; // g
           data[index + 2] = 0; // b

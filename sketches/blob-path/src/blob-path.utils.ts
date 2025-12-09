@@ -70,14 +70,12 @@ export function getOppositeEdgePoint(
   return [center[0] + dir[0] * t, center[1] + dir[1] * t];
 }
 
-export const calculateMetaballField = (x: number, y: number, metaballs: IMetaball[], threshold: number): boolean => {
-  const sum = metaballs.reduce((acc, ball) => {
+export const calculateMetaball = (x: number, y: number, metaballs: IMetaball[]): number => {
+  return metaballs.reduce((acc, ball) => {
     const dx = x - ball.position.x;
     const dy = y - ball.position.y;
     const distanceSquared = dx * dx + dy * dy;
 
     return acc + (ball.radius * ball.radius) / distanceSquared;
   }, 0);
-
-  return sum > threshold;
 };
