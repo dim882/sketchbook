@@ -49,8 +49,6 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     (opposite2.x - point2.x) * (opposite2.x - point2.x) + (opposite2.y - point2.y) * (opposite2.y - point2.y)
   );
 
-  console.log('heheee');
-
   const extension = 200;
   const totalDist1 = distToOpposite1 + extension;
   const totalDist2 = distToOpposite2 + extension;
@@ -61,9 +59,6 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
   const offscreenCanvases: HTMLCanvasElement[] = [];
 
   for (let i = 0; i < STEP_COUNT; i++) {
-    const current1: utils.IPoint = { x: point1.x + dir1.x * step1 * i, y: point1.y + dir1.y * step1 * i };
-    const current2: utils.IPoint = { x: point2.x + dir2.x * step2 * i, y: point2.y + dir2.y * step2 * i };
-
     const offscreen = utils.createOffscreenCanvas(width, height);
     if (!offscreen) continue;
 
@@ -71,12 +66,12 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
 
     const metaballs: utils.IMetaball[] = [
       {
-        position: current1,
+        position: utils.getPointAlongPath(point1, dir1, step1, i),
         velocity: { x: 0, y: 0 },
         radius: 30 + 20 * Math.sin((i / STEP_COUNT) * Math.PI * 2),
       },
       {
-        position: current2,
+        position: utils.getPointAlongPath(point2, dir2, step2, i),
         velocity: { x: 0, y: 0 },
         radius: 30 + 20 * Math.cos((i / STEP_COUNT) * Math.PI * 2),
       },

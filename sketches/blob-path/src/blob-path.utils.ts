@@ -54,6 +54,13 @@ export function normalizeVector(vec: IPoint): IPoint {
   return length === 0 ? { x: 0, y: 0 } : { x: vec.x / length, y: vec.y / length };
 }
 
+export function getPointAlongPath(start: IPoint, dir: IPoint, stepSize: number, stepIndex: number): IPoint {
+  return {
+    x: start.x + dir.x * stepSize * stepIndex,
+    y: start.y + dir.y * stepSize * stepIndex,
+  };
+}
+
 export function getOppositeEdgePoint(dir: IPoint, width: number, height: number, center: IPoint): IPoint {
   const maxDist = Math.max(width, height) * 2;
   let t = maxDist;
