@@ -30,31 +30,26 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
   context.fillRect(0, 0, width, height);
 
   const edge = utils.getRandomEdge(rand);
-  const point1: utils.IPoint = utils.getRandomEdgePoint(rand, width, height, edge);
-  const point2: utils.IPoint = utils.getRandomEdgePoint(rand, width, height, edge);
-
-  const vec1: utils.IPoint = { x: center.x - point1.x, y: center.y - point1.y };
-  const vec2: utils.IPoint = { x: center.x - point2.x, y: center.y - point2.y };
-
-  const dir1 = utils.normalizeVector(vec1);
-  const dir2 = utils.normalizeVector(vec2);
-
-  const opposite1 = utils.getOppositeEdgePoint(dir1, width, height, center);
-  const opposite2 = utils.getOppositeEdgePoint(dir2, width, height, center);
-
-  const distToOpposite1 = Math.sqrt(
-    (opposite1.x - point1.x) * (opposite1.x - point1.x) + (opposite1.y - point1.y) * (opposite1.y - point1.y)
-  );
-  const distToOpposite2 = Math.sqrt(
-    (opposite2.x - point2.x) * (opposite2.x - point2.x) + (opposite2.y - point2.y) * (opposite2.y - point2.y)
-  );
-
   const extension = 200;
-  const totalDist1 = distToOpposite1 + extension;
-  const totalDist2 = distToOpposite2 + extension;
 
-  const step1 = totalDist1 / STEP_COUNT;
-  const step2 = totalDist2 / STEP_COUNT;
+  const thing1 = utils.createThing({
+    rand,
+    width,
+    height,
+    edge,
+    center,
+    extension,
+    stepCount: STEP_COUNT,
+  });
+  const thing2 = utils.createThing({
+    rand,
+    width,
+    height,
+    edge,
+    center,
+    extension,
+    stepCount: STEP_COUNT,
+  });
 
   const offscreenCanvases: HTMLCanvasElement[] = [];
 
@@ -66,12 +61,12 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
 
     const metaballs: utils.IMetaball[] = [
       {
-        position: utils.getPointAlongPath(point1, dir1, step1, i),
+        position: utils.getPointAlongPath(thing1.point, thing1.dir, thing1.step, i),
         velocity: { x: 0, y: 0 },
         radius: 30 + 20 * Math.sin((i / STEP_COUNT) * Math.PI * 2),
       },
       {
-        position: utils.getPointAlongPath(point2, dir2, step2, i),
+        position: utils.getPointAlongPath(thing2.point, thing2.dir, thing2.step, i),
         velocity: { x: 0, y: 0 },
         radius: 30 + 20 * Math.cos((i / STEP_COUNT) * Math.PI * 2),
       },

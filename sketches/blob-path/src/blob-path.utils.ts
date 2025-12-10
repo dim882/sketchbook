@@ -25,6 +25,26 @@ export interface IMetaball {
   radius: number;
 }
 
+export interface IThing {
+  point: IPoint;
+  vec: IPoint;
+  dir: IPoint;
+  opposite: IPoint;
+  distToOpposite: number;
+  totalDist: number;
+  step: number;
+}
+
+export interface ICreateThingParams {
+  rand: PseudoRandomNumberGenerator;
+  width: number;
+  height: number;
+  edge: Edge;
+  center: IPoint;
+  extension: number;
+  stepCount: number;
+}
+
 export function getRandomEdge(rand: PseudoRandomNumberGenerator): Edge {
   return Math.floor(rand() * 4) as Edge;
 }
@@ -82,6 +102,31 @@ export function getOppositeEdgePoint(dir: IPoint, width: number, height: number,
   }
 
   return { x: center.x + dir.x * t, y: center.y + dir.y * t };
+}
+
+export function createThing({ rand, width, height, edge, center, extension, stepCount }: ICreateThingParams): IThing {
+  const point = getRandomEdgePoint(rand, width, height, edge);
+  const vec = {
+    x: center.x - point.x,
+    y: center.y - point.y,
+  };
+  const dir = normalizeVector(vec);
+  const opposite = getOppositeEdgePoint(dir, width, height, center);
+  const distToOpposite = Math.sqrt(
+    (opposite.x - point.x) * (opposite.x - point.x) + (opposite.y - point.y) * (opposite.y - point.y)
+  );
+  const totalDist = distToOpposite + extension;
+  const step = totalDist / stepCount;
+
+  return {
+    point,
+    vec,
+    dir,
+    opposite,
+    distToOpposite,
+    totalDist,
+    step,
+  };
 }
 
 export const calculateMetaball = (x: number, y: number, metaballs: IMetaball[]): number => {
