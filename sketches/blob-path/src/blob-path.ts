@@ -42,12 +42,18 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
   const opposite1 = utils.getOppositeEdgePoint(dir1, width, height, center);
   const opposite2 = utils.getOppositeEdgePoint(dir2, width, height, center);
 
-  const totalDist1 = Math.sqrt(
+  const distToOpposite1 = Math.sqrt(
     (opposite1.x - point1.x) * (opposite1.x - point1.x) + (opposite1.y - point1.y) * (opposite1.y - point1.y)
   );
-  const totalDist2 = Math.sqrt(
+  const distToOpposite2 = Math.sqrt(
     (opposite2.x - point2.x) * (opposite2.x - point2.x) + (opposite2.y - point2.y) * (opposite2.y - point2.y)
   );
+
+  console.log('heheee');
+
+  const extension = 200;
+  const totalDist1 = distToOpposite1 + extension;
+  const totalDist2 = distToOpposite2 + extension;
 
   const step1 = totalDist1 / STEP_COUNT;
   const step2 = totalDist2 / STEP_COUNT;
@@ -75,7 +81,6 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
         radius: 30 + 20 * Math.cos((i / STEP_COUNT) * Math.PI * 2),
       },
     ];
-    console.log('heye!!');
 
     const imageData = offscreenContext.createImageData(width, height);
     const data = imageData.data;
