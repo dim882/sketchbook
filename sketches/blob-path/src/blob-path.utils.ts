@@ -41,7 +41,6 @@ export interface ICreateThingParams {
   height: number;
   edge: Edge;
   center: IPoint;
-  extension: number;
   stepCount: number;
 }
 
@@ -104,7 +103,8 @@ export function getOppositeEdgePoint(dir: IPoint, width: number, height: number,
   return { x: center.x + dir.x * t, y: center.y + dir.y * t };
 }
 
-export function createThing({ rand, width, height, edge, center, extension, stepCount }: ICreateThingParams): IThing {
+export function createThing({ rand, width, height, edge, center, stepCount }: ICreateThingParams): IThing {
+  const extension = 200;
   const point = getRandomEdgePoint(rand, width, height, edge);
   const vec = {
     x: center.x - point.x,

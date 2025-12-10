@@ -30,7 +30,6 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
   context.fillRect(0, 0, width, height);
 
   const edge = utils.getRandomEdge(rand);
-  const extension = 200;
 
   const thing1 = utils.createThing({
     rand,
@@ -38,7 +37,6 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     height,
     edge,
     center,
-    extension,
     stepCount: STEP_COUNT,
   });
   const thing2 = utils.createThing({
@@ -47,7 +45,6 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     height,
     edge,
     center,
-    extension,
     stepCount: STEP_COUNT,
   });
 
