@@ -1,7 +1,11 @@
 import { getFloat } from './random';
 
 export type PseudoRandomNumberGenerator = () => number;
-export type IPointTuple = [number, number];
+export type IPoint = { x: number; y: number };
+
+export function toTuple(point: IPoint): [number, number] {
+  return [point.x, point.y];
+}
 
 export enum Edge {
   Top = 0,
@@ -30,58 +34,47 @@ export function getRandomEdgePoint(
   width: number,
   height: number,
   edge: Edge
-): IPointTuple {
+): IPoint {
   switch (edge) {
     case Edge.Top:
-      return [getFloat(rand, 0, width), 0];
+      return { x: getFloat(rand, 0, width), y: 0 };
     case Edge.Right:
-      return [width, getFloat(rand, 0, height)];
+      return { x: width, y: getFloat(rand, 0, height) };
     case Edge.Bottom:
-      return [getFloat(rand, 0, width), height];
+      return { x: getFloat(rand, 0, width), y: height };
     case Edge.Left:
-      return [0, getFloat(rand, 0, height)];
+      return { x: 0, y: getFloat(rand, 0, height) };
     default:
-      return [0, 0];
+      return { x: 0, y: 0 };
   }
 }
 
-export function normalizeVector([dx, dy]: IPointTuple): IPointTuple {
-  const length = Math.sqrt(dx * dx + dy * dy);
-  return length === 0 ? [0, 0] : [dx / length, dy / length];
+export function normalizeVector(vec: IPoint): IPoint {
+  const length = Math.sqrt(vec.x * vec.x + vec.y * vec.y);
+  return length === 0 ? { x: 0, y: 0 } : { x: vec.x / length, y: vec.y / length };
 }
 
-export function getOppositeEdgePoint(
-  dir: IPointTuple,
-  width: number,
-  height: number,
-  center: IPointTuple
-): IPointTuple {
-  // Extend from center in the same direction
+export function getOppositeEdgePoint(dir: IPoint, width: number, height: number, center: IPoint): IPoint {
   const maxDist = Math.max(width, height) * 2;
   let t = maxDist;
 
-  // Find intersection with opposite edge
-  if (dir[0] > 0) {
-    // Moving right, intersect with right edge
-    const tRight = (width - center[0]) / dir[0];
+  if (dir.x > 0) {
+    const tRight = (width - center.x) / dir.x;
     if (tRight > 0 && tRight < t) t = tRight;
-  } else if (dir[0] < 0) {
-    // Moving left, intersect with left edge
-    const tLeft = -center[0] / dir[0];
+  } else if (dir.x < 0) {
+    const tLeft = -center.x / dir.x;
     if (tLeft > 0 && tLeft < t) t = tLeft;
   }
 
-  if (dir[1] > 0) {
-    // Moving down, intersect with bottom edge
-    const tBottom = (height - center[1]) / dir[1];
+  if (dir.y > 0) {
+    const tBottom = (height - center.y) / dir.y;
     if (tBottom > 0 && tBottom < t) t = tBottom;
-  } else if (dir[1] < 0) {
-    // Moving up, intersect with top edge
-    const tTop = -center[1] / dir[1];
+  } else if (dir.y < 0) {
+    const tTop = -center.y / dir.y;
     if (tTop > 0 && tTop < t) t = tTop;
   }
 
-  return [center[0] + dir[0] * t, center[1] + dir[1] * t];
+  return { x: center.x + dir.x * t, y: center.y + dir.y * t };
 }
 
 export const calculateMetaball = (x: number, y: number, metaballs: IMetaball[]): number => {

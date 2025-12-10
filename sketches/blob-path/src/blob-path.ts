@@ -8,12 +8,13 @@ import {
   calculateMetaball,
   createOffscreenCanvas,
   isWithinThreshold,
-  type IPointTuple,
+  toTuple,
+  type IPoint,
   type PseudoRandomNumberGenerator,
   type IMetaball,
 } from './blob-path.utils';
 
-export type { PseudoRandomNumberGenerator, IPointTuple };
+export type { PseudoRandomNumberGenerator, IPoint as IPointTuple };
 
 const seedState = createSeedState();
 
@@ -37,17 +38,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGenerator) {
   const { width, height } = context.canvas;
-  const center: IPointTuple = [width / 2, height / 2];
+  const center: IPoint = { x: width / 2, y: height / 2 };
 
   context.fillStyle = '#6c8693';
   context.fillRect(0, 0, width, height);
 
   const edge = getRandomEdge(rand);
-  const point1: IPointTuple = getRandomEdgePoint(rand, width, height, edge);
-  const point2: IPointTuple = getRandomEdgePoint(rand, width, height, edge);
+  const point1: IPoint = getRandomEdgePoint(rand, width, height, edge);
+  const point2: IPoint = getRandomEdgePoint(rand, width, height, edge);
 
-  const vec1: IPointTuple = [center[0] - point1[0], center[1] - point1[1]];
-  const vec2: IPointTuple = [center[0] - point2[0], center[1] - point2[1]];
+  const vec1: IPoint = { x: center.x - point1.x, y: center.y - point1.y };
+  const vec2: IPoint = { x: center.x - point2.x, y: center.y - point2.y };
 
   const dir1 = normalizeVector(vec1);
   const dir2 = normalizeVector(vec2);
@@ -55,12 +56,11 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
   const opposite1 = getOppositeEdgePoint(dir1, width, height, center);
   const opposite2 = getOppositeEdgePoint(dir2, width, height, center);
 
-  // Calculate total distance from start to opposite edge
   const totalDist1 = Math.sqrt(
-    (opposite1[0] - point1[0]) * (opposite1[0] - point1[0]) + (opposite1[1] - point1[1]) * (opposite1[1] - point1[1])
+    (opposite1.x - point1.x) * (opposite1.x - point1.x) + (opposite1.y - point1.y) * (opposite1.y - point1.y)
   );
   const totalDist2 = Math.sqrt(
-    (opposite2[0] - point2[0]) * (opposite2[0] - point2[0]) + (opposite2[1] - point2[1]) * (opposite2[1] - point2[1])
+    (opposite2.x - point2.x) * (opposite2.x - point2.x) + (opposite2.y - point2.y) * (opposite2.y - point2.y)
   );
 
   const step1 = totalDist1 / STEP_COUNT;
@@ -69,8 +69,8 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
   const offscreenCanvases: HTMLCanvasElement[] = [];
 
   for (let i = 0; i < STEP_COUNT; i++) {
-    const current1: IPointTuple = [point1[0] + dir1[0] * step1 * i, point1[1] + dir1[1] * step1 * i];
-    const current2: IPointTuple = [point2[0] + dir2[0] * step2 * i, point2[1] + dir2[1] * step2 * i];
+    const current1: IPoint = { x: point1.x + dir1.x * step1 * i, y: point1.y + dir1.y * step1 * i };
+    const current2: IPoint = { x: point2.x + dir2.x * step2 * i, y: point2.y + dir2.y * step2 * i };
 
     const offscreen = createOffscreenCanvas(width, height);
     if (!offscreen) continue;
@@ -79,16 +79,17 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
 
     const metaballs: IMetaball[] = [
       {
-        position: { x: current1[0], y: current1[1] },
+        position: current1,
         velocity: { x: 0, y: 0 },
         radius: 30 + 20 * Math.sin((i / STEP_COUNT) * Math.PI * 2),
       },
       {
-        position: { x: current2[0], y: current2[1] },
+        position: current2,
         velocity: { x: 0, y: 0 },
         radius: 30 + 20 * Math.cos((i / STEP_COUNT) * Math.PI * 2),
       },
     ];
+    console.log('heye!!');
 
     const imageData = offscreenContext.createImageData(width, height);
     const data = imageData.data;
