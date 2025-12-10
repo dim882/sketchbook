@@ -1,20 +1,6 @@
 import { createSeedState } from './blob-path.seed';
 import { bindEvent } from './random';
-import {
-  getRandomEdge,
-  getRandomEdgePoint,
-  getOppositeEdgePoint,
-  normalizeVector,
-  calculateMetaball,
-  createOffscreenCanvas,
-  isWithinThreshold,
-  toTuple,
-  type IPoint,
-  type PseudoRandomNumberGenerator,
-  type IMetaball,
-} from './blob-path.utils';
-
-export type { PseudoRandomNumberGenerator, IPoint as IPointTuple };
+import * as utils from './blob-path.utils';
 
 const seedState = createSeedState();
 
@@ -36,25 +22,25 @@ window.addEventListener('DOMContentLoaded', () => {
   render(context, seedState.prng);
 });
 
-function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGenerator) {
+function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumberGenerator) {
   const { width, height } = context.canvas;
-  const center: IPoint = { x: width / 2, y: height / 2 };
+  const center: utils.IPoint = { x: width / 2, y: height / 2 };
 
   context.fillStyle = '#6c8693';
   context.fillRect(0, 0, width, height);
 
-  const edge = getRandomEdge(rand);
-  const point1: IPoint = getRandomEdgePoint(rand, width, height, edge);
-  const point2: IPoint = getRandomEdgePoint(rand, width, height, edge);
+  const edge = utils.getRandomEdge(rand);
+  const point1: utils.IPoint = utils.getRandomEdgePoint(rand, width, height, edge);
+  const point2: utils.IPoint = utils.getRandomEdgePoint(rand, width, height, edge);
 
-  const vec1: IPoint = { x: center.x - point1.x, y: center.y - point1.y };
-  const vec2: IPoint = { x: center.x - point2.x, y: center.y - point2.y };
+  const vec1: utils.IPoint = { x: center.x - point1.x, y: center.y - point1.y };
+  const vec2: utils.IPoint = { x: center.x - point2.x, y: center.y - point2.y };
 
-  const dir1 = normalizeVector(vec1);
-  const dir2 = normalizeVector(vec2);
+  const dir1 = utils.normalizeVector(vec1);
+  const dir2 = utils.normalizeVector(vec2);
 
-  const opposite1 = getOppositeEdgePoint(dir1, width, height, center);
-  const opposite2 = getOppositeEdgePoint(dir2, width, height, center);
+  const opposite1 = utils.getOppositeEdgePoint(dir1, width, height, center);
+  const opposite2 = utils.getOppositeEdgePoint(dir2, width, height, center);
 
   const totalDist1 = Math.sqrt(
     (opposite1.x - point1.x) * (opposite1.x - point1.x) + (opposite1.y - point1.y) * (opposite1.y - point1.y)
@@ -69,15 +55,15 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
   const offscreenCanvases: HTMLCanvasElement[] = [];
 
   for (let i = 0; i < STEP_COUNT; i++) {
-    const current1: IPoint = { x: point1.x + dir1.x * step1 * i, y: point1.y + dir1.y * step1 * i };
-    const current2: IPoint = { x: point2.x + dir2.x * step2 * i, y: point2.y + dir2.y * step2 * i };
+    const current1: utils.IPoint = { x: point1.x + dir1.x * step1 * i, y: point1.y + dir1.y * step1 * i };
+    const current2: utils.IPoint = { x: point2.x + dir2.x * step2 * i, y: point2.y + dir2.y * step2 * i };
 
-    const offscreen = createOffscreenCanvas(width, height);
+    const offscreen = utils.createOffscreenCanvas(width, height);
     if (!offscreen) continue;
 
     const { canvas: offscreenCanvas, context: offscreenContext } = offscreen;
 
-    const metaballs: IMetaball[] = [
+    const metaballs: utils.IMetaball[] = [
       {
         position: current1,
         velocity: { x: 0, y: 0 },
@@ -102,9 +88,9 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const index = (y * width + x) * 4;
-        const sum = calculateMetaball(x, y, metaballs);
+        const sum = utils.calculateMetaball(x, y, metaballs);
 
-        if (isWithinThreshold(sum, metaballs)) {
+        if (utils.isWithinThreshold(sum, metaballs)) {
           data[index] = 0; // r
           data[index + 1] = 0; // g
           data[index + 2] = 0; // b
