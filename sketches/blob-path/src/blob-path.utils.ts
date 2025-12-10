@@ -3,6 +3,13 @@ import { getFloat } from './random';
 export type PseudoRandomNumberGenerator = () => number;
 export type IPointTuple = [number, number];
 
+export enum Edge {
+  Top = 0,
+  Right = 1,
+  Bottom = 2,
+  Left = 3,
+}
+
 export interface IVector {
   x: number;
   y: number;
@@ -14,17 +21,24 @@ export interface IMetaball {
   radius: number;
 }
 
-export function getRandomEdgePoint(rand: PseudoRandomNumberGenerator, width: number, height: number): IPointTuple {
-  const edge = Math.floor(rand() * 4); // 0: top, 1: right, 2: bottom, 3: left
+export function getRandomEdge(rand: PseudoRandomNumberGenerator): Edge {
+  return Math.floor(rand() * 4) as Edge;
+}
 
+export function getRandomEdgePoint(
+  rand: PseudoRandomNumberGenerator,
+  width: number,
+  height: number,
+  edge: Edge
+): IPointTuple {
   switch (edge) {
-    case 0: // top
+    case Edge.Top:
       return [getFloat(rand, 0, width), 0];
-    case 1: // right
+    case Edge.Right:
       return [width, getFloat(rand, 0, height)];
-    case 2: // bottom
+    case Edge.Bottom:
       return [getFloat(rand, 0, width), height];
-    case 3: // left
+    case Edge.Left:
       return [0, getFloat(rand, 0, height)];
     default:
       return [0, 0];

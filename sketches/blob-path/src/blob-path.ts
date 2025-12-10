@@ -1,6 +1,7 @@
 import { createSeedState } from './blob-path.seed';
 import { bindEvent } from './random';
 import {
+  getRandomEdge,
   getRandomEdgePoint,
   getOppositeEdgePoint,
   normalizeVector,
@@ -41,8 +42,9 @@ function render(context: CanvasRenderingContext2D, rand: PseudoRandomNumberGener
   context.fillStyle = '#6c8693';
   context.fillRect(0, 0, width, height);
 
-  const point1: IPointTuple = getRandomEdgePoint(rand, width, height);
-  const point2: IPointTuple = getRandomEdgePoint(rand, width, height);
+  const edge = getRandomEdge(rand);
+  const point1: IPointTuple = getRandomEdgePoint(rand, width, height, edge);
+  const point2: IPointTuple = getRandomEdgePoint(rand, width, height, edge);
 
   const vec1: IPointTuple = [center[0] - point1[0], center[1] - point1[1]];
   const vec2: IPointTuple = [center[0] - point2[0], center[1] - point2[1]];
