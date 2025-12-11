@@ -51,7 +51,7 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
   const offscreenCanvases: OffscreenCanvas[] = [];
 
   for (let i = 0; i < STEP_COUNT; i++) {
-    const { canvas: offscreenCanvas, context: offscreenContext } = utils.createOffscreenCanvas(width, height);
+    const offscreen = utils.createOffscreenCanvas(width, height);
 
     const metaballs: utils.IMetaball[] = [
       {
@@ -64,7 +64,7 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
       },
     ];
 
-    const imageData = offscreenContext.createImageData(width, height);
+    const imageData = offscreen.context.createImageData(width, height);
     const data = imageData.data;
 
     const averageRadius = metaballs.reduce((sum, ball) => sum + ball.radius, 0) / metaballs.length;
@@ -93,8 +93,8 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
       }
     }
 
-    offscreenContext.putImageData(imageData, 0, 0);
-    offscreenCanvases.push(offscreenCanvas);
+    offscreen.context.putImageData(imageData, 0, 0);
+    offscreenCanvases.push(offscreen.canvas);
   }
 
   for (const offscreenCanvas of offscreenCanvases) {
