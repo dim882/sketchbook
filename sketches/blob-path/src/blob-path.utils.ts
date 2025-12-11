@@ -27,9 +27,6 @@ export interface IMetaball {
 export interface IBlobStreamData {
   point: IPoint;
   dir: IPoint;
-  opposite: IPoint;
-  distToOpposite: number;
-  totalDist: number;
   step: number;
 }
 
@@ -123,9 +120,6 @@ export function createBlobStreamData({ point, width, height, center, stepCount }
   return {
     point,
     dir,
-    opposite,
-    distToOpposite,
-    totalDist,
     step,
   };
 }
