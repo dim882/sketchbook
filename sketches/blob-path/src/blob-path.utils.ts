@@ -30,14 +30,6 @@ export interface IBlobStreamData {
   step: number;
 }
 
-export interface ICreateThingParams {
-  point: IPoint;
-  width: number;
-  height: number;
-  center: IPoint;
-  stepCount: number;
-}
-
 export function getRandomEdge(rand: PseudoRandomNumberGenerator): Edge {
   return Math.floor(rand() * 4) as Edge;
 }
@@ -119,6 +111,13 @@ export function getOppositeEdgePoint(dir: IPoint, width: number, height: number,
   };
 }
 
+export interface ICreateThingParams {
+  point: IPoint;
+  width: number;
+  height: number;
+  center: IPoint;
+  stepCount: number;
+}
 export function createBlobStreamData({ point, width, height, center, stepCount }: ICreateThingParams): IBlobStreamData {
   const OVERSHOOT_DISTANCE = 200;
   const dir = normalizeVector({
