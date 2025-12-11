@@ -50,15 +50,30 @@ export function getRandomEdgePoint(
 ): IPoint {
   switch (edge) {
     case Edge.Top:
-      return { x: getFloat(rand, 0, width), y: 0 };
+      return {
+        x: getFloat(rand, 0, width),
+        y: 0,
+      };
     case Edge.Right:
-      return { x: width, y: getFloat(rand, 0, height) };
+      return {
+        x: width,
+        y: getFloat(rand, 0, height),
+      };
     case Edge.Bottom:
-      return { x: getFloat(rand, 0, width), y: height };
+      return {
+        x: getFloat(rand, 0, width),
+        y: height,
+      };
     case Edge.Left:
-      return { x: 0, y: getFloat(rand, 0, height) };
+      return {
+        x: 0,
+        y: getFloat(rand, 0, height),
+      };
     default:
-      return { x: 0, y: 0 };
+      return {
+        x: 0,
+        y: 0,
+      };
   }
 }
 
