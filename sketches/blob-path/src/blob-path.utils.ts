@@ -26,7 +26,6 @@ export interface IMetaball {
 
 export interface IBlobStreamData {
   point: IPoint;
-  vec: IPoint;
   dir: IPoint;
   opposite: IPoint;
   distToOpposite: number;
@@ -110,11 +109,10 @@ export function getOppositeEdgePoint(dir: IPoint, width: number, height: number,
 
 export function createBlobStreamData({ point, width, height, center, stepCount }: ICreateThingParams): IBlobStreamData {
   const OVERSHOOT_DISTANCE = 200;
-  const vec = {
+  const dir = normalizeVector({
     x: center.x - point.x,
     y: center.y - point.y,
-  };
-  const dir = normalizeVector(vec);
+  });
   const opposite = getOppositeEdgePoint(dir, width, height, center);
   const distToOpposite = Math.sqrt(
     (opposite.x - point.x) * (opposite.x - point.x) + (opposite.y - point.y) * (opposite.y - point.y)
@@ -124,7 +122,6 @@ export function createBlobStreamData({ point, width, height, center, stepCount }
 
   return {
     point,
-    vec,
     dir,
     opposite,
     distToOpposite,
