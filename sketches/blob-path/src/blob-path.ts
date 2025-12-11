@@ -29,20 +29,15 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
   context.fillStyle = '#6c8693';
   context.fillRect(0, 0, width, height);
 
-  const edge1 = utils.getRandomEdge(rand);
-  const edge2 = utils.getRandomEdge(rand);
-  const point1 = utils.getRandomEdgePoint(rand, width, height, edge1);
-  const point2 = utils.getRandomEdgePoint(rand, width, height, edge2);
-
   const thing1 = utils.createBlobStreamData({
-    point: point1,
+    point: utils.getRandomEdgePoint(rand, width, height, utils.getRandomEdge(rand)),
     width,
     height,
     center,
     stepCount: STEP_COUNT,
   });
   const thing2 = utils.createBlobStreamData({
-    point: point2,
+    point: utils.getRandomEdgePoint(rand, width, height, utils.getRandomEdge(rand)),
     width,
     height,
     center,
