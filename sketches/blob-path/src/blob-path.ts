@@ -43,6 +43,13 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     center,
     stepCount: STEP_COUNT,
   });
+  const thing3 = utils.createBlobStreamData({
+    point: utils.getRandomEdgePoint(rand, width, height, utils.getRandomEdge(rand)),
+    width,
+    height,
+    center,
+    stepCount: STEP_COUNT,
+  });
 
   const offscreenCanvases: OffscreenCanvas[] = [];
 
@@ -52,12 +59,16 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     const metaballs: utils.IMetaball[] = [
       {
         position: utils.getPointAlongPath(thing1.point, thing1.dir, thing1.step, i),
-        radius: 30 + 20 * Math.sin((i / STEP_COUNT) * Math.PI * 2 * 2),
+        radius: 20 + 20 * Math.sin((i / STEP_COUNT) * Math.PI * 4),
       },
       {
         position: utils.getPointAlongPath(thing2.point, thing2.dir, thing2.step, i),
-        radius: 30 + 20 * Math.cos((i / STEP_COUNT) * Math.PI * 2 * 2),
+        radius: 20 + 20 * Math.cos((i / STEP_COUNT) * Math.PI * 4),
       },
+      // {
+      //   position: utils.getPointAlongPath(thing3.point, thing3.dir, thing3.step, i),
+      //   radius: 20 + 20 * Math.cos(20 + (i / STEP_COUNT) * Math.PI * 4),
+      // },
     ];
 
     const imageData = offscreen.context.createImageData(width, height);
