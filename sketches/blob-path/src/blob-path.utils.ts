@@ -21,7 +21,6 @@ export interface IVector {
 
 export interface IMetaball {
   position: IVector;
-  velocity: IVector;
   radius: number;
 }
 
@@ -86,21 +85,28 @@ export function getOppositeEdgePoint(dir: IPoint, width: number, height: number,
 
   if (dir.x > 0) {
     const tRight = (width - center.x) / dir.x;
+
     if (tRight > 0 && tRight < t) t = tRight;
   } else if (dir.x < 0) {
     const tLeft = -center.x / dir.x;
+
     if (tLeft > 0 && tLeft < t) t = tLeft;
   }
 
   if (dir.y > 0) {
     const tBottom = (height - center.y) / dir.y;
+
     if (tBottom > 0 && tBottom < t) t = tBottom;
   } else if (dir.y < 0) {
     const tTop = -center.y / dir.y;
+
     if (tTop > 0 && tTop < t) t = tTop;
   }
 
-  return { x: center.x + dir.x * t, y: center.y + dir.y * t };
+  return {
+    x: center.x + dir.x * t,
+    y: center.y + dir.y * t,
+  };
 }
 
 export function createBlobStreamData({
@@ -111,7 +117,7 @@ export function createBlobStreamData({
   center,
   stepCount,
 }: ICreateThingParams): IBlobStreamData {
-  const extension = 200;
+  const OVERSHOOT_DISTANCE = 200;
   const point = getRandomEdgePoint(rand, width, height, edge);
   const vec = {
     x: center.x - point.x,
@@ -122,7 +128,7 @@ export function createBlobStreamData({
   const distToOpposite = Math.sqrt(
     (opposite.x - point.x) * (opposite.x - point.x) + (opposite.y - point.y) * (opposite.y - point.y)
   );
-  const totalDist = distToOpposite + extension;
+  const totalDist = distToOpposite + OVERSHOOT_DISTANCE;
   const step = totalDist / stepCount;
 
   return {

@@ -59,12 +59,10 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     const metaballs: utils.IMetaball[] = [
       {
         position: utils.getPointAlongPath(thing1.point, thing1.dir, thing1.step, i),
-        velocity: { x: 0, y: 0 },
         radius: 30 + 20 * Math.sin((i / STEP_COUNT) * Math.PI * 2),
       },
       {
         position: utils.getPointAlongPath(thing2.point, thing2.dir, thing2.step, i),
-        velocity: { x: 0, y: 0 },
         radius: 30 + 20 * Math.cos((i / STEP_COUNT) * Math.PI * 2),
       },
     ];
