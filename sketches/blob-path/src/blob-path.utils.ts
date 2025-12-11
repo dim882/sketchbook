@@ -75,7 +75,12 @@ export function getRandomEdgePoint(
 
 export function normalizeVector(vec: IPoint): IPoint {
   const length = Math.sqrt(vec.x * vec.x + vec.y * vec.y);
-  return length === 0 ? { x: 0, y: 0 } : { x: vec.x / length, y: vec.y / length };
+  return length === 0
+    ? { x: 0, y: 0 }
+    : {
+        x: vec.x / length,
+        y: vec.y / length,
+      };
 }
 
 export function getPointAlongPath(start: IPoint, dir: IVector, stepSize: number, stepIndex: number): IPoint {
