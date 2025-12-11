@@ -48,13 +48,10 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     stepCount: STEP_COUNT,
   });
 
-  const offscreenCanvases: HTMLCanvasElement[] = [];
+  const offscreenCanvases: OffscreenCanvas[] = [];
 
   for (let i = 0; i < STEP_COUNT; i++) {
-    const offscreen = utils.createOffscreenCanvas(width, height);
-    if (!offscreen) continue;
-
-    const { canvas: offscreenCanvas, context: offscreenContext } = offscreen;
+    const { canvas: offscreenCanvas, context: offscreenContext } = utils.createOffscreenCanvas(width, height);
 
     const metaballs: utils.IMetaball[] = [
       {

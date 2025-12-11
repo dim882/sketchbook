@@ -156,16 +156,15 @@ export function createOffscreenCanvas(
   width: number,
   height: number
 ): {
-  canvas: HTMLCanvasElement;
-  context: CanvasRenderingContext2D;
-} | null {
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-
+  canvas: OffscreenCanvas;
+  context: OffscreenCanvasRenderingContext2D;
+} {
+  const canvas = new OffscreenCanvas(width, height);
   const context = canvas.getContext('2d', { willReadFrequently: true });
 
-  if (!context) return null;
+  if (!context) {
+    throw new Error('Failed to get 2d context from OffscreenCanvas');
+  }
 
   return { canvas, context };
 }
