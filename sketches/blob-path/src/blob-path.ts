@@ -29,15 +29,16 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
   context.fillStyle = '#6c8693';
   context.fillRect(0, 0, width, height);
 
+  const edge = utils.getRandomEdge(rand);
   const thing1 = utils.createBlobStreamData({
-    point: utils.getRandomEdgePoint(rand, width, height, utils.getRandomEdge(rand)),
+    point: utils.getRandomEdgePoint(rand, width, height, edge),
     width,
     height,
     center,
     stepCount: STEP_COUNT,
   });
   const thing2 = utils.createBlobStreamData({
-    point: utils.getRandomEdgePoint(rand, width, height, utils.getRandomEdge(rand)),
+    point: utils.getRandomEdgePoint(rand, width, height, edge),
     width,
     height,
     center,
@@ -56,7 +57,7 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
       },
       {
         position: utils.getPointAlongPath(thing2.point, thing2.dir, thing2.step, i),
-        radius: 20 + 20 * Math.cos((i / STEP_COUNT) * Math.PI * 4),
+        radius: 40 + 20 * Math.cos((i / STEP_COUNT) * Math.PI * 4),
       },
     ];
 
