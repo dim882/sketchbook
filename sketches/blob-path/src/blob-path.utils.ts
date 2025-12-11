@@ -25,7 +25,7 @@ export interface IMetaball {
   radius: number;
 }
 
-export interface IThing {
+export interface IBlobStreamData {
   point: IPoint;
   vec: IPoint;
   dir: IPoint;
@@ -103,7 +103,14 @@ export function getOppositeEdgePoint(dir: IPoint, width: number, height: number,
   return { x: center.x + dir.x * t, y: center.y + dir.y * t };
 }
 
-export function createThing({ rand, width, height, edge, center, stepCount }: ICreateThingParams): IThing {
+export function createBlobStreamData({
+  rand,
+  width,
+  height,
+  edge,
+  center,
+  stepCount,
+}: ICreateThingParams): IBlobStreamData {
   const extension = 200;
   const point = getRandomEdgePoint(rand, width, height, edge);
   const vec = {

@@ -31,7 +31,7 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
 
   const edge = utils.getRandomEdge(rand);
 
-  const thing1 = utils.createThing({
+  const thing1 = utils.createBlobStreamData({
     rand,
     width,
     height,
@@ -39,7 +39,7 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     center,
     stepCount: STEP_COUNT,
   });
-  const thing2 = utils.createThing({
+  const thing2 = utils.createBlobStreamData({
     rand,
     width,
     height,
