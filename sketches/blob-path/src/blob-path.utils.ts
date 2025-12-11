@@ -1,7 +1,11 @@
 import { getFloat } from './random';
 
 export type PseudoRandomNumberGenerator = () => number;
-export type IPoint = { x: number; y: number };
+
+export type IPoint = {
+  x: number;
+  y: number;
+};
 
 export function toTuple(point: IPoint): [number, number] {
   return [point.x, point.y];
@@ -74,7 +78,7 @@ export function normalizeVector(vec: IPoint): IPoint {
   return length === 0 ? { x: 0, y: 0 } : { x: vec.x / length, y: vec.y / length };
 }
 
-export function getPointAlongPath(start: IPoint, dir: IPoint, stepSize: number, stepIndex: number): IPoint {
+export function getPointAlongPath(start: IPoint, dir: IVector, stepSize: number, stepIndex: number): IPoint {
   return {
     x: start.x + dir.x * stepSize * stepIndex,
     y: start.y + dir.y * stepSize * stepIndex,
