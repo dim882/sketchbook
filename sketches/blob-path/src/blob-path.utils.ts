@@ -81,7 +81,8 @@ export function getPointAlongPath(start: IPoint, dir: IPoint, stepSize: number, 
   };
 }
 
-export function getOppositeEdgePoint(dir: IPoint, width: number, height: number, center: IPoint): IPoint {
+export function getOppositeEdgePoint(dir: IPoint, width: number, height: number): IPoint {
+  const center = { x: width / 2, y: height / 2 };
   const maxDist = Math.max(width, height) * 2;
   let t = maxDist;
 
@@ -124,7 +125,7 @@ export function createBlobStreamData({ point, width, height, center, stepCount }
     x: center.x - point.x,
     y: center.y - point.y,
   });
-  const opposite = getOppositeEdgePoint(dir, width, height, center);
+  const opposite = getOppositeEdgePoint(dir, width, height);
   const distToOpposite = Math.sqrt(
     (opposite.x - point.x) * (opposite.x - point.x) + (opposite.y - point.y) * (opposite.y - point.y)
   );
