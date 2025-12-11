@@ -5,6 +5,10 @@ import * as utils from './blob-path.utils';
 const seedState = createSeedState();
 
 const STEP_COUNT = 50;
+const BACKGROUND_COLOR = '#6c8693';
+const COLOR_BLACK = { r: 0, g: 0, b: 0, a: 255 };
+const COLOR_LIGHT = { r: 252, g: 250, b: 247, a: 255 };
+const ALPHA_TRANSPARENT = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
   const context = document.querySelector('canvas')?.getContext('2d');
@@ -26,7 +30,7 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
   const { width, height } = context.canvas;
   const center: utils.IPoint = { x: width / 2, y: height / 2 };
 
-  context.fillStyle = '#6c8693';
+  context.fillStyle = BACKGROUND_COLOR;
   context.fillRect(0, 0, width, height);
 
   const edge = utils.getRandomEdge(rand);
@@ -75,17 +79,17 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
         const sum = utils.calculateMetaball(x, y, metaballs);
 
         if (utils.isWithinThreshold(sum, metaballs)) {
-          data[index] = 0; // r
-          data[index + 1] = 0; // g
-          data[index + 2] = 0; // b
-          data[index + 3] = 255; // a
+          data[index] = COLOR_BLACK.r;
+          data[index + 1] = COLOR_BLACK.g;
+          data[index + 2] = COLOR_BLACK.b;
+          data[index + 3] = COLOR_BLACK.a;
         } else if (sum > thresholdMax) {
-          data[index] = 252; // r
-          data[index + 1] = 250; // g
-          data[index + 2] = 247; // b
-          data[index + 3] = 255; // a
+          data[index] = COLOR_LIGHT.r;
+          data[index + 1] = COLOR_LIGHT.g;
+          data[index + 2] = COLOR_LIGHT.b;
+          data[index + 3] = COLOR_LIGHT.a;
         } else {
-          data[index + 3] = 0; // transparent
+          data[index + 3] = ALPHA_TRANSPARENT;
         }
       }
     }
