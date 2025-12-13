@@ -73,8 +73,8 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     const rangeWidth = 0.01 - (averageRadius / 50) * (0.01 - 0.003);
     const thresholdMax = baseThreshold + rangeWidth;
 
-    const colorLine = utils.hexToRgba(COLOR_LINE);
-    const colorForm = utils.hexToRgba(COLOR_FORM);
+    const colorLine = utils.colorToRgba(COLOR_LINE);
+    const colorForm = utils.colorToRgba(COLOR_FORM);
 
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {

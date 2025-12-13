@@ -1,5 +1,5 @@
 import { getFloat } from './random';
-import { parse } from 'culori';
+import { parse, converter } from 'culori';
 
 export type PseudoRandomNumberGenerator = () => number;
 
@@ -184,12 +184,21 @@ export function isWithinThreshold(sum: number, metaballs: IMetaball[]): boolean 
   return sum > baseThreshold && sum < baseThreshold + rangeWidth;
 }
 
-export function hexToRgba(hex: string, alpha: number = 255): { r: number; g: number; b: number; a: number } {
-  const { r, g, b } = parse(hex)!;
+export function colorToRgba(color: string, defaultAlpha: number = 255): { r: number; g: number; b: number; a: number } {
+  const parsed = parse(color);
+
+  if (!parsed) {
+    console.error(`Invalid color string: ${color}. Returning grey`);
+
+    return { r: 128, g: 128, b: 128, a: defaultAlpha };
+  }
+
+  const rgb = parsed.mode === 'rgb' ? parsed : converter('rgb')(parsed);
+
   return {
-    r: Math.round(r * 255),
-    g: Math.round(g * 255),
-    b: Math.round(b * 255),
-    a: alpha,
+    r: Math.round(rgb.r * 255),
+    g: Math.round(rgb.g * 255),
+    b: Math.round(rgb.b * 255),
+    a: rgb.alpha !== undefined ? Math.round(rgb.alpha * 255) : defaultAlpha,
   };
 }
