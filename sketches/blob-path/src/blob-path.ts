@@ -4,11 +4,12 @@ import * as utils from './blob-path.utils';
 
 const seedState = createSeedState();
 
-const STEP_COUNT = 50;
-const BACKGROUND_COLOR = '#6c8693';
-const COLOR_LINE = '#000000';
-const COLOR_FORM = '#fcfaf7';
-const ALPHA_TRANSPARENT = 0;
+const Settings = {
+  STEP_COUNT: 50,
+  BACKGROUND_COLOR: '#6c8693',
+  COLOR_LINE: '#000000',
+  COLOR_FORM: '#fcfaf7',
+};
 
 window.addEventListener('DOMContentLoaded', () => {
   const context = document.querySelector('canvas')?.getContext('2d');
@@ -30,7 +31,7 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
   const { width, height } = context.canvas;
   const center: utils.IPoint = { x: width / 2, y: height / 2 };
 
-  context.fillStyle = BACKGROUND_COLOR;
+  context.fillStyle = Settings.BACKGROUND_COLOR;
   context.fillRect(0, 0, width, height);
 
   const edge = utils.getRandomEdge(rand);
@@ -39,29 +40,29 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     width,
     height,
     center,
-    stepCount: STEP_COUNT,
+    stepCount: Settings.STEP_COUNT,
   });
   const thing2 = utils.createBlobStreamData({
     point: utils.getRandomEdgePoint(rand, width, height, edge),
     width,
     height,
     center,
-    stepCount: STEP_COUNT,
+    stepCount: Settings.STEP_COUNT,
   });
 
   const offscreenCanvases: OffscreenCanvas[] = [];
 
-  for (let i = 0; i < STEP_COUNT; i++) {
+  for (let i = 0; i < Settings.STEP_COUNT; i++) {
     const offscreen = utils.createOffscreenCanvas(width, height);
 
     const metaballs: utils.IMetaball[] = [
       {
         position: utils.getPointAlongPath(thing1.point, thing1.dir, thing1.step, i),
-        radius: 20 + 20 * Math.sin((i / STEP_COUNT) * Math.PI * 4),
+        radius: 20 + 20 * Math.sin((i / Settings.STEP_COUNT) * Math.PI * 4),
       },
       {
         position: utils.getPointAlongPath(thing2.point, thing2.dir, thing2.step, i),
-        radius: 40 + 20 * Math.cos((i / STEP_COUNT) * Math.PI * 4),
+        radius: 40 + 20 * Math.cos((i / Settings.STEP_COUNT) * Math.PI * 4),
       },
     ];
 
@@ -73,8 +74,8 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     const rangeWidth = 0.01 - (averageRadius / 50) * (0.01 - 0.003);
     const thresholdMax = baseThreshold + rangeWidth;
 
-    const colorLine = utils.colorToRgba(COLOR_LINE);
-    const colorForm = utils.colorToRgba(COLOR_FORM);
+    const colorLine = utils.colorToRgba(Settings.COLOR_LINE);
+    const colorForm = utils.colorToRgba(Settings.COLOR_FORM);
 
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
@@ -92,7 +93,7 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
           data[index + 2] = colorForm.b;
           data[index + 3] = colorForm.a;
         } else {
-          data[index + 3] = ALPHA_TRANSPARENT;
+          data[index + 3] = 0;
         }
       }
     }
