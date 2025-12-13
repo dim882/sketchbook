@@ -6,8 +6,8 @@ const seedState = createSeedState();
 
 const STEP_COUNT = 50;
 const BACKGROUND_COLOR = '#6c8693';
-const COLOR_BLACK = { r: 0, g: 0, b: 0, a: 255 };
-const COLOR_LIGHT = { r: 252, g: 250, b: 247, a: 255 };
+const COLOR_LINE = { r: 0, g: 0, b: 0, a: 255 };
+const COLOR_FORM = { r: 252, g: 250, b: 247, a: 255 };
 const ALPHA_TRANSPARENT = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -79,15 +79,15 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
         const sum = utils.calculateMetaball(x, y, metaballs);
 
         if (utils.isWithinThreshold(sum, metaballs)) {
-          data[index] = COLOR_BLACK.r;
-          data[index + 1] = COLOR_BLACK.g;
-          data[index + 2] = COLOR_BLACK.b;
-          data[index + 3] = COLOR_BLACK.a;
+          data[index] = COLOR_LINE.r;
+          data[index + 1] = COLOR_LINE.g;
+          data[index + 2] = COLOR_LINE.b;
+          data[index + 3] = COLOR_LINE.a;
         } else if (sum > thresholdMax) {
-          data[index] = COLOR_LIGHT.r;
-          data[index + 1] = COLOR_LIGHT.g;
-          data[index + 2] = COLOR_LIGHT.b;
-          data[index + 3] = COLOR_LIGHT.a;
+          data[index] = COLOR_FORM.r;
+          data[index + 1] = COLOR_FORM.g;
+          data[index + 2] = COLOR_FORM.b;
+          data[index + 3] = COLOR_FORM.a;
         } else {
           data[index + 3] = ALPHA_TRANSPARENT;
         }
