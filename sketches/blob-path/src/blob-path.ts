@@ -4,12 +4,16 @@ import * as utils from './blob-path.utils';
 
 const seedState = createSeedState();
 
-const Settings = {
-  STEP_COUNT: 50,
-  BACKGROUND_COLOR: '#6c8693',
-  COLOR_LINE: '#000000',
-  COLOR_FORM: '#fcfaf7',
+const AllSettings = {
+  blue: {
+    STEP_COUNT: 50,
+    BACKGROUND_COLOR: '#6c8693',
+    COLOR_LINE: '#000000',
+    COLOR_FORM: '#fcfaf7',
+  },
 };
+
+const Settings = AllSettings.blue;
 
 window.addEventListener('DOMContentLoaded', () => {
   const context = document.querySelector('canvas')?.getContext('2d');
