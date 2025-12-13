@@ -1,4 +1,5 @@
 import { getFloat } from './random';
+import { parse } from 'culori';
 
 export type PseudoRandomNumberGenerator = () => number;
 
@@ -181,4 +182,14 @@ export function isWithinThreshold(sum: number, metaballs: IMetaball[]): boolean 
   const rangeWidth = 0.01 - (averageRadius / 50) * (0.01 - 0.003);
 
   return sum > baseThreshold && sum < baseThreshold + rangeWidth;
+}
+
+export function hexToRgba(hex: string, alpha: number = 255): { r: number; g: number; b: number; a: number } {
+  const { r, g, b } = parse(hex)!;
+  return {
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255),
+    a: alpha,
+  };
 }

@@ -6,8 +6,8 @@ const seedState = createSeedState();
 
 const STEP_COUNT = 50;
 const BACKGROUND_COLOR = '#6c8693';
-const COLOR_LINE = { r: 0, g: 0, b: 0, a: 255 };
-const COLOR_FORM = { r: 252, g: 250, b: 247, a: 255 };
+const COLOR_LINE = '#000000';
+const COLOR_FORM = '#fcfaf7';
 const ALPHA_TRANSPARENT = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -73,21 +73,24 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
     const rangeWidth = 0.01 - (averageRadius / 50) * (0.01 - 0.003);
     const thresholdMax = baseThreshold + rangeWidth;
 
+    const colorLine = utils.hexToRgba(COLOR_LINE);
+    const colorForm = utils.hexToRgba(COLOR_FORM);
+
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const index = (y * width + x) * 4;
         const sum = utils.calculateMetaball(x, y, metaballs);
 
         if (utils.isWithinThreshold(sum, metaballs)) {
-          data[index] = COLOR_LINE.r;
-          data[index + 1] = COLOR_LINE.g;
-          data[index + 2] = COLOR_LINE.b;
-          data[index + 3] = COLOR_LINE.a;
+          data[index] = colorLine.r;
+          data[index + 1] = colorLine.g;
+          data[index + 2] = colorLine.b;
+          data[index + 3] = colorLine.a;
         } else if (sum > thresholdMax) {
-          data[index] = COLOR_FORM.r;
-          data[index + 1] = COLOR_FORM.g;
-          data[index + 2] = COLOR_FORM.b;
-          data[index + 3] = COLOR_FORM.a;
+          data[index] = colorForm.r;
+          data[index + 1] = colorForm.g;
+          data[index + 2] = colorForm.b;
+          data[index + 3] = colorForm.a;
         } else {
           data[index + 3] = ALPHA_TRANSPARENT;
         }
