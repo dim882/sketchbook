@@ -19,7 +19,7 @@ const AllSettings = {
   },
 };
 
-const Settings = AllSettings.light;
+const Settings = AllSettings.blue;
 
 window.addEventListener('DOMContentLoaded', () => {
   const context = document.querySelector('canvas')?.getContext('2d');

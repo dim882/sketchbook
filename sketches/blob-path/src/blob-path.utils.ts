@@ -1,6 +1,8 @@
 import { getFloat } from './random';
 import { parse, converter } from 'culori';
 
+const BASE_THRESHOLD = 0.2;
+
 export type PseudoRandomNumberGenerator = () => number;
 
 export type IPoint = {
@@ -74,12 +76,23 @@ export function getRandomEdgePoint(
   }
 }
 
-export function getMaxThreshold(metaballs: IMetaball[]) {
-  const averageRadius = metaballs.reduce((sum, ball) => sum + ball.radius, 0) / metaballs.length;
-  const baseThreshold = 0.2;
-  const rangeWidth = 0.01 - (averageRadius / 50) * (0.01 - 0.003);
+function getAverageRadius(metaballs: IMetaball[]): number {
+  return metaballs.reduce((sum, ball) => sum + ball.radius, 0) / metaballs.length;
+}
 
-  return baseThreshold + rangeWidth;
+function getRangeWidth(averageRadius: number): number {
+  const rangeWidthInitial = 0.01;
+  const rangeWidthMin = 0.003;
+  const rangeWidthDivisor = 50;
+
+  return rangeWidthInitial - (averageRadius / rangeWidthDivisor) * (rangeWidthInitial - rangeWidthMin);
+}
+
+export function getMaxThreshold(metaballs: IMetaball[]) {
+  const averageRadius = getAverageRadius(metaballs);
+  const rangeWidth = getRangeWidth(averageRadius);
+
+  return BASE_THRESHOLD + rangeWidth;
 }
 
 export function normalizeVector(vec: IPoint): IPoint {
@@ -185,11 +198,9 @@ export function createOffscreenCanvas(
 }
 
 export function isWithinThreshold(sum: number, metaballs: IMetaball[]): boolean {
-  const averageRadius = metaballs.reduce((sum, ball) => sum + ball.radius, 0) / metaballs.length;
-  const baseThreshold = 0.2;
-  const rangeWidth = 0.01 - (averageRadius / 50) * (0.01 - 0.003);
+  const maxThreshold = getMaxThreshold(metaballs);
 
-  return sum > baseThreshold && sum < baseThreshold + rangeWidth;
+  return sum > BASE_THRESHOLD && sum < maxThreshold;
 }
 
 export function colorToRgba(color: string, defaultAlpha: number = 255): { r: number; g: number; b: number; a: number } {
