@@ -11,9 +11,15 @@ const AllSettings = {
     COLOR_LINE: '#000000',
     COLOR_FORM: '#fcfaf7',
   },
+  light: {
+    STEP_COUNT: 10,
+    BACKGROUND_COLOR: '#000',
+    COLOR_LINE: '#fff',
+    COLOR_FORM: '#ffffff00',
+  },
 };
 
-const Settings = AllSettings.blue;
+const Settings = AllSettings.light;
 
 window.addEventListener('DOMContentLoaded', () => {
   const context = document.querySelector('canvas')?.getContext('2d');
@@ -72,12 +78,7 @@ function render(context: CanvasRenderingContext2D, rand: utils.PseudoRandomNumbe
 
     const imageData = offscreen.context.createImageData(width, height);
     const data = imageData.data;
-
-    const averageRadius = metaballs.reduce((sum, ball) => sum + ball.radius, 0) / metaballs.length;
-    const baseThreshold = 0.2;
-    const rangeWidth = 0.01 - (averageRadius / 50) * (0.01 - 0.003);
-    const thresholdMax = baseThreshold + rangeWidth;
-
+    const thresholdMax = utils.getMaxThreshold(metaballs);
     const colorLine = utils.colorToRgba(Settings.COLOR_LINE);
     const colorForm = utils.colorToRgba(Settings.COLOR_FORM);
 

@@ -74,6 +74,14 @@ export function getRandomEdgePoint(
   }
 }
 
+export function getMaxThreshold(metaballs: IMetaball[]) {
+  const averageRadius = metaballs.reduce((sum, ball) => sum + ball.radius, 0) / metaballs.length;
+  const baseThreshold = 0.2;
+  const rangeWidth = 0.01 - (averageRadius / 50) * (0.01 - 0.003);
+
+  return baseThreshold + rangeWidth;
+}
+
 export function normalizeVector(vec: IPoint): IPoint {
   const length = Math.sqrt(vec.x * vec.x + vec.y * vec.y);
   return length === 0
