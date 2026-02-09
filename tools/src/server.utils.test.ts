@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import path from 'path';
 
 vi.mock('node:fs/promises');
 vi.mock('fast-glob');
@@ -9,65 +10,44 @@ import fg from 'fast-glob';
 
 describe('server.utils', () => {
   describe('paths', () => {
-    it('public() returns path containing public', () => {
-      expect(paths.public()).toContain('public');
+    it('public() ends with tools/public', () => {
+      expect(paths.public()).toMatch(/tools\/public$/);
     });
 
-    it('uiIndex() returns path to index template', () => {
-      expect(paths.uiIndex()).toContain('index.html.tpl');
+    it('uiIndex() ends with src/ui/index.html.tpl', () => {
+      expect(paths.uiIndex()).toMatch(/src\/ui\/index\.html\.tpl$/);
     });
 
-    it('sketches() returns path containing sketches', () => {
-      expect(paths.sketches()).toContain('sketches');
+    it('sketches() ends with /sketches', () => {
+      expect(paths.sketches()).toMatch(/\/sketches$/);
     });
 
-    it('sketch(name) returns path to specific sketch', () => {
-      const result = paths.sketch('my-sketch');
-
-      expect(result).toContain('sketches');
-      expect(result).toContain('my-sketch');
+    it('sketch(name) is sketches() + sketchName', () => {
+      expect(paths.sketch('my-sketch')).toBe(path.join(paths.sketches(), 'my-sketch'));
     });
 
-    it('dist(name) returns path to sketch dist directory', () => {
-      const result = paths.dist('my-sketch');
-
-      expect(result).toContain('my-sketch');
-      expect(result).toContain('dist');
+    it('dist(name) is sketch(name) + dist', () => {
+      expect(paths.dist('my-sketch')).toBe(path.join(paths.sketch('my-sketch'), 'dist'));
     });
 
-    it('src(name) returns path to sketch src directory', () => {
-      const result = paths.src('my-sketch');
-
-      expect(result).toContain('my-sketch');
-      expect(result).toContain('src');
+    it('src(name) is sketch(name) + src', () => {
+      expect(paths.src('my-sketch')).toBe(path.join(paths.sketch('my-sketch'), 'src'));
     });
 
-    it('html(name) returns path to sketch HTML file', () => {
-      const result = paths.html('my-sketch');
-
-      expect(result).toContain('dist');
-      expect(result).toContain('my-sketch.html');
+    it('html(name) is dist(name) + sketchName.html', () => {
+      expect(paths.html('my-sketch')).toBe(path.join(paths.dist('my-sketch'), 'my-sketch.html'));
     });
 
-    it('params(name) returns path to sketch params file', () => {
-      const result = paths.params('my-sketch');
-
-      expect(result).toContain('src');
-      expect(result).toContain('my-sketch.params.ts');
+    it('params(name) is src(name) + sketchName.params.ts', () => {
+      expect(paths.params('my-sketch')).toBe(path.join(paths.src('my-sketch'), 'my-sketch.params.ts'));
     });
 
-    it('template(name) returns path to sketch template file', () => {
-      const result = paths.template('my-sketch');
-
-      expect(result).toContain('src');
-      expect(result).toContain('my-sketch.params.tpl');
+    it('template(name) is src(name) + sketchName.params.tpl', () => {
+      expect(paths.template('my-sketch')).toBe(path.join(paths.src('my-sketch'), 'my-sketch.params.tpl'));
     });
 
-    it('serverHandler(name) returns path to server handler', () => {
-      const result = paths.serverHandler('my-sketch');
-
-      expect(result).toContain('src');
-      expect(result).toContain('my-sketch.server.js');
+    it('serverHandler(name) is src(name) + sketchName.server.js', () => {
+      expect(paths.serverHandler('my-sketch')).toBe(path.join(paths.src('my-sketch'), 'my-sketch.server.js'));
     });
   });
 
