@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import fs from 'node:fs/promises';
 import { Result } from '@swan-io/boxed';
-import { paths, getSketchParams, getSketchDirsData } from './server.utils';
+import { paths, getSketchParams, getSketchDirsData } from './utils/server.utils';
 
 const app = express();
 const port = 2000;

@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import { rollup, type RollupOptions, type OutputOptions } from '@rollup/wasm-node';
 import { Result } from '@swan-io/boxed';
 
-import { findNearestConfig } from './watch.utils';
+import { findNearestConfig } from './utils/watch.utils';
 
 const ROOT_DIR = path.resolve(__dirname, '../../');
 const SKETCHES_DIR = path.join(ROOT_DIR, 'sketches');

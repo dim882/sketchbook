@@ -2,8 +2,8 @@
 
 import fs from 'fs';
 import path from 'path';
-import { buildSketch } from './sketch.build.utils';
-import * as utils from './sketch.clone.utils';
+import { buildSketch } from './utils/sketch.build.utils';
+import * as utils from './utils/sketch.clone.utils';
 
 const EXCLUDED_FILES = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
 
@@ -67,7 +67,7 @@ function copyDir(source: string, target: string) {
 
       if (baseName === 'package.json') {
         utils.setPackageName(targetPath, targetName).match({
-          Ok: () => {},
+          Ok: () => { },
           Error: (err) => {
             errors.push(err);
             console.error(`Failed to update package.json: ${err.message}`);
@@ -75,14 +75,14 @@ function copyDir(source: string, target: string) {
         });
       } else if (extName === '.html') {
         utils.replaceHtmlTitle(targetPath, targetName).match({
-          Ok: () => {},
+          Ok: () => { },
           Error: (err) => {
             errors.push(err);
             console.error(`Failed to update HTML title in ${targetPath}: ${err.message}`);
           },
         });
         utils.replaceContentInFile(targetPath, sourceName, targetName).match({
-          Ok: () => {},
+          Ok: () => { },
           Error: (err) => {
             errors.push(err);
             console.error(`Failed to replace content in ${targetPath}: ${err.message}`);
@@ -90,7 +90,7 @@ function copyDir(source: string, target: string) {
         });
       } else if (utils.isTextFile(targetPath)) {
         utils.replaceContentInFile(targetPath, sourceName, targetName).match({
-          Ok: () => {},
+          Ok: () => { },
           Error: (err) => {
             errors.push(err);
             console.error(`Failed to replace content in ${targetPath}: ${err.message}`);

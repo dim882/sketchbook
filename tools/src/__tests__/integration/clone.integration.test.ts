@@ -13,7 +13,7 @@ import {
   replaceHtmlTitle,
   createTargetPath,
   isTextFile,
-} from '../../sketch.clone.utils';
+} from '../../utils/sketch.clone.utils';
 
 describe('Clone Integration Tests', () => {
   let tempDir: string;

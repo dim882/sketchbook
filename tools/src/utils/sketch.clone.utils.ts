@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { Result } from '@swan-io/boxed';
-import { escapeRegex } from './utils/string';
+import { escapeRegex } from './string';
 
 const FILE_EXTENSIONS = ['.ts', '.js', '.html', '.css', '.md', '.json', '.config.js'];
 

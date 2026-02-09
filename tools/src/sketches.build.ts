@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { buildSketch } from './sketch.build.utils';
+import { buildSketch } from './utils/sketch.build.utils';
 
 const SKETCHES_DIR = path.resolve(process.cwd(), '../sketches');
 const EXCLUDED_DIRS = ['.git', 'node_modules'];
