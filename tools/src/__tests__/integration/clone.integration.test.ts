@@ -6,8 +6,6 @@ import {
   cleanupTempDir,
   createTestSketch,
   readTempFile,
-  tempFileExists,
-  listTempFiles,
 } from '../helpers/tempDir';
 import {
   replaceContentInFile,
@@ -72,8 +70,9 @@ describe('Clone Integration Tests', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'import "my-sketch";\nconst x = "my-sketch";', 'utf8');
 
-      replaceContentInFile(filePath, 'my-sketch', 'new-sketch');
+      const result = replaceContentInFile(filePath, 'my-sketch', 'new-sketch');
 
+      expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
       expect(content).toBe('import "new-sketch";\nconst x = "new-sketch";');
     });
@@ -83,51 +82,48 @@ describe('Clone Integration Tests', () => {
       fs.writeFileSync(filePath, 'no matches here', 'utf8');
       const originalMtime = fs.statSync(filePath).mtimeMs;
 
-      // Small delay to ensure mtime would change if file was written
-      replaceContentInFile(filePath, 'my-sketch', 'new-sketch');
+      const result = replaceContentInFile(filePath, 'my-sketch', 'new-sketch');
 
+      expect(result.isOk()).toBe(true);
+      result.match({
+        Ok: (value) => expect(value.changed).toBe(false),
+        Error: () => expect.fail('Should not be error'),
+      });
       const newMtime = fs.statSync(filePath).mtimeMs;
       expect(newMtime).toBe(originalMtime);
     });
 
-    // This test catches Bug 1: Regex Injection
-    // Currently this test may fail because the bug exists
     it('handles sketch names with regex special characters', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'import "my-sketch.v2";\nconst x = "my-sketch.v2";', 'utf8');
 
-      replaceContentInFile(filePath, 'my-sketch.v2', 'new-sketch-v2');
+      const result = replaceContentInFile(filePath, 'my-sketch.v2', 'new-sketch-v2');
 
+      expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
-      // With the bug: "." matches any character, so "my-sketchXv2" would also match
-      // After fix: only literal "my-sketch.v2" should match
       expect(content).toBe('import "new-sketch-v2";\nconst x = "new-sketch-v2";');
     });
 
-    // TODO: Enable in Phase 4 after fixing regex injection bug
-    it.skip('does not replace partial matches due to regex wildcards', () => {
+    it('does not replace partial matches due to regex wildcards', () => {
       const filePath = path.join(tempDir, 'test.ts');
-      // "my-sketch.v2" with bug would match "my-sketchXv2" because "." = any char
       fs.writeFileSync(filePath, 'my-sketchXv2 and my-sketch.v2', 'utf8');
 
-      replaceContentInFile(filePath, 'my-sketch.v2', 'REPLACED');
+      const result = replaceContentInFile(filePath, 'my-sketch.v2', 'REPLACED');
 
+      expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
-      // The bug: both would be replaced because "." matches "X" too
-      // Fixed: only the literal match should be replaced
+      // With regex escaping, only literal "my-sketch.v2" should match
       expect(content).toBe('my-sketchXv2 and REPLACED');
     });
 
-    // TODO: Enable in Phase 4 after fixing regex injection bug
-    it.skip('handles brackets in search string', () => {
+    it('handles brackets in search string', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'const arr = sketch[1]; const b = sketchA;', 'utf8');
 
-      replaceContentInFile(filePath, 'sketch[1]', 'sketch[0]');
+      const result = replaceContentInFile(filePath, 'sketch[1]', 'sketch[0]');
 
+      expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
-      // With bug: [1] becomes character class matching '1', so 'sketch1' matches
-      // Fixed: only literal "sketch[1]" should match
       expect(content).toBe('const arr = sketch[0]; const b = sketchA;');
     });
   });
@@ -141,8 +137,9 @@ describe('Clone Integration Tests', () => {
         'utf8'
       );
 
-      setPackageName(pkgPath, 'new-name');
+      const result = setPackageName(pkgPath, 'new-name');
 
+      expect(result.isOk()).toBe(true);
       const content = readTempFile(pkgPath);
       const pkg = JSON.parse(content!);
       expect(pkg.name).toBe('new-name');
@@ -154,8 +151,9 @@ describe('Clone Integration Tests', () => {
       const pkgPath = path.join(tempDir, 'package.json');
       fs.writeFileSync(pkgPath, '{"name":"old"}', 'utf8');
 
-      setPackageName(pkgPath, 'new');
+      const result = setPackageName(pkgPath, 'new');
 
+      expect(result.isOk()).toBe(true);
       const content = readTempFile(pkgPath);
       expect(content).toContain('  "name"'); // 2-space indent
     });
@@ -170,8 +168,9 @@ describe('Clone Integration Tests', () => {
         'utf8'
       );
 
-      replaceHtmlTitle(htmlPath, 'New Title');
+      const result = replaceHtmlTitle(htmlPath, 'New Title');
 
+      expect(result.isOk()).toBe(true);
       const content = readTempFile(htmlPath);
       expect(content).toContain('<title>New Title</title>');
       expect(content).not.toContain('Old Title');
@@ -181,8 +180,9 @@ describe('Clone Integration Tests', () => {
       const htmlPath = path.join(tempDir, 'test.html');
       fs.writeFileSync(htmlPath, '<TITLE>Old</TITLE>', 'utf8');
 
-      replaceHtmlTitle(htmlPath, 'New');
+      const result = replaceHtmlTitle(htmlPath, 'New');
 
+      expect(result.isOk()).toBe(true);
       const content = readTempFile(htmlPath);
       expect(content).toContain('<title>New</title>');
     });
@@ -206,21 +206,27 @@ describe('Clone Integration Tests', () => {
       fs.copyFileSync(sourceFile, targetFile);
 
       // Replace content
-      replaceContentInFile(targetFile, 'source-sketch', 'target-sketch');
+      const r1 = replaceContentInFile(targetFile, 'source-sketch', 'target-sketch');
+      expect(r1.isOk()).toBe(true);
 
       // Copy and transform package.json
       fs.copyFileSync(
         path.join(sourceDir, 'package.json'),
         path.join(targetDir, 'package.json')
       );
-      setPackageName(path.join(targetDir, 'package.json'), 'target-sketch');
+      const r2 = setPackageName(path.join(targetDir, 'package.json'), 'target-sketch');
+      expect(r2.isOk()).toBe(true);
 
       // Copy and transform HTML
       fs.copyFileSync(
         path.join(sourceDir, 'src', 'source-sketch.html'),
         path.join(targetDir, 'src', 'target-sketch.html')
       );
-      replaceHtmlTitle(path.join(targetDir, 'src', 'target-sketch.html'), 'target-sketch');
+      const r3 = replaceHtmlTitle(
+        path.join(targetDir, 'src', 'target-sketch.html'),
+        'target-sketch'
+      );
+      expect(r3.isOk()).toBe(true);
 
       // Verify transformations
       const tsContent = readTempFile(targetFile);
@@ -247,74 +253,72 @@ describe('Bug Catching Tests', () => {
     cleanupTempDir(tempDir);
   });
 
-  describe('Bug 1: Regex Injection', () => {
-    // These tests document the bug - they will be enabled after fix in Phase 4
+  describe('Bug 1: Regex Injection (FIXED)', () => {
+    // These tests verify the regex injection bug is fixed
 
-    // TODO: Enable in Phase 4 after fixing regex injection bug
-    it.skip('sketch name with dot should be treated as literal', () => {
+    it('sketch name with dot should be treated as literal', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'name: my-sketch.v2, other: my-sketchAv2', 'utf8');
 
-      replaceContentInFile(filePath, 'my-sketch.v2', 'new');
+      const result = replaceContentInFile(filePath, 'my-sketch.v2', 'new');
 
+      expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
-      // Bug: both get replaced because "." matches any char
-      // Fixed: only literal "my-sketch.v2" replaced
+      // With fix: only literal "my-sketch.v2" is replaced
       expect(content).toBe('name: new, other: my-sketchAv2');
     });
 
-    // TODO: Enable in Phase 4 after fixing regex injection bug
-    it.skip('sketch name with parentheses should be treated as literal', () => {
+    it('sketch name with parentheses should be treated as literal', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'test(1) and test1', 'utf8');
 
-      // This might throw with current bug if parens create invalid regex
-      try {
-        replaceContentInFile(filePath, 'test(1)', 'replaced');
-        const content = readTempFile(filePath);
-        expect(content).toBe('replaced and test1');
-      } catch {
-        // Bug: throws regex error
-        expect.fail('Should not throw - regex special chars should be escaped');
-      }
+      // With fix: should not throw, parentheses are escaped
+      const result = replaceContentInFile(filePath, 'test(1)', 'replaced');
+
+      expect(result.isOk()).toBe(true);
+      const content = readTempFile(filePath);
+      expect(content).toBe('replaced and test1');
     });
 
-    // TODO: Enable in Phase 4 after fixing regex injection bug
-    it.skip('sketch name with asterisk should be treated as literal', () => {
+    it('sketch name with asterisk should be treated as literal', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'value* and valuex', 'utf8');
 
-      replaceContentInFile(filePath, 'value*', 'new');
+      const result = replaceContentInFile(filePath, 'value*', 'new');
 
+      expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
-      // Bug: "e*" in regex means "zero or more e", so "valu" would match
+      // With fix: asterisk is escaped, only literal "value*" is replaced
       expect(content).toBe('new and valuex');
     });
   });
 
-  describe('Bug 3: Silent Failures', () => {
-    // These tests verify that errors are currently silently swallowed
+  describe('Bug 3: Silent Failures (FIXED)', () => {
+    // These tests verify that functions now return Result.Error instead of silently failing
 
-    it('replaceContentInFile silently fails on non-existent file', () => {
-      // Currently this just logs and returns void
-      // After fix: should return Result.Error
+    it('replaceContentInFile returns Error on non-existent file', () => {
       const result = replaceContentInFile('/nonexistent/path.ts', 'a', 'b');
 
-      // Current behavior: returns undefined (void)
-      // This test documents that there's no way to know it failed
-      expect(result).toBeUndefined();
+      // With fix: returns Result.Error
+      expect(result.isError()).toBe(true);
     });
 
-    it('setPackageName silently fails on invalid JSON', () => {
+    it('setPackageName returns Error on invalid JSON', () => {
       const pkgPath = path.join(tempDir, 'package.json');
       fs.writeFileSync(pkgPath, 'not valid json', 'utf8');
 
-      // Currently this just logs and returns void
       const result = setPackageName(pkgPath, 'new-name');
 
-      expect(result).toBeUndefined();
+      // With fix: returns Result.Error
+      expect(result.isError()).toBe(true);
       // File should be unchanged since parsing failed
       expect(readTempFile(pkgPath)).toBe('not valid json');
+    });
+
+    it('replaceHtmlTitle returns Error on non-existent file', () => {
+      const result = replaceHtmlTitle('/nonexistent/path.html', 'New Title');
+
+      expect(result.isError()).toBe(true);
     });
   });
 });

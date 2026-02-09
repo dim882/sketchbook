@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
+import { Result } from '@swan-io/boxed';
+import { escapeRegex } from './utils/string';
 
 const FILE_EXTENSIONS = ['.ts', '.js', '.html', '.css', '.md', '.json', '.config.js'];
 
@@ -35,7 +37,12 @@ export function getDirectoryNames(sourceName: string, targetName: string) {
   return { sourceDir, targetDir };
 }
 
-export function createTargetPath(item: string, targetDir: string, sourceName: string, targetName: string): string {
+export function createTargetPath(
+  item: string,
+  targetDir: string,
+  sourceName: string,
+  targetName: string
+): string {
   const targetFileName = createTargetName(item, sourceName, targetName);
 
   return path.join(targetDir, targetFileName);
@@ -51,48 +58,54 @@ function createTargetName(item: string, sourceName: string, targetName: string):
 
 export const isTextFile = (filePath: string) => FILE_EXTENSIONS.includes(path.extname(filePath));
 
-export function replaceContentInFile(filePath: string, searchValue: string, replaceValue: string) {
-  try {
+export function replaceContentInFile(
+  filePath: string,
+  searchValue: string,
+  replaceValue: string
+): Result<{ changed: boolean }, Error> {
+  return Result.fromExecution(() => {
     const content = fs.readFileSync(filePath, 'utf8');
-    const updatedContent = content.replace(new RegExp(searchValue, 'g'), replaceValue);
+    // Fix: escape regex special characters to treat searchValue as literal string
+    const escapedSearch = escapeRegex(searchValue);
+    const updatedContent = content.replace(new RegExp(escapedSearch, 'g'), replaceValue);
 
     if (content !== updatedContent) {
       fs.writeFileSync(filePath, updatedContent, 'utf8');
+      return { changed: true };
     }
-  } catch (error) {
-    console.error(`Error processing file ${filePath}:`, error);
-  }
+    return { changed: false };
+  });
 }
 
-export function setPackageName(packageJsonPath: string, targetName: string) {
-  try {
+export function setPackageName(
+  packageJsonPath: string,
+  targetName: string
+): Result<void, Error> {
+  return Result.fromExecution(() => {
     const packageData = fs.readFileSync(packageJsonPath, 'utf8');
     const packageJson = JSON.parse(packageData);
     packageJson.name = targetName;
 
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-  } catch (error) {
-    console.error(`Error processing package.json (${packageJsonPath}):`, error);
-  }
+  });
 }
 
-export function install(targetDir: string) {
+export function install(targetDir: string): Result<void, Error> {
   console.log(`Running pnpm install in ${targetDir}...`);
 
-  try {
+  return Result.fromExecution(() => {
     execSync('pnpm install', { cwd: targetDir, stdio: 'inherit' });
-  } catch (error) {
-    console.error('Error running pnpm install:', error);
-  }
+  });
 }
 
-export function replaceHtmlTitle(filePath: string, newTitle: string) {
-  try {
+export function replaceHtmlTitle(
+  filePath: string,
+  newTitle: string
+): Result<void, Error> {
+  return Result.fromExecution(() => {
     const content = fs.readFileSync(filePath, 'utf8');
     const newContent = content.replace(/<title>.*?<\/title>/i, `<title>${newTitle}</title>`);
 
     fs.writeFileSync(filePath, newContent, 'utf8');
-  } catch (error) {
-    console.error(`Error replacing title in ${filePath}:`, error);
-  }
+  });
 }
