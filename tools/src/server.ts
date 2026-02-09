@@ -1,62 +1,18 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import fs from 'node:fs/promises';
-import { Result } from '@swan-io/boxed';
-import { paths, getSketchParams, getSketchDirsData } from './utils/server.utils';
+import {
+  paths,
+  getSketchParams,
+  validateSketchName,
+  requireValidSketchName,
+  renderMainPage,
+} from './utils/server.utils';
 
 const app = express();
 const port = 2000;
 
 app.use(express.json());
 app.use(express.static(paths.public()));
-
-/**
- * Validates a sketch name to prevent path traversal attacks.
- * Returns Ok with the validated name, or Error with a message.
- */
-function validateSketchName(name: unknown): Result<string, string> {
-  if (!name || typeof name !== 'string') {
-    return Result.Error('Sketch name is required');
-  }
-
-  // Check for path traversal attempts
-  if (name.includes('/') || name.includes('\\') || name.includes('..')) {
-    return Result.Error('Invalid sketch name: path traversal not allowed');
-  }
-
-  // Only allow alphanumeric, hyphen, underscore, and dot
-  if (!/^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)*$/.test(name)) {
-    return Result.Error('Invalid sketch name: only alphanumeric, hyphen, underscore allowed');
-  }
-
-  return Result.Ok(name);
-}
-
-/**
- * Middleware to validate sketch name parameter.
- */
-function requireValidSketchName(req: Request, res: Response, next: NextFunction) {
-  const validation = validateSketchName(req.params.sketchName);
-
-  validation.match({
-    Ok: (validName) => {
-      req.params.sketchName = validName;
-      next();
-    },
-    Error: (message) => {
-      res.status(400).json({ error: message });
-    },
-  });
-}
-
-async function renderMainPage(sketchName?: string) {
-  const htmlTemplate = await fs.readFile(paths.uiIndex(), 'utf8');
-  const initialData = JSON.stringify({
-    dirs: await getSketchDirsData(paths.sketches()),
-    initialSketch: sketchName || null,
-  });
-
-  return htmlTemplate.replace('${initialData}', initialData);
-}
 
 app.get('/', async (req, res) => {
   try {
