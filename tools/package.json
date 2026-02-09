@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@rollup/wasm-node": "^4.20.0",
+    "@swan-io/boxed": "^3.2.1",
     "@types/express": "^4.17.21",
     "@types/fs-extra": "^11.0.4",
     "chokidar": "^3.6.0",
