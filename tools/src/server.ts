@@ -86,7 +86,7 @@ app.get('/nav/:sketchname', async (req, res) => {
 app.get('/sketches/:sketchName', requireValidSketchName, (req, res) => {
   const { sketchName } = req.params;
 
-  res.sendFile(paths.html(sketchName), (err) => {
+  res.sendFile(paths.sketch(sketchName).html, (err) => {
     if (err) {
       // Check if file doesn't exist vs other errors
       if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
@@ -103,7 +103,7 @@ app.use(
   '/sketches/:sketchName/dist',
   requireValidSketchName,
   (req, res, next) => {
-    express.static(paths.dist(req.params.sketchName))(req, res, next);
+    express.static(paths.sketch(req.params.sketchName).dist)(req, res, next);
   }
 );
 
@@ -141,9 +141,11 @@ app.post(
         return res.status(400).json({ error: 'Invalid parameters: expected object' });
       }
 
+      const sketchPaths = paths.sketch(sketchName);
       let template: string;
+
       try {
-        template = await fs.readFile(paths.template(sketchName), 'utf-8');
+        template = await fs.readFile(sketchPaths.template, 'utf-8');
       } catch (err) {
         if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
           return res.status(404).json({
@@ -160,7 +162,7 @@ app.post(
         template = template.replace(new RegExp(`\\{\\{${escapedKey}\\}\\}`, 'g'), String(value));
       });
 
-      await fs.writeFile(paths.params(sketchName), template, 'utf-8');
+      await fs.writeFile(sketchPaths.params, template, 'utf-8');
 
       res.json({ success: true });
     } catch (err) {

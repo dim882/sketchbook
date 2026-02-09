@@ -9,32 +9,15 @@ import fg from 'fast-glob';
 
 const sketchesPath = paths.sketches();
 
-it('paths.sketch returns sketches/name', () => {
-  expect(paths.sketch('my-sketch')).toBe(`${sketchesPath}/my-sketch`);
-});
-
-it('paths.dist returns sketches/name/dist', () => {
-  expect(paths.dist('my-sketch')).toBe(`${sketchesPath}/my-sketch/dist`);
-});
-
-it('paths.src returns sketches/name/src', () => {
-  expect(paths.src('my-sketch')).toBe(`${sketchesPath}/my-sketch/src`);
-});
-
-it('paths.html returns sketches/name/dist/name.html', () => {
-  expect(paths.html('my-sketch')).toBe(`${sketchesPath}/my-sketch/dist/my-sketch.html`);
-});
-
-it('paths.params returns sketches/name/src/name.params.ts', () => {
-  expect(paths.params('my-sketch')).toBe(`${sketchesPath}/my-sketch/src/my-sketch.params.ts`);
-});
-
-it('paths.template returns sketches/name/src/name.params.tpl', () => {
-  expect(paths.template('my-sketch')).toBe(`${sketchesPath}/my-sketch/src/my-sketch.params.tpl`);
-});
-
-it('paths.serverHandler returns sketches/name/src/name.server.js', () => {
-  expect(paths.serverHandler('my-sketch')).toBe(`${sketchesPath}/my-sketch/src/my-sketch.server.js`);
+it('paths.sketch returns chained path object', () => {
+  const sketch = paths.sketch('my-sketch');
+  expect(sketch.base).toBe(`${sketchesPath}/my-sketch`);
+  expect(sketch.dist).toBe(`${sketchesPath}/my-sketch/dist`);
+  expect(sketch.src).toBe(`${sketchesPath}/my-sketch/src`);
+  expect(sketch.html).toBe(`${sketchesPath}/my-sketch/dist/my-sketch.html`);
+  expect(sketch.params).toBe(`${sketchesPath}/my-sketch/src/my-sketch.params.ts`);
+  expect(sketch.template).toBe(`${sketchesPath}/my-sketch/src/my-sketch.params.tpl`);
+  expect(sketch.serverHandler).toBe(`${sketchesPath}/my-sketch/src/my-sketch.server.js`);
 });
 
 it('getSketchDirsData returns sorted list of directories', async () => {
