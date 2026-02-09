@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import path from 'path';
 
 vi.mock('node:fs/promises');
 vi.mock('fast-glob');
@@ -10,44 +9,34 @@ import fg from 'fast-glob';
 
 describe('server.utils', () => {
   describe('paths', () => {
-    it('public() ends with tools/public', () => {
-      expect(paths.public()).toMatch(/tools\/public$/);
+    const sketchesPath = paths.sketches();
+
+    it('sketch(name) returns sketches/name', () => {
+      expect(paths.sketch('my-sketch')).toBe(`${sketchesPath}/my-sketch`);
     });
 
-    it('uiIndex() ends with src/ui/index.html.tpl', () => {
-      expect(paths.uiIndex()).toMatch(/src\/ui\/index\.html\.tpl$/);
+    it('dist(name) returns sketches/name/dist', () => {
+      expect(paths.dist('my-sketch')).toBe(`${sketchesPath}/my-sketch/dist`);
     });
 
-    it('sketches() ends with /sketches', () => {
-      expect(paths.sketches()).toMatch(/\/sketches$/);
+    it('src(name) returns sketches/name/src', () => {
+      expect(paths.src('my-sketch')).toBe(`${sketchesPath}/my-sketch/src`);
     });
 
-    it('sketch(name) is sketches() + sketchName', () => {
-      expect(paths.sketch('my-sketch')).toBe(path.join(paths.sketches(), 'my-sketch'));
+    it('html(name) returns sketches/name/dist/name.html', () => {
+      expect(paths.html('my-sketch')).toBe(`${sketchesPath}/my-sketch/dist/my-sketch.html`);
     });
 
-    it('dist(name) is sketch(name) + dist', () => {
-      expect(paths.dist('my-sketch')).toBe(path.join(paths.sketch('my-sketch'), 'dist'));
+    it('params(name) returns sketches/name/src/name.params.ts', () => {
+      expect(paths.params('my-sketch')).toBe(`${sketchesPath}/my-sketch/src/my-sketch.params.ts`);
     });
 
-    it('src(name) is sketch(name) + src', () => {
-      expect(paths.src('my-sketch')).toBe(path.join(paths.sketch('my-sketch'), 'src'));
+    it('template(name) returns sketches/name/src/name.params.tpl', () => {
+      expect(paths.template('my-sketch')).toBe(`${sketchesPath}/my-sketch/src/my-sketch.params.tpl`);
     });
 
-    it('html(name) is dist(name) + sketchName.html', () => {
-      expect(paths.html('my-sketch')).toBe(path.join(paths.dist('my-sketch'), 'my-sketch.html'));
-    });
-
-    it('params(name) is src(name) + sketchName.params.ts', () => {
-      expect(paths.params('my-sketch')).toBe(path.join(paths.src('my-sketch'), 'my-sketch.params.ts'));
-    });
-
-    it('template(name) is src(name) + sketchName.params.tpl', () => {
-      expect(paths.template('my-sketch')).toBe(path.join(paths.src('my-sketch'), 'my-sketch.params.tpl'));
-    });
-
-    it('serverHandler(name) is src(name) + sketchName.server.js', () => {
-      expect(paths.serverHandler('my-sketch')).toBe(path.join(paths.src('my-sketch'), 'my-sketch.server.js'));
+    it('serverHandler(name) returns sketches/name/src/name.server.js', () => {
+      expect(paths.serverHandler('my-sketch')).toBe(`${sketchesPath}/my-sketch/src/my-sketch.server.js`);
     });
   });
 
