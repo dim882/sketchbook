@@ -1,11 +1,16 @@
 import * as chokidar from 'chokidar';
 import * as path from 'node:path';
-import { rollup, type RollupOptions } from '@rollup/wasm-node';
+import { rollup, type RollupOptions, type OutputOptions } from '@rollup/wasm-node';
+import { Result } from '@swan-io/boxed';
 
 import { findNearestConfig } from './watch.utils';
 
 const ROOT_DIR = path.resolve(__dirname, '../../');
 const SKETCHES_DIR = path.join(ROOT_DIR, 'sketches');
+
+// Debounce settings
+const DEBOUNCE_MS = 300;
+const pendingBuilds = new Map<string, NodeJS.Timeout>();
 
 const watcher = makeWatcher(SKETCHES_DIR);
 
@@ -13,13 +18,29 @@ watcher.on('all', (event, filePath) => {
   const configPath = findNearestConfig(path.dirname(filePath));
 
   if (configPath) {
-    console.log(`Detected change. Building ${filePath}...`);
+    // Debounce: cancel pending build for this config and schedule a new one
+    const existingTimeout = pendingBuilds.get(configPath);
+    if (existingTimeout) {
+      clearTimeout(existingTimeout);
+    }
 
-    runRollup(configPath)
-      .then(() => console.log(`Built ${filePath}`))
-      .catch(logError);
+    const timeout = setTimeout(() => {
+      pendingBuilds.delete(configPath);
+      console.log(`Detected change. Building ${filePath}...`);
+
+      runRollup(configPath)
+        .then((result) =>
+          result.match({
+            Ok: () => console.log(`Built ${filePath}`),
+            Error: (err) => logError(err),
+          })
+        )
+        .catch(logError);
+    }, DEBOUNCE_MS);
+
+    pendingBuilds.set(configPath, timeout);
   } else {
-    console.log(`No config found: ${configPath}`);
+    console.log(`No config found for: ${filePath}`);
   }
 });
 
@@ -54,36 +75,94 @@ function makeWatcher(dir: string) {
   return watcher;
 }
 
-const runRollup = async (configPath: string) => {
-  const originalCwd = process.cwd();
-
+/**
+ * Run rollup build for a config file.
+ * Uses absolute paths to avoid process.chdir() race conditions.
+ */
+const runRollup = async (configPath: string): Promise<Result<void, Error>> => {
   try {
-    process.chdir(path.dirname(configPath));
+    const configDir = path.dirname(configPath);
+    const config = await getRollupConfig(configPath);
 
-    const config: RollupOptions = await getRollupConfig(configPath);
+    // Convert relative input path to absolute
+    const absoluteConfig = resolveConfigPaths(config, configDir);
 
-    const bundle = await rollup(config);
+    const bundle = await rollup(absoluteConfig);
 
-    if (Array.isArray(config.output)) {
-      for (const output of config.output) {
+    if (Array.isArray(absoluteConfig.output)) {
+      for (const output of absoluteConfig.output) {
         await bundle.write(output);
       }
-    } else if (config.output) {
-      await bundle.write(config.output);
+    } else if (absoluteConfig.output) {
+      await bundle.write(absoluteConfig.output);
     }
+
+    await bundle.close();
+
+    return Result.Ok(undefined);
   } catch (error) {
-    logError(error);
-  } finally {
-    process.chdir(originalCwd);
+    return Result.Error(error instanceof Error ? error : new Error(String(error)));
   }
 };
 
-const logError = (error: any) => {
+/**
+ * Resolve relative paths in rollup config to absolute paths.
+ * This avoids the need for process.chdir() which is not thread-safe.
+ */
+function resolveConfigPaths(config: RollupOptions, configDir: string): RollupOptions {
+  const resolvedConfig: RollupOptions = { ...config };
+
+  // Resolve input path
+  if (typeof config.input === 'string' && !path.isAbsolute(config.input)) {
+    resolvedConfig.input = path.resolve(configDir, config.input);
+  } else if (Array.isArray(config.input)) {
+    resolvedConfig.input = config.input.map((input) =>
+      path.isAbsolute(input) ? input : path.resolve(configDir, input)
+    );
+  } else if (typeof config.input === 'object' && config.input !== null) {
+    resolvedConfig.input = Object.fromEntries(
+      Object.entries(config.input).map(([key, value]) => [
+        key,
+        path.isAbsolute(value) ? value : path.resolve(configDir, value),
+      ])
+    );
+  }
+
+  // Resolve output paths
+  if (config.output) {
+    const resolveOutput = (output: OutputOptions): OutputOptions => {
+      const resolved: OutputOptions = { ...output };
+      if (output.dir && !path.isAbsolute(output.dir)) {
+        resolved.dir = path.resolve(configDir, output.dir);
+      }
+      if (output.file && !path.isAbsolute(output.file)) {
+        resolved.file = path.resolve(configDir, output.file);
+      }
+      return resolved;
+    };
+
+    if (Array.isArray(config.output)) {
+      resolvedConfig.output = config.output.map(resolveOutput);
+    } else {
+      resolvedConfig.output = resolveOutput(config.output);
+    }
+  }
+
+  return resolvedConfig;
+}
+
+const logError = (error: unknown) => {
   console.error('Error occurred:', error);
 };
 
+/**
+ * Load rollup config from file with cache busting.
+ * Adding a timestamp query param forces Node to reload the module.
+ */
 async function getRollupConfig(configPath: string): Promise<RollupOptions> {
-  const configModule = await import(configPath);
+  // Cache bust by adding timestamp to URL
+  const configUrl = `${configPath}?update=${Date.now()}`;
+  const configModule = await import(configUrl);
 
   return configModule.default || configModule;
 }
