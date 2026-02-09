@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import fg from 'fast-glob';
-import { SketchServerHandler } from './server.sketch.types';
-import { IDir } from './ui/SketchList';
+import { SketchServerHandler } from '../server.sketch.types';
+import { IDir } from '../ui/SketchList';
 
 const sketchesPath = path.join(__dirname, '../../sketches');
 
