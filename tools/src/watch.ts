@@ -1,8 +1,8 @@
 import * as chokidar from 'chokidar';
 import * as path from 'node:path';
-import * as fs from 'node:fs';
 import { rollup, type RollupOptions } from '@rollup/wasm-node';
-import { log } from 'node:console';
+
+import { findNearestConfig } from './watch.utils';
 
 const ROOT_DIR = path.resolve(__dirname, '../../');
 const SKETCHES_DIR = path.join(ROOT_DIR, 'sketches');
@@ -53,16 +53,6 @@ function makeWatcher(dir: string) {
 
   return watcher;
 }
-
-const findNearestConfig = (dir: string): string | null => {
-  const configPath = path.join(dir, 'rollup.config.js');
-
-  return fs.existsSync(configPath)
-    ? configPath
-    : dir === path.parse(dir).root
-    ? null
-    : findNearestConfig(path.dirname(dir));
-};
 
 const runRollup = async (configPath: string) => {
   const originalCwd = process.cwd();
