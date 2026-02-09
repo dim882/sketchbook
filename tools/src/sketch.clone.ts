@@ -16,8 +16,7 @@ const errors: Error[] = [];
 copyDir(sourceDir, targetDir);
 
 // Install dependencies
-const installResult = utils.install(targetDir);
-installResult.match({
+utils.install(targetDir).match({
   Ok: () => console.log(`Sketch './sketches/${targetName}' created successfully.`),
   Error: (err) => {
     errors.push(err);
@@ -26,8 +25,7 @@ installResult.match({
 });
 
 // Build sketch
-const buildResult = buildSketch(targetDir);
-buildResult.match({
+buildSketch(targetDir).match({
   Ok: () => console.log(`Sketch './sketches/${targetName}' built successfully.`),
   Error: (err) => {
     errors.push(err);

@@ -19,12 +19,9 @@ watcher.on('all', (event, filePath) => {
 
   if (configPath) {
     // Debounce: cancel pending build for this config and schedule a new one
-    const existingTimeout = pendingBuilds.get(configPath);
-    if (existingTimeout) {
-      clearTimeout(existingTimeout);
-    }
+    clearTimeout(pendingBuilds.get(configPath));
 
-    const timeout = setTimeout(() => {
+    pendingBuilds.set(configPath, setTimeout(() => {
       pendingBuilds.delete(configPath);
       console.log(`Detected change. Building ${filePath}...`);
 
@@ -36,9 +33,7 @@ watcher.on('all', (event, filePath) => {
           })
         )
         .catch(logError);
-    }, DEBOUNCE_MS);
-
-    pendingBuilds.set(configPath, timeout);
+    }, DEBOUNCE_MS));
   } else {
     console.log(`No config found for: ${filePath}`);
   }

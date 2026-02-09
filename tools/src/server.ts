@@ -24,9 +24,7 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/nav/:sketchname', async (req, res) => {
-  const validation = validateSketchName(req.params.sketchname);
-
-  return validation.match({
+  return validateSketchName(req.params.sketchname).match({
     Error: (message) => res.status(400).json({ error: message }),
     Ok: async (validName) => {
       try {
@@ -71,9 +69,7 @@ app.get(
       const params = await getSketchParams(req.params.sketchName);
       res.json({ params });
     } catch (err) {
-      const code = (err as NodeJS.ErrnoException).code;
-
-      if (code === 'ENOENT' || code === 'MODULE_NOT_FOUND') {
+      if ((err as NodeJS.ErrnoException).code === 'ENOENT' || (err as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
         res.status(404).json({
           error: `Parameters not found for sketch '${req.params.sketchName}'`,
         });

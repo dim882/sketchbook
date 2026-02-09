@@ -110,9 +110,7 @@ export function validateSketchName(name: unknown): Result<string, string> {
  * Middleware to validate sketch name parameter.
  */
 export function requireValidSketchName(req: Request, res: Response, next: NextFunction) {
-  const validation = validateSketchName(req.params.sketchName);
-
-  validation.match({
+  validateSketchName(req.params.sketchName).match({
     Ok: (validName) => {
       req.params.sketchName = validName;
       next();
