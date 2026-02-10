@@ -1,10 +1,21 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import fg from 'fast-glob';
-import { Result } from '@swan-io/boxed';
+import { Result, Future } from '@swan-io/boxed';
 import type { Request, Response, NextFunction } from 'express';
 import { SketchServerHandler } from '../server.sketch.types';
 import { IDir } from '../ui/SketchList';
+import { escapeRegex } from './string';
+
+export interface ServerError {
+  status: number;
+  message: string;
+  log?: string;
+}
+
+const notFound = (message: string): ServerError => ({ status: 404, message });
+const badRequest = (message: string): ServerError => ({ status: 400, message });
+const serverError = (message: string, log?: string): ServerError => ({ status: 500, message, log });
 
 const sketchesPath = path.join(__dirname, '../../sketches');
 
@@ -121,12 +132,66 @@ export function requireValidSketchName(req: Request, res: Response, next: NextFu
   });
 }
 
-export async function renderMainPage(sketchName?: string) {
-  const htmlTemplate = await fs.readFile(paths.uiIndex(), 'utf8');
-  const initialData = JSON.stringify({
-    dirs: await getSketchDirsData(paths.sketches()),
-    initialSketch: sketchName || null,
-  });
+export function renderMainPage(sketchName?: string): Future<Result<string, ServerError>> {
+  return Future.fromPromise(
+    (async () => {
+      const htmlTemplate = await fs.readFile(paths.uiIndex(), 'utf8');
+      const initialData = JSON.stringify({
+        dirs: await getSketchDirsData(paths.sketches()),
+        initialSketch: sketchName || null,
+      });
+      return htmlTemplate.replace('${initialData}', initialData);
+    })()
+  ).mapError(() => serverError('Failed to render page', 'Error rendering page'));
+}
 
-  return htmlTemplate.replace('${initialData}', initialData);
+export function fetchSketchParams(sketchName: string): Future<Result<unknown, ServerError>> {
+  return Future.fromPromise(getSketchParams(sketchName)).mapError((err) => {
+    const code = (err as NodeJS.ErrnoException).code;
+    if (code === 'ENOENT' || code === 'MODULE_NOT_FOUND') {
+      return notFound(`Parameters not found for sketch '${sketchName}'`);
+    }
+    return serverError('Failed to read parameters', 'Error reading params');
+  });
+}
+
+export function updateSketchParams(
+  sketchName: string,
+  params: Record<string, unknown>
+): Future<Result<void, ServerError>> {
+  const sketchPaths = paths.sketch(sketchName);
+
+  return Future.fromPromise(fs.readFile(sketchPaths.template, 'utf-8'))
+    .mapError((err) => {
+      if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+        return notFound(`Template not found for sketch '${sketchName}'`);
+      }
+      return serverError('Failed to read template', 'Error reading template');
+    })
+    .flatMapOk((template) => {
+      // Replace template placeholders with values
+      const result = Object.entries(params).reduce(
+        (tpl, [key, value]) =>
+          tpl.replace(new RegExp(`\\{\\{${escapeRegex(key)}\\}\\}`, 'g'), String(value)),
+        template
+      );
+
+      return Future.fromPromise(fs.writeFile(sketchPaths.params, result, 'utf-8')).mapError(() =>
+        serverError('Failed to write parameters', 'Error writing params')
+      );
+    });
+}
+
+export async function sendResult<T>(
+  res: Response,
+  future: Future<Result<T, ServerError>>,
+  onSuccess: (value: T) => void
+): Promise<void> {
+  (await future.toPromise()).match({
+    Ok: onSuccess,
+    Error: (err) => {
+      if (err.log) console.error(err.log);
+      res.status(err.status).json({ error: err.message });
+    },
+  });
 }
