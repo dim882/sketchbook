@@ -6,7 +6,7 @@ import {
   renderMainPage,
   fetchSketchParams,
   updateSketchParams,
-  respondWithError,
+  handleError,
 } from './utils/server.utils';
 
 const app = express();
@@ -18,7 +18,7 @@ app.use(express.static(paths.public()));
 app.get('/', async (_, res) => {
   (await renderMainPage().toPromise()).match({
     Ok: (html) => res.send(html),
-    Error: respondWithError(res),
+    Error: handleError(res),
   });
 });
 
@@ -27,7 +27,7 @@ app.get('/nav/:sketchname', async (req, res) => {
     Ok: async (validName) => {
       (await renderMainPage(validName).toPromise()).match({
         Ok: (html) => res.send(html),
-        Error: respondWithError(res),
+        Error: handleError(res),
       });
     },
     Error: (message) => res.status(400).json({ error: message }),
@@ -61,7 +61,7 @@ app.use(
 app.get('/api/sketches/:sketchName/params', requireValidSketchName, async (req, res) => {
   (await fetchSketchParams(req.params.sketchName).toPromise()).match({
     Ok: (params) => res.json({ params }),
-    Error: respondWithError(res),
+    Error: handleError(res),
   });
 });
 
@@ -74,7 +74,7 @@ app.post('/api/sketches/:sketchName/params', requireValidSketchName, async (req,
 
   (await updateSketchParams(req.params.sketchName, params).toPromise()).match({
     Ok: () => res.json({ success: true }),
-    Error: respondWithError(res),
+    Error: handleError(res),
   });
 });
 

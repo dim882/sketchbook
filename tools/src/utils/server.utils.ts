@@ -17,6 +17,15 @@ const notFound = (message: string): ServerError => ({ status: 404, message });
 const badRequest = (message: string): ServerError => ({ status: 400, message });
 const serverError = (message: string, log?: string): ServerError => ({ status: 500, message, log });
 
+export const handleError = (res: Response) => (err: ServerError) => {
+  if (err.log) {
+    console.error(err.log);
+  }
+
+  res.status(err.status).json({ error: err.message });
+};
+
+
 const sketchesPath = path.join(__dirname, '../../sketches');
 
 export interface SketchPaths {
@@ -87,12 +96,26 @@ export async function getSketchDirsData(sketchesPath: string): Promise<IDir[]> {
   return dirsWithTimestamps.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export async function getSketchParams(sketchName: string) {
+function getSketchParams(sketchName: string): Future<Result<unknown, ServerError>> {
   const sketchPaths = paths.sketch(sketchName);
-  const fileContent = await fs.readFile(sketchPaths.params, 'utf-8');
-  const sketchHandler = (await import(sketchPaths.serverHandler)) as { default: SketchServerHandler };
 
-  return sketchHandler.default.getParams(fileContent);
+  return Future.fromPromise(fs.readFile(sketchPaths.params, 'utf-8'))
+    .mapError((err: NodeJS.ErrnoException) => {
+      if (err.code === 'ENOENT') {
+        return notFound(`Parameters not found for sketch '${sketchName}'`);
+      }
+      return serverError('Failed to read parameters', 'Error reading params file');
+    })
+    .flatMapOk((fileContent) =>
+      Future.fromPromise(import(sketchPaths.serverHandler))
+        .mapError((err: NodeJS.ErrnoException) => {
+          if (err.code === 'MODULE_NOT_FOUND') {
+            return notFound(`Server handler not found for sketch '${sketchName}'`);
+          }
+          return serverError('Failed to load server handler', 'Error importing handler');
+        })
+        .mapOk((sketchHandler) => sketchHandler.default.getParams(fileContent))
+    );
 }
 
 /**
@@ -140,30 +163,25 @@ export function renderMainPage(sketchName?: string): Future<Result<string, Serve
         dirs: await getSketchDirsData(paths.sketches()),
         initialSketch: sketchName || null,
       });
+
       return htmlTemplate.replace('${initialData}', initialData);
     })()
   ).mapError(() => serverError('Failed to render page', 'Error rendering page'));
 }
 
 export function fetchSketchParams(sketchName: string): Future<Result<unknown, ServerError>> {
-  return Future.fromPromise(getSketchParams(sketchName)).mapError((err) => {
-    const code = (err as NodeJS.ErrnoException).code;
-    if (code === 'ENOENT' || code === 'MODULE_NOT_FOUND') {
-      return notFound(`Parameters not found for sketch '${sketchName}'`);
-    }
-    return serverError('Failed to read parameters', 'Error reading params');
-  });
+  return getSketchParams(sketchName);
 }
 
 export function updateSketchParams(
   sketchName: string,
-  params: Record<string, unknown>
+  params: Record<string, string>
 ): Future<Result<void, ServerError>> {
   const sketchPaths = paths.sketch(sketchName);
 
   return Future.fromPromise(fs.readFile(sketchPaths.template, 'utf-8'))
-    .mapError((err) => {
-      if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+    .mapError((err: NodeJS.ErrnoException) => {
+      if (err.code === 'ENOENT') {
         return notFound(`Template not found for sketch '${sketchName}'`);
       }
       return serverError('Failed to read template', 'Error reading template');
@@ -172,7 +190,7 @@ export function updateSketchParams(
       // Replace template placeholders with values
       const result = Object.entries(params).reduce(
         (tpl, [key, value]) =>
-          tpl.replace(new RegExp(`\\{\\{${escapeRegex(key)}\\}\\}`, 'g'), String(value)),
+          tpl.replace(new RegExp(`\\{\\{${escapeRegex(key)}\\}\\}`, 'g'), value),
         template
       );
 
@@ -181,9 +199,3 @@ export function updateSketchParams(
       );
     });
 }
-
-/** Curried error responder for use with Result.match() */
-export const respondWithError = (res: Response) => (err: ServerError) => {
-  if (err.log) console.error(err.log);
-  res.status(err.status).json({ error: err.message });
-};
