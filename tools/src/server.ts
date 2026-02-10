@@ -6,7 +6,7 @@ import {
   renderMainPage,
   fetchSketchParams,
   updateSketchParams,
-  sendResult,
+  respondWithError,
 } from './utils/server.utils';
 
 const app = express();
@@ -16,15 +16,21 @@ app.use(express.json());
 app.use(express.static(paths.public()));
 
 app.get('/', async (_, res) => {
-  await sendResult(res, renderMainPage(), (html) => res.send(html));
+  (await renderMainPage().toPromise()).match({
+    Ok: (html) => res.send(html),
+    Error: respondWithError(res),
+  });
 });
 
 app.get('/nav/:sketchname', async (req, res) => {
   validateSketchName(req.params.sketchname).match({
-    Error: (message) => res.status(400).json({ error: message }),
     Ok: async (validName) => {
-      await sendResult(res, renderMainPage(validName), (html) => res.send(html));
+      (await renderMainPage(validName).toPromise()).match({
+        Ok: (html) => res.send(html),
+        Error: respondWithError(res),
+      });
     },
+    Error: (message) => res.status(400).json({ error: message }),
   });
 });
 
@@ -53,7 +59,10 @@ app.use(
 );
 
 app.get('/api/sketches/:sketchName/params', requireValidSketchName, async (req, res) => {
-  await sendResult(res, fetchSketchParams(req.params.sketchName), (params) => res.json({ params }));
+  (await fetchSketchParams(req.params.sketchName).toPromise()).match({
+    Ok: (params) => res.json({ params }),
+    Error: respondWithError(res),
+  });
 });
 
 app.post('/api/sketches/:sketchName/params', requireValidSketchName, async (req, res) => {
@@ -63,9 +72,10 @@ app.post('/api/sketches/:sketchName/params', requireValidSketchName, async (req,
     return res.status(400).json({ error: 'Invalid parameters: expected object' });
   }
 
-  await sendResult(res, updateSketchParams(req.params.sketchName, params), () =>
-    res.json({ success: true })
-  );
+  (await updateSketchParams(req.params.sketchName, params).toPromise()).match({
+    Ok: () => res.json({ success: true }),
+    Error: respondWithError(res),
+  });
 });
 
 app.listen(port, () => {

@@ -182,16 +182,8 @@ export function updateSketchParams(
     });
 }
 
-export async function sendResult<T>(
-  res: Response,
-  future: Future<Result<T, ServerError>>,
-  onSuccess: (value: T) => void
-): Promise<void> {
-  (await future.toPromise()).match({
-    Ok: onSuccess,
-    Error: (err) => {
-      if (err.log) console.error(err.log);
-      res.status(err.status).json({ error: err.message });
-    },
-  });
-}
+/** Curried error responder for use with Result.match() */
+export const respondWithError = (res: Response) => (err: ServerError) => {
+  if (err.log) console.error(err.log);
+  res.status(err.status).json({ error: err.message });
+};
