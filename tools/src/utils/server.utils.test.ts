@@ -27,11 +27,13 @@ it('getSketchDirsData returns sorted list of directories', async () => {
   ] as unknown as Awaited<ReturnType<typeof fs.readdir>>);
   vi.mocked(fg).mockResolvedValue([]);
 
-  const result = await getSketchDirsData('/path/to/sketches');
+  const result = await getSketchDirsData('/path/to/sketches').toPromise();
 
-  expect(result).toHaveLength(2);
-  expect(result[0].name).toBe('sketch-a');
-  expect(result[1].name).toBe('sketch-b');
+  expect(result.isOk()).toBe(true);
+  const dirs = (result as { value: unknown }).value as { name: string }[];
+  expect(dirs).toHaveLength(2);
+  expect(dirs[0].name).toBe('sketch-a');
+  expect(dirs[1].name).toBe('sketch-b');
 });
 
 it('getSketchDirsData filters out non-directory entries', async () => {
@@ -41,10 +43,12 @@ it('getSketchDirsData filters out non-directory entries', async () => {
   ] as unknown as Awaited<ReturnType<typeof fs.readdir>>);
   vi.mocked(fg).mockResolvedValue([]);
 
-  const result = await getSketchDirsData('/path/to/sketches');
+  const result = await getSketchDirsData('/path/to/sketches').toPromise();
 
-  expect(result).toHaveLength(1);
-  expect(result[0].name).toBe('sketch');
+  expect(result.isOk()).toBe(true);
+  const dirs = (result as { value: unknown }).value as { name: string }[];
+  expect(dirs).toHaveLength(1);
+  expect(dirs[0].name).toBe('sketch');
 });
 
 it('getSketchDirsData returns lastModified of 0 when no ts/tsx/html files exist', async () => {
@@ -53,9 +57,11 @@ it('getSketchDirsData returns lastModified of 0 when no ts/tsx/html files exist'
   ] as unknown as Awaited<ReturnType<typeof fs.readdir>>);
   vi.mocked(fg).mockResolvedValue([]);
 
-  const result = await getSketchDirsData('/path/to/sketches');
+  const result = await getSketchDirsData('/path/to/sketches').toPromise();
 
-  expect(result[0].lastModified).toBe(0);
+  expect(result.isOk()).toBe(true);
+  const dirs = (result as { value: unknown }).value as { lastModified: number }[];
+  expect(dirs[0].lastModified).toBe(0);
 });
 
 it('getSketchDirsData returns latest mtime when ts/tsx/html files exist', async () => {
@@ -67,7 +73,9 @@ it('getSketchDirsData returns latest mtime when ts/tsx/html files exist', async 
     .mockResolvedValueOnce({ mtime: { getTime: () => 1000 } } as unknown as Awaited<ReturnType<typeof fs.stat>>)
     .mockResolvedValueOnce({ mtime: { getTime: () => 2000 } } as unknown as Awaited<ReturnType<typeof fs.stat>>);
 
-  const result = await getSketchDirsData('/path/to/sketches');
+  const result = await getSketchDirsData('/path/to/sketches').toPromise();
 
-  expect(result[0].lastModified).toBe(2000);
+  expect(result.isOk()).toBe(true);
+  const dirs = (result as { value: unknown }).value as { lastModified: number }[];
+  expect(dirs[0].lastModified).toBe(2000);
 });

@@ -10,6 +10,8 @@ import { escapeRegex } from './string';
 const readFile = (filePath: string) => Future.fromPromise(fs.readFile(filePath, 'utf-8'));
 const writeFile = (filePath: string, content: string) =>
   Future.fromPromise(fs.writeFile(filePath, content, 'utf-8'));
+const readDir = (dirPath: string) =>
+  Future.fromPromise(fs.readdir(dirPath, { withFileTypes: true }));
 
 export interface ServerError {
   status: number;
@@ -83,21 +85,21 @@ async function getLastModifiedTime(dirPath: string): Promise<number> {
   return Math.max(...tsStats.map((stat) => stat.mtime.getTime()));
 }
 
-export async function getSketchDirsData(sketchesPath: string): Promise<IDir[]> {
-  const files = await fs.readdir(sketchesPath, { withFileTypes: true });
-
-  const dirsWithTimestamps = await Promise.all(
-    files
-      .filter((file) => file.isDirectory())
-      .map(async (dir) => {
-        return {
-          name: dir.name,
-          lastModified: await getLastModifiedTime(path.join(sketchesPath, dir.name)),
-        };
-      })
-  );
-
-  return dirsWithTimestamps.sort((a, b) => a.name.localeCompare(b.name));
+export function getSketchDirsData(sketchesDir: string): Future<Result<IDir[], unknown>> {
+  return readDir(sketchesDir)
+    .flatMapOk((files) =>
+      Future.fromPromise(
+        Promise.all(
+          files
+            .filter((file) => file.isDirectory())
+            .map(async (dir) => ({
+              name: dir.name,
+              lastModified: await getLastModifiedTime(path.join(sketchesDir, dir.name)),
+            }))
+        )
+      )
+    )
+    .mapOk((dirs) => dirs.sort((a, b) => a.name.localeCompare(b.name)));
 }
 
 function getSketchParams(sketchName: string): Future<Result<unknown, ServerError>> {
@@ -162,12 +164,12 @@ export function requireValidSketchName(req: Request, res: Response, next: NextFu
 export function renderMainPage(sketchName?: string): Future<Result<string, ServerError>> {
   return readFile(paths.uiIndex())
     .flatMapOk((htmlTemplate) =>
-      Future.fromPromise(getSketchDirsData(paths.sketches())).mapOk((dirs) => {
-        return htmlTemplate.replace('${initialData}', JSON.stringify({
+      getSketchDirsData(paths.sketches()).mapOk((dirs) =>
+        htmlTemplate.replace('${initialData}', JSON.stringify({
           dirs,
           initialSketch: sketchName || null,
-        }));
-      })
+        }))
+      )
     )
     .mapError((err: Error) => serverError('Failed to render page', err));
 }
