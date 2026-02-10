@@ -90,14 +90,12 @@ function getLastModifiedTime(dirPath: string): Future<Result<number, unknown>> {
 export function getSketchDirsData(sketchesDir: string): Future<Result<IDir[], unknown>> {
   return readDir(sketchesDir)
     .flatMapOk((files) => {
-      const dirs = files.filter((file) => file.isDirectory());
-
-      const futures = dirs.map((dir) =>
-        getLastModifiedTime(path.join(sketchesDir, dir.name)).mapOk((lastModified) => ({
-          name: dir.name,
-          lastModified,
-        }))
-      );
+      const futures = files
+        .filter((file) => file.isDirectory())
+        .map((dir) =>
+          getLastModifiedTime(path.join(sketchesDir, dir.name))
+            .mapOk((lastModified) => ({ name: dir.name, lastModified }))
+        );
 
       return Future.all(futures).map(Result.all);
     })
