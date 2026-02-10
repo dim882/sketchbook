@@ -7,6 +7,10 @@ import { SketchServerHandler } from '../server.sketch.types';
 import { IDir } from '../ui/SketchList';
 import { escapeRegex } from './string';
 
+const readFile = (filePath: string) => Future.fromPromise(fs.readFile(filePath, 'utf-8'));
+const writeFile = (filePath: string, content: string) =>
+  Future.fromPromise(fs.writeFile(filePath, content, 'utf-8'));
+
 export interface ServerError {
   status: number;
   message: string;
@@ -99,7 +103,7 @@ export async function getSketchDirsData(sketchesPath: string): Promise<IDir[]> {
 function getSketchParams(sketchName: string): Future<Result<unknown, ServerError>> {
   const sketchPaths = paths.sketch(sketchName);
 
-  return Future.fromPromise(fs.readFile(sketchPaths.params, 'utf-8'))
+  return readFile(sketchPaths.params)
     .mapError((err: NodeJS.ErrnoException) => {
       if (err.code === 'ENOENT') {
         return notFound(`Parameters not found for sketch '${sketchName}'`);
@@ -156,7 +160,7 @@ export function requireValidSketchName(req: Request, res: Response, next: NextFu
 }
 
 export function renderMainPage(sketchName?: string): Future<Result<string, ServerError>> {
-  return Future.fromPromise(fs.readFile(paths.uiIndex(), 'utf8'))
+  return readFile(paths.uiIndex())
     .flatMapOk((htmlTemplate) =>
       Future.fromPromise(getSketchDirsData(paths.sketches())).mapOk((dirs) => {
         return htmlTemplate.replace('${initialData}', JSON.stringify({
@@ -178,7 +182,7 @@ export function updateSketchParams(
 ): Future<Result<void, ServerError>> {
   const sketchPaths = paths.sketch(sketchName);
 
-  return Future.fromPromise(fs.readFile(sketchPaths.template, 'utf-8'))
+  return readFile(sketchPaths.template)
     .mapError((err: NodeJS.ErrnoException) => {
       if (err.code === 'ENOENT') {
         return notFound(`Template not found for sketch '${sketchName}'`);
@@ -193,7 +197,7 @@ export function updateSketchParams(
         template
       );
 
-      return Future.fromPromise(fs.writeFile(sketchPaths.params, result, 'utf-8')).mapError(
+      return writeFile(sketchPaths.params, result).mapError(
         (err: Error) => serverError('Failed to write parameters', err)
       );
     });
