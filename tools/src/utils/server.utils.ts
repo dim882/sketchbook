@@ -10,16 +10,16 @@ import { escapeRegex } from './string';
 export interface ServerError {
   status: number;
   message: string;
-  log?: string;
+  cause?: Error;
 }
 
 const notFound = (message: string): ServerError => ({ status: 404, message });
 const badRequest = (message: string): ServerError => ({ status: 400, message });
-const serverError = (message: string, log?: string): ServerError => ({ status: 500, message, log });
+const serverError = (message: string, cause?: Error): ServerError => ({ status: 500, message, cause });
 
 export const handleError = (res: Response) => (err: ServerError) => {
-  if (err.log) {
-    console.error(err.log);
+  if (err.cause) {
+    console.error(`${err.message}:`, err.cause);
   }
 
   res.status(err.status).json({ error: err.message });
@@ -104,8 +104,7 @@ function getSketchParams(sketchName: string): Future<Result<unknown, ServerError
       if (err.code === 'ENOENT') {
         return notFound(`Parameters not found for sketch '${sketchName}'`);
       }
-
-      return serverError('Failed to read parameters', `Error reading params file: ${err}`);
+      return serverError('Failed to read parameters', err);
     })
     .flatMapOk((fileContent) =>
       Future.fromPromise(import(sketchPaths.serverHandler))
@@ -113,8 +112,7 @@ function getSketchParams(sketchName: string): Future<Result<unknown, ServerError
           if (err.code === 'MODULE_NOT_FOUND') {
             return notFound(`Server handler not found for sketch '${sketchName}'`);
           }
-
-          return serverError('Failed to load server handler', `Error importing handler: ${err}`);
+          return serverError('Failed to load server handler', err);
         })
         .mapOk((sketchHandler) => sketchHandler.default.getParams(fileContent))
     );
@@ -168,7 +166,7 @@ export function renderMainPage(sketchName?: string): Future<Result<string, Serve
 
       return htmlTemplate.replace('${initialData}', initialData);
     })()
-  ).mapError((err) => serverError('Failed to render page', `Error rendering page: ${err}`));
+  ).mapError((err: Error) => serverError('Failed to render page', err));
 }
 
 export function fetchSketchParams(sketchName: string): Future<Result<unknown, ServerError>> {
@@ -186,7 +184,7 @@ export function updateSketchParams(
       if (err.code === 'ENOENT') {
         return notFound(`Template not found for sketch '${sketchName}'`);
       }
-      return serverError('Failed to read template', `Error reading template: ${err}`);
+      return serverError('Failed to read template', err);
     })
     .flatMapOk((template) => {
       // Replace template placeholders with values
@@ -196,8 +194,8 @@ export function updateSketchParams(
         template
       );
 
-      return Future.fromPromise(fs.writeFile(sketchPaths.params, result, 'utf-8')).mapError((err) =>
-        serverError('Failed to write parameters', `Error writing params: ${err}`)
+      return Future.fromPromise(fs.writeFile(sketchPaths.params, result, 'utf-8')).mapError(
+        (err: Error) => serverError('Failed to write parameters', err)
       );
     });
 }
