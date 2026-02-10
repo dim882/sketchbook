@@ -15,20 +15,24 @@ const port = 2000;
 app.use(express.json());
 app.use(express.static(paths.public()));
 
-app.get('/', async (_, res) => {
-  (await renderMainPage().toPromise()).match({
-    Ok: (html) => res.send(html),
-    Error: handleError(res),
-  });
+app.get('/', (_, res) => {
+  renderMainPage().tap((result) =>
+    result.match({
+      Ok: (html) => res.send(html),
+      Error: handleError(res),
+    })
+  );
 });
 
-app.get('/nav/:sketchname', async (req, res) => {
+app.get('/nav/:sketchname', (req, res) => {
   validateSketchName(req.params.sketchname).match({
-    Ok: async (validName) => {
-      (await renderMainPage(validName).toPromise()).match({
-        Ok: (html) => res.send(html),
-        Error: handleError(res),
-      });
+    Ok: (validName) => {
+      renderMainPage(validName).tap((result) =>
+        result.match({
+          Ok: (html) => res.send(html),
+          Error: handleError(res),
+        })
+      );
     },
     Error: (message) => res.status(400).json({ error: message }),
   });
@@ -58,24 +62,29 @@ app.use(
   }
 );
 
-app.get('/api/sketches/:sketchName/params', requireValidSketchName, async (req, res) => {
-  (await fetchSketchParams(req.params.sketchName).toPromise()).match({
-    Ok: (params) => res.json({ params }),
-    Error: handleError(res),
-  });
+app.get('/api/sketches/:sketchName/params', requireValidSketchName, (req, res) => {
+  fetchSketchParams(req.params.sketchName).tap((result) =>
+    result.match({
+      Ok: (params) => res.json({ params }),
+      Error: handleError(res),
+    })
+  );
 });
 
-app.post('/api/sketches/:sketchName/params', requireValidSketchName, async (req, res) => {
+app.post('/api/sketches/:sketchName/params', requireValidSketchName, (req, res) => {
   const { params } = req.body;
 
   if (!params || typeof params !== 'object') {
-    return res.status(400).json({ error: 'Invalid parameters: expected object' });
+    res.status(400).json({ error: 'Invalid parameters: expected object' });
+    return;
   }
 
-  (await updateSketchParams(req.params.sketchName, params).toPromise()).match({
-    Ok: () => res.json({ success: true }),
-    Error: handleError(res),
-  });
+  updateSketchParams(req.params.sketchName, params).tap((result) =>
+    result.match({
+      Ok: () => res.json({ success: true }),
+      Error: handleError(res),
+    })
+  );
 });
 
 app.listen(port, () => {
