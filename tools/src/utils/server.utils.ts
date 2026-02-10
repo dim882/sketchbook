@@ -156,17 +156,16 @@ export function requireValidSketchName(req: Request, res: Response, next: NextFu
 }
 
 export function renderMainPage(sketchName?: string): Future<Result<string, ServerError>> {
-  return Future.fromPromise(
-    (async () => {
-      const htmlTemplate = await fs.readFile(paths.uiIndex(), 'utf8');
-      const initialData = JSON.stringify({
-        dirs: await getSketchDirsData(paths.sketches()),
-        initialSketch: sketchName || null,
-      });
-
-      return htmlTemplate.replace('${initialData}', initialData);
-    })()
-  ).mapError((err: Error) => serverError('Failed to render page', err));
+  return Future.fromPromise(fs.readFile(paths.uiIndex(), 'utf8'))
+    .flatMapOk((htmlTemplate) =>
+      Future.fromPromise(getSketchDirsData(paths.sketches())).mapOk((dirs) => {
+        return htmlTemplate.replace('${initialData}', JSON.stringify({
+          dirs,
+          initialSketch: sketchName || null,
+        }));
+      })
+    )
+    .mapError((err: Error) => serverError('Failed to render page', err));
 }
 
 export function fetchSketchParams(sketchName: string): Future<Result<unknown, ServerError>> {
