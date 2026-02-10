@@ -68,37 +68,39 @@ export const paths = {
   sketch: (name: string) => createSketchPaths(name),
 };
 
-async function getLastModifiedTime(dirPath: string): Promise<number> {
-  const tsFiles = await fg(['**/*.{ts,tsx,html}'], {
-    cwd: dirPath,
-    absolute: true,
-    ignore: ['node_modules/**'],
-    dot: false,
+function getLastModifiedTime(dirPath: string): Future<Result<number, unknown>> {
+  return Future.fromPromise(
+    fg(['**/*.{ts,tsx,html}'], {
+      cwd: dirPath,
+      absolute: true,
+      ignore: ['node_modules/**'],
+      dot: false,
+    })
+  ).flatMapOk((tsFiles) => {
+    if (tsFiles.length === 0) {
+      return Future.value(Result.Ok(0));
+    }
+
+    return Future.fromPromise(
+      Promise.all(tsFiles.map((file) => fs.stat(file)))
+    ).mapOk((tsStats) => Math.max(...tsStats.map((stat) => stat.mtime.getTime())));
   });
-
-  if (tsFiles.length === 0) {
-    return 0;
-  }
-
-  const tsStats = await Promise.all(tsFiles.map((file) => fs.stat(file)));
-
-  return Math.max(...tsStats.map((stat) => stat.mtime.getTime()));
 }
 
 export function getSketchDirsData(sketchesDir: string): Future<Result<IDir[], unknown>> {
   return readDir(sketchesDir)
-    .flatMapOk((files) =>
-      Future.fromPromise(
-        Promise.all(
-          files
-            .filter((file) => file.isDirectory())
-            .map(async (dir) => ({
-              name: dir.name,
-              lastModified: await getLastModifiedTime(path.join(sketchesDir, dir.name)),
-            }))
-        )
-      )
-    )
+    .flatMapOk((files) => {
+      const dirs = files.filter((file) => file.isDirectory());
+
+      const futures = dirs.map((dir) =>
+        getLastModifiedTime(path.join(sketchesDir, dir.name)).mapOk((lastModified) => ({
+          name: dir.name,
+          lastModified,
+        }))
+      );
+
+      return Future.all(futures).map(Result.all);
+    })
     .mapOk((dirs) => dirs.sort((a, b) => a.name.localeCompare(b.name)));
 }
 
