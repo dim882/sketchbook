@@ -3,9 +3,17 @@ import path from 'node:path';
 import fg from 'fast-glob';
 import { Result, Future } from '@swan-io/boxed';
 import type { Request, Response, NextFunction } from 'express';
-import { SketchServerHandler } from '../server.sketch.types';
+import { SketchServerHandler, SketchParams } from '../server.sketch.types';
 import { IDir } from '../ui/SketchList';
 import { escapeRegex } from './string';
+
+/**
+ * Type guard for Node.js ErrnoException.
+ * Use instead of type assertions like `(err as NodeJS.ErrnoException)`.
+ */
+export function isErrnoException(err: unknown): err is NodeJS.ErrnoException {
+  return err instanceof Error && 'code' in err;
+}
 
 const readFile = (filePath: string) => Future.fromPromise(fs.readFile(filePath, 'utf-8'));
 const writeFile = (filePath: string, content: string) =>
