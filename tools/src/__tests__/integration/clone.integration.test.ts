@@ -22,22 +22,18 @@ describe('Clone Integration Tests', () => {
 
   describe('createTargetPath', () => {
     it('renames files matching source prefix', () => {
-      const result = CloneUtils.createTargetPath('my-sketch.ts', '/target', 'my-sketch', 'new-sketch');
+      const result = CloneUtils.createTargetPath({ item: 'my-sketch.ts', targetDir: '/target', sourceName: 'my-sketch', targetName: 'new-sketch' });
       expect(result).toBe(path.join('/target', 'new-sketch.ts'));
     });
 
     it('preserves files not matching source prefix', () => {
-      const result = CloneUtils.createTargetPath('utils.ts', '/target', 'my-sketch', 'new-sketch');
+      const result = CloneUtils.createTargetPath({ item: 'utils.ts', targetDir: '/target', sourceName: 'my-sketch', targetName: 'new-sketch' });
       expect(result).toBe(path.join('/target', 'utils.ts'));
     });
 
     it('handles complex filenames with source prefix', () => {
       const result = CloneUtils.createTargetPath(
-        'my-sketch.utils.ts',
-        '/target',
-        'my-sketch',
-        'new-sketch'
-      );
+        { item: 'my-sketch.utils.ts', targetDir: '/target', sourceName: 'my-sketch', targetName: 'new-sketch' });
       expect(result).toBe(path.join('/target', 'new-sketch.utils.ts'));
     });
   });

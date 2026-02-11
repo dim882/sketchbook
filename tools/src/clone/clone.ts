@@ -17,7 +17,7 @@ const errors: Error[] = [];
 /** Collect errors from Result, logging failures */
 const collectError = <T>(result: Result<T, Error>, context: string): void => {
   result.match({
-    Ok: () => {},
+    Ok: () => { },
     Error: (err) => {
       errors.push(err);
       console.error(`${context}: ${err.message}`);
@@ -58,7 +58,7 @@ function copyDir(source: string, target: string) {
     }
 
     const sourcePath = path.join(source, item);
-    const targetPath = CloneUtils.createTargetPath(item, target, sourceName, targetName);
+    const targetPath = CloneUtils.createTargetPath({ item, targetDir: target, sourceName, targetName });
     const stats = fs.statSync(sourcePath);
 
     if (stats.isDirectory()) {

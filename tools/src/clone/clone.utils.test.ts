@@ -163,30 +163,26 @@ describe('getDirectoryNames (imperative wrapper)', () => {
 
 describe('createTargetPath', () => {
   it('renames file when it starts with sourceName', () => {
-    const result = CloneUtils.createTargetPath('my-sketch.ts', '/target/dir', 'my-sketch', 'new-sketch');
+    const result = CloneUtils.createTargetPath({ item: 'my-sketch.ts', targetDir: '/target/dir', sourceName: 'my-sketch', targetName: 'new-sketch' });
 
     expect(result).toBe(path.join('/target/dir', 'new-sketch.ts'));
   });
 
   it('preserves filename when it does not start with sourceName', () => {
-    const result = CloneUtils.createTargetPath('utils.ts', '/target/dir', 'my-sketch', 'new-sketch');
+    const result = CloneUtils.createTargetPath({ item: 'utils.ts', targetDir: '/target/dir', sourceName: 'my-sketch', targetName: 'new-sketch' });
 
     expect(result).toBe(path.join('/target/dir', 'utils.ts'));
   });
 
   it('handles complex source name prefixes', () => {
     const result = CloneUtils.createTargetPath(
-      'my-sketch.utils.ts',
-      '/target/dir',
-      'my-sketch',
-      'new-sketch'
-    );
+      { item: 'my-sketch.utils.ts', targetDir: '/target/dir', sourceName: 'my-sketch', targetName: 'new-sketch' });
 
     expect(result).toBe(path.join('/target/dir', 'new-sketch.utils.ts'));
   });
 
   it('handles files with no extension', () => {
-    const result = CloneUtils.createTargetPath('my-sketch', '/target/dir', 'my-sketch', 'new-sketch');
+    const result = CloneUtils.createTargetPath({ item: 'my-sketch', targetDir: '/target/dir', sourceName: 'my-sketch', targetName: 'new-sketch' });
 
     expect(result).toBe(path.join('/target/dir', 'new-sketch'));
   });
@@ -229,7 +225,7 @@ describe('isTextFile', () => {
 describe('replaceContentInFile', () => {
   it('returns Ok with changed: true and writes file when content changes', () => {
     vi.mocked(fs.readFileSync).mockReturnValue('import "old-name";\nconst x = "old-name";');
-    vi.mocked(fs.writeFileSync).mockImplementation(() => {});
+    vi.mocked(fs.writeFileSync).mockImplementation(() => { });
 
     const result = CloneUtils.replaceContentInFile('/path/file.ts', 'old-name', 'new-name');
 
@@ -248,7 +244,7 @@ describe('replaceContentInFile', () => {
 
   it('returns Ok with changed: false when no changes made', () => {
     vi.mocked(fs.readFileSync).mockReturnValue('no matches here');
-    vi.mocked(fs.writeFileSync).mockImplementation(() => {});
+    vi.mocked(fs.writeFileSync).mockImplementation(() => { });
 
     const result = CloneUtils.replaceContentInFile('/path/file.ts', 'old-name', 'new-name');
 
@@ -277,7 +273,7 @@ describe('setPackageName', () => {
     vi.mocked(fs.readFileSync).mockReturnValue(
       JSON.stringify({ name: 'old-name', version: '1.0.0' })
     );
-    vi.mocked(fs.writeFileSync).mockImplementation(() => {});
+    vi.mocked(fs.writeFileSync).mockImplementation(() => { });
 
     const result = CloneUtils.setPackageName('/path/package.json', 'new-name');
 
@@ -292,7 +288,7 @@ describe('setPackageName', () => {
 
   it('preserves formatting with 2-space indent', () => {
     vi.mocked(fs.readFileSync).mockReturnValue('{"name":"old"}');
-    vi.mocked(fs.writeFileSync).mockImplementation(() => {});
+    vi.mocked(fs.writeFileSync).mockImplementation(() => { });
 
     CloneUtils.setPackageName('/path/package.json', 'new');
 
@@ -325,7 +321,7 @@ describe('replaceHtmlTitle', () => {
     vi.mocked(fs.readFileSync).mockReturnValue(
       '<html><head><title>Old Title</title></head></html>'
     );
-    vi.mocked(fs.writeFileSync).mockImplementation(() => {});
+    vi.mocked(fs.writeFileSync).mockImplementation(() => { });
 
     const result = CloneUtils.replaceHtmlTitle('/path/file.html', 'New Title');
 
@@ -342,7 +338,7 @@ describe('replaceHtmlTitle', () => {
     vi.mocked(fs.readFileSync).mockReturnValue(
       '<html><head><TITLE>Old</TITLE></head></html>'
     );
-    vi.mocked(fs.writeFileSync).mockImplementation(() => {});
+    vi.mocked(fs.writeFileSync).mockImplementation(() => { });
 
     const result = CloneUtils.replaceHtmlTitle('/path/file.html', 'New');
 

@@ -68,12 +68,14 @@ export function getDirectoryNames(sourceName: string, targetName: string): Direc
   });
 }
 
-export function createTargetPath(
-  item: string,
-  targetDir: string,
-  sourceName: string,
-  targetName: string
-): string {
+interface ICreateTargetPathArgs {
+  item: string;
+  sourceName: string;
+  targetDir: string;
+  targetName: string;
+}
+
+export function createTargetPath({ item, sourceName, targetDir, targetName }: ICreateTargetPathArgs): string {
   return path.join(targetDir, createTargetName(item, sourceName, targetName));
 }
 
