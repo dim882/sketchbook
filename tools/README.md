@@ -4,7 +4,7 @@ This directory contains build tools, server utilities, and CLI scripts for the s
 
 ## Core Principles
 
-### 1. Lift at the Edge
+### Lift at the Edge
 
 Convert Promises to Futures **immediately** at I/O boundaries:
 
@@ -19,14 +19,14 @@ async function getData() {
 }
 ```
 
-| I/O Type | Pattern |
-|----------|---------|
-| File operations | `Future.fromPromise(fs.readFile(...))` |
-| HTTP calls | `Future.fromPromise(fetch(...))` |
-| Dynamic imports | `Future.fromPromise(import(...))` |
-| Sync operations that throw | `Result.fromExecution(() => ...)` |
+| I/O Type                   | Pattern                                |
+| -------------------------- | -------------------------------------- |
+| File operations            | `Future.fromPromise(fs.readFile(...))` |
+| HTTP calls                 | `Future.fromPromise(fetch(...))`       |
+| Dynamic imports            | `Future.fromPromise(import(...))`      |
+| Sync operations that throw | `Result.fromExecution(() => ...)`      |
 
-### 2. Type Errors at Boundaries
+### Type Errors at Boundaries
 
 Every **public function** must have an explicit error type, never `unknown`:
 
@@ -38,13 +38,13 @@ function getSketchData(name: string): Future<Result<Data, ServerError>>
 function getSketchData(name: string): Future<Result<Data, unknown>>
 ```
 
-| Context | Error Type | Example |
-|---------|-----------|---------|
-| Server utilities | `ServerError` | HTTP handlers, API utilities |
-| CLI utilities | `Error` | Clone scripts, build tools |
-| Validation | `string` | Simple user-facing error messages |
+| Context          | Error Type    | Example                           |
+| ---------------- | ------------- | --------------------------------- |
+| Server utilities | `ServerError` | HTTP handlers, API utilities      |
+| CLI utilities    | `Error`       | Clone scripts, build tools        |
+| Validation       | `string`      | Simple user-facing error messages |
 
-### 3. Pure Core, Imperative Shell
+### Pure Core, Imperative Shell
 
 Keep validation and business logic **pure** (no side effects). Handle I/O and process control at entry points:
 
@@ -69,25 +69,6 @@ export function getArgs() {
 
 ## Error Handling
 
-### ServerError (HTTP Context)
-
-Used for all server-side utilities. Includes HTTP status codes:
-
-```typescript
-interface ServerError {
-  status: number;    // HTTP status code
-  message: string;   // User-facing message
-  cause?: Error;     // Original error (logged, not exposed)
-}
-
-// Factory functions
-notFound(message)       // 404
-badRequest(message)     // 400
-serverError(msg, cause) // 500
-```
-
-### Error Flow
-
 ```
 I/O Operation
     ↓
@@ -106,19 +87,6 @@ Errors are:
 - **Logged** at boundaries (in `handleError`), not inline
 - **Never swallowed** - always propagated or explicitly handled
 
-### Result (Sync Context)
-
-Used for synchronous operations that might fail:
-
-```typescript
-function replaceInFile(path: string, search: string, replace: string): Result<void, Error> {
-  return Result.fromExecution(() => {
-    const content = fs.readFileSync(path, 'utf8');
-    fs.writeFileSync(path, content.replace(search, replace));
-  });
-}
-```
-
 ## Composition Patterns
 
 ### Sequential Operations: `flatMapOk`
@@ -132,16 +100,6 @@ readFile(path)
   .mapError((err) => serverError('Pipeline failed', err));
 ```
 
-### Parallel Operations: `Future.all` + `Result.all`
-
-Run independent operations concurrently:
-
-```typescript
-const futures = items.map((item) => processItem(item));
-return Future.all(futures).map(Result.all);
-// Returns Future<Result<ProcessedItem[], Error>>
-```
-
 ### Side Effects: `tap`
 
 Execute side effects without changing the value (used at HTTP boundaries):
@@ -153,16 +111,6 @@ fetchData().tap((result) =>
     Error: handleError(res),
   })
 );
-```
-
-### Early Return: `Future.value`
-
-Return an immediate value when short-circuiting:
-
-```typescript
-if (items.length === 0) {
-  return Future.value(Result.Ok([]));
-}
 ```
 
 ## Type Safety
@@ -196,21 +144,3 @@ if ((err as NodeJS.ErrnoException).code === 'ENOENT') { ... }
 
 - **Validation inputs**: `validateSketchName(name: unknown)` - must validate untrusted input
 - **Error handlers**: `logError(error: unknown)` - catch blocks produce unknown errors
-
-## File Organization
-
-```
-tools/
-├── src/
-│   ├── server.ts              # Express server entry point
-│   ├── server.sketch.types.ts # Shared types for sketch handlers
-│   ├── watch.ts               # File watcher for dev builds
-│   ├── sketch.clone.ts        # CLI: clone a sketch
-│   ├── lib-pull.ts            # CLI: sync lib to sketch
-│   └── utils/
-│       ├── server.utils.ts    # Server utilities (Future-based)
-│       ├── sketch.clone.utils.ts  # Clone utilities (Result-based)
-│       ├── sketch.build.utils.ts  # Build utilities (Result-based)
-│       └── watch.utils.ts     # Watch utilities
-└── README.md
-```
