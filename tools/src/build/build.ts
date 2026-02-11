@@ -23,7 +23,13 @@ const buildAllSketches = (): void => {
 
   console.log(`Found ${sketchDirectories.length} sketches to build`);
 
-  sketchDirectories.forEach(LibBuild.buildSketch);
+  const results = sketchDirectories.map(LibBuild.buildSketch);
+  const failures = results.filter((r) => r.isError());
+
+  if (failures.length > 0) {
+    console.error(`${failures.length} sketch(es) failed to build`);
+    process.exit(1);
+  }
 
   console.log('All sketches built successfully');
 };
