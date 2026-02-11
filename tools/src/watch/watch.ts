@@ -144,8 +144,8 @@ function resolveConfigPaths(config: RollupOptions, configDir: string): RollupOpt
   return resolvedConfig;
 }
 
-const logError = (error: unknown) => {
-  console.error('Error occurred:', error);
+const logError = (error: Error) => {
+  console.error('Error occurred:', error.message);
 };
 
 /**
