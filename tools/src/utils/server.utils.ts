@@ -148,12 +148,8 @@ export function fetchSketchParams(sketchName: string): Future<Result<SketchParam
   console.log(`[fetchSketchParams] Loading params for sketch: ${sketchName}`);
 
   return readFile(sketchPaths.params)
-    .tap((result) =>
-      result.match({
-        Ok: () => console.log(`[fetchSketchParams] Read params file: ${sketchPaths.params}`),
-        Error: (err) => console.log(`[fetchSketchParams] Failed to read params file:`, err),
-      })
-    )
+    .tapOk(() => console.log(`[fetchSketchParams] Read params file: ${sketchPaths.params}`))
+    .tapError((err) => console.log(`[fetchSketchParams] Failed to read params file:`, err))
     .mapError((err: unknown) =>
       isErrnoException(err) && err.code === 'ENOENT'
         ? notFound(`Parameters not found for sketch '${sketchName}'`)
@@ -161,37 +157,27 @@ export function fetchSketchParams(sketchName: string): Future<Result<SketchParam
     )
     .flatMapOk((fileContent) =>
       Future.fromPromise(import(sketchPaths.serverHandler))
-        .tap((result) =>
-          result.match({
-            Ok: (module) =>
-              console.log(`[fetchSketchParams] Loaded server handler, has default export: ${'default' in module}`),
-            Error: (err) => console.log(`[fetchSketchParams] Failed to load server handler:`, err),
-          })
+        .tapOk((module) =>
+          console.log(`[fetchSketchParams] Loaded server handler, has default export: ${'default' in module}`)
         )
+        .tapError((err) => console.log(`[fetchSketchParams] Failed to load server handler:`, err))
         .mapError((err: unknown) =>
           isErrnoException(err) && err.code === 'MODULE_NOT_FOUND'
             ? notFound(`Server handler not found for sketch '${sketchName}'`)
             : serverError('Failed to load server handler', err)
         )
-        .mapOk((module) => {
-          if (!isValidServerHandler(module)) {
-            return Result.Error<SketchParams, ServerError>(
+        .mapOkToResult((module) =>
+          !isValidServerHandler(module)
+            ? Result.Error(
               serverError(
                 `Server handler for sketch '${sketchName}' is invalid: must export default object with getParams function`
               )
-            );
-          }
-          try {
-            return Result.Ok<SketchParams, ServerError>(module.default.getParams(fileContent));
-          } catch (err) {
-            return Result.Error<SketchParams, ServerError>(
-              serverError(`Failed to parse params for sketch '${sketchName}'`, err)
-            );
-          }
-        })
-        .mapOk((result) => result)
-    )
-    .flatMapOk((result) => Future.value(result));
+            )
+            : Result.fromExecution(() => module.default.getParams(fileContent))
+              .mapError((err) =>
+                serverError(`Failed to parse params for sketch '${sketchName}'`, err))
+        )
+    );
 }
 
 // Validates a sketch name to prevent path traversal attacks.
