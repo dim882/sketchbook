@@ -178,21 +178,14 @@ export function requireValidSketchName(req: Request, res: Response, next: NextFu
   });
 }
 
-export function renderMainPage(sketchName?: string): Future<Result<string, ServerError>> {
+export function renderMainPage(initialSketch?: string): Future<Result<string, ServerError>> {
   return readFile(paths.uiIndex())
     .mapError((err) =>
       serverError('Failed to read UI template', err)
     )
     .flatMapOk((htmlTemplate) =>
       getSketchDirsData(paths.sketches()).mapOk((dirs) =>
-        htmlTemplate.replace(
-          '${initialData}',
-          JSON.stringify({
-            dirs,
-            initialSketch: sketchName || null,
-          })
-        )
-      )
+        htmlTemplate.replace('${initialData}', JSON.stringify({ dirs, initialSketch, })))
     );
 }
 
