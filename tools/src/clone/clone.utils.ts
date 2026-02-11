@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import { Result } from '@swan-io/boxed';
-import * as LibString from '../lib/string';
 import * as LibPaths from '../lib/paths';
 
 const FILE_EXTENSIONS = ['.ts', '.js', '.html', '.css', '.md', '.json', '.config.js'];
@@ -67,9 +66,7 @@ export function replaceContentInFile(
 ): Result<{ changed: boolean }, Error> {
   return Result.fromExecution(() => {
     const content = fs.readFileSync(filePath, 'utf8');
-    // Fix: escape regex special characters to treat searchValue as literal string
-    const escapedSearch = LibString.escapeRegex(searchValue);
-    const updatedContent = content.replace(new RegExp(escapedSearch, 'g'), replaceValue);
+    const updatedContent = content.replaceAll(searchValue, replaceValue);
 
     if (content !== updatedContent) {
       fs.writeFileSync(filePath, updatedContent, 'utf8');
