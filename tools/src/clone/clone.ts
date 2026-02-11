@@ -2,6 +2,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { Result } from '@swan-io/boxed';
 import * as LibBuild from '../lib/build';
 import * as CloneUtils from './clone.utils';
 
@@ -13,25 +14,30 @@ const { sourceDir, targetDir } = CloneUtils.getDirectoryNames(sourceName, target
 // Track errors during clone
 const errors: Error[] = [];
 
+/** Collect errors from Result, logging failures */
+const collectError = <T>(result: Result<T, Error>, context: string): void => {
+  result.match({
+    Ok: () => {},
+    Error: (err) => {
+      errors.push(err);
+      console.error(`${context}: ${err.message}`);
+    },
+  });
+};
+
 copyDir(sourceDir, targetDir);
 
 // Install dependencies
-CloneUtils.install(targetDir).match({
-  Ok: () => console.log(`Sketch './sketches/${targetName}' created successfully.`),
-  Error: (err) => {
-    errors.push(err);
-    console.error('Failed to install dependencies:', err.message);
-  },
-});
+collectError(CloneUtils.install(targetDir), 'Failed to install dependencies');
+if (errors.length === 0) {
+  console.log(`Sketch './sketches/${targetName}' created successfully.`);
+}
 
 // Build sketch
-LibBuild.buildSketch(targetDir).match({
-  Ok: () => console.log(`Sketch './sketches/${targetName}' built successfully.`),
-  Error: (err) => {
-    errors.push(err);
-    console.error('Failed to build sketch:', err.message);
-  },
-});
+collectError(LibBuild.buildSketch(targetDir), 'Failed to build sketch');
+if (errors.length === 0) {
+  console.log(`Sketch './sketches/${targetName}' built successfully.`);
+}
 
 // Report final status
 if (errors.length > 0) {
@@ -64,36 +70,12 @@ function copyDir(source: string, target: string) {
       const fileName = path.basename(targetPath);
 
       if (fileName === 'package.json') {
-        CloneUtils.setPackageName(targetPath, targetName).match({
-          Ok: () => { },
-          Error: (err) => {
-            errors.push(err);
-            console.error(`Failed to update package.json: ${err.message}`);
-          },
-        });
+        collectError(CloneUtils.setPackageName(targetPath, targetName), 'Failed to update package.json');
       } else if (extName === '.html') {
-        CloneUtils.replaceHtmlTitle(targetPath, targetName).match({
-          Ok: () => { },
-          Error: (err) => {
-            errors.push(err);
-            console.error(`Failed to update HTML title in ${targetPath}: ${err.message}`);
-          },
-        });
-        CloneUtils.replaceContentInFile(targetPath, sourceName, targetName).match({
-          Ok: () => { },
-          Error: (err) => {
-            errors.push(err);
-            console.error(`Failed to replace content in ${targetPath}: ${err.message}`);
-          },
-        });
+        collectError(CloneUtils.replaceHtmlTitle(targetPath, targetName), `Failed to update HTML title in ${targetPath}`);
+        collectError(CloneUtils.replaceContentInFile(targetPath, sourceName, targetName), `Failed to replace content in ${targetPath}`);
       } else if (CloneUtils.isTextFile(targetPath)) {
-        CloneUtils.replaceContentInFile(targetPath, sourceName, targetName).match({
-          Ok: () => { },
-          Error: (err) => {
-            errors.push(err);
-            console.error(`Failed to replace content in ${targetPath}: ${err.message}`);
-          },
-        });
+        collectError(CloneUtils.replaceContentInFile(targetPath, sourceName, targetName), `Failed to replace content in ${targetPath}`);
       }
     }
   });

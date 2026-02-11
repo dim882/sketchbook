@@ -6,36 +6,66 @@ import * as LibPaths from '../lib/paths';
 
 const FILE_EXTENSIONS = ['.ts', '.js', '.html', '.css', '.md', '.json', '.config.js'];
 
-export function getArgs() {
-  const sourceName = process.argv[2];
-  const targetName = process.argv[3];
+export type Args = { sourceName: string; targetName: string };
+export type Directories = { sourceDir: string; targetDir: string };
 
-  if (!sourceName || !targetName) {
-    console.error('Usage: pnpm clone <source> <target>');
-    !sourceName && console.error('<source> not provided');
-    !targetName && console.error('<target> not provided');
+/** Pure validation - returns Result with error messages */
+export function validateArgs(argv: string[]): Result<Args, string[]> {
+  const sourceName = argv[2];
+  const targetName = argv[3];
+  const errors: string[] = [];
 
-    process.exit(1);
+  if (!sourceName) errors.push('<source> not provided');
+  if (!targetName) errors.push('<target> not provided');
+
+  if (errors.length > 0) {
+    return Result.Error(errors);
   }
-  return { sourceName, targetName };
+
+  return Result.Ok({ sourceName, targetName });
 }
 
-export function getDirectoryNames(sourceName: string, targetName: string) {
+/** Pure validation - returns Result with error message */
+export function validateDirectories(
+  sourceName: string,
+  targetName: string
+): Result<Directories, string> {
   const sketchesDir = LibPaths.getSketchesDir();
   const sourceDir = path.join(sketchesDir, sourceName);
   const targetDir = path.join(sketchesDir, targetName);
 
   if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
-    console.error(`Source sketch directory not found: ${sourceDir}`);
-    process.exit(1);
+    return Result.Error(`Source sketch directory not found: ${sourceDir}`);
   }
 
   if (fs.existsSync(targetDir)) {
-    console.error(`Target sketch directory already exists: ${targetDir}`);
-    process.exit(1);
+    return Result.Error(`Target sketch directory already exists: ${targetDir}`);
   }
 
-  return { sourceDir, targetDir };
+  return Result.Ok({ sourceDir, targetDir });
+}
+
+/** Imperative wrapper for CLI - handles side effects */
+export function getArgs(): Args {
+  return validateArgs(process.argv).match({
+    Ok: (args) => args,
+    Error: (errors) => {
+      console.error('Usage: pnpm clone <source> <target>');
+      errors.forEach((e) => console.error(e));
+      process.exit(1);
+    },
+  });
+}
+
+/** Imperative wrapper for CLI - handles side effects */
+export function getDirectoryNames(sourceName: string, targetName: string): Directories {
+  return validateDirectories(sourceName, targetName).match({
+    Ok: (dirs) => dirs,
+    Error: (msg) => {
+      console.error(msg);
+      process.exit(1);
+    },
+  });
 }
 
 export function createTargetPath(

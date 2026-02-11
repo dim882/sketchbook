@@ -19,7 +19,48 @@ function withArgv(args: string[], fn: () => void) {
   }
 }
 
-describe('getArgs', () => {
+describe('validateArgs (pure)', () => {
+  it('returns Ok with sourceName and targetName when both provided', () => {
+    const result = CloneUtils.validateArgs(['node', 'script.ts', 'source', 'target']);
+
+    expect(result.isOk()).toBe(true);
+    result.match({
+      Ok: (args) => {
+        expect(args.sourceName).toBe('source');
+        expect(args.targetName).toBe('target');
+      },
+      Error: () => expect.fail('Should not be error'),
+    });
+  });
+
+  it('returns Error with messages when source missing', () => {
+    const result = CloneUtils.validateArgs(['node', 'script.ts']);
+
+    expect(result.isError()).toBe(true);
+    result.match({
+      Ok: () => expect.fail('Should not be Ok'),
+      Error: (errors) => {
+        expect(errors).toContain('<source> not provided');
+        expect(errors).toContain('<target> not provided');
+      },
+    });
+  });
+
+  it('returns Error when only source provided', () => {
+    const result = CloneUtils.validateArgs(['node', 'script.ts', 'source']);
+
+    expect(result.isError()).toBe(true);
+    result.match({
+      Ok: () => expect.fail('Should not be Ok'),
+      Error: (errors) => {
+        expect(errors).toContain('<target> not provided');
+        expect(errors).not.toContain('<source> not provided');
+      },
+    });
+  });
+});
+
+describe('getArgs (imperative wrapper)', () => {
   it('returns sourceName and targetName when both provided', () => {
     withArgv(['source-sketch', 'target-sketch'], () => {
       const result = CloneUtils.getArgs();
@@ -48,7 +89,50 @@ describe('getArgs', () => {
   });
 });
 
-describe('getDirectoryNames', () => {
+describe('validateDirectories (pure)', () => {
+  it('returns Ok when source exists and target does not', () => {
+    vi.mocked(fs.existsSync).mockImplementation((p) => p.toString().includes('existing-source'));
+    vi.mocked(fs.statSync).mockReturnValue({ isDirectory: () => true } as fs.Stats);
+
+    const result = CloneUtils.validateDirectories('existing-source', 'new-target');
+
+    expect(result.isOk()).toBe(true);
+    result.match({
+      Ok: (dirs) => {
+        expect(dirs.sourceDir).toContain('existing-source');
+        expect(dirs.targetDir).toContain('new-target');
+      },
+      Error: () => expect.fail('Should not be error'),
+    });
+  });
+
+  it('returns Error when source does not exist', () => {
+    vi.mocked(fs.existsSync).mockReturnValue(false);
+
+    const result = CloneUtils.validateDirectories('nonexistent', 'target');
+
+    expect(result.isError()).toBe(true);
+    result.match({
+      Ok: () => expect.fail('Should not be Ok'),
+      Error: (msg) => expect(msg).toContain('Source sketch directory not found'),
+    });
+  });
+
+  it('returns Error when target already exists', () => {
+    vi.mocked(fs.existsSync).mockReturnValue(true);
+    vi.mocked(fs.statSync).mockReturnValue({ isDirectory: () => true } as fs.Stats);
+
+    const result = CloneUtils.validateDirectories('source', 'existing-target');
+
+    expect(result.isError()).toBe(true);
+    result.match({
+      Ok: () => expect.fail('Should not be Ok'),
+      Error: (msg) => expect(msg).toContain('Target sketch directory already exists'),
+    });
+  });
+});
+
+describe('getDirectoryNames (imperative wrapper)', () => {
   it('returns sourceDir and targetDir when source exists and target does not', () => {
     vi.mocked(fs.existsSync).mockImplementation((p) => p.toString().includes('existing-source'));
     vi.mocked(fs.statSync).mockReturnValue({ isDirectory: () => true } as fs.Stats);
