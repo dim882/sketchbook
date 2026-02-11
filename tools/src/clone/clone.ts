@@ -45,20 +45,18 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-function copyDir(source: string, target: string) {
-  if (!fs.existsSync(target)) {
-    fs.mkdirSync(target, { recursive: true });
+function copyDir(source: string, targetDir: string) {
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
   }
 
-  const items = fs.readdirSync(source);
-
-  items.forEach((item) => {
+  fs.readdirSync(source).forEach((item) => {
     if (EXCLUDED_FILES.includes(item)) {
       return;
     }
 
     const sourcePath = path.join(source, item);
-    const targetPath = CloneUtils.createTargetPath({ item, targetDir: target, sourceName, targetName });
+    const targetPath = CloneUtils.createTargetPath({ item, targetDir, sourceName, targetName });
     const stats = fs.statSync(sourcePath);
 
     if (stats.isDirectory()) {
