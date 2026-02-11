@@ -7,13 +7,7 @@ import {
   createTestSketch,
   readTempFile,
 } from '../helpers/tempDir';
-import {
-  replaceContentInFile,
-  setPackageName,
-  replaceHtmlTitle,
-  createTargetPath,
-  isTextFile,
-} from '../../utils/sketch.clone.utils';
+import * as CloneUtils from '../../clone/clone.utils';
 
 describe('Clone Integration Tests', () => {
   let tempDir: string;
@@ -28,17 +22,17 @@ describe('Clone Integration Tests', () => {
 
   describe('createTargetPath', () => {
     it('renames files matching source prefix', () => {
-      const result = createTargetPath('my-sketch.ts', '/target', 'my-sketch', 'new-sketch');
+      const result = CloneUtils.createTargetPath('my-sketch.ts', '/target', 'my-sketch', 'new-sketch');
       expect(result).toBe(path.join('/target', 'new-sketch.ts'));
     });
 
     it('preserves files not matching source prefix', () => {
-      const result = createTargetPath('utils.ts', '/target', 'my-sketch', 'new-sketch');
+      const result = CloneUtils.createTargetPath('utils.ts', '/target', 'my-sketch', 'new-sketch');
       expect(result).toBe(path.join('/target', 'utils.ts'));
     });
 
     it('handles complex filenames with source prefix', () => {
-      const result = createTargetPath(
+      const result = CloneUtils.createTargetPath(
         'my-sketch.utils.ts',
         '/target',
         'my-sketch',
@@ -54,13 +48,13 @@ describe('Clone Integration Tests', () => {
 
     it('identifies text files correctly', () => {
       textExtensions.forEach((ext) => {
-        expect(isTextFile(`file${ext}`)).toBe(true);
+        expect(CloneUtils.isTextFile(`file${ext}`)).toBe(true);
       });
     });
 
     it('identifies binary files correctly', () => {
       binaryExtensions.forEach((ext) => {
-        expect(isTextFile(`file${ext}`)).toBe(false);
+        expect(CloneUtils.isTextFile(`file${ext}`)).toBe(false);
       });
     });
   });
@@ -70,7 +64,7 @@ describe('Clone Integration Tests', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'import "my-sketch";\nconst x = "my-sketch";', 'utf8');
 
-      const result = replaceContentInFile(filePath, 'my-sketch', 'new-sketch');
+      const result = CloneUtils.replaceContentInFile(filePath, 'my-sketch', 'new-sketch');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
@@ -82,7 +76,7 @@ describe('Clone Integration Tests', () => {
       fs.writeFileSync(filePath, 'no matches here', 'utf8');
       const originalMtime = fs.statSync(filePath).mtimeMs;
 
-      const result = replaceContentInFile(filePath, 'my-sketch', 'new-sketch');
+      const result = CloneUtils.replaceContentInFile(filePath, 'my-sketch', 'new-sketch');
 
       expect(result.isOk()).toBe(true);
       result.match({
@@ -97,7 +91,7 @@ describe('Clone Integration Tests', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'import "my-sketch.v2";\nconst x = "my-sketch.v2";', 'utf8');
 
-      const result = replaceContentInFile(filePath, 'my-sketch.v2', 'new-sketch-v2');
+      const result = CloneUtils.replaceContentInFile(filePath, 'my-sketch.v2', 'new-sketch-v2');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
@@ -108,7 +102,7 @@ describe('Clone Integration Tests', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'my-sketchXv2 and my-sketch.v2', 'utf8');
 
-      const result = replaceContentInFile(filePath, 'my-sketch.v2', 'REPLACED');
+      const result = CloneUtils.replaceContentInFile(filePath, 'my-sketch.v2', 'REPLACED');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
@@ -120,7 +114,7 @@ describe('Clone Integration Tests', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'const arr = sketch[1]; const b = sketchA;', 'utf8');
 
-      const result = replaceContentInFile(filePath, 'sketch[1]', 'sketch[0]');
+      const result = CloneUtils.replaceContentInFile(filePath, 'sketch[1]', 'sketch[0]');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
@@ -137,7 +131,7 @@ describe('Clone Integration Tests', () => {
         'utf8'
       );
 
-      const result = setPackageName(pkgPath, 'new-name');
+      const result = CloneUtils.setPackageName(pkgPath, 'new-name');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(pkgPath);
@@ -151,7 +145,7 @@ describe('Clone Integration Tests', () => {
       const pkgPath = path.join(tempDir, 'package.json');
       fs.writeFileSync(pkgPath, '{"name":"old"}', 'utf8');
 
-      const result = setPackageName(pkgPath, 'new');
+      const result = CloneUtils.setPackageName(pkgPath, 'new');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(pkgPath);
@@ -168,7 +162,7 @@ describe('Clone Integration Tests', () => {
         'utf8'
       );
 
-      const result = replaceHtmlTitle(htmlPath, 'New Title');
+      const result = CloneUtils.replaceHtmlTitle(htmlPath, 'New Title');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(htmlPath);
@@ -180,7 +174,7 @@ describe('Clone Integration Tests', () => {
       const htmlPath = path.join(tempDir, 'test.html');
       fs.writeFileSync(htmlPath, '<TITLE>Old</TITLE>', 'utf8');
 
-      const result = replaceHtmlTitle(htmlPath, 'New');
+      const result = CloneUtils.replaceHtmlTitle(htmlPath, 'New');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(htmlPath);
@@ -206,7 +200,7 @@ describe('Clone Integration Tests', () => {
       fs.copyFileSync(sourceFile, targetFile);
 
       // Replace content
-      const r1 = replaceContentInFile(targetFile, 'source-sketch', 'target-sketch');
+      const r1 = CloneUtils.replaceContentInFile(targetFile, 'source-sketch', 'target-sketch');
       expect(r1.isOk()).toBe(true);
 
       // Copy and transform package.json
@@ -214,7 +208,7 @@ describe('Clone Integration Tests', () => {
         path.join(sourceDir, 'package.json'),
         path.join(targetDir, 'package.json')
       );
-      const r2 = setPackageName(path.join(targetDir, 'package.json'), 'target-sketch');
+      const r2 = CloneUtils.setPackageName(path.join(targetDir, 'package.json'), 'target-sketch');
       expect(r2.isOk()).toBe(true);
 
       // Copy and transform HTML
@@ -222,7 +216,7 @@ describe('Clone Integration Tests', () => {
         path.join(sourceDir, 'src', 'source-sketch.html'),
         path.join(targetDir, 'src', 'target-sketch.html')
       );
-      const r3 = replaceHtmlTitle(
+      const r3 = CloneUtils.replaceHtmlTitle(
         path.join(targetDir, 'src', 'target-sketch.html'),
         'target-sketch'
       );
@@ -260,7 +254,7 @@ describe('Bug Catching Tests', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'name: my-sketch.v2, other: my-sketchAv2', 'utf8');
 
-      const result = replaceContentInFile(filePath, 'my-sketch.v2', 'new');
+      const result = CloneUtils.replaceContentInFile(filePath, 'my-sketch.v2', 'new');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
@@ -273,7 +267,7 @@ describe('Bug Catching Tests', () => {
       fs.writeFileSync(filePath, 'test(1) and test1', 'utf8');
 
       // With fix: should not throw, parentheses are escaped
-      const result = replaceContentInFile(filePath, 'test(1)', 'replaced');
+      const result = CloneUtils.replaceContentInFile(filePath, 'test(1)', 'replaced');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
@@ -284,7 +278,7 @@ describe('Bug Catching Tests', () => {
       const filePath = path.join(tempDir, 'test.ts');
       fs.writeFileSync(filePath, 'value* and valuex', 'utf8');
 
-      const result = replaceContentInFile(filePath, 'value*', 'new');
+      const result = CloneUtils.replaceContentInFile(filePath, 'value*', 'new');
 
       expect(result.isOk()).toBe(true);
       const content = readTempFile(filePath);
@@ -297,7 +291,7 @@ describe('Bug Catching Tests', () => {
     // These tests verify that functions now return Result.Error instead of silently failing
 
     it('replaceContentInFile returns Error on non-existent file', () => {
-      const result = replaceContentInFile('/nonexistent/path.ts', 'a', 'b');
+      const result = CloneUtils.replaceContentInFile('/nonexistent/path.ts', 'a', 'b');
 
       // With fix: returns Result.Error
       expect(result.isError()).toBe(true);
@@ -307,7 +301,7 @@ describe('Bug Catching Tests', () => {
       const pkgPath = path.join(tempDir, 'package.json');
       fs.writeFileSync(pkgPath, 'not valid json', 'utf8');
 
-      const result = setPackageName(pkgPath, 'new-name');
+      const result = CloneUtils.setPackageName(pkgPath, 'new-name');
 
       // With fix: returns Result.Error
       expect(result.isError()).toBe(true);
@@ -316,7 +310,7 @@ describe('Bug Catching Tests', () => {
     });
 
     it('replaceHtmlTitle returns Error on non-existent file', () => {
-      const result = replaceHtmlTitle('/nonexistent/path.html', 'New Title');
+      const result = CloneUtils.replaceHtmlTitle('/nonexistent/path.html', 'New Title');
 
       expect(result.isError()).toBe(true);
     });

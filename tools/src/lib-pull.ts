@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
-import path from 'path';
+import * as path from 'path';
+import * as LibPaths from './lib/paths';
 
 const sketchName = process.argv[2];
 if (!sketchName) {
@@ -7,8 +8,8 @@ if (!sketchName) {
   process.exit(1);
 }
 
-const libPath = path.resolve(__dirname, '..', 'lib');
-const sketchLibPath = path.resolve(__dirname, '..', 'sketches', sketchName, 'lib');
+const libPath = LibPaths.getLibDir();
+const sketchLibPath = path.join(LibPaths.getSketchesDir(), sketchName, 'lib');
 
 fs.copy(libPath, sketchLibPath, {
   overwrite: true,

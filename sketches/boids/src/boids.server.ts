@@ -1,4 +1,4 @@
-import type { SketchServerHandler, SketchParams } from '../../../tools/src/server.sketch.types';
+import type { SketchServerHandler, SketchParams } from '../../../tools/src/lib/types';
 
 interface FlockParams extends SketchParams {
   separationDist: number;

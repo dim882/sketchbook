@@ -16,3 +16,12 @@ export type SketchParams = Record<string, ParamValue>;
 export interface SketchServerHandler {
   getParams(fileContent: string): SketchParams;
 }
+
+/**
+ * Directory entry with name and last modified timestamp.
+ * Used by both server and UI for sketch listing.
+ */
+export interface IDir {
+  name: string;
+  lastModified: number;
+}

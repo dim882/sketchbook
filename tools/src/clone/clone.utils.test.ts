@@ -1,10 +1,10 @@
 import { it, expect, vi, describe } from 'vitest';
-import path from 'path';
+import * as path from 'path';
 
 vi.mock('fs');
 vi.mock('child_process');
 
-import * as utils from './sketch.clone.utils';
+import * as CloneUtils from './clone.utils';
 import fs from 'fs';
 import { execSync } from 'child_process';
 
@@ -22,7 +22,7 @@ function withArgv(args: string[], fn: () => void) {
 describe('getArgs', () => {
   it('returns sourceName and targetName when both provided', () => {
     withArgv(['source-sketch', 'target-sketch'], () => {
-      const result = utils.getArgs();
+      const result = CloneUtils.getArgs();
 
       expect(result).toEqual({
         sourceName: 'source-sketch',
@@ -33,7 +33,7 @@ describe('getArgs', () => {
 
   it('exits with code 1 when sourceName missing', () => {
     withArgv([], () => {
-      utils.getArgs();
+      CloneUtils.getArgs();
 
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -41,7 +41,7 @@ describe('getArgs', () => {
 
   it('exits with code 1 when targetName missing', () => {
     withArgv(['source-only'], () => {
-      utils.getArgs();
+      CloneUtils.getArgs();
 
       expect(process.exit).toHaveBeenCalledWith(1);
     });
@@ -53,7 +53,7 @@ describe('getDirectoryNames', () => {
     vi.mocked(fs.existsSync).mockImplementation((p) => p.toString().includes('existing-source'));
     vi.mocked(fs.statSync).mockReturnValue({ isDirectory: () => true } as fs.Stats);
 
-    const result = utils.getDirectoryNames('existing-source', 'new-target');
+    const result = CloneUtils.getDirectoryNames('existing-source', 'new-target');
 
     expect(result.sourceDir).toContain('existing-source');
     expect(result.targetDir).toContain('new-target');
@@ -62,7 +62,7 @@ describe('getDirectoryNames', () => {
   it('exits when source directory does not exist', () => {
     vi.mocked(fs.existsSync).mockReturnValue(false);
 
-    utils.getDirectoryNames('nonexistent', 'target');
+    CloneUtils.getDirectoryNames('nonexistent', 'target');
 
     expect(process.exit).toHaveBeenCalledWith(1);
   });
@@ -71,7 +71,7 @@ describe('getDirectoryNames', () => {
     vi.mocked(fs.existsSync).mockReturnValue(true);
     vi.mocked(fs.statSync).mockReturnValue({ isDirectory: () => true } as fs.Stats);
 
-    utils.getDirectoryNames('source', 'existing-target');
+    CloneUtils.getDirectoryNames('source', 'existing-target');
 
     expect(process.exit).toHaveBeenCalledWith(1);
   });
@@ -79,19 +79,19 @@ describe('getDirectoryNames', () => {
 
 describe('createTargetPath', () => {
   it('renames file when it starts with sourceName', () => {
-    const result = utils.createTargetPath('my-sketch.ts', '/target/dir', 'my-sketch', 'new-sketch');
+    const result = CloneUtils.createTargetPath('my-sketch.ts', '/target/dir', 'my-sketch', 'new-sketch');
 
     expect(result).toBe(path.join('/target/dir', 'new-sketch.ts'));
   });
 
   it('preserves filename when it does not start with sourceName', () => {
-    const result = utils.createTargetPath('utils.ts', '/target/dir', 'my-sketch', 'new-sketch');
+    const result = CloneUtils.createTargetPath('utils.ts', '/target/dir', 'my-sketch', 'new-sketch');
 
     expect(result).toBe(path.join('/target/dir', 'utils.ts'));
   });
 
   it('handles complex source name prefixes', () => {
-    const result = utils.createTargetPath(
+    const result = CloneUtils.createTargetPath(
       'my-sketch.utils.ts',
       '/target/dir',
       'my-sketch',
@@ -102,7 +102,7 @@ describe('createTargetPath', () => {
   });
 
   it('handles files with no extension', () => {
-    const result = utils.createTargetPath('my-sketch', '/target/dir', 'my-sketch', 'new-sketch');
+    const result = CloneUtils.createTargetPath('my-sketch', '/target/dir', 'my-sketch', 'new-sketch');
 
     expect(result).toBe(path.join('/target/dir', 'new-sketch'));
   });
@@ -110,35 +110,35 @@ describe('createTargetPath', () => {
 
 describe('isTextFile', () => {
   it('returns true for .ts files', () => {
-    expect(utils.isTextFile('file.ts')).toBe(true);
+    expect(CloneUtils.isTextFile('file.ts')).toBe(true);
   });
 
   it('returns true for .js files', () => {
-    expect(utils.isTextFile('file.js')).toBe(true);
+    expect(CloneUtils.isTextFile('file.js')).toBe(true);
   });
 
   it('returns true for .html files', () => {
-    expect(utils.isTextFile('file.html')).toBe(true);
+    expect(CloneUtils.isTextFile('file.html')).toBe(true);
   });
 
   it('returns true for .css files', () => {
-    expect(utils.isTextFile('file.css')).toBe(true);
+    expect(CloneUtils.isTextFile('file.css')).toBe(true);
   });
 
   it('returns true for .md files', () => {
-    expect(utils.isTextFile('file.md')).toBe(true);
+    expect(CloneUtils.isTextFile('file.md')).toBe(true);
   });
 
   it('returns true for .json files', () => {
-    expect(utils.isTextFile('file.json')).toBe(true);
+    expect(CloneUtils.isTextFile('file.json')).toBe(true);
   });
 
   it('returns false for .png files', () => {
-    expect(utils.isTextFile('file.png')).toBe(false);
+    expect(CloneUtils.isTextFile('file.png')).toBe(false);
   });
 
   it('returns false for files with no extension', () => {
-    expect(utils.isTextFile('file')).toBe(false);
+    expect(CloneUtils.isTextFile('file')).toBe(false);
   });
 });
 
@@ -147,7 +147,7 @@ describe('replaceContentInFile', () => {
     vi.mocked(fs.readFileSync).mockReturnValue('import "old-name";\nconst x = "old-name";');
     vi.mocked(fs.writeFileSync).mockImplementation(() => {});
 
-    const result = utils.replaceContentInFile('/path/file.ts', 'old-name', 'new-name');
+    const result = CloneUtils.replaceContentInFile('/path/file.ts', 'old-name', 'new-name');
 
     expect(result.isOk()).toBe(true);
     result.match({
@@ -166,7 +166,7 @@ describe('replaceContentInFile', () => {
     vi.mocked(fs.readFileSync).mockReturnValue('no matches here');
     vi.mocked(fs.writeFileSync).mockImplementation(() => {});
 
-    const result = utils.replaceContentInFile('/path/file.ts', 'old-name', 'new-name');
+    const result = CloneUtils.replaceContentInFile('/path/file.ts', 'old-name', 'new-name');
 
     expect(result.isOk()).toBe(true);
     result.match({
@@ -182,7 +182,7 @@ describe('replaceContentInFile', () => {
       throw new Error('ENOENT');
     });
 
-    const result = utils.replaceContentInFile('/path/file.ts', 'old', 'new');
+    const result = CloneUtils.replaceContentInFile('/path/file.ts', 'old', 'new');
 
     expect(result.isError()).toBe(true);
   });
@@ -195,7 +195,7 @@ describe('setPackageName', () => {
     );
     vi.mocked(fs.writeFileSync).mockImplementation(() => {});
 
-    const result = utils.setPackageName('/path/package.json', 'new-name');
+    const result = CloneUtils.setPackageName('/path/package.json', 'new-name');
 
     expect(result.isOk()).toBe(true);
 
@@ -210,7 +210,7 @@ describe('setPackageName', () => {
     vi.mocked(fs.readFileSync).mockReturnValue('{"name":"old"}');
     vi.mocked(fs.writeFileSync).mockImplementation(() => {});
 
-    utils.setPackageName('/path/package.json', 'new');
+    CloneUtils.setPackageName('/path/package.json', 'new');
 
     const writeCall = vi.mocked(fs.writeFileSync).mock.calls[0];
 
@@ -222,7 +222,7 @@ describe('setPackageName', () => {
       throw new Error('ENOENT');
     });
 
-    const result = utils.setPackageName('/path/package.json', 'new');
+    const result = CloneUtils.setPackageName('/path/package.json', 'new');
 
     expect(result.isError()).toBe(true);
   });
@@ -230,7 +230,7 @@ describe('setPackageName', () => {
   it('returns Error when JSON is invalid', () => {
     vi.mocked(fs.readFileSync).mockReturnValue('not valid json');
 
-    const result = utils.setPackageName('/path/package.json', 'new');
+    const result = CloneUtils.setPackageName('/path/package.json', 'new');
 
     expect(result.isError()).toBe(true);
   });
@@ -243,7 +243,7 @@ describe('replaceHtmlTitle', () => {
     );
     vi.mocked(fs.writeFileSync).mockImplementation(() => {});
 
-    const result = utils.replaceHtmlTitle('/path/file.html', 'New Title');
+    const result = CloneUtils.replaceHtmlTitle('/path/file.html', 'New Title');
 
     expect(result.isOk()).toBe(true);
 
@@ -260,7 +260,7 @@ describe('replaceHtmlTitle', () => {
     );
     vi.mocked(fs.writeFileSync).mockImplementation(() => {});
 
-    const result = utils.replaceHtmlTitle('/path/file.html', 'New');
+    const result = CloneUtils.replaceHtmlTitle('/path/file.html', 'New');
 
     expect(result.isOk()).toBe(true);
 
@@ -276,7 +276,7 @@ describe('replaceHtmlTitle', () => {
       throw new Error('ENOENT');
     });
 
-    const result = utils.replaceHtmlTitle('/path/file.html', 'New');
+    const result = CloneUtils.replaceHtmlTitle('/path/file.html', 'New');
 
     expect(result.isError()).toBe(true);
   });
@@ -286,7 +286,7 @@ describe('install', () => {
   it('returns Ok and runs pnpm install in target directory', () => {
     vi.mocked(execSync).mockImplementation(() => Buffer.from(''));
 
-    const result = utils.install('/path/to/target');
+    const result = CloneUtils.install('/path/to/target');
 
     expect(result.isOk()).toBe(true);
 
@@ -301,7 +301,7 @@ describe('install', () => {
       throw new Error('command failed');
     });
 
-    const result = utils.install('/path/to/target');
+    const result = CloneUtils.install('/path/to/target');
 
     expect(result.isError()).toBe(true);
   });

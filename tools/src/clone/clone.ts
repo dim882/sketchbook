@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
-import path from 'path';
-import { buildSketch } from './utils/sketch.build.utils';
-import * as utils from './utils/sketch.clone.utils';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as LibBuild from '../lib/build';
+import * as CloneUtils from './clone.utils';
 
 const EXCLUDED_FILES = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
 
-const { sourceName, targetName } = utils.getArgs();
-const { sourceDir, targetDir } = utils.getDirectoryNames(sourceName, targetName);
+const { sourceName, targetName } = CloneUtils.getArgs();
+const { sourceDir, targetDir } = CloneUtils.getDirectoryNames(sourceName, targetName);
 
 // Track errors during clone
 const errors: Error[] = [];
@@ -16,7 +16,7 @@ const errors: Error[] = [];
 copyDir(sourceDir, targetDir);
 
 // Install dependencies
-utils.install(targetDir).match({
+CloneUtils.install(targetDir).match({
   Ok: () => console.log(`Sketch './sketches/${targetName}' created successfully.`),
   Error: (err) => {
     errors.push(err);
@@ -25,7 +25,7 @@ utils.install(targetDir).match({
 });
 
 // Build sketch
-buildSketch(targetDir).match({
+LibBuild.buildSketch(targetDir).match({
   Ok: () => console.log(`Sketch './sketches/${targetName}' built successfully.`),
   Error: (err) => {
     errors.push(err);
@@ -52,7 +52,7 @@ function copyDir(source: string, target: string) {
     }
 
     const sourcePath = path.join(source, item);
-    const targetPath = utils.createTargetPath(item, target, sourceName, targetName);
+    const targetPath = CloneUtils.createTargetPath(item, target, sourceName, targetName);
     const stats = fs.statSync(sourcePath);
 
     if (stats.isDirectory()) {
@@ -64,7 +64,7 @@ function copyDir(source: string, target: string) {
       const extName = path.extname(targetPath);
 
       if (baseName === 'package.json') {
-        utils.setPackageName(targetPath, targetName).match({
+        CloneUtils.setPackageName(targetPath, targetName).match({
           Ok: () => { },
           Error: (err) => {
             errors.push(err);
@@ -72,22 +72,22 @@ function copyDir(source: string, target: string) {
           },
         });
       } else if (extName === '.html') {
-        utils.replaceHtmlTitle(targetPath, targetName).match({
+        CloneUtils.replaceHtmlTitle(targetPath, targetName).match({
           Ok: () => { },
           Error: (err) => {
             errors.push(err);
             console.error(`Failed to update HTML title in ${targetPath}: ${err.message}`);
           },
         });
-        utils.replaceContentInFile(targetPath, sourceName, targetName).match({
+        CloneUtils.replaceContentInFile(targetPath, sourceName, targetName).match({
           Ok: () => { },
           Error: (err) => {
             errors.push(err);
             console.error(`Failed to replace content in ${targetPath}: ${err.message}`);
           },
         });
-      } else if (utils.isTextFile(targetPath)) {
-        utils.replaceContentInFile(targetPath, sourceName, targetName).match({
+      } else if (CloneUtils.isTextFile(targetPath)) {
+        CloneUtils.replaceContentInFile(targetPath, sourceName, targetName).match({
           Ok: () => { },
           Error: (err) => {
             errors.push(err);

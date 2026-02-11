@@ -1,5 +1,5 @@
 import { IFlockParams } from './boid-fuzz.params';
-import type { SketchServerHandler } from '../../../tools/src/server.sketch.types';
+import type { SketchServerHandler } from '../../../tools/src/lib/types';
 
 export interface IAllParams extends IFlockParams, Record<string, unknown> {
   BOID_COUNT: number;

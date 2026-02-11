@@ -2,11 +2,9 @@ import { h, FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import { navigateToSketch } from './NavUtils';
 import styles from './SketchList.module.css';
+import type { IDir } from '../lib/types';
 
-export interface IDir {
-  name: string;
-  lastModified: number;
-}
+export type { IDir };
 
 export interface SketchListProps {
   dirs: IDir[];

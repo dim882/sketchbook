@@ -1,8 +1,9 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
 import { execSync } from 'child_process';
 import { Result } from '@swan-io/boxed';
-import { escapeRegex } from './string';
+import * as LibString from '../lib/string';
+import * as LibPaths from '../lib/paths';
 
 const FILE_EXTENSIONS = ['.ts', '.js', '.html', '.css', '.md', '.json', '.config.js'];
 
@@ -21,8 +22,9 @@ export function getArgs() {
 }
 
 export function getDirectoryNames(sourceName: string, targetName: string) {
-  const sourceDir = path.join(__dirname, '../../sketches', sourceName);
-  const targetDir = path.join(__dirname, '../../sketches', targetName);
+  const sketchesDir = LibPaths.getSketchesDir();
+  const sourceDir = path.join(sketchesDir, sourceName);
+  const targetDir = path.join(sketchesDir, targetName);
 
   if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
     console.error(`Source sketch directory not found: ${sourceDir}`);
@@ -66,7 +68,7 @@ export function replaceContentInFile(
   return Result.fromExecution(() => {
     const content = fs.readFileSync(filePath, 'utf8');
     // Fix: escape regex special characters to treat searchValue as literal string
-    const escapedSearch = escapeRegex(searchValue);
+    const escapedSearch = LibString.escapeRegex(searchValue);
     const updatedContent = content.replace(new RegExp(escapedSearch, 'g'), replaceValue);
 
     if (content !== updatedContent) {

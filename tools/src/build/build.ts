@@ -1,8 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import { buildSketch } from './utils/sketch.build.utils';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as LibPaths from '../lib/paths';
+import * as LibBuild from '../lib/build';
 
-const SKETCHES_DIR = path.resolve(process.cwd(), '../sketches');
+const SKETCHES_DIR = LibPaths.getSketchesDir();
 const EXCLUDED_DIRS = ['.git', 'node_modules'];
 
 const getAllSketchDirectories = (directory: string): string[] => {
@@ -22,7 +23,7 @@ const buildAllSketches = (): void => {
 
   console.log(`Found ${sketchDirectories.length} sketches to build`);
 
-  sketchDirectories.forEach(buildSketch);
+  sketchDirectories.forEach(LibBuild.buildSketch);
 
   console.log('All sketches built successfully');
 };

@@ -3,10 +3,10 @@ import * as path from 'node:path';
 import { rollup, type RollupOptions, type OutputOptions } from '@rollup/wasm-node';
 import { Result } from '@swan-io/boxed';
 
-import { findNearestConfig } from './utils/watch.utils';
+import * as LibPaths from '../lib/paths';
+import * as WatchUtils from './watch.utils';
 
-const ROOT_DIR = path.resolve(__dirname, '../../');
-const SKETCHES_DIR = path.join(ROOT_DIR, 'sketches');
+const SKETCHES_DIR = LibPaths.getSketchesDir();
 
 // Debounce settings
 const DEBOUNCE_MS = 300;
@@ -15,7 +15,7 @@ const pendingBuilds = new Map<string, NodeJS.Timeout>();
 const watcher = makeWatcher(SKETCHES_DIR);
 
 watcher.on('all', (event, filePath) => {
-  const configPath = findNearestConfig(path.dirname(filePath));
+  const configPath = WatchUtils.findNearestConfig(path.dirname(filePath));
 
   if (configPath) {
     // Debounce: cancel pending build for this config and schedule a new one
