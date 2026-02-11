@@ -6,25 +6,14 @@ import * as LibBuild from '../lib/build';
 const SKETCHES_DIR = LibPaths.getSketchesDir();
 const EXCLUDED_DIRS = ['.git', 'node_modules'];
 
-const getAllSketchDirectories = (directory: string): string[] => {
-  if (!fs.existsSync(directory)) {
-    return [];
-  }
-
-  const items = fs.readdirSync(directory, { withFileTypes: true });
-
-  return items
-    .filter((item) => item.isDirectory() && !EXCLUDED_DIRS.includes(item.name))
-    .map((item) => path.join(directory, item.name));
-};
-
 const buildAllSketches = (): void => {
   const sketchDirectories = getAllSketchDirectories(SKETCHES_DIR);
 
   console.log(`Found ${sketchDirectories.length} sketches to build`);
 
-  const results = sketchDirectories.map(LibBuild.buildSketch);
-  const failures = results.filter((r) => r.isError());
+  const failures = sketchDirectories
+    .map(LibBuild.buildSketch)
+    .filter((r) => r.isError());
 
   if (failures.length > 0) {
     console.error(`${failures.length} sketch(es) failed to build`);
@@ -33,5 +22,16 @@ const buildAllSketches = (): void => {
 
   console.log('All sketches built successfully');
 };
+
+const getAllSketchDirectories = (directory: string): string[] => {
+  if (!fs.existsSync(directory)) {
+    return [];
+  }
+
+  return fs.readdirSync(directory, { withFileTypes: true })
+    .filter((item) => item.isDirectory() && !EXCLUDED_DIRS.includes(item.name))
+    .map((item) => path.join(directory, item.name));
+};
+
 
 buildAllSketches();
