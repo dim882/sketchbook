@@ -43,6 +43,20 @@ export const handleError = (res: Response) => (err: ServerError) => {
   res.status(err.status).json({ error: err.message });
 };
 
+interface IInitialData {
+  dirs: IDir[];
+  initialSketch?: string;
+}
+
+const injectInitialData = (template: string, data: IInitialData) =>
+  template.replace('${initialData}', JSON.stringify(data));
+
+const applyTemplateParams = (template: string, params: Record<string, string>) =>
+  Object.entries(params).reduce(
+    (tpl, [key, value]) => tpl.replace(new RegExp(`\\{\\{${escapeRegex(key)}\\}\\}`, 'g'), value),
+    template
+  );
+
 const sketchesPath = path.join(__dirname, '../../../sketches');
 
 export interface SketchPaths {
@@ -173,12 +187,10 @@ export function requireValidSketchName(req: Request, res: Response, next: NextFu
 
 export function renderMainPage(initialSketch?: string): Future<Result<string, ServerError>> {
   return readFile(paths.uiIndex())
-    .mapError((err) =>
-      serverError('Failed to read UI template', err)
-    )
-    .flatMapOk((htmlTemplate) =>
-      getSketchDirsData(paths.sketches()).mapOk((dirs) =>
-        htmlTemplate.replace('${initialData}', JSON.stringify({ dirs, initialSketch, })))
+    .mapError((err) => serverError('Failed to read UI template', err))
+    .flatMapOk((template) =>
+      getSketchDirsData(paths.sketches())
+        .mapOk((dirs) => injectInitialData(template, { dirs, initialSketch }))
     );
 }
 
@@ -196,15 +208,7 @@ export function updateSketchParams(
         : serverError('Failed to read template', err)
     )
     .flatMapOk((template) =>
-      writeFile(
-        sketchPaths.params,
-        Object.entries(params).reduce(
-          (tpl, [key, value]) =>
-            tpl.replace(new RegExp(`\\{\\{${escapeRegex(key)}\\}\\}`, 'g'), value),
-          template
-        )
-      ).mapError((err) =>
-        serverError('Failed to write parameters', err)
-      )
+      writeFile(sketchPaths.params, applyTemplateParams(template, params))
+        .mapError((err) => serverError('Failed to write parameters', err))
     );
 }
