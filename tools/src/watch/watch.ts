@@ -53,9 +53,7 @@ function makeWatcher(dir: string) {
     alwaysStat: true,
     depth: 99,
   };
-  const watchPaths = [dir, path.join(dir, './**/*')];
-
-  const watcher = chokidar.watch(watchPaths, watchOptions);
+  const watcher = chokidar.watch([dir, path.join(dir, './**/*')], watchOptions);
 
   // Add debug logging
   watcher
@@ -74,11 +72,11 @@ function makeWatcher(dir: string) {
  */
 const runRollup = async (configPath: string): Promise<Result<void, Error>> => {
   try {
-    const configDir = path.dirname(configPath);
-    const config = await getRollupConfig(configPath);
-
     // Convert relative input path to absolute
-    const absoluteConfig = resolveConfigPaths(config, configDir);
+    const absoluteConfig = resolveConfigPaths(
+      await getRollupConfig(configPath),
+      path.dirname(configPath)
+    );
 
     const bundle = await rollup(absoluteConfig);
 
@@ -154,8 +152,9 @@ const logError = (error: Error) => {
  */
 async function getRollupConfig(configPath: string): Promise<RollupOptions> {
   // Cache bust by adding timestamp to URL
-  const configUrl = `${configPath}?update=${Date.now()}`;
-  const configModule = (await import(configUrl)) as { default?: RollupOptions } | RollupOptions;
+  const configModule = (await import(`${configPath}?update=${Date.now()}`)) as
+    | { default?: RollupOptions }
+    | RollupOptions;
 
   // Config can be exported as default or as the module itself
   return 'default' in configModule && configModule.default

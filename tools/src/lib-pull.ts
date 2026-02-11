@@ -21,11 +21,10 @@ const sketchName = validateArgs(process.argv).match({
   },
 });
 
-const libPath = LibPaths.getLibDir();
 const sketchLibPath = path.join(LibPaths.getSketchesDir(), sketchName, 'lib');
 
 Future.fromPromise(
-  fs.copy(libPath, sketchLibPath, {
+  fs.copy(LibPaths.getLibDir(), sketchLibPath, {
     overwrite: true,
     filter: (src: string) => !src.endsWith('package.json'),
   })

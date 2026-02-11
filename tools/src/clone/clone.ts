@@ -66,12 +66,9 @@ function copyDir(source: string, target: string) {
     } else if (stats.isFile()) {
       fs.copyFileSync(sourcePath, targetPath);
 
-      const extName = path.extname(targetPath);
-      const fileName = path.basename(targetPath);
-
-      if (fileName === 'package.json') {
+      if (path.basename(targetPath) === 'package.json') {
         collectError(CloneUtils.setPackageName(targetPath, targetName), 'Failed to update package.json');
-      } else if (extName === '.html') {
+      } else if (path.extname(targetPath) === '.html') {
         collectError(CloneUtils.replaceHtmlTitle(targetPath, targetName), `Failed to update HTML title in ${targetPath}`);
         collectError(CloneUtils.replaceContentInFile(targetPath, sourceName, targetName), `Failed to replace content in ${targetPath}`);
       } else if (CloneUtils.isTextFile(targetPath)) {

@@ -74,9 +74,7 @@ export function createTargetPath(
   sourceName: string,
   targetName: string
 ): string {
-  const targetFileName = createTargetName(item, sourceName, targetName);
-
-  return path.join(targetDir, targetFileName);
+  return path.join(targetDir, createTargetName(item, sourceName, targetName));
 }
 
 function createTargetName(item: string, sourceName: string, targetName: string): string {
@@ -111,10 +109,8 @@ export function setPackageName(
   targetName: string
 ): Result<void, Error> {
   return Result.fromExecution(() => {
-    const packageData = fs.readFileSync(packageJsonPath, 'utf8');
-    const packageJson = JSON.parse(packageData);
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     packageJson.name = targetName;
-
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
   });
 }
@@ -132,9 +128,10 @@ export function replaceHtmlTitle(
   newTitle: string
 ): Result<void, Error> {
   return Result.fromExecution(() => {
-    const content = fs.readFileSync(filePath, 'utf8');
-    const newContent = content.replace(/<title>.*?<\/title>/i, `<title>${newTitle}</title>`);
-
-    fs.writeFileSync(filePath, newContent, 'utf8');
+    fs.writeFileSync(
+      filePath,
+      fs.readFileSync(filePath, 'utf8').replace(/<title>.*?<\/title>/i, `<title>${newTitle}</title>`),
+      'utf8'
+    );
   });
 }
