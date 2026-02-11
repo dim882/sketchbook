@@ -7,17 +7,15 @@ import { SketchServerHandler, SketchParams } from '../server.sketch.types';
 import { IDir } from '../ui/SketchList';
 import { escapeRegex } from './string';
 
-/**
- * Type guard for Node.js ErrnoException.
- * Use instead of type assertions like `(err as NodeJS.ErrnoException)`.
- */
 export function isErrnoException(err: unknown): err is NodeJS.ErrnoException {
   return err instanceof Error && 'code' in err;
 }
 
 const readFile = (filePath: string) => Future.fromPromise(fs.readFile(filePath, 'utf-8'));
+
 const writeFile = (filePath: string, content: string) =>
   Future.fromPromise(fs.writeFile(filePath, content, 'utf-8'));
+
 const readDir = (dirPath: string) =>
   Future.fromPromise(fs.readdir(dirPath, { withFileTypes: true }));
 
@@ -28,8 +26,14 @@ export interface ServerError {
 }
 
 const notFound = (message: string): ServerError => ({ status: 404, message });
+
 const badRequest = (message: string): ServerError => ({ status: 400, message });
-const serverError = (message: string, cause?: Error): ServerError => ({ status: 500, message, cause });
+
+const serverError = (message: string, cause?: unknown): ServerError => ({
+  status: 500,
+  message,
+  cause: cause instanceof Error ? cause : undefined,
+});
 
 export const handleError = (res: Response) => (err: ServerError) => {
   if (err.cause) {
@@ -38,7 +42,6 @@ export const handleError = (res: Response) => (err: ServerError) => {
 
   res.status(err.status).json({ error: err.message });
 };
-
 
 const sketchesPath = path.join(__dirname, '../../../sketches');
 
@@ -90,7 +93,7 @@ function getLastModifiedTime(dirPath: string): Future<Result<number, ServerError
     })
   )
     .mapError((err) =>
-      serverError(`Failed to glob files in ${dirPath}`, err instanceof Error ? err : undefined)
+      serverError(`Failed to glob files in ${dirPath}`, err)
     )
     .flatMapOk((tsFiles) => {
       if (tsFiles.length === 0) {
@@ -99,7 +102,7 @@ function getLastModifiedTime(dirPath: string): Future<Result<number, ServerError
 
       return Future.fromPromise(Promise.all(tsFiles.map((file) => fs.stat(file))))
         .mapError((err) =>
-          serverError('Failed to stat files', err instanceof Error ? err : undefined)
+          serverError('Failed to stat files', err)
         )
         .mapOk((tsStats) => Math.max(...tsStats.map((stat) => stat.mtime.getTime())));
     });
@@ -112,7 +115,7 @@ function getLastModifiedTime(dirPath: string): Future<Result<number, ServerError
 export function getSketchDirsData(sketchesDir: string): Future<Result<IDir[], ServerError>> {
   return readDir(sketchesDir)
     .mapError((err) =>
-      serverError(`Failed to read sketches directory`, err instanceof Error ? err : undefined)
+      serverError(`Failed to read sketches directory`, err)
     )
     .flatMapOk((files) => {
       const futures = files
@@ -141,7 +144,7 @@ function getSketchParams(sketchName: string): Future<Result<SketchParams, Server
       if (isErrnoException(err) && err.code === 'ENOENT') {
         return notFound(`Parameters not found for sketch '${sketchName}'`);
       }
-      return serverError('Failed to read parameters', err instanceof Error ? err : undefined);
+      return serverError('Failed to read parameters', err);
     })
     .flatMapOk((fileContent) =>
       Future.fromPromise(import(sketchPaths.serverHandler) as Promise<{ default: SketchServerHandler }>)
@@ -149,7 +152,7 @@ function getSketchParams(sketchName: string): Future<Result<SketchParams, Server
           if (isErrnoException(err) && err.code === 'MODULE_NOT_FOUND') {
             return notFound(`Server handler not found for sketch '${sketchName}'`);
           }
-          return serverError('Failed to load server handler', err instanceof Error ? err : undefined);
+          return serverError('Failed to load server handler', err);
         })
         .mapOk((module) => module.default.getParams(fileContent))
     );
@@ -199,7 +202,7 @@ export function requireValidSketchName(req: Request, res: Response, next: NextFu
 export function renderMainPage(sketchName?: string): Future<Result<string, ServerError>> {
   return readFile(paths.uiIndex())
     .mapError((err) =>
-      serverError('Failed to read UI template', err instanceof Error ? err : undefined)
+      serverError('Failed to read UI template', err)
     )
     .flatMapOk((htmlTemplate) =>
       getSketchDirsData(paths.sketches()).mapOk((dirs) =>
@@ -237,7 +240,7 @@ export function updateSketchParams(
       if (isErrnoException(err) && err.code === 'ENOENT') {
         return notFound(`Template not found for sketch '${sketchName}'`);
       }
-      return serverError('Failed to read template', err instanceof Error ? err : undefined);
+      return serverError('Failed to read template', err);
     })
     .flatMapOk((template) =>
       writeFile(
@@ -248,7 +251,7 @@ export function updateSketchParams(
           template
         )
       ).mapError((err) =>
-        serverError('Failed to write parameters', err instanceof Error ? err : undefined)
+        serverError('Failed to write parameters', err)
       )
     );
 }
