@@ -23,15 +23,12 @@ const buildAllSketches = (): void => {
   console.log('All sketches built successfully');
 };
 
-const getAllSketchDirectories = (directory: string): string[] => {
-  if (!fs.existsSync(directory)) {
-    return [];
-  }
-
-  return fs.readdirSync(directory, { withFileTypes: true })
-    .filter((item) => item.isDirectory() && !EXCLUDED_DIRS.includes(item.name))
-    .map((item) => path.join(directory, item.name));
-};
+const getAllSketchDirectories = (directory: string): string[] =>
+  fs.existsSync(directory)
+    ? fs.readdirSync(directory, { withFileTypes: true })
+        .filter((item) => item.isDirectory() && !EXCLUDED_DIRS.includes(item.name))
+        .map((item) => path.join(directory, item.name))
+    : [];
 
 
 buildAllSketches();
