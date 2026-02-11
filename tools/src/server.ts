@@ -7,6 +7,7 @@ import {
   fetchSketchParams,
   updateSketchParams,
   handleError,
+  isErrnoException,
 } from './utils/server.utils';
 
 const app = express();
@@ -44,7 +45,7 @@ app.get('/sketches/:sketchName', requireValidSketchName, (req, res) => {
   res.sendFile(paths.sketch(sketchName).html, (err) => {
     if (err) {
       // Check if file doesn't exist vs other errors
-      if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+      if (isErrnoException(err) && err.code === 'ENOENT') {
         res.status(404).json({ error: `Sketch '${sketchName}' not found` });
       } else {
         console.error('Error sending sketch file:', err);
