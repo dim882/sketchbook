@@ -12,9 +12,9 @@ export type BuildResult = {
 export const getAllSketchDirectories = (directory: string): string[] =>
   fs.existsSync(directory)
     ? fs
-        .readdirSync(directory, { withFileTypes: true })
-        .filter((item) => item.isDirectory() && !EXCLUDED_DIRS.includes(item.name))
-        .map((item) => path.join(directory, item.name))
+      .readdirSync(directory, { withFileTypes: true })
+      .filter((item) => item.isDirectory() && !EXCLUDED_DIRS.includes(item.name))
+      .map((item) => path.join(directory, item.name))
     : [];
 
 export const buildAllSketches = (
@@ -23,5 +23,9 @@ export const buildAllSketches = (
 ): BuildResult => {
   const directories = getAllSketchDirectories(sketchesDir);
   const failures = directories.map(buildFn).filter((r) => r.isError()).length;
-  return { total: directories.length, failures };
+
+  return {
+    total: directories.length,
+    failures
+  };
 };
