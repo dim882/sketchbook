@@ -124,7 +124,7 @@ export function getSketchDirsData(sketchesDir: string): Future<Result<IDir[], Se
     .mapOk((dirs) => dirs.sort((a, b) => a.name.localeCompare(b.name)));
 }
 
-function getSketchParams(sketchName: string): Future<Result<SketchParams, ServerError>> {
+export function fetchSketchParams(sketchName: string): Future<Result<SketchParams, ServerError>> {
   const sketchPaths = paths.sketch(sketchName);
 
   return readFile(sketchPaths.params)
@@ -143,7 +143,6 @@ function getSketchParams(sketchName: string): Future<Result<SketchParams, Server
         .mapOk((module) => module.default.getParams(fileContent))
     );
 }
-
 
 // Validates a sketch name to prevent path traversal attacks.
 export function validateSketchName(name: unknown): Result<string, string> {
@@ -179,10 +178,6 @@ export function requireValidSketchName(req: Request, res: Response, next: NextFu
   });
 }
 
-/**
- * Render the main page with sketch directory data.
- * @returns Future with HTML string, or ServerError on failure
- */
 export function renderMainPage(sketchName?: string): Future<Result<string, ServerError>> {
   return readFile(paths.uiIndex())
     .mapError((err) =>
@@ -199,14 +194,6 @@ export function renderMainPage(sketchName?: string): Future<Result<string, Serve
         )
       )
     );
-}
-
-/**
- * Fetch parameters for a sketch (public API).
- * @returns Future with parsed parameters, or ServerError on failure
- */
-export function fetchSketchParams(sketchName: string): Future<Result<SketchParams, ServerError>> {
-  return getSketchParams(sketchName);
 }
 
 /**
