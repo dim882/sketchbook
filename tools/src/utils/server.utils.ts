@@ -103,13 +103,11 @@ function getLastModifiedTime(dirPath: string): Future<Result<number, ServerError
     })
   ).mapError((err) => serverError(`Failed to glob files in ${dirPath}`, err))
     .flatMapOk((tsFiles) => {
-      if (tsFiles.length === 0) {
-        return Future.value(Result.Ok(0));
-      }
-
-      return Future.fromPromise(Promise.all(tsFiles.map((file) => fs.stat(file))))
-        .mapError((err) => serverError('Failed to stat files', err))
-        .mapOk((tsStats) => Math.max(...tsStats.map((stat) => stat.mtime.getTime())));
+      return (tsFiles.length === 0) ?
+        Future.value(Result.Ok(0)) :
+        Future.fromPromise(Promise.all(tsFiles.map((file) => fs.stat(file))))
+          .mapError((err) => serverError('Failed to stat files', err))
+          .mapOk((tsStats) => Math.max(...tsStats.map((stat) => stat.mtime.getTime())));
     });
 }
 
