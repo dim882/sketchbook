@@ -5,7 +5,7 @@ import { Result, Future } from '@swan-io/boxed';
 
 import * as LibTypes from '../../lib/types';
 import * as ServerPaths from '../server.paths';
-import * as ServerMiddleware from '../server.middleware';
+import * as ServerErrors from '../server.errors';
 import * as ServerUtils from '../server.utils';
 
 // --- Route Handlers ---
@@ -43,9 +43,9 @@ function getLastModifiedTime(dirPath: string): Future<number> {
     );
 }
 
-export function getSketchDirsData(sketchesDir: string): Future<Result<LibTypes.IDir[], ServerMiddleware.ServerError>> {
+export function getSketchDirsData(sketchesDir: string): Future<Result<LibTypes.IDir[], ServerErrors.ServerError>> {
   return ServerUtils.readDir(sketchesDir)
-    .mapError((err) => ServerMiddleware.serverError(`Failed to read sketches directory`, err))
+    .mapError((err) => ServerErrors.serverError(`Failed to read sketches directory`, err))
     .flatMapOk((files) =>
       Future.all(
         files
@@ -58,9 +58,9 @@ export function getSketchDirsData(sketchesDir: string): Future<Result<LibTypes.I
     );
 }
 
-function renderMainPage(initialSketch?: string): Future<Result<string, ServerMiddleware.ServerError>> {
+function renderMainPage(initialSketch?: string): Future<Result<string, ServerErrors.ServerError>> {
   return ServerUtils.readFile(ServerPaths.paths.uiIndex())
-    .mapError((err) => ServerMiddleware.serverError('Failed to read UI template', err))
+    .mapError((err) => ServerErrors.serverError('Failed to read UI template', err))
     .flatMapOk((template) =>
       getSketchDirsData(ServerPaths.paths.sketches())
         .mapOk((dirs) => injectInitialData(template, { dirs, initialSketch }))

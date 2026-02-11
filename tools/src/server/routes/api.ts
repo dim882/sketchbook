@@ -2,7 +2,7 @@ import { Result, Future } from '@swan-io/boxed';
 
 import * as LibTypes from '../../lib/types';
 import * as ServerPaths from '../server.paths';
-import * as ServerMiddleware from '../server.middleware';
+import * as ServerErrors from '../server.errors';
 import * as ServerUtils from '../server.utils';
 
 // --- Route Handlers ---
@@ -32,7 +32,7 @@ const applyTemplateParams = (template: string, params: Record<string, string>) =
     template
   );
 
-function fetchSketchParams(sketchName: string): Future<Result<LibTypes.SketchParams, ServerMiddleware.ServerError>> {
+function fetchSketchParams(sketchName: string): Future<Result<LibTypes.SketchParams, ServerErrors.ServerError>> {
   const sketchPaths = ServerPaths.paths.sketch(sketchName);
 
   console.log(`[fetchSketchParams] Loading params for sketch: ${sketchName}`);
@@ -41,9 +41,9 @@ function fetchSketchParams(sketchName: string): Future<Result<LibTypes.SketchPar
     .tapOk(() => console.log(`[fetchSketchParams] Read params file: ${sketchPaths.params}`))
     .tapError((err) => console.log(`[fetchSketchParams] Failed to read params file:`, err))
     .mapError((err: unknown) =>
-      ServerMiddleware.isErrnoException(err) && err.code === 'ENOENT'
-        ? ServerMiddleware.notFound(`Parameters not found for sketch '${sketchName}'`)
-        : ServerMiddleware.serverError('Failed to read parameters', err)
+      ServerErrors.isErrnoException(err) && err.code === 'ENOENT'
+        ? ServerErrors.notFound(`Parameters not found for sketch '${sketchName}'`)
+        : ServerErrors.serverError('Failed to read parameters', err)
     )
     .flatMapOk((fileContent) =>
       Future.fromPromise(import(sketchPaths.serverHandler))
@@ -52,20 +52,20 @@ function fetchSketchParams(sketchName: string): Future<Result<LibTypes.SketchPar
         )
         .tapError((err) => console.log(`[fetchSketchParams] Failed to load server handler:`, err))
         .mapError((err: unknown) =>
-          ServerMiddleware.isErrnoException(err) && err.code === 'MODULE_NOT_FOUND'
-            ? ServerMiddleware.notFound(`Server handler not found for sketch '${sketchName}'`)
-            : ServerMiddleware.serverError('Failed to load server handler', err)
+          ServerErrors.isErrnoException(err) && err.code === 'MODULE_NOT_FOUND'
+            ? ServerErrors.notFound(`Server handler not found for sketch '${sketchName}'`)
+            : ServerErrors.serverError('Failed to load server handler', err)
         )
         .mapOkToResult((module) =>
           !isValidServerHandler(module)
             ? Result.Error(
-              ServerMiddleware.serverError(
+              ServerErrors.serverError(
                 `Server handler for sketch '${sketchName}' is invalid: must export default object with getParams function`
               )
             )
             : Result.fromExecution(() => module.default.getParams(fileContent))
               .mapError((err) =>
-                ServerMiddleware.serverError(`Failed to parse params for sketch '${sketchName}'`, err))
+                ServerErrors.serverError(`Failed to parse params for sketch '${sketchName}'`, err))
         )
     );
 }
@@ -73,17 +73,17 @@ function fetchSketchParams(sketchName: string): Future<Result<LibTypes.SketchPar
 function updateSketchParams(
   sketchName: string,
   params: Record<string, string>
-): Future<Result<void, ServerMiddleware.ServerError>> {
+): Future<Result<void, ServerErrors.ServerError>> {
   const sketchPaths = ServerPaths.paths.sketch(sketchName);
 
   return ServerUtils.readFile(sketchPaths.template)
     .mapError((err: unknown) =>
-      ServerMiddleware.isErrnoException(err) && err.code === 'ENOENT'
-        ? ServerMiddleware.notFound(`Template not found for sketch '${sketchName}'`)
-        : ServerMiddleware.serverError('Failed to read template', err)
+      ServerErrors.isErrnoException(err) && err.code === 'ENOENT'
+        ? ServerErrors.notFound(`Template not found for sketch '${sketchName}'`)
+        : ServerErrors.serverError('Failed to read template', err)
     )
     .flatMapOk((template) =>
       ServerUtils.writeFile(sketchPaths.params, applyTemplateParams(template, params))
-        .mapError((err) => ServerMiddleware.serverError('Failed to write parameters', err))
+        .mapError((err) => ServerErrors.serverError('Failed to write parameters', err))
     );
 }
