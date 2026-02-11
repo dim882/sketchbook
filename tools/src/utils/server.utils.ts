@@ -87,36 +87,30 @@ function getLastModifiedTime(dirPath: string): Future<Result<number, ServerError
       ignore: ['node_modules/**'],
       dot: false,
     })
-  )
-    .mapError((err) =>
-      serverError(`Failed to glob files in ${dirPath}`, err)
-    )
+  ).mapError((err) => serverError(`Failed to glob files in ${dirPath}`, err))
     .flatMapOk((tsFiles) => {
       if (tsFiles.length === 0) {
         return Future.value(Result.Ok(0));
       }
 
       return Future.fromPromise(Promise.all(tsFiles.map((file) => fs.stat(file))))
-        .mapError((err) =>
-          serverError('Failed to stat files', err)
-        )
+        .mapError((err) => serverError('Failed to stat files', err))
         .mapOk((tsStats) => Math.max(...tsStats.map((stat) => stat.mtime.getTime())));
     });
 }
 
 export function getSketchDirsData(sketchesDir: string): Future<Result<IDir[], ServerError>> {
   return readDir(sketchesDir)
-    .mapError((err) =>
-      serverError(`Failed to read sketches directory`, err)
-    )
+    .mapError((err) => serverError(`Failed to read sketches directory`, err))
     .flatMapOk((files) => {
       const futures = files
         .filter((file) => file.isDirectory())
         .map((dir) =>
-          getLastModifiedTime(path.join(sketchesDir, dir.name)).mapOk((lastModified) => ({
-            name: dir.name,
-            lastModified,
-          }))
+          getLastModifiedTime(path.join(sketchesDir, dir.name))
+            .mapOk((lastModified) => ({
+              name: dir.name,
+              lastModified,
+            }))
         );
 
       return Future.all(futures).map(Result.all);
@@ -163,9 +157,8 @@ export function validateSketchName(name: unknown): Result<string, string> {
   return Result.Ok(name);
 }
 
-/**
- * Middleware to validate sketch name parameter.
- */
+
+// Middleware to validate sketch name parameter
 export function requireValidSketchName(req: Request, res: Response, next: NextFunction) {
   validateSketchName(req.params.sketchName).match({
     Ok: (validName) => {
@@ -189,10 +182,7 @@ export function renderMainPage(initialSketch?: string): Future<Result<string, Se
     );
 }
 
-/**
- * Update parameters for a sketch by applying values to a template.
- * @returns Future with void on success, or ServerError on failure
- */
+// Update parameters for a sketch by applying values to a template.
 export function updateSketchParams(
   sketchName: string,
   params: Record<string, string>
