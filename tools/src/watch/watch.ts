@@ -25,14 +25,13 @@ watcher.on('all', (_event, filePath) => {
       pendingBuilds.delete(configPath);
       console.log(`Detected change. Building ${filePath}...`);
 
-      runRollup(configPath)
-        .then((result) =>
-          result.match({
-            Ok: () => console.log(`Built ${filePath}`),
-            Error: (err) => logError(err),
-          })
-        )
-        .catch(logError);
+      // runRollup catches all errors and returns Result.Error, so no .catch needed
+      runRollup(configPath).then((result) =>
+        result.match({
+          Ok: () => console.log(`Built ${filePath}`),
+          Error: (err) => logError(err),
+        })
+      );
     }, DEBOUNCE_MS));
   } else {
     console.log(`No config found for: ${filePath}`);
