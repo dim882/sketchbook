@@ -3,15 +3,15 @@ import { it, expect, vi } from 'vitest';
 vi.mock('node:fs/promises');
 vi.mock('fast-glob');
 
-import * as ServerPaths from './server.paths';
-import * as MainRoutes from './routes/main';
+import * as Paths from './server.paths';
+import * as Main from './routes/main';
 import fs from 'node:fs/promises';
 import fg from 'fast-glob';
 
-const sketchesPath = ServerPaths.paths.sketches();
+const sketchesPath = Paths.paths.sketches();
 
 it('paths.sketch returns chained path object', () => {
-  const sketch = ServerPaths.paths.sketch('my-sketch');
+  const sketch = Paths.paths.sketch('my-sketch');
   expect(sketch.base).toBe(`${sketchesPath}/my-sketch`);
   expect(sketch.dist).toBe(`${sketchesPath}/my-sketch/dist`);
   expect(sketch.src).toBe(`${sketchesPath}/my-sketch/src`);
@@ -28,7 +28,7 @@ it('getSketchDirsData returns sorted list of directories', async () => {
   ] as unknown as Awaited<ReturnType<typeof fs.readdir>>);
   vi.mocked(fg).mockResolvedValue([]);
 
-  const result = await MainRoutes.getSketchDirsData('/path/to/sketches').toPromise();
+  const result = await Main.getSketchDirsData('/path/to/sketches').toPromise();
 
   expect(result.isOk()).toBe(true);
   const dirs = (result as { value: unknown }).value as { name: string }[];
@@ -44,7 +44,7 @@ it('getSketchDirsData filters out non-directory entries', async () => {
   ] as unknown as Awaited<ReturnType<typeof fs.readdir>>);
   vi.mocked(fg).mockResolvedValue([]);
 
-  const result = await MainRoutes.getSketchDirsData('/path/to/sketches').toPromise();
+  const result = await Main.getSketchDirsData('/path/to/sketches').toPromise();
 
   expect(result.isOk()).toBe(true);
   const dirs = (result as { value: unknown }).value as { name: string }[];
@@ -58,7 +58,7 @@ it('getSketchDirsData returns lastModified of 0 when no ts/tsx/html files exist'
   ] as unknown as Awaited<ReturnType<typeof fs.readdir>>);
   vi.mocked(fg).mockResolvedValue([]);
 
-  const result = await MainRoutes.getSketchDirsData('/path/to/sketches').toPromise();
+  const result = await Main.getSketchDirsData('/path/to/sketches').toPromise();
 
   expect(result.isOk()).toBe(true);
   const dirs = (result as { value: unknown }).value as { lastModified: number }[];
@@ -74,7 +74,7 @@ it('getSketchDirsData returns latest mtime when ts/tsx/html files exist', async 
     .mockResolvedValueOnce({ mtime: { getTime: () => 1000 } } as unknown as Awaited<ReturnType<typeof fs.stat>>)
     .mockResolvedValueOnce({ mtime: { getTime: () => 2000 } } as unknown as Awaited<ReturnType<typeof fs.stat>>);
 
-  const result = await MainRoutes.getSketchDirsData('/path/to/sketches').toPromise();
+  const result = await Main.getSketchDirsData('/path/to/sketches').toPromise();
 
   expect(result.isOk()).toBe(true);
   const dirs = (result as { value: unknown }).value as { lastModified: number }[];

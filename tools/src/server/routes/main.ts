@@ -3,10 +3,10 @@ import * as fs from 'node:fs/promises';
 import fg from 'fast-glob';
 import { Result, Future } from '@swan-io/boxed';
 
-import * as LibTypes from '../../lib/types';
-import * as ServerPaths from '../server.paths';
-import * as ServerErrors from '../server.errors';
-import * as ServerUtils from '../server.utils';
+import * as Types from '../../lib/types';
+import * as Paths from '../server.paths';
+import * as Errors from '../server.errors';
+import * as Utils from '../server.utils';
 
 // --- Route Handlers ---
 
@@ -15,7 +15,7 @@ export const handleMainPage = (initialSketch?: string) => renderMainPage(initial
 // --- Supporting Functions ---
 
 interface IInitialData {
-  dirs: LibTypes.IDir[];
+  dirs: Types.IDir[];
   initialSketch?: string;
 }
 
@@ -43,9 +43,9 @@ function getLastModifiedTime(dirPath: string): Future<number> {
     );
 }
 
-export function getSketchDirsData(sketchesDir: string): Future<Result<LibTypes.IDir[], ServerErrors.ServerError>> {
-  return ServerUtils.readDir(sketchesDir)
-    .mapError((err) => ServerErrors.serverError(`Failed to read sketches directory`, err))
+export function getSketchDirsData(sketchesDir: string): Future<Result<Types.IDir[], Errors.ServerError>> {
+  return Utils.readDir(sketchesDir)
+    .mapError((err) => Errors.serverError(`Failed to read sketches directory`, err))
     .flatMapOk((files) =>
       Future.all(
         files
@@ -58,11 +58,11 @@ export function getSketchDirsData(sketchesDir: string): Future<Result<LibTypes.I
     );
 }
 
-function renderMainPage(initialSketch?: string): Future<Result<string, ServerErrors.ServerError>> {
-  return ServerUtils.readFile(ServerPaths.paths.uiIndex())
-    .mapError((err) => ServerErrors.serverError('Failed to read UI template', err))
+function renderMainPage(initialSketch?: string): Future<Result<string, Errors.ServerError>> {
+  return Utils.readFile(Paths.paths.uiIndex())
+    .mapError((err) => Errors.serverError('Failed to read UI template', err))
     .flatMapOk((template) =>
-      getSketchDirsData(ServerPaths.paths.sketches())
+      getSketchDirsData(Paths.paths.sketches())
         .mapOk((dirs) => injectInitialData(template, { dirs, initialSketch }))
     );
 }

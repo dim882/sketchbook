@@ -1,9 +1,9 @@
 import { Result, Future } from '@swan-io/boxed';
 
-import * as LibTypes from '../../lib/types';
-import * as ServerPaths from '../server.paths';
-import * as ServerErrors from '../server.errors';
-import * as ServerUtils from '../server.utils';
+import * as Types from '../../lib/types';
+import * as Paths from '../server.paths';
+import * as Errors from '../server.errors';
+import * as Utils from '../server.utils';
 
 // --- Route Handlers ---
 
@@ -14,7 +14,7 @@ export const handleUpdateParams = (sketchName: string, params: Record<string, st
 
 // --- Supporting Functions ---
 
-function isValidServerHandler(module: unknown): module is { default: LibTypes.SketchServerHandler } {
+function isValidServerHandler(module: unknown): module is { default: Types.SketchServerHandler } {
   return (
     module !== null &&
     typeof module === 'object' &&
@@ -32,18 +32,18 @@ const applyTemplateParams = (template: string, params: Record<string, string>) =
     template
   );
 
-function fetchSketchParams(sketchName: string): Future<Result<LibTypes.SketchParams, ServerErrors.ServerError>> {
-  const sketchPaths = ServerPaths.paths.sketch(sketchName);
+function fetchSketchParams(sketchName: string): Future<Result<Types.SketchParams, Errors.ServerError>> {
+  const sketchPaths = Paths.paths.sketch(sketchName);
 
   console.log(`[fetchSketchParams] Loading params for sketch: ${sketchName}`);
 
-  return ServerUtils.readFile(sketchPaths.params)
+  return Utils.readFile(sketchPaths.params)
     .tapOk(() => console.log(`[fetchSketchParams] Read params file: ${sketchPaths.params}`))
     .tapError((err) => console.log(`[fetchSketchParams] Failed to read params file:`, err))
     .mapError((err: unknown) =>
-      ServerErrors.isErrnoException(err) && err.code === 'ENOENT'
-        ? ServerErrors.notFound(`Parameters not found for sketch '${sketchName}'`)
-        : ServerErrors.serverError('Failed to read parameters', err)
+      Errors.isErrnoException(err) && err.code === 'ENOENT'
+        ? Errors.notFound(`Parameters not found for sketch '${sketchName}'`)
+        : Errors.serverError('Failed to read parameters', err)
     )
     .flatMapOk((fileContent) =>
       Future.fromPromise(import(sketchPaths.serverHandler))
@@ -52,20 +52,20 @@ function fetchSketchParams(sketchName: string): Future<Result<LibTypes.SketchPar
         )
         .tapError((err) => console.log(`[fetchSketchParams] Failed to load server handler:`, err))
         .mapError((err: unknown) =>
-          ServerErrors.isErrnoException(err) && err.code === 'MODULE_NOT_FOUND'
-            ? ServerErrors.notFound(`Server handler not found for sketch '${sketchName}'`)
-            : ServerErrors.serverError('Failed to load server handler', err)
+          Errors.isErrnoException(err) && err.code === 'MODULE_NOT_FOUND'
+            ? Errors.notFound(`Server handler not found for sketch '${sketchName}'`)
+            : Errors.serverError('Failed to load server handler', err)
         )
         .mapOkToResult((module) =>
           !isValidServerHandler(module)
             ? Result.Error(
-              ServerErrors.serverError(
+              Errors.serverError(
                 `Server handler for sketch '${sketchName}' is invalid: must export default object with getParams function`
               )
             )
             : Result.fromExecution(() => module.default.getParams(fileContent))
               .mapError((err) =>
-                ServerErrors.serverError(`Failed to parse params for sketch '${sketchName}'`, err))
+                Errors.serverError(`Failed to parse params for sketch '${sketchName}'`, err))
         )
     );
 }
@@ -73,17 +73,17 @@ function fetchSketchParams(sketchName: string): Future<Result<LibTypes.SketchPar
 function updateSketchParams(
   sketchName: string,
   params: Record<string, string>
-): Future<Result<void, ServerErrors.ServerError>> {
-  const sketchPaths = ServerPaths.paths.sketch(sketchName);
+): Future<Result<void, Errors.ServerError>> {
+  const sketchPaths = Paths.paths.sketch(sketchName);
 
-  return ServerUtils.readFile(sketchPaths.template)
+  return Utils.readFile(sketchPaths.template)
     .mapError((err: unknown) =>
-      ServerErrors.isErrnoException(err) && err.code === 'ENOENT'
-        ? ServerErrors.notFound(`Template not found for sketch '${sketchName}'`)
-        : ServerErrors.serverError('Failed to read template', err)
+      Errors.isErrnoException(err) && err.code === 'ENOENT'
+        ? Errors.notFound(`Template not found for sketch '${sketchName}'`)
+        : Errors.serverError('Failed to read template', err)
     )
     .flatMapOk((template) =>
-      ServerUtils.writeFile(sketchPaths.params, applyTemplateParams(template, params))
-        .mapError((err) => ServerErrors.serverError('Failed to write parameters', err))
+      Utils.writeFile(sketchPaths.params, applyTemplateParams(template, params))
+        .mapError((err) => Errors.serverError('Failed to write parameters', err))
     );
 }
