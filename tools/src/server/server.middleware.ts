@@ -50,6 +50,15 @@ export const handleError = (res: Response) => (err: ServerError) => {
   res.status(err.status).json({ error: err.message });
 };
 
+// Helper to handle Result responses, reducing .tap(result.match({Ok, Error})) boilerplate
+export const sendResult =
+  <T>(res: Response, onOk: (value: T) => void) =>
+  (result: Result<T, ServerError>) =>
+    result.match({
+      Ok: onOk,
+      Error: handleError(res),
+    });
+
 // Validates a sketch name to prevent path traversal attacks.
 export function validateSketchName(name: unknown): Result<string, string> {
   if (!name || typeof name !== 'string') {

@@ -1,7 +1,9 @@
 import express from 'express';
 import * as ServerPaths from './server.paths';
 import * as ServerMiddleware from './server.middleware';
-import * as ServerSketches from './server.sketches';
+import * as MainRoutes from './routes/main';
+import * as SketchRoutes from './routes/sketches';
+import * as ApiRoutes from './routes/api';
 
 const app = express();
 const port = 2000;
@@ -9,63 +11,38 @@ const port = 2000;
 app.use(express.json());
 app.use(express.static(ServerPaths.paths.public()));
 
+// Main page routes
 app.get('/', (_, res) => {
-  ServerSketches.renderMainPage().tap((result) =>
-    result.match({
-      Ok: (html) => res.send(html),
-      Error: ServerMiddleware.handleError(res),
-    })
-  );
+  MainRoutes.handleMainPage().tap(ServerMiddleware.sendResult(res, (html) => res.send(html)));
 });
 
-app.get('/nav/:sketchname', (req, res) => {
-  ServerMiddleware.validateSketchName(req.params.sketchname).match({
-    Ok: (validName) => {
-      ServerSketches.renderMainPage(validName).tap((result) =>
-        result.match({
-          Ok: (html) => res.send(html),
-          Error: ServerMiddleware.handleError(res),
-        })
-      );
-    },
-    Error: (message) => res.status(400).json({ error: message }),
-  });
+app.get('/nav/:sketchName', ServerMiddleware.requireValidSketchName, (req, res) => {
+  MainRoutes.handleMainPage(req.params.sketchName).tap(ServerMiddleware.sendResult(res, (html) => res.send(html)));
 });
 
+// Sketch file routes
 app.get('/sketches/:sketchName', ServerMiddleware.requireValidSketchName, (req, res) => {
-  ServerMiddleware.sendFile(res, ServerPaths.paths.sketch(req.params.sketchName).html).tap((result) =>
-    result.match({
-      Ok: () => { },
-      Error: ServerMiddleware.handleError(res),
-    })
+  ServerMiddleware.sendFile(res, SketchRoutes.getSketchHtmlPath(req.params.sketchName)).tap(
+    ServerMiddleware.sendResult(res, () => {})
   );
 });
 
-app.use(
-  '/sketches/:sketchName/dist',
-  ServerMiddleware.requireValidSketchName,
-  (req, res, next) => {
-    express.static(ServerPaths.paths.sketch(req.params.sketchName).dist)(req, res, next);
-  }
-);
+app.use('/sketches/:sketchName/dist', ServerMiddleware.requireValidSketchName, (req, res, next) => {
+  express.static(SketchRoutes.getSketchDistPath(req.params.sketchName))(req, res, next);
+});
 
+// API routes
 app.get('/api/sketches/:sketchName/params', ServerMiddleware.requireValidSketchName, (req, res) => {
-  ServerSketches.fetchSketchParams(req.params.sketchName).tap((result) =>
-    result.match({
-      Ok: (params) => res.json({ params }),
-      Error: ServerMiddleware.handleError(res),
-    })
+  ApiRoutes.handleGetParams(req.params.sketchName).tap(
+    ServerMiddleware.sendResult(res, (params) => res.json({ params }))
   );
 });
 
 app.post('/api/sketches/:sketchName/params', ServerMiddleware.requireValidSketchName, (req, res) => {
   ServerMiddleware.validateParamsBody(req.body).match({
     Ok: (params) =>
-      ServerSketches.updateSketchParams(req.params.sketchName, params).tap((result) =>
-        result.match({
-          Ok: () => res.json({ success: true }),
-          Error: ServerMiddleware.handleError(res),
-        })
+      ApiRoutes.handleUpdateParams(req.params.sketchName, params).tap(
+        ServerMiddleware.sendResult(res, () => res.json({ success: true }))
       ),
     Error: ServerMiddleware.handleError(res),
   });
