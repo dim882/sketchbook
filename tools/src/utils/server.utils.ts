@@ -93,7 +93,8 @@ export const paths = {
   sketch: (name: string) => createSketchPaths(name),
 };
 
-function getLastModifiedTime(dirPath: string): Future<Result<number, ServerError>> {
+// Check the last modified time for all files in the dir
+function getLastModifiedTime(dirPath: string): Future<number> {
   return Future.fromPromise(
     fg(['**/*.{ts,tsx,html}'], {
       cwd: dirPath,
@@ -101,33 +102,36 @@ function getLastModifiedTime(dirPath: string): Future<Result<number, ServerError
       ignore: ['node_modules/**'],
       dot: false,
     })
-  ).mapError((err) => serverError(`Failed to glob files in ${dirPath}`, err))
-    .flatMapOk((tsFiles) => {
-      return (tsFiles.length === 0) ?
-        Future.value(Result.Ok(0)) :
-        Future.fromPromise(Promise.all(tsFiles.map((file) => fs.stat(file))))
-          .mapError((err) => serverError('Failed to stat files', err))
-          .mapOk((tsStats) => Math.max(...tsStats.map((stat) => stat.mtime.getTime())));
-    });
+  )
+    .flatMap((result) =>
+      result.match({
+        Ok: (files) =>
+          files.length === 0
+            ? Future.value(0)
+            : Future.fromPromise(Promise.all(files.map((file) => fs.stat(file)))).map((statResult) =>
+              statResult.match({
+                Ok: (stats) => Math.max(...stats.map((stat) => stat.mtime.getTime())),
+                Error: () => 0,
+              })
+            ),
+        Error: () => Future.value(0),
+      })
+    );
 }
 
 export function getSketchDirsData(sketchesDir: string): Future<Result<IDir[], ServerError>> {
   return readDir(sketchesDir)
     .mapError((err) => serverError(`Failed to read sketches directory`, err))
-    .flatMapOk((files) => {
-      const futures = files
-        .filter((file) => file.isDirectory())
-        .map((dir) =>
-          getLastModifiedTime(path.join(sketchesDir, dir.name))
-            .mapOk((lastModified) => ({
-              name: dir.name,
-              lastModified,
-            }))
-        );
-
-      return Future.all(futures).map(Result.all);
-    })
-    .mapOk((dirs) => dirs.sort((a, b) => a.name.localeCompare(b.name)));
+    .flatMapOk((files) =>
+      Future.all(
+        files
+          .filter((file) => file.isDirectory())
+          .map((dir) =>
+            getLastModifiedTime(path.join(sketchesDir, dir.name))
+              .map((lastModified) => ({ name: dir.name, lastModified }))
+          )
+      ).map((dirs) => Result.Ok(dirs.sort((a, b) => a.name.localeCompare(b.name))))
+    );
 }
 
 export function fetchSketchParams(sketchName: string): Future<Result<SketchParams, ServerError>> {
