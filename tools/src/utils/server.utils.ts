@@ -3,8 +3,9 @@ import path from 'node:path';
 import fg from 'fast-glob';
 import { Result, Future } from '@swan-io/boxed';
 import type { Request, Response, NextFunction } from 'express';
-import { SketchServerHandler, SketchParams } from '../server.sketch.types';
+
 import { IDir } from '../ui/SketchList';
+import { SketchServerHandler, SketchParams } from '../server.sketch.types';
 import { escapeRegex } from './string';
 
 export function isErrnoException(err: unknown): err is NodeJS.ErrnoException {
@@ -95,15 +96,15 @@ export const paths = {
 
 // Returns the most recent mtime of source files in a directory, or 0 on error
 function getLastModifiedTime(dirPath: string): Future<number> {
+  const fgConfig = {
+    cwd: dirPath,
+    ignore: ['node_modules/**'],
+    absolute: true,
+    dot: false
+  };
+
   return Future.fromPromise(
-    fg(['**/*.{ts,tsx,html}'],
-      {
-        cwd: dirPath,
-        absolute: true,
-        ignore: ['node_modules/**'],
-        dot: false
-      })
-  )
+    fg(['**/*.{ts,tsx,html}'], fgConfig))
     .map((result) => result.getOr([]))
     .flatMap((files) =>
       files.length === 0
