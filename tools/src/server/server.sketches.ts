@@ -3,7 +3,6 @@ import * as path from 'node:path';
 import fg from 'fast-glob';
 import { Result, Future } from '@swan-io/boxed';
 
-import * as LibString from '../lib/string';
 import * as LibTypes from '../lib/types';
 import * as ServerPaths from './server.paths';
 import * as ServerMiddleware from './server.middleware';
@@ -38,7 +37,7 @@ const injectInitialData = (template: string, data: IInitialData) =>
 
 const applyTemplateParams = (template: string, params: Record<string, string>) =>
   Object.entries(params).reduce(
-    (tpl, [key, value]) => tpl.replace(new RegExp(`\\{\\{${LibString.escapeRegex(key)}\\}\\}`, 'g'), value),
+    (tpl, [key, value]) => tpl.replaceAll(`{{${key}}}`, value),
     template
   );
 
