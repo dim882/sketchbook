@@ -157,7 +157,10 @@ const logError = (error: unknown) => {
 async function getRollupConfig(configPath: string): Promise<RollupOptions> {
   // Cache bust by adding timestamp to URL
   const configUrl = `${configPath}?update=${Date.now()}`;
-  const configModule = await import(configUrl);
+  const configModule = (await import(configUrl)) as { default?: RollupOptions } | RollupOptions;
 
-  return configModule.default || configModule;
+  // Config can be exported as default or as the module itself
+  return 'default' in configModule && configModule.default
+    ? configModule.default
+    : (configModule as RollupOptions);
 }

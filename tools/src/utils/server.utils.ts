@@ -144,14 +144,14 @@ function getSketchParams(sketchName: string): Future<Result<SketchParams, Server
       return serverError('Failed to read parameters', err instanceof Error ? err : undefined);
     })
     .flatMapOk((fileContent) =>
-      Future.fromPromise(import(sketchPaths.serverHandler))
+      Future.fromPromise(import(sketchPaths.serverHandler) as Promise<{ default: SketchServerHandler }>)
         .mapError((err: unknown) => {
           if (isErrnoException(err) && err.code === 'MODULE_NOT_FOUND') {
             return notFound(`Server handler not found for sketch '${sketchName}'`);
           }
           return serverError('Failed to load server handler', err instanceof Error ? err : undefined);
         })
-        .mapOk((sketchHandler) => sketchHandler.default.getParams(fileContent))
+        .mapOk((module) => module.default.getParams(fileContent))
     );
 }
 
