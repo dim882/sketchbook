@@ -79,10 +79,6 @@ export const paths = {
   sketch: (name: string) => createSketchPaths(name),
 };
 
-/**
- * Get the most recent modification time of source files in a directory.
- * @returns Future with the timestamp in milliseconds, or ServerError on failure
- */
 function getLastModifiedTime(dirPath: string): Future<Result<number, ServerError>> {
   return Future.fromPromise(
     fg(['**/*.{ts,tsx,html}'], {
@@ -108,10 +104,6 @@ function getLastModifiedTime(dirPath: string): Future<Result<number, ServerError
     });
 }
 
-/**
- * Get data for all sketch directories including last modification times.
- * @returns Future with array of sketch directory info, or ServerError on failure
- */
 export function getSketchDirsData(sketchesDir: string): Future<Result<IDir[], ServerError>> {
   return readDir(sketchesDir)
     .mapError((err) =>
@@ -132,36 +124,28 @@ export function getSketchDirsData(sketchesDir: string): Future<Result<IDir[], Se
     .mapOk((dirs) => dirs.sort((a, b) => a.name.localeCompare(b.name)));
 }
 
-/**
- * Load and parse parameters for a sketch.
- * @returns Future with parsed parameters, or ServerError on failure
- */
 function getSketchParams(sketchName: string): Future<Result<SketchParams, ServerError>> {
   const sketchPaths = paths.sketch(sketchName);
 
   return readFile(sketchPaths.params)
-    .mapError((err: unknown) => {
-      if (isErrnoException(err) && err.code === 'ENOENT') {
-        return notFound(`Parameters not found for sketch '${sketchName}'`);
-      }
-      return serverError('Failed to read parameters', err);
-    })
+    .mapError((err: unknown) =>
+      isErrnoException(err) && err.code === 'ENOENT'
+        ? notFound(`Parameters not found for sketch '${sketchName}'`)
+        : serverError('Failed to read parameters', err)
+    )
     .flatMapOk((fileContent) =>
       Future.fromPromise(import(sketchPaths.serverHandler) as Promise<{ default: SketchServerHandler }>)
-        .mapError((err: unknown) => {
-          if (isErrnoException(err) && err.code === 'MODULE_NOT_FOUND') {
-            return notFound(`Server handler not found for sketch '${sketchName}'`);
-          }
-          return serverError('Failed to load server handler', err);
-        })
+        .mapError((err: unknown) =>
+          isErrnoException(err) && err.code === 'MODULE_NOT_FOUND'
+            ? notFound(`Server handler not found for sketch '${sketchName}'`)
+            : serverError('Failed to load server handler', err)
+        )
         .mapOk((module) => module.default.getParams(fileContent))
     );
 }
 
-/**
- * Validates a sketch name to prevent path traversal attacks.
- * Returns Ok with the validated name, or Error with a message.
- */
+
+// Validates a sketch name to prevent path traversal attacks.
 export function validateSketchName(name: unknown): Result<string, string> {
   if (!name || typeof name !== 'string') {
     return Result.Error('Sketch name is required');
@@ -236,12 +220,11 @@ export function updateSketchParams(
   const sketchPaths = paths.sketch(sketchName);
 
   return readFile(sketchPaths.template)
-    .mapError((err: unknown) => {
-      if (isErrnoException(err) && err.code === 'ENOENT') {
-        return notFound(`Template not found for sketch '${sketchName}'`);
-      }
-      return serverError('Failed to read template', err);
-    })
+    .mapError((err: unknown) =>
+      isErrnoException(err) && err.code === 'ENOENT'
+        ? notFound(`Template not found for sketch '${sketchName}'`)
+        : serverError('Failed to read template', err)
+    )
     .flatMapOk((template) =>
       writeFile(
         sketchPaths.params,
