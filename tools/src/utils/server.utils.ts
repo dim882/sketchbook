@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import fg from 'fast-glob';
 import { Result, Future } from '@swan-io/boxed';
+import { z } from 'zod';
 import type { Request, Response, NextFunction } from 'express';
 
 import { IDir } from '../ui/SketchList';
@@ -60,20 +61,12 @@ export const sendFile = (res: Response, filePath: string): Future<Result<void, S
       : serverError('Failed to send file', err)
   );
 
-// Pure validation for params body
-export function validateParamsBody(body: unknown): Result<Record<string, string>, ServerError> {
-  if (!body || typeof body !== 'object') {
-    return Result.Error(badRequest('Invalid request body: expected object'));
-  }
+const ParamsBody = z.object({ params: z.record(z.string(), z.string()) });
 
-  const { params } = body as { params?: unknown };
-
-  if (!params || typeof params !== 'object') {
-    return Result.Error(badRequest('Invalid parameters: expected object'));
-  }
-
-  return Result.Ok(params as Record<string, string>);
-}
+export const validateParamsBody = (body: unknown): Result<Record<string, string>, ServerError> =>
+  Result.fromExecution(() => ParamsBody.parse(body))
+    .map(({ params }) => params)
+    .mapError(() => badRequest('Invalid parameters: expected object with params record'));
 
 export const handleError = (res: Response) => (err: ServerError) => {
   if (err.cause) {
