@@ -14,7 +14,7 @@ const pendingBuilds = new Map<string, NodeJS.Timeout>();
 
 const watcher = makeWatcher(SKETCHES_DIR);
 
-watcher.on('all', (event, filePath) => {
+watcher.on('all', (_event, filePath) => {
   const configPath = WatchUtils.findNearestConfig(path.dirname(filePath));
 
   if (configPath) {
@@ -55,7 +55,6 @@ function makeWatcher(dir: string) {
     depth: 99,
   };
   const watchPaths = [dir, path.join(dir, './**/*')];
-  console.log(watchPaths);
 
   const watcher = chokidar.watch(watchPaths, watchOptions);
 

@@ -60,10 +60,10 @@ function copyDir(source: string, target: string) {
     } else if (stats.isFile()) {
       fs.copyFileSync(sourcePath, targetPath);
 
-      const baseName = path.basename(targetPath);
       const extName = path.extname(targetPath);
+      const fileName = path.basename(targetPath);
 
-      if (baseName === 'package.json') {
+      if (fileName === 'package.json') {
         CloneUtils.setPackageName(targetPath, targetName).match({
           Ok: () => { },
           Error: (err) => {
