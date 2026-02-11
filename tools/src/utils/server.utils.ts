@@ -93,29 +93,24 @@ export const paths = {
   sketch: (name: string) => createSketchPaths(name),
 };
 
-// Check the last modified time for all files in the dir
+// Returns the most recent mtime of source files in a directory, or 0 on error
 function getLastModifiedTime(dirPath: string): Future<number> {
   return Future.fromPromise(
-    fg(['**/*.{ts,tsx,html}'], {
-      cwd: dirPath,
-      absolute: true,
-      ignore: ['node_modules/**'],
-      dot: false,
-    })
-  )
-    .flatMap((result) =>
-      result.match({
-        Ok: (files) =>
-          files.length === 0
-            ? Future.value(0)
-            : Future.fromPromise(Promise.all(files.map((file) => fs.stat(file)))).map((statResult) =>
-              statResult.match({
-                Ok: (stats) => Math.max(...stats.map((stat) => stat.mtime.getTime())),
-                Error: () => 0,
-              })
-            ),
-        Error: () => Future.value(0),
+    fg(['**/*.{ts,tsx,html}'],
+      {
+        cwd: dirPath,
+        absolute: true,
+        ignore: ['node_modules/**'],
+        dot: false
       })
+  )
+    .map((result) => result.getOr([]))
+    .flatMap((files) =>
+      files.length === 0
+        ? Future.value(0)
+        : Future.fromPromise(Promise.all(files.map((file) => fs.stat(file))))
+          .map((result) => result.getOr([]))
+          .map((stats) => (stats.length > 0 ? Math.max(...stats.map((s) => s.mtime.getTime())) : 0))
     );
 }
 
