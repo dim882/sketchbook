@@ -6,8 +6,9 @@ import {
   renderMainPage,
   fetchSketchParams,
   updateSketchParams,
+  validateParamsBody,
+  sendFile,
   handleError,
-  isErrnoException,
 } from './utils/server.utils';
 
 const app = express();
@@ -40,19 +41,12 @@ app.get('/nav/:sketchname', (req, res) => {
 });
 
 app.get('/sketches/:sketchName', requireValidSketchName, (req, res) => {
-  const { sketchName } = req.params;
-
-  res.sendFile(paths.sketch(sketchName).html, (err) => {
-    if (err) {
-      // Check if file doesn't exist vs other errors
-      if (isErrnoException(err) && err.code === 'ENOENT') {
-        res.status(404).json({ error: `Sketch '${sketchName}' not found` });
-      } else {
-        console.error('Error sending sketch file:', err);
-        res.status(500).json({ error: 'Failed to load sketch' });
-      }
-    }
-  });
+  sendFile(res, paths.sketch(req.params.sketchName).html).tap((result) =>
+    result.match({
+      Ok: () => { },
+      Error: handleError(res),
+    })
+  );
 });
 
 app.use(
@@ -73,19 +67,16 @@ app.get('/api/sketches/:sketchName/params', requireValidSketchName, (req, res) =
 });
 
 app.post('/api/sketches/:sketchName/params', requireValidSketchName, (req, res) => {
-  const { params } = req.body;
-
-  if (!params || typeof params !== 'object') {
-    res.status(400).json({ error: 'Invalid parameters: expected object' });
-    return;
-  }
-
-  updateSketchParams(req.params.sketchName, params).tap((result) =>
-    result.match({
-      Ok: () => res.json({ success: true }),
-      Error: handleError(res),
-    })
-  );
+  validateParamsBody(req.body).match({
+    Ok: (params) =>
+      updateSketchParams(req.params.sketchName, params).tap((result) =>
+        result.match({
+          Ok: () => res.json({ success: true }),
+          Error: handleError(res),
+        })
+      ),
+    Error: handleError(res),
+  });
 });
 
 app.listen(port, () => {

@@ -38,15 +38,42 @@ export interface ServerError {
   cause?: Error;
 }
 
-const notFound = (message: string): ServerError => ({ status: 404, message });
+export const notFound = (message: string): ServerError => ({ status: 404, message });
 
-const badRequest = (message: string): ServerError => ({ status: 400, message });
+export const badRequest = (message: string): ServerError => ({ status: 400, message });
 
 const serverError = (message: string, cause?: unknown): ServerError => ({
   status: 500,
   message,
   cause: cause instanceof Error ? cause : undefined,
 });
+
+// Wraps res.sendFile in a Future at the I/O boundary
+export const sendFile = (res: Response, filePath: string): Future<Result<void, ServerError>> =>
+  Future.fromPromise(
+    new Promise<void>((resolve, reject) => {
+      res.sendFile(filePath, (err) => (err ? reject(err) : resolve()));
+    })
+  ).mapError((err: unknown) =>
+    isErrnoException(err) && err.code === 'ENOENT'
+      ? notFound(`File not found: ${path.basename(filePath)}`)
+      : serverError('Failed to send file', err)
+  );
+
+// Pure validation for params body
+export function validateParamsBody(body: unknown): Result<Record<string, string>, ServerError> {
+  if (!body || typeof body !== 'object') {
+    return Result.Error(badRequest('Invalid request body: expected object'));
+  }
+
+  const { params } = body as { params?: unknown };
+
+  if (!params || typeof params !== 'object') {
+    return Result.Error(badRequest('Invalid parameters: expected object'));
+  }
+
+  return Result.Ok(params as Record<string, string>);
+}
 
 export const handleError = (res: Response) => (err: ServerError) => {
   if (err.cause) {
