@@ -2,6 +2,7 @@ import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
 import fg from 'fast-glob';
 import { Result, Future } from '@swan-io/boxed';
+import type { Request, Response } from 'express';
 
 import * as Types from '../../lib/types';
 import * as Paths from '../server.paths';
@@ -14,7 +15,13 @@ const log = createLogger('routes/main');
 
 // --- Route Handlers ---
 
-export const handleMainPage = (initialSketch?: string) => renderMainPage(initialSketch);
+export const mainPageHandler = (_req: Request, res: Response) => {
+  renderMainPage().tap(Utils.sendResult(res, (html) => res.send(html)));
+};
+
+export const navHandler = (req: Request, res: Response) => {
+  renderMainPage(req.params.sketchName).tap(Utils.sendResult(res, (html) => res.send(html)));
+};
 
 // --- Supporting Functions ---
 

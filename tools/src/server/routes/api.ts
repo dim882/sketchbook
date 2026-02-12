@@ -1,4 +1,5 @@
 import { Result, Future } from '@swan-io/boxed';
+import type { Request, Response } from 'express';
 
 import * as Types from '../../lib/types';
 import * as Paths from '../server.paths';
@@ -10,10 +11,21 @@ const log = createLogger('routes/api');
 
 // --- Route Handlers ---
 
-export const handleGetParams = (sketchName: string) => fetchSketchParams(sketchName);
+export const getParamsHandler = (req: Request, res: Response) => {
+  fetchSketchParams(req.params.sketchName).tap(
+    Utils.sendResult(res, (params) => res.json({ params }))
+  );
+};
 
-export const handleUpdateParams = (sketchName: string, params: Record<string, string>) =>
-  updateSketchParams(sketchName, params);
+export const updateParamsHandler = (req: Request, res: Response) => {
+  Errors.validateParamsBody(req.body).match({
+    Ok: (params) =>
+      updateSketchParams(req.params.sketchName, params).tap(
+        Utils.sendResult(res, () => res.json({ success: true }))
+      ),
+    Error: Errors.handleError(res),
+  });
+};
 
 // --- Supporting Functions ---
 

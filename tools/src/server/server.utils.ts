@@ -28,8 +28,8 @@ export const sendFile = (res: Response, filePath: string): Future<Result<void, E
 // Helper to handle Result responses, reducing .tap(result.match({Ok, Error})) boilerplate
 export const sendResult =
   <T>(res: Response, onOk: (value: T) => void) =>
-  (result: Result<T, Errors.ServerError>) =>
-    result.match({
-      Ok: onOk,
-      Error: Errors.handleError(res),
-    });
+    (result: Result<T, Errors.ServerError>) =>
+      result.match({
+        Ok: onOk,
+        Error: Errors.handleError(res),
+      });
