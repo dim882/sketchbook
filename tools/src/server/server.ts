@@ -6,6 +6,11 @@ import * as Utils from './server.utils';
 import * as Main from './routes/main';
 import * as Sketches from './routes/sketches';
 import * as Api from './routes/api';
+import { installErrorHandlers } from '../lib/bootstrap';
+import { createLogger } from '../lib/logger';
+
+installErrorHandlers();
+const log = createLogger('server');
 
 const app = express();
 const port = 2000;
@@ -50,6 +55,17 @@ app.post('/api/sketches/:sketchName/params', Middleware.requireValidSketchName, 
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+const server = app.listen(port, () => {
+  log.info(`Server running on http://localhost:${port}`, { port });
+});
+
+server.on('error', (error: NodeJS.ErrnoException) => {
+  if (error.code === 'EADDRINUSE') {
+    log.error(`Port ${port} is already in use`, { port, error: error.message });
+  } else if (error.code === 'EACCES') {
+    log.error(`Permission denied for port ${port}`, { port, error: error.message });
+  } else {
+    log.error('Server failed to start', { error: error.message });
+  }
+  process.exit(1);
 });

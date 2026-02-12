@@ -7,6 +7,10 @@ import * as Types from '../../lib/types';
 import * as Paths from '../server.paths';
 import * as Errors from '../server.errors';
 import * as Utils from '../server.utils';
+import { createLogger } from '../../lib/logger';
+import { getOrLog } from '../../lib/result-logging';
+
+const log = createLogger('routes/main');
 
 // --- Route Handlers ---
 
@@ -33,12 +37,12 @@ function getLastModifiedTime(dirPath: string): Future<number> {
 
   return Future.fromPromise(
     fg(['**/*.{ts,tsx,html}'], fgConfig))
-    .map((result) => result.getOr([]))
+    .map(getOrLog(log, 'fast-glob file search', []))
     .flatMap((files) =>
       files.length === 0
         ? Future.value(0)
         : Future.fromPromise(Promise.all(files.map((file) => fs.stat(file))))
-          .map((result) => result.getOr([]))
+          .map(getOrLog(log, 'fs.stat files', []))
           .map((stats) => (stats.length > 0 ? Math.max(...stats.map((s) => s.mtime.getTime())) : 0))
     );
 }

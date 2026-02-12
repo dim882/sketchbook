@@ -4,6 +4,9 @@ import * as Types from '../../lib/types';
 import * as Paths from '../server.paths';
 import * as Errors from '../server.errors';
 import * as Utils from '../server.utils';
+import { createLogger } from '../../lib/logger';
+
+const log = createLogger('routes/api');
 
 // --- Route Handlers ---
 
@@ -35,11 +38,11 @@ const applyTemplateParams = (template: string, params: Record<string, string>) =
 function fetchSketchParams(sketchName: string): Future<Result<Types.SketchParams, Errors.ServerError>> {
   const sketchPaths = Paths.paths.sketch(sketchName);
 
-  console.log(`[fetchSketchParams] Loading params for sketch: ${sketchName}`);
+  log.info(`Loading params for sketch: ${sketchName}`, { sketchName });
 
   return Utils.readFile(sketchPaths.params)
-    .tapOk(() => console.log(`[fetchSketchParams] Read params file: ${sketchPaths.params}`))
-    .tapError((err) => console.log(`[fetchSketchParams] Failed to read params file:`, err))
+    .tapOk(() => log.debug(`Read params file: ${sketchPaths.params}`))
+    .tapError((err) => log.warn(`Failed to read params file`, { error: err }))
     .mapError((err: unknown) =>
       Errors.isErrnoException(err) && err.code === 'ENOENT'
         ? Errors.notFound(`Parameters not found for sketch '${sketchName}'`)
@@ -48,9 +51,9 @@ function fetchSketchParams(sketchName: string): Future<Result<Types.SketchParams
     .flatMapOk((fileContent) =>
       Future.fromPromise(import(sketchPaths.serverHandler))
         .tapOk((module) =>
-          console.log(`[fetchSketchParams] Loaded server handler, has default export: ${'default' in module}`)
+          log.debug(`Loaded server handler`, { hasDefaultExport: 'default' in module })
         )
-        .tapError((err) => console.log(`[fetchSketchParams] Failed to load server handler:`, err))
+        .tapError((err) => log.warn(`Failed to load server handler`, { error: err }))
         .mapError((err: unknown) =>
           Errors.isErrnoException(err) && err.code === 'MODULE_NOT_FOUND'
             ? Errors.notFound(`Server handler not found for sketch '${sketchName}'`)
