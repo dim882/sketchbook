@@ -5,6 +5,11 @@ import * as path from 'path';
 import { Result } from '@swan-io/boxed';
 import * as LibBuild from '../lib/build';
 import * as CloneUtils from './clone.utils';
+import { installErrorHandlers } from '../lib/bootstrap';
+import { createLogger } from '../lib/logger';
+
+installErrorHandlers();
+const log = createLogger('clone');
 
 const EXCLUDED_FILES = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
 
@@ -20,7 +25,7 @@ const collectError = <T>(result: Result<T, Error>, context: string): void => {
     Ok: () => { },
     Error: (err) => {
       errors.push(err);
-      console.error(`${context}: ${err.message}`);
+      log.error(context, { error: err.message });
     },
   });
 };
@@ -30,18 +35,18 @@ copyDir(sourceDir, targetDir);
 // Install dependencies
 collectError(CloneUtils.install(targetDir), 'Failed to install dependencies');
 if (errors.length === 0) {
-  console.log(`Sketch './sketches/${targetName}' created successfully.`);
+  log.info(`Sketch './sketches/${targetName}' created successfully.`);
 }
 
 // Build sketch
 collectError(LibBuild.buildSketch(targetDir), 'Failed to build sketch');
 if (errors.length === 0) {
-  console.log(`Sketch './sketches/${targetName}' built successfully.`);
+  log.info(`Sketch './sketches/${targetName}' built successfully.`);
 }
 
 // Report final status
 if (errors.length > 0) {
-  console.error(`\nClone completed with ${errors.length} error(s).`);
+  log.error(`Clone completed with ${errors.length} error(s).`, { errorCount: errors.length });
   process.exit(1);
 }
 

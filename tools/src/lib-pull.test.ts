@@ -2,6 +2,19 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('fs-extra');
 vi.mock('./lib/paths');
+vi.mock('./lib/bootstrap', () => ({
+  installErrorHandlers: vi.fn(),
+}));
+
+const mockLogger = {
+  info: vi.fn(),
+  error: vi.fn(),
+  warn: vi.fn(),
+  debug: vi.fn(),
+};
+vi.mock('./lib/logger', () => ({
+  createLogger: () => mockLogger,
+}));
 
 import fs from 'fs-extra';
 import * as LibPaths from './lib/paths';
@@ -10,6 +23,8 @@ describe('lib-pull script', () => {
   beforeEach(() => {
     vi.resetModules();
     vi.clearAllMocks();
+    mockLogger.info.mockClear();
+    mockLogger.error.mockClear();
     vi.mocked(LibPaths.getLibDir).mockReturnValue('/project/lib');
     vi.mocked(LibPaths.getSketchesDir).mockReturnValue('/project/sketches');
   });
@@ -19,7 +34,6 @@ describe('lib-pull script', () => {
       const originalArgv = process.argv;
       process.argv = ['node', 'lib-pull.ts'];
 
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       // Make process.exit throw to stop execution (simulates real behavior)
       const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => {
         throw new Error('process.exit called');
@@ -27,11 +41,10 @@ describe('lib-pull script', () => {
 
       await expect(import('./lib-pull')).rejects.toThrow('process.exit called');
 
-      expect(consoleSpy).toHaveBeenCalledWith('Please provide a sketch name');
+      expect(mockLogger.error).toHaveBeenCalledWith('Please provide a sketch name');
       expect(exitSpy).toHaveBeenCalledWith(1);
 
       process.argv = originalArgv;
-      consoleSpy.mockRestore();
       exitSpy.mockRestore();
     });
   });
@@ -43,7 +56,6 @@ describe('lib-pull script', () => {
 
       vi.mocked(fs.copy).mockResolvedValue(undefined);
       vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
 
       await import('./lib-pull');
       await new Promise((resolve) => setTimeout(resolve, 10));
@@ -58,7 +70,6 @@ describe('lib-pull script', () => {
       );
 
       process.argv = originalArgv;
-      consoleSpy.mockRestore();
     });
 
     it('filters out package.json from copy', async () => {
@@ -89,15 +100,13 @@ describe('lib-pull script', () => {
 
       vi.mocked(fs.copy).mockResolvedValue(undefined);
       vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
 
       await import('./lib-pull');
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      expect(consoleSpy).toHaveBeenCalledWith('Copied lib to my-sketch');
+      expect(mockLogger.info).toHaveBeenCalledWith('Copied lib to my-sketch');
 
       process.argv = originalArgv;
-      consoleSpy.mockRestore();
     });
 
     it('logs error and exits on copy failure', async () => {
@@ -106,19 +115,17 @@ describe('lib-pull script', () => {
 
       vi.mocked(fs.copy).mockRejectedValue(new Error('ENOENT: no such file'));
       const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       await import('./lib-pull');
       await new Promise((resolve) => setTimeout(resolve, 10));
 
-      expect(consoleSpy).toHaveBeenCalledWith(
+      expect(mockLogger.error).toHaveBeenCalledWith(
         expect.stringContaining('Error copying lib'),
-        expect.stringContaining('ENOENT')
+        expect.objectContaining({ error: expect.stringContaining('ENOENT') })
       );
       expect(exitSpy).toHaveBeenCalledWith(1);
 
       process.argv = originalArgv;
-      consoleSpy.mockRestore();
     });
   });
 });

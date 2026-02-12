@@ -5,6 +5,11 @@ import { Result } from '@swan-io/boxed';
 
 import * as LibPaths from '../lib/paths';
 import * as WatchUtils from './watch.utils';
+import { installErrorHandlers } from '../lib/bootstrap';
+import { createLogger } from '../lib/logger';
+
+installErrorHandlers();
+const log = createLogger('watch');
 
 const SKETCHES_DIR = LibPaths.getSketchesDir();
 
@@ -23,22 +28,22 @@ watcher.on('all', (_event, filePath) => {
 
     pendingBuilds.set(configPath, setTimeout(() => {
       pendingBuilds.delete(configPath);
-      console.log(`Detected change. Building ${filePath}...`);
+      log.info(`Detected change. Building ${filePath}...`);
 
       // runRollup catches all errors and returns Result.Error, so no .catch needed
       runRollup(configPath).then((result) =>
         result.match({
-          Ok: () => console.log(`Built ${filePath}`),
-          Error: (err) => logError(err),
+          Ok: () => log.info(`Built ${filePath}`),
+          Error: (err) => log.error('Build failed', { error: err.message, filePath }),
         })
       );
     }, DEBOUNCE_MS));
   } else {
-    console.log(`No config found for: ${filePath}`);
+    log.debug(`No config found for: ${filePath}`);
   }
 });
 
-console.log(`Watching for changes in ${SKETCHES_DIR}`);
+log.info(`Watching for changes in ${SKETCHES_DIR}`);
 
 function makeWatcher(dir: string) {
   const watchOptions = {
@@ -57,11 +62,11 @@ function makeWatcher(dir: string) {
 
   // Add debug logging
   watcher
-    .on('add', (filePath) => console.log(`File ${filePath} has been added`))
-    .on('change', (filePath) => console.log(`File ${filePath} has been changed`))
-    .on('unlink', (filePath) => console.log(`File ${filePath} has been removed`))
-    .on('error', (error) => console.error(`Watcher error: ${error}`))
-    .on('ready', () => console.log('Initial scan complete. Ready for changes'));
+    .on('add', (filePath) => log.debug(`File ${filePath} has been added`))
+    .on('change', (filePath) => log.debug(`File ${filePath} has been changed`))
+    .on('unlink', (filePath) => log.debug(`File ${filePath} has been removed`))
+    .on('error', (error) => log.error(`Watcher error`, { error: String(error) }))
+    .on('ready', () => log.info('Initial scan complete. Ready for changes'));
 
   return watcher;
 }
@@ -141,10 +146,6 @@ function resolveConfigPaths(config: RollupOptions, configDir: string): RollupOpt
 
   return resolvedConfig;
 }
-
-const logError = (error: Error) => {
-  console.error('Error occurred:', error.message);
-};
 
 /**
  * Load rollup config from file with cache busting.
