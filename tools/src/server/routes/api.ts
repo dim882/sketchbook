@@ -11,13 +11,13 @@ const log = createLogger('routes/api');
 
 // --- Route Handlers ---
 
-export const getParamsHandler = (req: Request, res: Response) => {
+export const getParamsRoute = (req: Request, res: Response) => {
   fetchSketchParams(req.params.sketchName).tap(
     Utils.sendResult(res, (params) => res.json({ params }))
   );
 };
 
-export const updateParamsHandler = (req: Request, res: Response) => {
+export const updateParamsRoute = (req: Request, res: Response) => {
   Errors.validateParamsBody(req.body).match({
     Ok: (params) =>
       updateSketchParams(req.params.sketchName, params).tap(

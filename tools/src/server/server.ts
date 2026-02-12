@@ -17,16 +17,16 @@ app.use(express.json());
 app.use(express.static(Paths.paths.public()));
 
 // Main page routes
-app.get('/', Main.mainPageHandler);
-app.get('/nav/:sketchName', Middleware.requireValidSketchName, Main.navHandler);
+app.get('/', Main.route);
+app.get('/nav/:sketchName', Middleware.requireValidSketchName, Main.route);
 
 // Sketch file routes
-app.get('/sketches/:sketchName', Middleware.requireValidSketchName, Sketches.sketchHtmlHandler);
-app.use('/sketches/:sketchName/dist', Middleware.requireValidSketchName, Sketches.sketchDistHandler);
+app.get('/sketches/:sketchName', Middleware.requireValidSketchName, Sketches.htmlRoute);
+app.use('/sketches/:sketchName/dist', Middleware.requireValidSketchName, Sketches.distRoute);
 
 // API routes
-app.get('/api/sketches/:sketchName/params', Middleware.requireValidSketchName, Api.getParamsHandler);
-app.post('/api/sketches/:sketchName/params', Middleware.requireValidSketchName, Api.updateParamsHandler);
+app.get('/api/sketches/:sketchName/params', Middleware.requireValidSketchName, Api.getParamsRoute);
+app.post('/api/sketches/:sketchName/params', Middleware.requireValidSketchName, Api.updateParamsRoute);
 
 const server = app.listen(port, () => {
   log.info(`Server running on http://localhost:${port}`, { port });

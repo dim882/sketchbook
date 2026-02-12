@@ -15,11 +15,7 @@ const log = createLogger('routes/main');
 
 // --- Route Handlers ---
 
-export const mainPageHandler = (_req: Request, res: Response) => {
-  renderMainPage().tap(Utils.sendResult(res, (html) => res.send(html)));
-};
-
-export const navHandler = (req: Request, res: Response) => {
+export const route = (req: Request, res: Response) => {
   renderMainPage(req.params.sketchName).tap(Utils.sendResult(res, (html) => res.send(html)));
 };
 
