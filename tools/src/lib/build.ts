@@ -1,22 +1,13 @@
-import { execSync, spawn } from 'child_process';
+import { spawn } from 'child_process';
 import * as path from 'path';
 import { Result } from '@swan-io/boxed';
 import { createLogger } from './logger';
 
 const log = createLogger('lib/build');
 
-export const buildSketch = (sketchPath: string): Result<void, Error> => {
+export const buildSketch = (sketchPath: string): Promise<Result<void, Error>> => {
   log.info(`Building sketch: ${path.basename(sketchPath)}`);
 
-  return Result.fromExecution(() => {
-    execSync('npx rollup -c', {
-      cwd: sketchPath,
-      stdio: 'inherit',
-    });
-  });
-};
-
-export const buildSketchAsync = (sketchPath: string): Promise<Result<void, Error>> => {
   return new Promise((resolve) => {
     const child = spawn('npx', ['rollup', '-c'], {
       cwd: sketchPath,

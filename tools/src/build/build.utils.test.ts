@@ -57,38 +57,38 @@ describe('buildAllSketches', () => {
     rmSync(tempDir, { recursive: true });
   });
 
-  it('returns success when all builds succeed', () => {
-    const fakeBuild = () => Result.Ok<void, Error>(undefined);
+  it('returns success when all builds succeed', async () => {
+    const fakeBuild = async () => Result.Ok<void, Error>(undefined);
 
-    const result = buildAllSketches(tempDir, fakeBuild);
+    const result = await buildAllSketches(tempDir, fakeBuild);
 
     expect(result.total).toBe(2);
     expect(result.failures).toBe(0);
   });
 
-  it('counts failures when builds fail', () => {
+  it('counts failures when builds fail', async () => {
     let callCount = 0;
-    const fakeBuild = (): Result<void, Error> => {
+    const fakeBuild = async (): Promise<Result<void, Error>> => {
       callCount++;
       return callCount === 1 ? Result.Ok(undefined) : Result.Error(new Error('fail'));
     };
 
-    const result = buildAllSketches(tempDir, fakeBuild);
+    const result = await buildAllSketches(tempDir, fakeBuild);
 
     expect(result.total).toBe(2);
     expect(result.failures).toBe(1);
   });
 
-  it('reports correct failure count when multiple builds fail', () => {
+  it('reports correct failure count when multiple builds fail', async () => {
     mkdirSync(join(tempDir, 'sketch3'));
 
     let callCount = 0;
-    const fakeBuild = (): Result<void, Error> => {
+    const fakeBuild = async (): Promise<Result<void, Error>> => {
       callCount++;
       return callCount === 2 ? Result.Ok(undefined) : Result.Error(new Error('fail'));
     };
 
-    const result = buildAllSketches(tempDir, fakeBuild);
+    const result = await buildAllSketches(tempDir, fakeBuild);
 
     expect(result.total).toBe(3);
     expect(result.failures).toBe(2);

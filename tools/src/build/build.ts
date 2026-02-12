@@ -7,8 +7,8 @@ import { createLogger } from '../lib/logger';
 installErrorHandlers();
 const log = createLogger('build');
 
-const main = (): void => {
-  const result = buildAllSketches(LibPaths.getSketchesDir(), LibBuild.buildSketch);
+const main = async (): Promise<void> => {
+  const result = await buildAllSketches(LibPaths.getSketchesDir(), LibBuild.buildSketch);
   log.info(`Found ${result.total} sketches to build`, { total: result.total });
 
   if (result.failures > 0) {

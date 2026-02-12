@@ -17,12 +17,19 @@ export const getAllSketchDirectories = (directory: string): string[] =>
       .map((item) => path.join(directory, item.name))
     : [];
 
-export const buildAllSketches = (
+export const buildAllSketches = async (
   sketchesDir: string,
-  buildFn: (path: string) => Result<void, Error>
-): BuildResult => {
+  buildFn: (path: string) => Promise<Result<void, Error>>
+): Promise<BuildResult> => {
   const directories = getAllSketchDirectories(sketchesDir);
-  const failures = directories.map(buildFn).filter((r) => r.isError()).length;
+  let failures = 0;
+
+  for (const dir of directories) {
+    const result = await buildFn(dir);
+    if (result.isError()) {
+      failures++;
+    }
+  }
 
   return {
     total: directories.length,

@@ -30,25 +30,29 @@ const collectError = <T>(result: Result<T, Error>, context: string): void => {
   });
 };
 
-copyDir(sourceDir, targetDir);
+const main = async () => {
+  copyDir(sourceDir, targetDir);
 
-// Install dependencies
-collectError(CloneUtils.install(targetDir), 'Failed to install dependencies');
-if (errors.length === 0) {
-  log.info(`Sketch './sketches/${targetName}' created successfully.`);
-}
+  // Install dependencies
+  collectError(CloneUtils.install(targetDir), 'Failed to install dependencies');
+  if (errors.length === 0) {
+    log.info(`Sketch './sketches/${targetName}' created successfully.`);
+  }
 
-// Build sketch
-collectError(LibBuild.buildSketch(targetDir), 'Failed to build sketch');
-if (errors.length === 0) {
-  log.info(`Sketch './sketches/${targetName}' built successfully.`);
-}
+  // Build sketch
+  collectError(await LibBuild.buildSketch(targetDir), 'Failed to build sketch');
+  if (errors.length === 0) {
+    log.info(`Sketch './sketches/${targetName}' built successfully.`);
+  }
 
-// Report final status
-if (errors.length > 0) {
-  log.error(`Clone completed with ${errors.length} error(s).`, { errorCount: errors.length });
-  process.exit(1);
-}
+  // Report final status
+  if (errors.length > 0) {
+    log.error(`Clone completed with ${errors.length} error(s).`, { errorCount: errors.length });
+    process.exit(1);
+  }
+};
+
+main();
 
 function copyDir(source: string, targetDir: string) {
   if (!fs.existsSync(targetDir)) {
