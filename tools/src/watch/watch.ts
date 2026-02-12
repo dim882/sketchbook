@@ -7,14 +7,11 @@ import { installErrorHandlers } from '../lib/bootstrap';
 import { createLogger } from '../lib/logger';
 
 installErrorHandlers();
-const log = createLogger('watch');
 
 const SKETCHES_DIR = LibPaths.getSketchesDir();
-
-// Debounce settings
 const DEBOUNCE_MS = 300;
+const log = createLogger('watch');
 const pendingBuilds = new Map<string, NodeJS.Timeout>();
-
 const watcher = makeWatcher(SKETCHES_DIR, log);
 
 watcher.on('all', (_event, filePath) => {
