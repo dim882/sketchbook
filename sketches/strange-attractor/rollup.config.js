@@ -4,7 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import copy from 'rollup-plugin-copy';
 
 export default {
-  input: 'strange-attractor.ts',
+  input: 'src/strange-attractor.ts',
   output: {
     file: 'dist/bundle.js',
     format: 'module',
@@ -18,8 +18,8 @@ export default {
     typescript(),
     copy({
       targets: [
-        { src: '*.css', dest: 'dist' },
-        { src: '*.html', dest: 'dist' },
+        { src: 'src/*.css', dest: 'dist' },
+        { src: 'src/*.html', dest: 'dist' },
       ],
     }),
   ],

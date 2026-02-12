@@ -5,7 +5,7 @@ import { babel } from '@rollup/plugin-babel';
 import postcss from 'rollup-plugin-postcss';
 
 export default {
-  input: 'palettes.ts',
+  input: 'src/palettes.ts',
   output: {
     file: 'dist/bundle.js',
     format: 'es',
@@ -29,8 +29,8 @@ export default {
     }),
     copy({
       targets: [
-        { src: '*.css', dest: 'dist' },
-        { src: '*.html', dest: 'dist' },
+        { src: 'src/*.css', dest: 'dist' },
+        { src: 'src/*.html', dest: 'dist' },
       ],
     }),
   ],
