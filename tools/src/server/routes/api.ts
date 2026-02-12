@@ -18,7 +18,9 @@ export const getParamsRoute = (req: Request, res: Response) => {
 };
 
 export const updateParamsRoute = (req: Request, res: Response) => {
-  Errors.validateParamsBody(req.body).match({
+  Errors.validateParamsBody(req.body)
+    .tapError((err) => log.warn('Validation failed', { error: err, body: req.body }))
+    .match({
     Ok: (params) =>
       updateSketchParams(req.params.sketchName, params).tap(
         Utils.sendResult(res, () => res.json({ success: true }))

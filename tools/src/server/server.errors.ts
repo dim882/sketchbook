@@ -33,7 +33,9 @@ export const handleError = (res: Response) => (err: ServerError) => {
   res.status(err.status).json({ error: err.message });
 };
 
-const ParamsBody = z.object({ params: z.record(z.string(), z.string()) });
+const ParamsBody = z.object({
+  params: z.record(z.string(), z.union([z.string(), z.number()]).transform(String)),
+});
 
 export const validateParamsBody = (body: unknown): Result<Record<string, string>, ServerError> =>
   Result.fromExecution(() => ParamsBody.parse(body))
