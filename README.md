@@ -1,31 +1,65 @@
 # Sketchbook
 
-A collection of creative coding sketches and tools.
+A monorepo for creative coding sketches.
 
-## Development
+## Philosophy
 
-### Available Commands
+**Sketches are standalone.** Each sketch is its own package that can be built and run independently—no framework lock-in. The dev server exists to make iteration fast, but sketches should never depend on it.
 
-- `pnpm dev`: Starts the development server with hot reloading, file watching, and UI building
-- `pnpm clone <base sketch name> <my sketch name>`: Creates a new sketch from a template
-- `pnpm lib:pull`: Updates the shared library code
-- `pnpm build`: Builds all sketches and the UI bundle
-- `pnpm check`: Runs TypeScript type checking on sketch files
-- `pnpm lib:publish:patch`: Publishes the lib package with a patch version bump (0.1.0 → 0.1.1)
-- `pnpm lib:publish:minor`: Publishes the lib package with a minor version bump (0.1.0 → 0.2.0)
-- `pnpm lib:publish:major`: Publishes the lib package with a major version bump (0.1.0 → 1.0.0)
+**Loose coupling.** Any interaction between sketches and tooling is explicit and generic. A few sketches (like `boids`) support browser-based parameter editing that writes to disk via the server—this works but is experimental.
 
-## Parameter Editing
+## Structure
 
-Sketches can include editable parameters that persist between sessions. To add parameter editing to a sketch:
+```
+sketches/   # Individual sketch packages (browser)
+lib/        # Shared utilities as @dim882/sketchlib (browser)
+tools/      # Dev server, build system, CLI (node)
+```
 
-1. Create the actual params file `src/<sketch>.params.ts` with default values
-2. Create a template file `src/<sketch>.params.tpl` with placeholder values like `{{paramName}}` - this template is used to regenerate the actual params file when values are saved
-3. Add a server handler `src/<sketch>.server.ts` with a `getParams()` function to parse the params file
-4. Include a parameter UI form in your sketch's HTML file with form fields that match your parameter names and a submit button
-5. Initialize parameter handling in your sketch's JavaScript - the code must load current parameters on startup and handle form submission to save new values via the API endpoints
+### Sketches
 
-For a full example, see the `boids` sketch
+Each sketch follows a naming convention:
 
-The server will automatically handle loading and saving parameters via `/api/sketches/<sketch>/params` endpoints.
+```
+sketches/foo/
+  src/
+    foo.html      # Entry point
+    foo.ts        # Main logic
+    foo.css       # Styles
+    foo.utils.ts  # Helpers
+  rollup.config.js
+  package.json
+```
+
+Sketches can import from `@dim882/sketchlib` for shared utilities.
+
+### Lib
+
+Published to npm as `@dim882/sketchlib`. Contains reusable utilities: canvas helpers, animation, audio, math, random, etc. Distributed as TypeScript source.
+
+### Tools
+
+Node-based infrastructure: Express dev server, Rollup build orchestration, file watcher, and CLI utilities. Run with Bun.
+
+## Commands
+
+```bash
+pnpm dev                    # Dev server with hot reload
+pnpm clone <from> <to>      # Create new sketch from template
+pnpm build                  # Build all sketches
+pnpm check                  # TypeScript checking
+pnpm lib:pull               # Update shared lib in sketches
+pnpm lib:publish:patch      # Publish lib (patch/minor/major)
+```
+
+## Parameter Editing (Experimental)
+
+Some sketches support editable parameters that persist to disk. Requires:
+
+1. `<sketch>.params.ts` — default values
+2. `<sketch>.params.tpl` — template with `{{placeholders}}`
+3. `<sketch>.server.ts` — `getParams()` parser
+4. Form UI in HTML
+
+Server handles `/api/sketches/<sketch>/params` automatically. See `boids` for a working example.
 
