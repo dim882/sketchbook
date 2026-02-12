@@ -1,18 +1,46 @@
 import fs from 'fs-extra';
-import path from 'path';
+import * as path from 'path';
+import { Future, Result } from '@swan-io/boxed';
+import * as LibPaths from './lib/paths';
+import { installErrorHandlers } from './lib/bootstrap';
+import { createLogger } from './lib/logger';
 
-const sketchName = process.argv[2];
-if (!sketchName) {
-  console.error('Please provide a sketch name');
-  process.exit(1);
+installErrorHandlers();
+const log = createLogger('lib-pull');
+
+/** Pure validation */
+function validateArgs(argv: string[]): Result<string, string> {
+  const sketchName = argv[2];
+  if (!sketchName) {
+    return Result.Error('Please provide a sketch name');
+  }
+  return Result.Ok(sketchName);
 }
 
-const libPath = path.resolve(__dirname, '..', 'lib');
-const sketchLibPath = path.resolve(__dirname, '..', 'sketches', sketchName, 'lib');
+/** Imperative shell - entry point */
+const sketchName = validateArgs(process.argv).match({
+  Ok: (name) => name,
+  Error: (msg) => {
+    log.error(msg);
+    process.exit(1);
+  },
+});
 
-fs.copy(libPath, sketchLibPath, {
-  overwrite: true,
-  filter: (src: string) => !src.endsWith('package.json'),
-})
-  .then(() => console.log(`Copied lib to ${sketchName}`))
-  .catch((err: Error) => console.error(`Error copying lib to ${sketchLibPath}:`, err));
+const sketchLibPath = path.join(LibPaths.getSketchesDir(), sketchName, 'lib');
+
+Future.fromPromise(
+  fs.copy(LibPaths.getLibDir(), sketchLibPath, {
+    overwrite: true,
+    filter: (src: string) => !src.endsWith('package.json'),
+  })
+)
+  .mapError((err): Error => (err instanceof Error ? err : new Error(String(err))))
+  .tap((result) =>
+    result.match({
+      Ok: () => log.info(`Copied lib to ${sketchName}`),
+      Error: (err) => {
+        log.error(`Error copying lib to ${sketchLibPath}`, { error: err.message });
+        process.exit(1);
+      },
+    })
+  );

@@ -1,4 +1,6 @@
-interface FlockParams {
+import type { SketchServerHandler, SketchParams } from '../../../tools/src/lib/types';
+
+interface FlockParams extends SketchParams {
   separationDist: number;
   alignDist: number;
   cohesionDist: number;
@@ -7,7 +9,7 @@ interface FlockParams {
   cohesionWeight: number;
 }
 
-export function getParams(fileContent: string): FlockParams {
+function getParams(fileContent: string): FlockParams {
   // Extract FLOCK_PARAMS from the file content
   const match = fileContent.match(/export const FLOCK_PARAMS[^}]+}/s);
   if (!match) {
@@ -33,3 +35,9 @@ export function getParams(fileContent: string): FlockParams {
     cohesionWeight: extractNumber(paramsText, 'cohesionWeight'),
   };
 }
+
+const handler: SketchServerHandler = {
+  getParams,
+};
+
+export default handler;
