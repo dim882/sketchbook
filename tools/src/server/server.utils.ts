@@ -13,7 +13,6 @@ export const writeFile = (filePath: string, content: string) =>
 export const readDir = (dirPath: string) =>
   Future.fromPromise(fs.readdir(dirPath, { withFileTypes: true }));
 
-// Wraps res.sendFile in a Future at the I/O boundary
 export const sendFile = (res: Response, filePath: string): Future<Result<void, Errors.ServerError>> =>
   Future.fromPromise(
     new Promise<void>((resolve, reject) => {
@@ -25,7 +24,6 @@ export const sendFile = (res: Response, filePath: string): Future<Result<void, E
       : Errors.serverError('Failed to send file', err)
   );
 
-// Helper to handle Result responses, reducing .tap(result.match({Ok, Error})) boilerplate
 export const sendResult =
   <T>(res: Response, onOk: (value: T) => void) =>
     (result: Result<T, Errors.ServerError>) =>
