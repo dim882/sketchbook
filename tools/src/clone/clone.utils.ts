@@ -3,6 +3,9 @@ import * as path from 'path';
 import { execSync } from 'child_process';
 import { Result } from '@swan-io/boxed';
 import * as LibPaths from '../lib/paths';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('clone/utils');
 
 const FILE_EXTENSIONS = ['.ts', '.js', '.html', '.css', '.md', '.json', '.config.js'];
 
@@ -50,8 +53,8 @@ export function getArgs(): Args {
   return validateArgs(process.argv).match({
     Ok: (args) => args,
     Error: (errors) => {
-      console.error('Usage: pnpm clone <source> <target>');
-      errors.forEach((e) => console.error(e));
+      log.error('Usage: pnpm clone <source> <target>');
+      errors.forEach((e) => log.error(e));
       process.exit(1);
     },
   });
@@ -62,7 +65,7 @@ export function getDirectoryNames(sourceName: string, targetName: string): Direc
   return validateDirectories(sourceName, targetName).match({
     Ok: (dirs) => dirs,
     Error: (msg) => {
-      console.error(msg);
+      log.error(msg);
       process.exit(1);
     },
   });
@@ -118,7 +121,7 @@ export function setPackageName(
 }
 
 export function install(targetDir: string): Result<void, Error> {
-  console.log(`Running pnpm install in ${targetDir}...`);
+  log.info(`Running pnpm install in ${targetDir}...`);
 
   return Result.fromExecution(() => {
     execSync('pnpm install', { cwd: targetDir, stdio: 'inherit' });

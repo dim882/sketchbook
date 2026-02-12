@@ -1,6 +1,9 @@
 import { Result } from '@swan-io/boxed';
 import { z } from 'zod';
 import type { Response } from 'express';
+import { createLogger } from '../lib/logger';
+
+const log = createLogger('server/errors');
 
 export interface ServerError {
   status: number;
@@ -24,7 +27,7 @@ export const serverError = (message: string, cause?: unknown): ServerError => ({
 
 export const handleError = (res: Response) => (err: ServerError) => {
   if (err.cause) {
-    console.error(`${err.message}:`, err.cause);
+    log.error(err.message, { cause: err.cause.message });
   }
 
   res.status(err.status).json({ error: err.message });

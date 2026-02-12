@@ -1,11 +1,28 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('child_process');
+
+const { mockLogger } = vi.hoisted(() => ({
+  mockLogger: {
+    info: vi.fn(),
+    error: vi.fn(),
+    warn: vi.fn(),
+    debug: vi.fn(),
+  },
+}));
+
+vi.mock('./logger', () => ({
+  createLogger: () => mockLogger,
+}));
 
 import * as LibBuild from './build';
 import { execSync } from 'child_process';
 
 describe('buildSketch', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('returns Ok and executes rollup -c in the sketch directory', () => {
     vi.mocked(execSync).mockImplementation(() => Buffer.from(''));
 
@@ -20,12 +37,10 @@ describe('buildSketch', () => {
 
   it('logs the sketch name being built', () => {
     vi.mocked(execSync).mockImplementation(() => Buffer.from(''));
-    const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
 
     LibBuild.buildSketch('/path/to/my-sketch');
 
-    expect(consoleSpy).toHaveBeenCalledWith('Building sketch: my-sketch');
-    consoleSpy.mockRestore();
+    expect(mockLogger.info).toHaveBeenCalledWith('Building sketch: my-sketch');
   });
 
   it('returns Error when build fails', () => {
