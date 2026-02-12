@@ -28,7 +28,7 @@ watcher.on('all', (_event, filePath) => {
       pendingBuilds.delete(configPath);
       log.info(`Detected change. Building ${filePath}...`);
 
-      buildSketch(path.dirname(configPath)).then((result) =>
+      buildSketch(path.dirname(configPath)).tap((result) =>
         result.match({
           Ok: () => log.info(`Built ${filePath}`),
           Error: (err) => log.error('Build failed', { error: err.message, filePath }),

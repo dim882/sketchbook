@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'fs';
 import { join } from 'path';
 import os from 'os';
-import { Result } from '@swan-io/boxed';
+import { Future, Result } from '@swan-io/boxed';
 import { getAllSketchDirectories, buildAllSketches } from './build.utils';
 
 describe('getAllSketchDirectories', () => {
@@ -58,7 +58,7 @@ describe('buildAllSketches', () => {
   });
 
   it('returns success when all builds succeed', async () => {
-    const fakeBuild = async () => Result.Ok<void, Error>(undefined);
+    const fakeBuild = () => Future.value(Result.Ok<void, Error>(undefined));
 
     const result = await buildAllSketches(tempDir, fakeBuild);
 
@@ -68,9 +68,9 @@ describe('buildAllSketches', () => {
 
   it('counts failures when builds fail', async () => {
     let callCount = 0;
-    const fakeBuild = async (): Promise<Result<void, Error>> => {
+    const fakeBuild = (): Future<Result<void, Error>> => {
       callCount++;
-      return callCount === 1 ? Result.Ok(undefined) : Result.Error(new Error('fail'));
+      return Future.value(callCount === 1 ? Result.Ok(undefined) : Result.Error(new Error('fail')));
     };
 
     const result = await buildAllSketches(tempDir, fakeBuild);
@@ -83,9 +83,9 @@ describe('buildAllSketches', () => {
     mkdirSync(join(tempDir, 'sketch3'));
 
     let callCount = 0;
-    const fakeBuild = async (): Promise<Result<void, Error>> => {
+    const fakeBuild = (): Future<Result<void, Error>> => {
       callCount++;
-      return callCount === 2 ? Result.Ok(undefined) : Result.Error(new Error('fail'));
+      return Future.value(callCount === 2 ? Result.Ok(undefined) : Result.Error(new Error('fail')));
     };
 
     const result = await buildAllSketches(tempDir, fakeBuild);

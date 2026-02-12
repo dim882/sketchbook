@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { Result } from '@swan-io/boxed';
+import { Future, Result } from '@swan-io/boxed';
 
 const EXCLUDED_DIRS = ['.git', 'node_modules'];
 
@@ -19,13 +19,13 @@ export const getAllSketchDirectories = (directory: string): string[] =>
 
 export const buildAllSketches = async (
   sketchesDir: string,
-  buildFn: (path: string) => Promise<Result<void, Error>>
+  buildFn: (path: string) => Future<Result<void, Error>>
 ): Promise<BuildResult> => {
   const directories = getAllSketchDirectories(sketchesDir);
   let failures = 0;
 
   for (const dir of directories) {
-    const result = await buildFn(dir);
+    const result = await buildFn(dir).toPromise();
     if (result.isError()) {
       failures++;
     }
