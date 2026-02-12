@@ -6,7 +6,7 @@ export default {
   input: 'src/arcs.ts',
   output: {
     file: 'dist/bundle.js',
-    format: 'module',
+    format: 'es',
     sourcemap: true,
   },
   plugins: [

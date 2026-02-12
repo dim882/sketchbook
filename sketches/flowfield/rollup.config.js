@@ -7,8 +7,8 @@ export default {
   input: 'src/flowfield.ts',
   output: {
     file: 'dist/bundle.js',
-    format: 'module',
-    sourcemap: false,
+    format: 'es',
+    sourcemap: true,
   },
   plugins: [
     nodeResolve(),

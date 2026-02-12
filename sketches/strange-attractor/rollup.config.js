@@ -7,8 +7,8 @@ export default {
   input: 'src/strange-attractor.ts',
   output: {
     file: 'dist/bundle.js',
-    format: 'module',
-    sourcemap: false,
+    format: 'es',
+    sourcemap: true,
   },
   plugins: [
     nodeResolve(),

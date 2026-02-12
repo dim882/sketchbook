@@ -30,7 +30,7 @@ export default [
     input: 'src/color-picker.tsx',
     output: {
       file: 'dist/bundle.js',
-      format: 'module',
+      format: 'es',
       sourcemap: true,
     },
     plugins: commonPlugins,
@@ -39,7 +39,7 @@ export default [
     input: 'src/color-picker-element.ts',
     output: {
       file: 'dist/color-picker-element.js',
-      format: 'module',
+      format: 'es',
       sourcemap: true,
     },
     plugins: commonPlugins,
