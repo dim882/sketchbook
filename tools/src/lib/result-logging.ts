@@ -19,21 +19,22 @@ import type { Logger } from './logger';
  */
 export const logResult =
   <T, E>(log: Logger, operation: string, successMessage?: string | ((value: T) => string)) =>
-  (result: Result<T, E>): Result<T, E> => {
-    result.match({
-      Ok: (value) => {
-        const message =
-          typeof successMessage === 'function'
-            ? successMessage(value)
-            : successMessage || `${operation} succeeded`;
-        log.info(message, { operation });
-      },
-      Error: (error) => {
-        log.error(`${operation} failed`, { operation, error });
-      },
-    });
-    return result;
-  };
+    (result: Result<T, E>): Result<T, E> => {
+      result.match({
+        Ok: (value) => {
+          const message =
+            typeof successMessage === 'function'
+              ? successMessage(value)
+              : successMessage || `${operation} succeeded`;
+          log.info(message, { operation });
+        },
+        Error: (error) => {
+          log.error(`${operation} failed`, { operation, error });
+        },
+      });
+
+      return result;
+    };
 
 /**
  * Log a Result's outcome and discard the value.
@@ -51,9 +52,9 @@ export const logResult =
  */
 export const logAndDiscard =
   <T, E>(log: Logger, operation: string) =>
-  (result: Result<T, E>): void => {
-    logResult(log, operation)(result);
-  };
+    (result: Result<T, E>): void => {
+      logResult(log, operation)(result);
+    };
 
 /**
  * Extract a value from a Result, using a default on error, but LOG the error first.
@@ -71,17 +72,18 @@ export const logAndDiscard =
  */
 export const getOrLog =
   <T, E>(log: Logger, operation: string, defaultValue: T) =>
-  (result: Result<T, E>): T =>
-    result.match({
-      Ok: (value) => value,
-      Error: (error) => {
-        log.warn(`${operation} failed, using default value`, {
-          operation,
-          error,
-        });
-        return defaultValue;
-      },
-    });
+    (result: Result<T, E>): T =>
+      result.match({
+        Ok: (value) => value,
+        Error: (error) => {
+          log.warn(`${operation} failed, using default value`, {
+            operation,
+            error,
+          });
+
+          return defaultValue;
+        },
+      });
 
 /**
  * Log the start and outcome of a Future<Result>.
@@ -100,9 +102,10 @@ export const getOrLog =
  */
 export const logFutureResult =
   <T, E>(log: Logger, operation: string, successMessage?: string | ((value: T) => string)) =>
-  (future: Future<Result<T, E>>): Future<Result<T, E>> => {
-    log.debug(`${operation} started`, { operation });
-    return future.tap((result) => {
-      logResult(log, operation, successMessage)(result);
-    });
-  };
+    (future: Future<Result<T, E>>): Future<Result<T, E>> => {
+      log.debug(`${operation} started`, { operation });
+
+      return future.tap((result) => {
+        logResult(log, operation, successMessage)(result);
+      });
+    };
