@@ -33,6 +33,7 @@
     "nodemon": "^3.1.0",
     "preact": "^10.25.4",
     "rollup": "^4.20.0",
+    "winston": "^3.19.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
