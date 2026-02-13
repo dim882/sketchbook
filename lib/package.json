@@ -1,18 +1,52 @@
 {
   "name": "@dim882/sketchlib",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "A TypeScript library of utilities for creative coding sketches",
   "license": "MIT",
-  "main": "index.ts",
-  "types": "index.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "files": [
-    "*.ts"
+    "dist"
   ],
   "exports": {
     ".": {
-      "types": "./index.ts",
-      "default": "./index.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./canvas": {
+      "types": "./dist/canvas.d.ts",
+      "default": "./dist/canvas.js"
+    },
+    "./animation": {
+      "types": "./dist/animation.d.ts",
+      "default": "./dist/animation.js"
+    },
+    "./audio": {
+      "types": "./dist/audio.d.ts",
+      "default": "./dist/audio.js"
+    },
+    "./random": {
+      "types": "./dist/random.d.ts",
+      "default": "./dist/random.js"
+    },
+    "./math": {
+      "types": "./dist/math.d.ts",
+      "default": "./dist/math.js"
+    },
+    "./fp-utils": {
+      "types": "./dist/fp-utils.d.ts",
+      "default": "./dist/fp-utils.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
     }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist"
   },
   "publishConfig": {
     "access": "public"

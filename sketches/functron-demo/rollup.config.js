@@ -4,7 +4,7 @@ import copy from 'rollup-plugin-copy';
 import { babel } from '@rollup/plugin-babel';
 
 export default {
-  input: 'functron-demo.ts',
+  input: 'src/functron-demo.ts',
   output: {
     file: 'dist/bundle.js',
     format: 'es',
@@ -23,8 +23,8 @@ export default {
     }),
     copy({
       targets: [
-        { src: '*.css', dest: 'dist' },
-        { src: '*.html', dest: 'dist' },
+        { src: 'src/*.css', dest: 'dist' },
+        { src: 'src/*.html', dest: 'dist' },
       ],
     }),
   ],

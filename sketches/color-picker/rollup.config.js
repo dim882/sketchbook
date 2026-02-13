@@ -21,25 +21,25 @@ const commonPlugins = [
     sourceMap: true,
   }),
   copy({
-    targets: [{ src: '*.html', dest: 'dist' }],
+    targets: [{ src: 'src/*.html', dest: 'dist' }],
   }),
 ];
 
 export default [
   {
-    input: 'color-picker.tsx',
+    input: 'src/color-picker.tsx',
     output: {
       file: 'dist/bundle.js',
-      format: 'module',
+      format: 'es',
       sourcemap: true,
     },
     plugins: commonPlugins,
   },
   {
-    input: 'color-picker-element.ts',
+    input: 'src/color-picker-element.ts',
     output: {
       file: 'dist/color-picker-element.js',
-      format: 'module',
+      format: 'es',
       sourcemap: true,
     },
     plugins: commonPlugins,

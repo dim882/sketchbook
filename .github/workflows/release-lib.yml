@@ -1,0 +1,78 @@
+name: Release Lib
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lib/**'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine version bump
+        id: bump
+        run: |
+          # Get commits since last lib tag
+          LAST_TAG=$(git describe --tags --match "v*" --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            COMMITS=$(git log --format="%B" -- lib/)
+          else
+            COMMITS=$(git log --format="%B" $LAST_TAG..HEAD -- lib/)
+          fi
+
+          # Determine bump type from scoped conventional commits
+          # Only (lib) scoped commits count
+          # Major: feat(lib)!: or BREAKING CHANGE in body of (lib) scoped commit
+          if echo "$COMMITS" | grep -qE "^(feat|fix|refactor|chore)\(lib\)!:"; then
+            echo "type=major" >> $GITHUB_OUTPUT
+          elif echo "$COMMITS" | grep -q "BREAKING CHANGE" && echo "$COMMITS" | grep -qE "^\w+\(lib\)"; then
+            echo "type=major" >> $GITHUB_OUTPUT
+          elif echo "$COMMITS" | grep -qE "^feat\(lib\):"; then
+            echo "type=minor" >> $GITHUB_OUTPUT
+          elif echo "$COMMITS" | grep -qE "^fix\(lib\):"; then
+            echo "type=patch" >> $GITHUB_OUTPUT
+          else
+            # Default to patch for any lib changes without scoped commits
+            echo "type=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build lib
+        run: |
+          pnpm install
+          cd lib && pnpm build
+
+      - name: Bump version and publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          cd lib
+          npm version ${{ steps.bump.outputs.type }} -m "chore(lib): release v%s"
+          npm publish --access public
+
+      - name: Push version commit and tag
+        run: |
+          git push
+          git push --tags

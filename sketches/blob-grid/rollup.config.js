@@ -3,10 +3,10 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import copy from 'rollup-plugin-copy';
 
 export default {
-  input: 'blob-grid.ts',
+  input: 'src/blob-grid.ts',
   output: {
     file: 'dist/bundle.js',
-    format: 'module',
+    format: 'es',
     sourcemap: true,
   },
   plugins: [
@@ -14,8 +14,8 @@ export default {
     typescript(),
     copy({
       targets: [
-        { src: '*.css', dest: 'dist' },
-        { src: '*.html', dest: 'dist' },
+        { src: 'src/*.css', dest: 'dist' },
+        { src: 'src/*.html', dest: 'dist' },
       ],
     }),
   ],
