@@ -45,7 +45,10 @@ jobs:
 
           # Determine bump type from scoped conventional commits
           # Only (lib) scoped commits count
-          if echo "$COMMITS" | grep -qE "^(feat|fix|refactor|chore)\(lib\):.*BREAKING CHANGE"; then
+          # Major: feat(lib)!: or BREAKING CHANGE in body of (lib) scoped commit
+          if echo "$COMMITS" | grep -qE "^(feat|fix|refactor|chore)\(lib\)!:"; then
+            echo "type=major" >> $GITHUB_OUTPUT
+          elif echo "$COMMITS" | grep -q "BREAKING CHANGE" && echo "$COMMITS" | grep -qE "^\w+\(lib\)"; then
             echo "type=major" >> $GITHUB_OUTPUT
           elif echo "$COMMITS" | grep -qE "^feat\(lib\):"; then
             echo "type=minor" >> $GITHUB_OUTPUT

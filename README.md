@@ -38,9 +38,9 @@ Sketches can import from `@dim882/sketchlib` for shared utilities.
 Published to npm as `@dim882/sketchlib`. Contains reusable utilities: canvas helpers, animation, audio, math, random, etc.
 
 Releases are automated: merging lib changes to main triggers npm publish. Version is determined by commit scope:
-- `feat(lib):` → minor
 - `fix(lib):` → patch
-- `BREAKING CHANGE` with `(lib)` scope → major
+- `feat(lib):` → minor
+- `feat(lib)!:` or `BREAKING CHANGE` in body → major
 
 ### Tools
 
