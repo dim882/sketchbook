@@ -16,6 +16,9 @@ const EXCLUDED_FILES = ['dist', 'node_modules', 'yarn.lock', '.DS_Store'];
 const { sourceName, targetName } = CloneUtils.getArgs();
 const { sourceDir, targetDir } = CloneUtils.getDirectoryNames(sourceName, targetName);
 
+const sourceLeafName = path.basename(sourceName);
+const targetLeafName = path.basename(targetName);
+
 // Track errors during clone
 const errors: Error[] = [];
 
@@ -65,7 +68,7 @@ function copyDir(source: string, targetDir: string) {
     }
 
     const sourcePath = path.join(source, item);
-    const targetPath = CloneUtils.createTargetPath({ item, targetDir, sourceName, targetName });
+    const targetPath = CloneUtils.createTargetPath({ item, targetDir, sourceName: sourceLeafName, targetName: targetLeafName });
     const stats = fs.statSync(sourcePath);
 
     if (stats.isDirectory()) {
@@ -74,12 +77,12 @@ function copyDir(source: string, targetDir: string) {
       fs.copyFileSync(sourcePath, targetPath);
 
       if (path.basename(targetPath) === 'package.json') {
-        collectError(CloneUtils.setPackageName(targetPath, targetName), 'Failed to update package.json');
+        collectError(CloneUtils.setPackageName(targetPath, targetLeafName), 'Failed to update package.json');
       } else if (path.extname(targetPath) === '.html') {
-        collectError(CloneUtils.replaceHtmlTitle(targetPath, targetName), `Failed to update HTML title in ${targetPath}`);
-        collectError(CloneUtils.replaceContentInFile(targetPath, sourceName, targetName), `Failed to replace content in ${targetPath}`);
+        collectError(CloneUtils.replaceHtmlTitle(targetPath, targetLeafName), `Failed to update HTML title in ${targetPath}`);
+        collectError(CloneUtils.replaceContentInFile(targetPath, sourceLeafName, targetLeafName), `Failed to replace content in ${targetPath}`);
       } else if (CloneUtils.isTextFile(targetPath)) {
-        collectError(CloneUtils.replaceContentInFile(targetPath, sourceName, targetName), `Failed to replace content in ${targetPath}`);
+        collectError(CloneUtils.replaceContentInFile(targetPath, sourceLeafName, targetLeafName), `Failed to replace content in ${targetPath}`);
       }
     }
   });

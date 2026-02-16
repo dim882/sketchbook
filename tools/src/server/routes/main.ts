@@ -51,18 +51,28 @@ function getLastModifiedTime(dirPath: string): Future<number> {
 }
 
 export function getSketchDirsData(sketchesDir: string): Future<Result<Types.IDir[], Errors.ServerError>> {
-  return Utils.readDir(sketchesDir)
-    .mapError((err) => Errors.serverError(`Failed to read sketches directory`, err))
-    .flatMapOk((files) =>
-      Future.all(
-        files
-          .filter((file) => file.isDirectory())
-          .map((dir) =>
-            getLastModifiedTime(path.join(sketchesDir, dir.name))
-              .map((lastModified) => ({ name: dir.name, lastModified }))
+  return Future.fromPromise(
+    fg('**/rollup.config.js', {
+      cwd: sketchesDir,
+      ignore: ['**/node_modules/**'],
+    })
+  )
+    .mapError((err) => Errors.serverError('Failed to discover sketches', err))
+    .flatMapOk((configPaths) => {
+      const sketchPaths = configPaths.map((cp) => path.dirname(cp));
+      return Future.all(
+        sketchPaths.map((dirPath) =>
+          getLastModifiedTime(path.join(sketchesDir, dirPath)).map(
+            (lastModified): Types.IDir => ({
+              name: path.basename(dirPath),
+              path: dirPath,
+              lastModified,
+              isSketch: true,
+            })
           )
-      ).map((dirs) => Result.Ok(dirs.sort((a, b) => a.name.localeCompare(b.name))))
-    );
+        )
+      ).map((dirs) => Result.Ok(dirs.sort((a, b) => a.path.localeCompare(b.path))));
+    });
 }
 
 function renderMainPage(initialSketch?: string): Future<Result<string, Errors.ServerError>> {

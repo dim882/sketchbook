@@ -16,15 +16,16 @@ function createSketchPaths(name: string): SketchPaths {
   const base = path.join(sketchesPath, name);
   const dist = path.join(base, 'dist');
   const src = path.join(base, 'src');
+  const leafName = path.basename(name);
 
   return {
     base,
     dist,
     src,
-    html: path.join(dist, `${name}.html`),
-    params: path.join(src, `${name}.params.ts`),
-    template: path.join(src, `${name}.params.tpl`),
-    serverHandler: path.join(src, `${name}.server.js`),
+    html: path.join(dist, `${leafName}.html`),
+    params: path.join(src, `${leafName}.params.ts`),
+    template: path.join(src, `${leafName}.params.tpl`),
+    serverHandler: path.join(src, `${leafName}.server.js`),
   };
 }
 

@@ -18,15 +18,20 @@ app.use(express.static(Paths.paths.public()));
 
 // Main page routes
 app.get('/', Main.route);
-app.get('/nav/:sketchName', Middleware.requireValidSketchName, Main.route);
+app.get('/nav/*', Middleware.extractSketchName, Middleware.requireValidSketchName, Main.route);
 
-// Sketch file routes
-app.get('/sketches/:sketchName', Middleware.requireValidSketchName, Sketches.htmlRoute);
-app.use('/sketches/:sketchName/dist', Middleware.requireValidSketchName, Sketches.distRoute);
+// Sketch dist files (must be before HTML route)
+app.use('/sketches', (req, res, next) => {
+  if (!req.path.match(/\/dist\//)) return next();
+  express.static(Paths.paths.sketches())(req, res, next);
+});
+
+// Sketch HTML routes
+app.get('/sketches/*', Middleware.extractSketchName, Middleware.requireValidSketchName, Sketches.htmlRoute);
 
 // API routes
-app.get('/api/sketches/:sketchName/params', Middleware.requireValidSketchName, Api.getParamsRoute);
-app.post('/api/sketches/:sketchName/params', Middleware.requireValidSketchName, Api.updateParamsRoute);
+app.get('/api/sketches/*/params', Middleware.extractSketchName, Middleware.requireValidSketchName, Api.getParamsRoute);
+app.post('/api/sketches/*/params', Middleware.extractSketchName, Middleware.requireValidSketchName, Api.updateParamsRoute);
 
 const server = app.listen(port, () => {
   log.info(`Server running on http://localhost:${port}`, { port });

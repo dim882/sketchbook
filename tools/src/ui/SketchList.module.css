@@ -62,4 +62,27 @@
   background: #007bff;
   color: white;
   border-color: #007bff;
-} 
+}
+
+.folderToggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  padding: 2px 0;
+}
+
+.folderToggle:hover {
+  color: #222;
+}
+
+.folderIcon {
+  font-size: 10px;
+  width: 12px;
+  display: inline-block;
+}
