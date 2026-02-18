@@ -73,6 +73,15 @@ const main = async () => {
 main();
 
 function adjustHtmlPaths(dir: string) {
+  // After copyDir, HTML content has had sourceLeafName → targetLeafName applied.
+  // So /sketches/base/dist/ became /sketches/base2/dist/ (not /sketches/nested/base2/dist/).
+  // Compute the intermediate path to find and replace it with the correct full path.
+  const segments = sourceName.split('/');
+  segments[segments.length - 1] = targetLeafName;
+  const intermediateSourcePath = segments.join('/');
+
+  if (intermediateSourcePath === targetName) return;
+
   fs.readdirSync(dir).forEach((item) => {
     const fullPath = path.join(dir, item);
     const stats = fs.statSync(fullPath);
@@ -80,7 +89,7 @@ function adjustHtmlPaths(dir: string) {
       adjustHtmlPaths(fullPath);
     } else if (stats.isFile() && path.extname(fullPath) === '.html') {
       collectError(
-        CloneUtils.replaceContentInFile(fullPath, `/sketches/${sourceName}/`, `/sketches/${targetName}/`),
+        CloneUtils.replaceContentInFile(fullPath, `/sketches/${intermediateSourcePath}/`, `/sketches/${targetName}/`),
         `Failed to adjust HTML paths in ${fullPath}`
       );
     }
@@ -109,8 +118,8 @@ function copyDir(source: string, targetDir: string) {
       if (path.basename(targetPath) === 'package.json') {
         collectError(CloneUtils.setPackageName(targetPath, targetLeafName), 'Failed to update package.json');
       } else if (path.extname(targetPath) === '.html') {
-        collectError(CloneUtils.replaceHtmlTitle(targetPath, targetLeafName), `Failed to update HTML title in ${targetPath}`);
         collectError(CloneUtils.replaceContentInFile(targetPath, sourceLeafName, targetLeafName), `Failed to replace content in ${targetPath}`);
+        collectError(CloneUtils.replaceHtmlTitle(targetPath, targetLeafName), `Failed to update HTML title in ${targetPath}`);
       } else if (CloneUtils.isTextFile(targetPath)) {
         collectError(CloneUtils.replaceContentInFile(targetPath, sourceLeafName, targetLeafName), `Failed to replace content in ${targetPath}`);
       }

@@ -48,17 +48,28 @@ const main = () => {
   }
 
   // Adjust relative lib paths in rollup.config.js if depth changed
-  if (sourceDepth !== targetDepth) {
-    const rollupConfig = path.join(targetDir, 'rollup.config.js');
+  const rollupConfig = path.join(targetDir, 'rollup.config.js');
+  if (sourceDepth !== targetDepth && fs.existsSync(rollupConfig)) {
+    collectError(
+      CloneUtils.adjustRelativePaths(rollupConfig, sourceDepth, targetDepth),
+      'Failed to adjust relative paths in rollup.config.js'
+    );
+  }
+
+  // Replace content references first (source leaf name -> target leaf name)
+  // This must happen BEFORE updateHtmlPaths since it modifies HTML paths too.
+  if (sourceLeafName !== targetLeafName) {
+    updateContentReferences(path.join(targetDir, 'src'));
     if (fs.existsSync(rollupConfig)) {
       collectError(
-        CloneUtils.adjustRelativePaths(rollupConfig, sourceDepth, targetDepth),
-        'Failed to adjust relative paths in rollup.config.js'
+        CloneUtils.replaceContentInFile(rollupConfig, sourceLeafName, targetLeafName),
+        'Failed to update rollup.config.js references'
       );
     }
   }
 
-  // Update HTML paths (/sketches/old-path/ -> /sketches/new-path/)
+  // Update HTML paths using intermediate path (after content replacement,
+  // /sketches/base/ became /sketches/base2/, now fix to /sketches/nested/base2/)
   updateHtmlPaths(targetDir);
 
   // Update package.json name
@@ -68,18 +79,6 @@ const main = () => {
       CloneUtils.setPackageName(packageJson, targetLeafName),
       'Failed to update package.json name'
     );
-  }
-
-  // Replace content references (source leaf name -> target leaf name)
-  if (sourceLeafName !== targetLeafName) {
-    updateContentReferences(path.join(targetDir, 'src'));
-    const rollupConfig = path.join(targetDir, 'rollup.config.js');
-    if (fs.existsSync(rollupConfig)) {
-      collectError(
-        CloneUtils.replaceContentInFile(rollupConfig, sourceLeafName, targetLeafName),
-        'Failed to update rollup.config.js references'
-      );
-    }
   }
 
   // Clean and rebuild
@@ -117,16 +116,24 @@ function renameSketchFiles(dir: string, oldLeaf: string, newLeaf: string) {
 }
 
 function updateHtmlPaths(dir: string) {
+  // After content replacement, HTML has sourceLeafName replaced with targetLeafName.
+  // Compute the intermediate path to find the correct string to replace.
+  const segments = sourcePath.split('/');
+  segments[segments.length - 1] = targetLeafName;
+  const intermediateSourcePath = segments.join('/');
+
   const srcDir = path.join(dir, 'src');
   if (!fs.existsSync(srcDir)) return;
 
   fs.readdirSync(srcDir).forEach((item) => {
     if (path.extname(item) === '.html') {
       const filePath = path.join(srcDir, item);
-      collectError(
-        CloneUtils.replaceContentInFile(filePath, `/sketches/${sourcePath}/`, `/sketches/${targetPath}/`),
-        `Failed to update HTML paths in ${filePath}`
-      );
+      if (intermediateSourcePath !== targetPath) {
+        collectError(
+          CloneUtils.replaceContentInFile(filePath, `/sketches/${intermediateSourcePath}/`, `/sketches/${targetPath}/`),
+          `Failed to update HTML paths in ${filePath}`
+        );
+      }
       if (sourceLeafName !== targetLeafName) {
         collectError(
           CloneUtils.replaceHtmlTitle(filePath, targetLeafName),
