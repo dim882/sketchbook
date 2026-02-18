@@ -33,8 +33,23 @@ const collectError = <T>(result: Result<T, Error>, context: string): void => {
   });
 };
 
+const sourceDepth = sourceName.split('/').length;
+const targetDepth = targetName.split('/').length;
+
 const main = async () => {
   copyDir(sourceDir, targetDir);
+
+  // Adjust relative paths in rollup.config.js for different nesting depth
+  const rollupConfig = path.join(targetDir, 'rollup.config.js');
+  if (fs.existsSync(rollupConfig)) {
+    collectError(
+      CloneUtils.adjustRelativePaths(rollupConfig, sourceDepth, targetDepth),
+      'Failed to adjust relative paths in rollup.config.js'
+    );
+  }
+
+  // Adjust relative paths in HTML files for dist references
+  adjustHtmlPaths(targetDir);
 
   // Install dependencies
   collectError(CloneUtils.install(targetDir), 'Failed to install dependencies');
@@ -56,6 +71,21 @@ const main = async () => {
 };
 
 main();
+
+function adjustHtmlPaths(dir: string) {
+  fs.readdirSync(dir).forEach((item) => {
+    const fullPath = path.join(dir, item);
+    const stats = fs.statSync(fullPath);
+    if (stats.isDirectory() && item !== 'node_modules' && item !== 'dist') {
+      adjustHtmlPaths(fullPath);
+    } else if (stats.isFile() && path.extname(fullPath) === '.html') {
+      collectError(
+        CloneUtils.replaceContentInFile(fullPath, `/sketches/${sourceName}/`, `/sketches/${targetName}/`),
+        `Failed to adjust HTML paths in ${fullPath}`
+      );
+    }
+  });
+}
 
 function copyDir(source: string, targetDir: string) {
   if (!fs.existsSync(targetDir)) {
