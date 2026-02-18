@@ -362,6 +362,87 @@ describe('replaceHtmlTitle', () => {
   });
 });
 
+describe('adjustRelativePaths', () => {
+  it('returns changed: false when depths are equal', () => {
+    const result = CloneUtils.adjustRelativePaths('/path/file.js', 1, 1);
+
+    expect(result.isOk()).toBe(true);
+    result.match({
+      Ok: (value) => expect(value.changed).toBe(false),
+      Error: () => expect.fail('Should not be error'),
+    });
+  });
+
+  it('adds ../ when moving deeper (depth 1 to 2)', () => {
+    vi.mocked(fs.readFileSync).mockReturnValue(
+      "include: ['../../lib/**/*.ts', 'src/**/*.ts']"
+    );
+    vi.mocked(fs.writeFileSync).mockImplementation(() => { });
+
+    const result = CloneUtils.adjustRelativePaths('/path/rollup.config.js', 1, 2);
+
+    expect(result.isOk()).toBe(true);
+    result.match({
+      Ok: (value) => expect(value.changed).toBe(true),
+      Error: () => expect.fail('Should not be error'),
+    });
+
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      '/path/rollup.config.js',
+      "include: ['../../../lib/**/*.ts', 'src/**/*.ts']",
+      'utf8'
+    );
+  });
+
+  it('removes ../ when moving shallower (depth 2 to 1)', () => {
+    vi.mocked(fs.readFileSync).mockReturnValue(
+      "include: ['../../../lib/**/*.ts', 'src/**/*.ts']"
+    );
+    vi.mocked(fs.writeFileSync).mockImplementation(() => { });
+
+    const result = CloneUtils.adjustRelativePaths('/path/rollup.config.js', 2, 1);
+
+    expect(result.isOk()).toBe(true);
+    result.match({
+      Ok: (value) => expect(value.changed).toBe(true),
+      Error: () => expect.fail('Should not be error'),
+    });
+
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      '/path/rollup.config.js',
+      "include: ['../../lib/**/*.ts', 'src/**/*.ts']",
+      'utf8'
+    );
+  });
+
+  it('handles double-quoted paths', () => {
+    vi.mocked(fs.readFileSync).mockReturnValue(
+      'include: ["../../lib/**/*.ts"]'
+    );
+    vi.mocked(fs.writeFileSync).mockImplementation(() => { });
+
+    const result = CloneUtils.adjustRelativePaths('/path/rollup.config.js', 1, 2);
+
+    expect(result.isOk()).toBe(true);
+
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      '/path/rollup.config.js',
+      'include: ["../../../lib/**/*.ts"]',
+      'utf8'
+    );
+  });
+
+  it('returns Error when read fails', () => {
+    vi.mocked(fs.readFileSync).mockImplementation(() => {
+      throw new Error('ENOENT');
+    });
+
+    const result = CloneUtils.adjustRelativePaths('/path/file.js', 1, 2);
+
+    expect(result.isError()).toBe(true);
+  });
+});
+
 describe('install', () => {
   it('returns Ok and runs pnpm install in target directory', () => {
     vi.mocked(execSync).mockImplementation(() => Buffer.from(''));

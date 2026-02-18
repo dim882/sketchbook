@@ -128,6 +128,33 @@ export function install(targetDir: string): Result<void, Error> {
   });
 }
 
+export function adjustRelativePaths(
+  filePath: string,
+  sourceDepth: number,
+  targetDepth: number
+): Result<{ changed: boolean }, Error> {
+  const depthDiff = targetDepth - sourceDepth;
+  if (depthDiff === 0) return Result.Ok({ changed: false });
+
+  return Result.fromExecution(() => {
+    const content = fs.readFileSync(filePath, 'utf8');
+    const updatedContent = content.replace(
+      /(['"])((\.\.\/)+)(lib\/)/g,
+      (_match, quote, fullPrefix, _singleDotDot, lib) => {
+        const currentDepth = fullPrefix.length / 3;
+        const newDepth = Math.max(1, currentDepth + depthDiff);
+        return `${quote}${'../'.repeat(newDepth)}${lib}`;
+      }
+    );
+
+    if (content !== updatedContent) {
+      fs.writeFileSync(filePath, updatedContent, 'utf8');
+      return { changed: true };
+    }
+    return { changed: false };
+  });
+}
+
 export function replaceHtmlTitle(
   filePath: string,
   newTitle: string

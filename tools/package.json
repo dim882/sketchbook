@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "npm-run-all --parallel watch serve ui:watch",
     "clone": "bun src/clone/clone.ts",
+    "move": "bun src/move/move.ts",
     "build": "bun src/build/build.ts",
     "lib:pull": "bun src/lib-pull.ts",
     "serve": "bun --watch src/server/server.ts",
