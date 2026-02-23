@@ -8,6 +8,7 @@ import * as Types from '../../lib/types';
 import * as Paths from '../server.paths';
 import * as Errors from '../server.errors';
 import * as Utils from '../server.utils';
+import { SKETCH_GLOB, SKETCH_GLOB_IGNORE } from '../../build/build.utils';
 import { createLogger } from '../../lib/logger';
 import { getOrLog } from '../../lib/result-logging';
 
@@ -52,9 +53,9 @@ function getLastModifiedTime(dirPath: string): Future<number> {
 
 export function getSketchDirsData(sketchesDir: string): Future<Result<Types.IDir[], Errors.ServerError>> {
   return Future.fromPromise(
-    fg('**/rollup.config.js', {
+    fg(SKETCH_GLOB, {
       cwd: sketchesDir,
-      ignore: ['**/node_modules/**'],
+      ignore: SKETCH_GLOB_IGNORE,
     })
   )
     .mapError((err) => Errors.serverError('Failed to discover sketches', err))

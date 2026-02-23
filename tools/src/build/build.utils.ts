@@ -3,6 +3,10 @@ import * as path from 'path';
 import fg from 'fast-glob';
 import { Future, Result } from '@swan-io/boxed';
 
+export const SKETCH_MARKER = 'package.json';
+export const SKETCH_GLOB = `**/${SKETCH_MARKER}`;
+export const SKETCH_GLOB_IGNORE = ['**/node_modules/**', '**/dist/**'];
+
 export type BuildResult = {
   total: number;
   failures: number;
@@ -11,12 +15,12 @@ export type BuildResult = {
 export const getAllSketchDirectories = (directory: string): string[] => {
   if (!fs.existsSync(directory)) return [];
 
-  const configs = fg.sync('**/rollup.config.js', {
+  const matches = fg.sync(SKETCH_GLOB, {
     cwd: directory,
-    ignore: ['**/node_modules/**'],
+    ignore: SKETCH_GLOB_IGNORE,
   });
 
-  return configs.map((config) => path.join(directory, path.dirname(config)));
+  return matches.map((match) => path.join(directory, path.dirname(match)));
 };
 
 export const buildAllSketches = async (

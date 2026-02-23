@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Result } from '@swan-io/boxed';
 import * as LibPaths from '../lib/paths';
+import { SKETCH_MARKER } from '../build/build.utils';
 import { createLogger } from '../lib/logger';
 
 const log = createLogger('move/utils');
@@ -47,8 +48,8 @@ export function validateDirectories(
     return Result.Error(`Source sketch directory not found: ${sourceDir}`);
   }
 
-  if (!fs.existsSync(path.join(sourceDir, 'rollup.config.js'))) {
-    return Result.Error(`Source is not a sketch (no rollup.config.js): ${sourceDir}`);
+  if (!fs.existsSync(path.join(sourceDir, SKETCH_MARKER))) {
+    return Result.Error(`Source is not a sketch (no ${SKETCH_MARKER}): ${sourceDir}`);
   }
 
   if (fs.existsSync(targetDir)) {

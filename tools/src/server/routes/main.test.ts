@@ -11,8 +11,8 @@ import type { IDir } from '../../lib/types';
 
 it('getSketchDirsData returns sorted list of sketches by path', async () => {
   vi.mocked(fg).mockImplementation(((pattern: string) => {
-    if (pattern === '**/rollup.config.js') {
-      return Promise.resolve(['sketch-b/rollup.config.js', 'sketch-a/rollup.config.js']);
+    if (pattern === '**/package.json') {
+      return Promise.resolve(['sketch-b/package.json', 'sketch-a/package.json']);
     }
     return Promise.resolve([]);
   }) as typeof fg);
@@ -30,8 +30,8 @@ it('getSketchDirsData returns sorted list of sketches by path', async () => {
 
 it('getSketchDirsData discovers nested sketches', async () => {
   vi.mocked(fg).mockImplementation(((pattern: string) => {
-    if (pattern === '**/rollup.config.js') {
-      return Promise.resolve(['flat/rollup.config.js', 'experiments/nested/rollup.config.js']);
+    if (pattern === '**/package.json') {
+      return Promise.resolve(['flat/package.json', 'experiments/nested/package.json']);
     }
     return Promise.resolve([]);
   }) as typeof fg);
@@ -49,8 +49,8 @@ it('getSketchDirsData discovers nested sketches', async () => {
 
 it('getSketchDirsData returns lastModified of 0 when no ts/tsx/html files exist', async () => {
   vi.mocked(fg).mockImplementation(((pattern: string) => {
-    if (pattern === '**/rollup.config.js') {
-      return Promise.resolve(['empty-sketch/rollup.config.js']);
+    if (pattern === '**/package.json') {
+      return Promise.resolve(['empty-sketch/package.json']);
     }
     return Promise.resolve([]);
   }) as typeof fg);
@@ -64,8 +64,8 @@ it('getSketchDirsData returns lastModified of 0 when no ts/tsx/html files exist'
 
 it('getSketchDirsData returns latest mtime when ts/tsx/html files exist', async () => {
   vi.mocked(fg).mockImplementation(((pattern: string) => {
-    if (pattern === '**/rollup.config.js') {
-      return Promise.resolve(['sketch/rollup.config.js']);
+    if (pattern === '**/package.json') {
+      return Promise.resolve(['sketch/package.json']);
     }
     return Promise.resolve(['/path/file1.ts', '/path/file2.ts']);
   }) as typeof fg);

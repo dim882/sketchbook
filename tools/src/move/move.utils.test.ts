@@ -82,9 +82,8 @@ describe('validateDirectories', () => {
   it('returns Ok when source is valid sketch and target does not exist', () => {
     vi.mocked(fs.existsSync).mockImplementation((p) => {
       const s = p.toString();
-      return s.includes('existing-sketch') && !s.includes('rollup') ? true
-        : s.endsWith('rollup.config.js') && s.includes('existing-sketch') ? true
-        : false;
+      if (s.includes('new-location')) return false;
+      return s.includes('existing-sketch');
     });
     vi.mocked(fs.statSync).mockReturnValue({ isDirectory: () => true } as fs.Stats);
 
@@ -105,9 +104,9 @@ describe('validateDirectories', () => {
     });
   });
 
-  it('returns Error when source has no rollup.config.js', () => {
+  it('returns Error when source has no package.json', () => {
     vi.mocked(fs.existsSync).mockImplementation((p) => {
-      return !p.toString().includes('rollup');
+      return !p.toString().endsWith('package.json');
     });
     vi.mocked(fs.statSync).mockReturnValue({ isDirectory: () => true } as fs.Stats);
 
