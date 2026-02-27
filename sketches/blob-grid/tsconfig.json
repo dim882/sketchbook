@@ -1,0 +1,3 @@
+{
+  "extends": "@dim882/sketchlib/presets/default/tsconfig.json"
+}
