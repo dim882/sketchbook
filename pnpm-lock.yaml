@@ -15,7 +15,41 @@ importers:
         specifier: ^4.1.5
         version: 4.1.5
 
-  lib: {}
+  lib:
+    dependencies:
+      '@babel/preset-env':
+        specifier: ^7.24.7
+        version: 7.26.9(@babel/core@7.26.10)
+      '@babel/preset-react':
+        specifier: ^7.24.7
+        version: 7.26.3(@babel/core@7.26.10)
+      '@babel/preset-typescript':
+        specifier: ^7.24.7
+        version: 7.27.0(@babel/core@7.26.10)
+      '@rollup/plugin-babel':
+        specifier: ^6.0.4
+        version: 6.0.4(@babel/core@7.26.10)(@types/babel__core@7.20.5)(rollup@4.40.0)
+      '@rollup/plugin-commonjs':
+        specifier: ^28.0.2
+        version: 28.0.3(rollup@4.40.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^15.2.3
+        version: 15.3.1(rollup@4.40.0)
+      '@rollup/plugin-typescript':
+        specifier: ^11.1.6
+        version: 11.1.6(rollup@4.40.0)(tslib@2.8.1)(typescript@5.8.3)
+      rollup-plugin-copy:
+        specifier: ^3.5.0
+        version: 3.5.0
+      rollup-plugin-postcss:
+        specifier: ^4.0.2
+        version: 4.0.2(postcss@8.5.3)
+      tslib:
+        specifier: ^2.6.2
+        version: 2.8.1
+      typescript:
+        specifier: ^5.4.5
+        version: 5.8.3
 
   sketches/animation:
     dependencies:
@@ -23,6 +57,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -51,6 +88,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -79,6 +119,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -110,6 +153,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -141,6 +187,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -169,6 +218,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -203,6 +255,9 @@ importers:
         specifier: ^4.0.3
         version: 4.0.3
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.26.10)(@types/babel__core@7.20.5)(rollup@4.40.0)
@@ -240,6 +295,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -267,9 +325,6 @@ importers:
 
   sketches/boid-fuzz:
     dependencies:
-      '@dim882/sketchlib':
-        specifier: ^0.1.0
-        version: 0.1.0
       culori:
         specifier: ^4.0.1
         version: 4.0.1
@@ -280,6 +335,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -311,6 +369,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -366,6 +427,9 @@ importers:
       '@babel/preset-env':
         specifier: ^7.24.5
         version: 7.26.9(@babel/core@7.26.10)
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.26.10)(@types/babel__core@7.20.5)(rollup@4.40.0)
@@ -409,6 +473,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -440,6 +507,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -495,6 +565,9 @@ importers:
         specifier: ^4.0.3
         version: 4.0.3
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-commonjs':
         specifier: ^28.0.2
         version: 28.0.3(rollup@4.40.0)
@@ -544,6 +617,9 @@ importers:
         specifier: ^3.6.2
         version: 3.6.2
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.26.10)(@types/babel__core@7.20.5)(rollup@4.40.0)
@@ -584,6 +660,9 @@ importers:
         specifier: ^4.0.2
         version: 4.0.3
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -618,6 +697,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -649,6 +731,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -680,6 +765,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -711,6 +799,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -739,6 +830,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -773,6 +867,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -801,6 +898,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -835,6 +935,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.26.10)(@types/babel__core@7.20.5)(rollup@4.40.0)
@@ -869,6 +972,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -906,6 +1012,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -952,6 +1061,9 @@ importers:
       '@babel/preset-react':
         specifier: ^7.24.7
         version: 7.26.3(@babel/core@7.26.10)
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.26.10)(@types/babel__core@7.20.5)(rollup@4.40.0)
@@ -983,6 +1095,9 @@ importers:
         specifier: ^0.30.0
         version: 0.30.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -1011,6 +1126,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -1042,6 +1160,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -1073,6 +1194,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -1107,6 +1231,9 @@ importers:
         specifier: ^4.0.3
         version: 4.0.3
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-commonjs':
         specifier: ^28.0.2
         version: 28.0.3(rollup@4.40.0)
@@ -1150,6 +1277,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -1178,6 +1308,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -1212,6 +1345,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -1246,6 +1382,9 @@ importers:
         specifier: ^0.29.1
         version: 0.29.1
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../lib
+        version: link:../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
@@ -1974,9 +2113,6 @@ packages:
 
   '@dabh/diagnostics@2.0.8':
     resolution: {integrity: sha512-R4MSXTVnuMzGD7bzHdW2ZhhdPC/igELENcq5IjEverBvq5hn1SXCWcsi6eSsdWP0/Ur+SItRRjAktmdoX/8R/Q==}
-
-  '@dim882/sketchlib@0.1.0':
-    resolution: {integrity: sha512-qH+NgwMxrCPzqCCaP3YBABk4hBBqpmQ9dTQJWGcnbs30dM2VLnBd8fYnmCGQLMRBaPgydqFTT/7up9ANtKW5Og==}
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -6228,8 +6364,6 @@ snapshots:
       '@so-ric/colorspace': 1.1.6
       enabled: 2.0.0
       kuler: 2.0.0
-
-  '@dim882/sketchlib@0.1.0': {}
 
   '@esbuild/aix-ppc64@0.21.5':
     optional: true

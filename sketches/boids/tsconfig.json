@@ -1,3 +1,15 @@
 {
-  "extends": "@dim882/sketchlib/presets/default/tsconfig.json"
+  "extends": "@dim882/sketchlib/presets/default/tsconfig.json",
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "src/*.server.ts",
+    "src/*.test.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "./dist"
+  }
 }

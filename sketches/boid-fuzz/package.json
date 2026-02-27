@@ -12,6 +12,7 @@
     "clean": "rm -rf dist/*"
   },
   "devDependencies": {
+    "@dim882/sketchlib": "link:../../lib",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/ramda": "^0.29.12",
@@ -22,7 +23,6 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@dim882/sketchlib": "^0.1.0",
     "culori": "^4.0.1",
     "nice-color-palettes": "^4.0.0",
     "ramda": "^0.29.1"
