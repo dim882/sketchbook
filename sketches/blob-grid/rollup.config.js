@@ -1,22 +1,4 @@
-import typescript from '@rollup/plugin-typescript';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import copy from 'rollup-plugin-copy';
-
-export default {
-  input: 'src/blob-grid.ts',
-  output: {
-    file: 'dist/bundle.js',
-    format: 'es',
-    sourcemap: true,
-  },
-  plugins: [
-    nodeResolve(),
-    typescript(),
-    copy({
-      targets: [
-        { src: 'src/*.css', dest: 'dist' },
-        { src: 'src/*.html', dest: 'dist' },
-      ],
-    }),
-  ],
-};
+import createConfig from '@dim882/sketchlib/presets/default/rollup.config.js';
+export default createConfig('blob-grid', import.meta.url, {
+  html: 'src/blob-grid.html',
+});
