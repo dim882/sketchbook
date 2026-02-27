@@ -5,13 +5,14 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@dim882/sketchlib": "link:../../lib",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/ramda": "^0.29.12",
     "rollup": "^4.14.3",
+    "rollup-plugin-copy": "^3.5.0",
     "tslib": "^2.6.2",
-    "typescript": "^5.4.5",
-    "rollup-plugin-copy": "^3.5.0"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "ramda": "^0.30.0"
