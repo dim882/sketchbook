@@ -1,6 +1,6 @@
 {
   "name": "@dim882/sketchlib",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A TypeScript library of utilities for creative coding sketches",
   "license": "MIT",
   "type": "module",
