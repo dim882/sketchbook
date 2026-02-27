@@ -8,7 +8,8 @@
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "presets"
   ],
   "exports": {
     ".": {
@@ -42,7 +43,8 @@
     "./types": {
       "types": "./dist/types.d.ts",
       "default": "./dist/types.js"
-    }
+    },
+    "./presets/*": "./presets/*"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
