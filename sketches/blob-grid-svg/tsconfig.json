@@ -1,3 +1,14 @@
 {
-  "extends": "@dim882/sketchlib/presets/preact/tsconfig.json"
+  "extends": "@dim882/sketchlib/presets/preact/tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "outDir": "./dist"
+  }
 }
