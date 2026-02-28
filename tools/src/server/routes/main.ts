@@ -8,6 +8,7 @@ import * as Types from '../../lib/types';
 import * as Paths from '../server.paths';
 import * as Errors from '../server.errors';
 import * as Utils from '../server.utils';
+import { SKETCH_GLOB, SKETCH_GLOB_IGNORE } from '../../build/build.utils';
 import { createLogger } from '../../lib/logger';
 import { getOrLog } from '../../lib/result-logging';
 
@@ -51,18 +52,28 @@ function getLastModifiedTime(dirPath: string): Future<number> {
 }
 
 export function getSketchDirsData(sketchesDir: string): Future<Result<Types.IDir[], Errors.ServerError>> {
-  return Utils.readDir(sketchesDir)
-    .mapError((err) => Errors.serverError(`Failed to read sketches directory`, err))
-    .flatMapOk((files) =>
-      Future.all(
-        files
-          .filter((file) => file.isDirectory())
-          .map((dir) =>
-            getLastModifiedTime(path.join(sketchesDir, dir.name))
-              .map((lastModified) => ({ name: dir.name, lastModified }))
+  return Future.fromPromise(
+    fg(SKETCH_GLOB, {
+      cwd: sketchesDir,
+      ignore: SKETCH_GLOB_IGNORE,
+    })
+  )
+    .mapError((err) => Errors.serverError('Failed to discover sketches', err))
+    .flatMapOk((configPaths) => {
+      const sketchPaths = configPaths.map((cp) => path.dirname(cp));
+      return Future.all(
+        sketchPaths.map((dirPath) =>
+          getLastModifiedTime(path.join(sketchesDir, dirPath)).map(
+            (lastModified): Types.IDir => ({
+              name: path.basename(dirPath),
+              path: dirPath,
+              lastModified,
+              isSketch: true,
+            })
           )
-      ).map((dirs) => Result.Ok(dirs.sort((a, b) => a.name.localeCompare(b.name))))
-    );
+        )
+      ).map((dirs) => Result.Ok(dirs.sort((a, b) => a.path.localeCompare(b.path))));
+    });
 }
 
 function renderMainPage(initialSketch?: string): Future<Result<string, Errors.ServerError>> {

@@ -23,5 +23,11 @@ export interface SketchServerHandler {
  */
 export interface IDir {
   name: string;
+  path: string;
   lastModified: number;
+  isSketch: boolean;
+}
+
+export interface IDirTreeNode extends IDir {
+  children?: IDirTreeNode[];
 }

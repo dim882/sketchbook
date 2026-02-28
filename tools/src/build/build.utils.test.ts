@@ -21,11 +21,11 @@ describe('getAllSketchDirectories', () => {
     expect(result).toEqual([]);
   });
 
-  it('filters out excluded directories (.git, node_modules)', () => {
+  it('finds directories containing package.json', () => {
     mkdirSync(join(tempDir, 'sketch1'));
-    mkdirSync(join(tempDir, '.git'));
-    mkdirSync(join(tempDir, 'node_modules'));
+    writeFileSync(join(tempDir, 'sketch1', 'package.json'), '');
     mkdirSync(join(tempDir, 'sketch2'));
+    writeFileSync(join(tempDir, 'sketch2', 'package.json'), '');
 
     const result = getAllSketchDirectories(tempDir);
 
@@ -34,13 +34,38 @@ describe('getAllSketchDirectories', () => {
     expect(result).toContain(join(tempDir, 'sketch2'));
   });
 
-  it('filters out files (only includes directories)', () => {
+  it('ignores directories without package.json', () => {
     mkdirSync(join(tempDir, 'sketch1'));
-    writeFileSync(join(tempDir, 'README.md'), '');
+    writeFileSync(join(tempDir, 'sketch1', 'package.json'), '');
+    mkdirSync(join(tempDir, 'not-a-sketch'));
 
     const result = getAllSketchDirectories(tempDir);
 
     expect(result).toEqual([join(tempDir, 'sketch1')]);
+  });
+
+  it('ignores node_modules', () => {
+    mkdirSync(join(tempDir, 'node_modules', 'pkg'), { recursive: true });
+    writeFileSync(join(tempDir, 'node_modules', 'pkg', 'package.json'), '');
+    mkdirSync(join(tempDir, 'sketch1'));
+    writeFileSync(join(tempDir, 'sketch1', 'package.json'), '');
+
+    const result = getAllSketchDirectories(tempDir);
+
+    expect(result).toEqual([join(tempDir, 'sketch1')]);
+  });
+
+  it('discovers nested sketch directories', () => {
+    mkdirSync(join(tempDir, 'experiments', 'nested'), { recursive: true });
+    writeFileSync(join(tempDir, 'experiments', 'nested', 'package.json'), '');
+    mkdirSync(join(tempDir, 'flat'));
+    writeFileSync(join(tempDir, 'flat', 'package.json'), '');
+
+    const result = getAllSketchDirectories(tempDir);
+
+    expect(result).toHaveLength(2);
+    expect(result).toContain(join(tempDir, 'experiments/nested'));
+    expect(result).toContain(join(tempDir, 'flat'));
   });
 });
 
@@ -50,7 +75,9 @@ describe('buildAllSketches', () => {
   beforeEach(() => {
     tempDir = mkdtempSync(join(os.tmpdir(), 'build-test-'));
     mkdirSync(join(tempDir, 'sketch1'));
+    writeFileSync(join(tempDir, 'sketch1', 'package.json'), '');
     mkdirSync(join(tempDir, 'sketch2'));
+    writeFileSync(join(tempDir, 'sketch2', 'package.json'), '');
   });
 
   afterEach(() => {
@@ -81,6 +108,7 @@ describe('buildAllSketches', () => {
 
   it('reports correct failure count when multiple builds fail', async () => {
     mkdirSync(join(tempDir, 'sketch3'));
+    writeFileSync(join(tempDir, 'sketch3', 'package.json'), '');
 
     let callCount = 0;
     const fakeBuild = (): Future<Result<void, Error>> => {
