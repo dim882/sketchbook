@@ -115,14 +115,17 @@ fetchData().tap((result) =>
 
 ## Type Safety
 
-### Param Values
+### Config Values
 
-Sketch parameters use constrained types:
+Sketch configuration uses JSON-serializable types with nested object support:
 
 ```typescript
-type ParamValue = string | number | boolean | null;
-type Params = Record<string, ParamValue>;
+type ConfigValue = string | number | boolean | null;
+type ConfigRecord = { [key: string]: ConfigValue | ConfigRecord };
 ```
+
+Configuration is validated at the server boundary using zod schemas exported
+by each sketch's `*.schema.ts` file. See `SKETCH_CONFIG.md` for details.
 
 ### Type Guards
 
