@@ -1,11 +1,4 @@
-interface FlockParams {
-  separationDist: number;
-  alignDist: number;
-  cohesionDist: number;
-  separationWeight: number;
-  alignmentWeight: number;
-  cohesionWeight: number;
-}
+import type { Config } from './boids.schema';
 
 export class ParamsUI {
   private form: HTMLFormElement;
@@ -32,30 +25,30 @@ export class ParamsUI {
     }
   }
 
-  private populateForm(params: FlockParams) {
-    (document.getElementById('separationDist') as HTMLInputElement).value = params.separationDist.toString();
-    (document.getElementById('alignDist') as HTMLInputElement).value = params.alignDist.toString();
-    (document.getElementById('cohesionDist') as HTMLInputElement).value = params.cohesionDist.toString();
-    (document.getElementById('separationWeight') as HTMLInputElement).value = params.separationWeight.toString();
-    (document.getElementById('alignmentWeight') as HTMLInputElement).value = params.alignmentWeight.toString();
-    (document.getElementById('cohesionWeight') as HTMLInputElement).value = params.cohesionWeight.toString();
+  private populateForm(config: Config) {
+    const fp = config.FLOCK_PARAMS;
+    (document.getElementById('separationDist') as HTMLInputElement).value = fp.separationDist.toString();
+    (document.getElementById('alignDist') as HTMLInputElement).value = fp.alignDist.toString();
+    (document.getElementById('cohesionDist') as HTMLInputElement).value = fp.cohesionDist.toString();
+    (document.getElementById('separationWeight') as HTMLInputElement).value = fp.separationWeight.toString();
+    (document.getElementById('alignmentWeight') as HTMLInputElement).value = fp.alignmentWeight.toString();
+    (document.getElementById('cohesionWeight') as HTMLInputElement).value = fp.cohesionWeight.toString();
   }
 
-  private async saveParams(params: FlockParams) {
+  private async saveParams(config: Config) {
     try {
       const response = await fetch('/api/sketches/boids/params', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ params }),
+        body: JSON.stringify({ params: config }),
       });
 
       if (!response.ok) throw new Error('Failed to save parameters');
 
       this.showStatus('Parameters saved successfully!', 'success');
 
-      // Reload the page to apply new parameters
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -82,12 +75,17 @@ export class ParamsUI {
       const formData = new FormData(this.form);
 
       this.saveParams({
-        separationDist: parseFloat(formData.get('separationDist') as string),
-        alignDist: parseFloat(formData.get('alignDist') as string),
-        cohesionDist: parseFloat(formData.get('cohesionDist') as string),
-        separationWeight: parseFloat(formData.get('separationWeight') as string),
-        alignmentWeight: parseFloat(formData.get('alignmentWeight') as string),
-        cohesionWeight: parseFloat(formData.get('cohesionWeight') as string),
+        FLOCK_PARAMS: {
+          separationDist: parseFloat(formData.get('separationDist') as string),
+          alignDist: parseFloat(formData.get('alignDist') as string),
+          cohesionDist: parseFloat(formData.get('cohesionDist') as string),
+          separationWeight: parseFloat(formData.get('separationWeight') as string),
+          alignmentWeight: parseFloat(formData.get('alignmentWeight') as string),
+          cohesionWeight: parseFloat(formData.get('cohesionWeight') as string),
+        },
+        BOID_COUNT: parseFloat(formData.get('BOID_COUNT') as string) || 500,
+        WOIM_LENGTH: parseFloat(formData.get('WOIM_LENGTH') as string) || 20,
+        BACKGROUND_COLOR: (formData.get('BACKGROUND_COLOR') as string) || '#fcfaf7',
       });
     });
   }

@@ -1,0 +1,13 @@
+{
+  "FLOCK_PARAMS": {
+    "separationDist": 100,
+    "alignDist": 50,
+    "cohesionDist": 50,
+    "separationWeight": 1.5,
+    "alignmentWeight": 1,
+    "cohesionWeight": 1
+  },
+  "BOID_COUNT": 500,
+  "WOIM_LENGTH": 20,
+  "BACKGROUND_COLOR": "#fcfaf7"
+}
