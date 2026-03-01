@@ -5,6 +5,7 @@
   "license": "MIT",
   "type": "module",
   "devDependencies": {
+    "@dim882/sketchlib": "link:../../../lib",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "rollup": "^4.14.3",
@@ -15,5 +16,6 @@
   "scripts": {
     "build": "rollup -c",
     "clean": "rm -rf dist/*"
-  }
+  },
+  "sketchPreset": "default"
 }

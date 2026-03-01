@@ -11,7 +11,7 @@
     "clean": "rm -rf dist/*"
   },
   "devDependencies": {
-    "@dim882/sketchlib": "^0.3.0",
+    "@dim882/sketchlib": "link:../../lib",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",

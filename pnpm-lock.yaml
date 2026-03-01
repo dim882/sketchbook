@@ -534,6 +534,9 @@ importers:
 
   sketches/demo/nested-base:
     devDependencies:
+      '@dim882/sketchlib':
+        specifier: link:../../../lib
+        version: link:../../../lib
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
         version: 15.3.1(rollup@4.40.0)
