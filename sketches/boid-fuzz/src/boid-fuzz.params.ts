@@ -1,26 +1,14 @@
-export interface IFlockParams {
-  separationDist: number;
-  alignDist: number;
-  cohesionDist: number;
-  separationWeight: number;
-  alignmentWeight: number;
-  cohesionWeight: number;
-}
+import type { Config, IFlockParams } from './boid-fuzz.schema';
+import configJson from './boid-fuzz.params.json';
 
-export const FLOCK_PARAMS: IFlockParams = {
-  separationDist: 100,
-  alignDist: 50,
-  cohesionDist: 500,
-  separationWeight: 2.4,
-  alignmentWeight: 1,
-  cohesionWeight: 1,
-};
+const config: Config = configJson as Config;
 
-export const BOID_COUNT = 200;
-export const WOIM_LENGTH = 20;
-export const BACKGROUND_COLOR = '#121212'; 
-
-export const BOID_COLOR = '#e8c9c9';
-export const FLOCK_LIFETIME_FRAMES = 200;
-export const FLOCK_SPAWN_INTERVAL_FRAMES = 40;
-export const FLOCK_SPAWN_DISTANCE = 60;
+export type { IFlockParams };
+export const FLOCK_PARAMS: IFlockParams = config.FLOCK_PARAMS;
+export const BOID_COUNT: number = config.BOID_COUNT;
+export const WOIM_LENGTH: number = config.WOIM_LENGTH;
+export const BACKGROUND_COLOR: string = config.BACKGROUND_COLOR;
+export const BOID_COLOR: string = config.BOID_COLOR;
+export const FLOCK_LIFETIME_FRAMES: number = config.FLOCK_LIFETIME_FRAMES;
+export const FLOCK_SPAWN_INTERVAL_FRAMES: number = config.FLOCK_SPAWN_INTERVAL_FRAMES;
+export const FLOCK_SPAWN_DISTANCE: number = config.FLOCK_SPAWN_DISTANCE;
