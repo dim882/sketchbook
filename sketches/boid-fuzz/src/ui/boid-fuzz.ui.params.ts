@@ -1,43 +1,7 @@
-import {
-  FLOCK_PARAMS,
-  BOID_COUNT,
-  WOIM_LENGTH,
-  BACKGROUND_COLOR,
-  BOID_COLOR,
-  FLOCK_LIFETIME_FRAMES,
-  FLOCK_SPAWN_INTERVAL_FRAMES,
-  FLOCK_SPAWN_DISTANCE,
-} from '../boid-fuzz.params';
+import type { Config } from '../boid-fuzz.schema';
+import configJson from '../boid-fuzz.params.json';
 
-interface IFlockParams {
-  separationDist: number;
-  alignDist: number;
-  cohesionDist: number;
-  separationWeight: number;
-  alignmentWeight: number;
-  cohesionWeight: number;
-}
-
-interface IAllParams extends IFlockParams {
-  BOID_COUNT: number;
-  WOIM_LENGTH: number;
-  BACKGROUND_COLOR: string;
-  BOID_COLOR: string;
-  FLOCK_LIFETIME_FRAMES: number;
-  FLOCK_SPAWN_INTERVAL_FRAMES: number;
-  FLOCK_SPAWN_DISTANCE: number;
-}
-
-const DEFAULT_PARAMS: IAllParams = {
-  ...FLOCK_PARAMS,
-  BOID_COUNT,
-  WOIM_LENGTH,
-  BACKGROUND_COLOR,
-  BOID_COLOR,
-  FLOCK_LIFETIME_FRAMES,
-  FLOCK_SPAWN_INTERVAL_FRAMES,
-  FLOCK_SPAWN_DISTANCE,
-};
+const DEFAULT_CONFIG: Config = configJson as Config;
 
 const getTemplate = () => {
   const template = document.createElement('template');
@@ -130,8 +94,7 @@ export class ParamsUI extends HTMLElement {
     this.form = this.querySelector('#params-form') as HTMLFormElement;
     this.statusDiv = this.querySelector('#status') as HTMLDivElement;
 
-    // Populate with defaults immediately
-    this.populateForm(DEFAULT_PARAMS);
+    this.populateForm(DEFAULT_CONFIG);
 
     this.initializeForm();
     this.loadCurrentParams();
@@ -144,41 +107,39 @@ export class ParamsUI extends HTMLElement {
 
       const data = await response.json();
       if (data.params) {
-        // Merge with defaults to ensure all fields are present
-        const mergedParams = { ...DEFAULT_PARAMS, ...data.params };
-        this.populateForm(mergedParams);
+        this.populateForm(data.params);
       }
     } catch (error) {
       console.error('Error loading parameters:', error);
-      // Already populated with defaults, so just log the error
     }
   }
 
-  private populateForm(params: IAllParams) {
-    (this.querySelector('#separationDist') as HTMLInputElement).value = params.separationDist.toString();
-    (this.querySelector('#alignDist') as HTMLInputElement).value = params.alignDist.toString();
-    (this.querySelector('#cohesionDist') as HTMLInputElement).value = params.cohesionDist.toString();
-    (this.querySelector('#separationWeight') as HTMLInputElement).value = params.separationWeight.toString();
-    (this.querySelector('#alignmentWeight') as HTMLInputElement).value = params.alignmentWeight.toString();
-    (this.querySelector('#cohesionWeight') as HTMLInputElement).value = params.cohesionWeight.toString();
-    (this.querySelector('#BOID_COUNT') as HTMLInputElement).value = params.BOID_COUNT.toString();
-    (this.querySelector('#WOIM_LENGTH') as HTMLInputElement).value = params.WOIM_LENGTH.toString();
-    (this.querySelector('#BACKGROUND_COLOR') as HTMLInputElement).value = params.BACKGROUND_COLOR;
-    (this.querySelector('#BOID_COLOR') as HTMLInputElement).value = params.BOID_COLOR;
-    (this.querySelector('#FLOCK_LIFETIME_FRAMES') as HTMLInputElement).value = params.FLOCK_LIFETIME_FRAMES.toString();
+  private populateForm(config: Config) {
+    const fp = config.FLOCK_PARAMS;
+    (this.querySelector('#separationDist') as HTMLInputElement).value = fp.separationDist.toString();
+    (this.querySelector('#alignDist') as HTMLInputElement).value = fp.alignDist.toString();
+    (this.querySelector('#cohesionDist') as HTMLInputElement).value = fp.cohesionDist.toString();
+    (this.querySelector('#separationWeight') as HTMLInputElement).value = fp.separationWeight.toString();
+    (this.querySelector('#alignmentWeight') as HTMLInputElement).value = fp.alignmentWeight.toString();
+    (this.querySelector('#cohesionWeight') as HTMLInputElement).value = fp.cohesionWeight.toString();
+    (this.querySelector('#BOID_COUNT') as HTMLInputElement).value = config.BOID_COUNT.toString();
+    (this.querySelector('#WOIM_LENGTH') as HTMLInputElement).value = config.WOIM_LENGTH.toString();
+    (this.querySelector('#BACKGROUND_COLOR') as HTMLInputElement).value = config.BACKGROUND_COLOR;
+    (this.querySelector('#BOID_COLOR') as HTMLInputElement).value = config.BOID_COLOR;
+    (this.querySelector('#FLOCK_LIFETIME_FRAMES') as HTMLInputElement).value = config.FLOCK_LIFETIME_FRAMES.toString();
     (this.querySelector('#FLOCK_SPAWN_INTERVAL_FRAMES') as HTMLInputElement).value =
-      params.FLOCK_SPAWN_INTERVAL_FRAMES.toString();
-    (this.querySelector('#FLOCK_SPAWN_DISTANCE') as HTMLInputElement).value = params.FLOCK_SPAWN_DISTANCE.toString();
+      config.FLOCK_SPAWN_INTERVAL_FRAMES.toString();
+    (this.querySelector('#FLOCK_SPAWN_DISTANCE') as HTMLInputElement).value = config.FLOCK_SPAWN_DISTANCE.toString();
   }
 
-  private async saveParams(params: IAllParams) {
+  private async saveParams(config: Config) {
     try {
       const response = await fetch('/api/sketches/boid-fuzz/params', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ params }),
+        body: JSON.stringify({ params: config }),
       });
 
       if (!response.ok) throw new Error('Failed to save parameters');
@@ -211,12 +172,14 @@ export class ParamsUI extends HTMLElement {
       const formData = new FormData(this.form);
 
       this.saveParams({
-        separationDist: parseFloat(formData.get('separationDist') as string),
-        alignDist: parseFloat(formData.get('alignDist') as string),
-        cohesionDist: parseFloat(formData.get('cohesionDist') as string),
-        separationWeight: parseFloat(formData.get('separationWeight') as string),
-        alignmentWeight: parseFloat(formData.get('alignmentWeight') as string),
-        cohesionWeight: parseFloat(formData.get('cohesionWeight') as string),
+        FLOCK_PARAMS: {
+          separationDist: parseFloat(formData.get('separationDist') as string),
+          alignDist: parseFloat(formData.get('alignDist') as string),
+          cohesionDist: parseFloat(formData.get('cohesionDist') as string),
+          separationWeight: parseFloat(formData.get('separationWeight') as string),
+          alignmentWeight: parseFloat(formData.get('alignmentWeight') as string),
+          cohesionWeight: parseFloat(formData.get('cohesionWeight') as string),
+        },
         BOID_COUNT: parseFloat(formData.get('BOID_COUNT') as string),
         WOIM_LENGTH: parseFloat(formData.get('WOIM_LENGTH') as string),
         BACKGROUND_COLOR: formData.get('BACKGROUND_COLOR') as string,
