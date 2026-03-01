@@ -6,9 +6,8 @@ export interface SketchPaths {
   dist: string;
   src: string;
   html: string;
-  params: string;
-  template: string;
-  serverHandler: string;
+  config: string;
+  schema: string;
 }
 
 function createSketchPaths(name: string): SketchPaths {
@@ -23,9 +22,8 @@ function createSketchPaths(name: string): SketchPaths {
     dist,
     src,
     html: path.join(dist, `${leafName}.html`),
-    params: path.join(src, `${leafName}.params.ts`),
-    template: path.join(src, `${leafName}.params.tpl`),
-    serverHandler: path.join(src, `${leafName}.server.js`),
+    config: path.join(src, `${leafName}.params.json`),
+    schema: path.join(dist, `${leafName}.schema.js`),
   };
 }
 
