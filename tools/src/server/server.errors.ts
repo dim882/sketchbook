@@ -1,6 +1,7 @@
 import { Result } from '@swan-io/boxed';
 import { z } from 'zod';
 import type { Response } from 'express';
+import type { ParamValue, ParamRecord } from '../lib/types';
 import { createLogger } from '../lib/logger';
 
 const log = createLogger('server/errors');
@@ -33,7 +34,7 @@ export const handleError = (res: Response) => (err: ServerError) => {
   res.status(err.status).json({ error: err.message });
 };
 
-const jsonValue: z.ZodType<import('../lib/types').ParamValue | import('../lib/types').ParamRecord> = z.lazy(() =>
+const jsonValue: z.ZodType<ParamValue | ParamRecord> = z.lazy(() =>
   z.union([z.string(), z.number(), z.boolean(), z.null(), z.record(z.string(), jsonValue)])
 );
 

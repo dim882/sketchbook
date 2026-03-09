@@ -46,7 +46,9 @@ const compileAllSchemasOnStartup = async (): Promise<void> => {
   }
 };
 
-compileAllSchemasOnStartup();
+compileAllSchemasOnStartup().catch((error) => {
+  log.error('Failed to compile schemas on startup', { error: error instanceof Error ? error.message : String(error) });
+});
 
 watcher.on('all', (_event, filePath) => {
   const configPath = findNearestConfig(path.dirname(filePath));

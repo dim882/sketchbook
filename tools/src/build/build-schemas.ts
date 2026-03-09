@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import { copyFileSync, mkdirSync } from 'fs';
+import { mkdir, copyFile } from 'fs/promises';
 import * as path from 'path';
 import fg from 'fast-glob';
 import { Future, Result } from '@swan-io/boxed';
@@ -58,13 +58,17 @@ export const compileSchema = (
         stderr += data.toString();
       });
 
-      child.on('close', (code) => {
+      child.on('close', async (code) => {
         if (code === 0) {
-          const jsonFileName = path.basename(relativeSchemaPath).replace('.ts', '.json');
-          const jsonSource = path.join(sketchDir, 'src', jsonFileName);
-          mkdirSync(distDir, { recursive: true });
-          copyFileSync(jsonSource, path.join(distDir, jsonFileName));
-          resolve(path.join(distDir, path.basename(relativeSchemaPath).replace('.ts', '.js')));
+          try {
+            const jsonFileName = path.basename(relativeSchemaPath).replace('.ts', '.json');
+            const jsonSource = path.join(sketchDir, 'src', jsonFileName);
+            await mkdir(distDir, { recursive: true });
+            await copyFile(jsonSource, path.join(distDir, jsonFileName));
+            resolve(path.join(distDir, path.basename(relativeSchemaPath).replace('.ts', '.js')));
+          } catch (error) {
+            reject(error instanceof Error ? error : new Error(String(error)));
+          }
         } else {
           reject(new Error(stderr || `tsc exited with code ${code}`));
         }
@@ -96,7 +100,7 @@ export const buildAllSchemas = async (
 };
 
 // CLI entry point
-if (process.argv[1] && path.resolve(process.argv[1]).includes('build-schemas')) {
+if (process.argv[1] && path.basename(process.argv[1]).startsWith('build-schemas')) {
   const main = async () => {
     const sketchesDir = LibPaths.getSketchesDir();
     const result = await buildAllSchemas(sketchesDir);

@@ -19,7 +19,7 @@ export const paramsSchema = z.object({
   FLOCK_SPAWN_DISTANCE: z.number().positive(),
 });
 
-export type BoidsParams = z.infer<typeof paramsSchema>;
-export type IFlockParams = BoidsParams['FLOCK_PARAMS'];
+export type IBoidFuzzParams = z.infer<typeof paramsSchema>;
+export type IFlockParams = IBoidFuzzParams['FLOCK_PARAMS'];
 
 export const params = paramsSchema.parse(paramsJson);

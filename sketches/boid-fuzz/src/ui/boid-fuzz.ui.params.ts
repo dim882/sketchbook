@@ -1,7 +1,5 @@
-import type { BoidsParams } from '../boid-fuzz.params';
-import defaultParamsJson from '../boid-fuzz.params.json';
-
-const DEFAULT_PARAMS: BoidsParams = defaultParamsJson as BoidsParams;
+import type { IBoidFuzzParams } from '../boid-fuzz.params';
+import { params as DEFAULT_PARAMS } from '../boid-fuzz.params';
 
 const getTemplate = () => {
   const template = document.createElement('template');
@@ -114,7 +112,7 @@ export class ParamsUI extends HTMLElement {
     }
   }
 
-  private populateForm(params: BoidsParams) {
+  private populateForm(params: IBoidFuzzParams) {
     const fp = params.FLOCK_PARAMS;
     (this.querySelector('#separationDist') as HTMLInputElement).value = fp.separationDist.toString();
     (this.querySelector('#alignDist') as HTMLInputElement).value = fp.alignDist.toString();
@@ -132,7 +130,7 @@ export class ParamsUI extends HTMLElement {
     (this.querySelector('#FLOCK_SPAWN_DISTANCE') as HTMLInputElement).value = params.FLOCK_SPAWN_DISTANCE.toString();
   }
 
-  private async saveParams(sketchParams: BoidsParams) {
+  private async saveParams(sketchParams: IBoidFuzzParams) {
     try {
       const response = await fetch('/api/sketches/boid-fuzz/params', {
         method: 'POST',
@@ -180,12 +178,12 @@ export class ParamsUI extends HTMLElement {
           alignmentWeight: parseFloat(formData.get('alignmentWeight') as string),
           cohesionWeight: parseFloat(formData.get('cohesionWeight') as string),
         },
-        BOID_COUNT: parseFloat(formData.get('BOID_COUNT') as string),
-        WOIM_LENGTH: parseFloat(formData.get('WOIM_LENGTH') as string),
+        BOID_COUNT: parseInt(formData.get('BOID_COUNT') as string, 10),
+        WOIM_LENGTH: parseInt(formData.get('WOIM_LENGTH') as string, 10),
         BACKGROUND_COLOR: formData.get('BACKGROUND_COLOR') as string,
         BOID_COLOR: formData.get('BOID_COLOR') as string,
-        FLOCK_LIFETIME_FRAMES: parseFloat(formData.get('FLOCK_LIFETIME_FRAMES') as string),
-        FLOCK_SPAWN_INTERVAL_FRAMES: parseFloat(formData.get('FLOCK_SPAWN_INTERVAL_FRAMES') as string),
+        FLOCK_LIFETIME_FRAMES: parseInt(formData.get('FLOCK_LIFETIME_FRAMES') as string, 10),
+        FLOCK_SPAWN_INTERVAL_FRAMES: parseInt(formData.get('FLOCK_SPAWN_INTERVAL_FRAMES') as string, 10),
         FLOCK_SPAWN_DISTANCE: parseFloat(formData.get('FLOCK_SPAWN_DISTANCE') as string),
       });
     });

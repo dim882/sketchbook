@@ -9,6 +9,10 @@ import { createLogger } from '../../lib/logger';
 
 const log = createLogger('routes/api');
 
+function isZodSchema(value: unknown): value is ZodType {
+  return value != null && typeof (value as Record<string, unknown>).parse === 'function';
+}
+
 // --- Route Handlers ---
 
 export const getParamsRoute = (req: Request, res: Response) => {
@@ -51,7 +55,8 @@ function fetchSketchParams(sketchName: string): Future<Result<Record<string, unk
 }
 
 function loadSchemaModule(schemaPath: string): Future<Result<ZodType, Errors.ServerError>> {
-  return Future.fromPromise(import(schemaPath))
+  // Bust Node's module cache so recompiled schemas are picked up without a server restart
+  return Future.fromPromise(import(`${schemaPath}?t=${Date.now()}`))
     .tapOk((module) =>
       log.debug(`Loaded schema module`, { hasDefault: 'default' in module })
     )
@@ -63,14 +68,14 @@ function loadSchemaModule(schemaPath: string): Future<Result<ZodType, Errors.Ser
     )
     .mapOkToResult((module) => {
       const schema = module.paramsSchema;
-      if (!schema || typeof schema.parse !== 'function') {
+      if (!isZodSchema(schema)) {
         return Result.Error(
           Errors.serverError(
             `Schema module is invalid: must export a zod schema as paramsSchema`
           )
         );
       }
-      return Result.Ok(schema as ZodType);
+      return Result.Ok(schema);
     });
 }
 

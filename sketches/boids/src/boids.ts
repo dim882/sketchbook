@@ -1,6 +1,6 @@
 import * as utils from './boids.utils';
 import { params } from './boids.params';
-import { ParamsUI } from './boids.params.ui';
+import { createParamsUI } from './boids.params.ui';
 
 const prng = Math.random;
 
@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  new ParamsUI();
+  createParamsUI();
 
   let flock = utils.createFlock(params.BOID_COUNT, canvas.width, canvas.height, prng);
   let boidPaths: utils.IPath[] = flock.map(() => []);

@@ -15,6 +15,6 @@ export const paramsSchema = z.object({
   BACKGROUND_COLOR: z.string(),
 });
 
-export type BoidsParams = z.infer<typeof paramsSchema>;
+export type IBoidsParams = z.infer<typeof paramsSchema>;
 
 export const params = paramsSchema.parse(paramsJson);
