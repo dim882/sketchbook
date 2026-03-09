@@ -92,9 +92,9 @@ describe('compileSchema', () => {
       join(sketchDir, 'src', 'test-sketch.params.ts'),
       `import { z } from 'zod';
 import paramsJson from './test-sketch.params.json';
-export const configSchema = z.object({ x: z.number() });
-export type BoidsParams = z.infer<typeof configSchema>;
-export const params = configSchema.parse(paramsJson);
+export const paramsSchema = z.object({ x: z.number() });
+export type SketchParams = z.infer<typeof paramsSchema>;
+export const params = paramsSchema.parse(paramsJson);
 `
     );
 

@@ -1,6 +1,6 @@
-# Sketch Configuration System
+# Sketch Parameters System
 
-Sketches can expose browser-editable configuration using zod schemas and plain JSON files. The server handles reading and writing generically — no sketch-specific server code is needed.
+Sketches can expose browser-editable parameters using zod schemas and plain JSON files. The server handles reading and writing generically — no sketch-specific server code is needed.
 
 ## How It Works
 
@@ -19,11 +19,11 @@ Sketches can expose browser-editable configuration using zod schemas and plain J
                       └──────────────────┘    └──────────────────┘
 ```
 
-1. **Params** (`*.params.ts`) — Defines the config shape using zod, imports the JSON, and exports the parsed config. Compiled to JS + d.ts for the server.
-2. **Config** (`*.params.json`) — Plain JSON file with current values. Source of truth at runtime.
+1. **Params** (`*.params.ts`) — Defines the parameter shape using zod, imports the JSON, and exports the parsed params. Compiled to JS + d.ts for the server.
+2. **Values** (`*.params.json`) — Plain JSON file with current values. Source of truth at runtime.
 3. **Server** — Generic: GET reads JSON, POST validates against the compiled schema then writes JSON.
 
-## Adding Config to a New Sketch
+## Adding Parameters to a New Sketch
 
 ### 1. Create the params file (`src/{name}.params.ts`)
 
@@ -31,18 +31,18 @@ Sketches can expose browser-editable configuration using zod schemas and plain J
 import { z } from 'zod';
 import paramsJson from './{name}.params.json';
 
-export const configSchema = z.object({
+export const paramsSchema = z.object({
   speed: z.number().positive(),
   color: z.string(),
   count: z.number().int().positive(),
 });
 
-export type SketchParams = z.infer<typeof configSchema>;
+export type SketchParams = z.infer<typeof paramsSchema>;
 
-export const params = configSchema.parse(paramsJson);
+export const params = paramsSchema.parse(paramsJson);
 ```
 
-### 2. Create the config file (`src/{name}.params.json`)
+### 2. Create the params file (`src/{name}.params.json`)
 
 ```json
 {
@@ -68,7 +68,7 @@ Add the JSON plugin:
 import json from '@rollup/plugin-json';
 
 export default {
-  // ...existing config
+  // ...existing rollup options
   plugins: [
     nodeResolve(),
     json(),        // <-- add this
@@ -98,7 +98,7 @@ Must include `resolveJsonModule`:
 
 ## Server API
 
-- **GET** `/api/sketches/{name}/params` — Returns the current config as JSON
+- **GET** `/api/sketches/{name}/params` — Returns the current params as JSON
 - **POST** `/api/sketches/{name}/params` — Validates against the sketch's zod schema, then writes
 
 Request body for POST:
@@ -127,6 +127,6 @@ Output goes to `dist/{name}.params.js` + `dist/{name}.params.d.ts` in each sketc
 
 ## Key Constraints
 
-- **No zod in client bundles**: The `configSchema` should not be imported at runtime by client code. Use `import type` for types, and import `params` for the parsed values.
-- **Schema must export `configSchema`**: The server does `const { configSchema } = await import(path)`.
+- **No zod in client bundles**: The `paramsSchema` should not be imported at runtime by client code. Use `import type` for types, and import `params` for the parsed values.
+- **Schema must export `paramsSchema`**: The server does `const { paramsSchema } = await import(path)`.
 - **JSON must match schema**: The `*.params.json` file must be valid according to the schema. The server validates on write, but manual edits bypass this.

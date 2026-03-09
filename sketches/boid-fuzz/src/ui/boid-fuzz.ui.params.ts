@@ -1,7 +1,7 @@
 import type { BoidsParams } from '../boid-fuzz.params';
-import configJson from '../boid-fuzz.params.json';
+import defaultParamsJson from '../boid-fuzz.params.json';
 
-const DEFAULT_CONFIG: BoidsParams = configJson as BoidsParams;
+const DEFAULT_PARAMS: BoidsParams = defaultParamsJson as BoidsParams;
 
 const getTemplate = () => {
   const template = document.createElement('template');
@@ -94,7 +94,7 @@ export class ParamsUI extends HTMLElement {
     this.form = this.querySelector('#params-form') as HTMLFormElement;
     this.statusDiv = this.querySelector('#status') as HTMLDivElement;
 
-    this.populateForm(DEFAULT_CONFIG);
+    this.populateForm(DEFAULT_PARAMS);
 
     this.initializeForm();
     this.loadCurrentParams();
@@ -114,32 +114,32 @@ export class ParamsUI extends HTMLElement {
     }
   }
 
-  private populateForm(config: BoidsParams) {
-    const fp = config.FLOCK_PARAMS;
+  private populateForm(params: BoidsParams) {
+    const fp = params.FLOCK_PARAMS;
     (this.querySelector('#separationDist') as HTMLInputElement).value = fp.separationDist.toString();
     (this.querySelector('#alignDist') as HTMLInputElement).value = fp.alignDist.toString();
     (this.querySelector('#cohesionDist') as HTMLInputElement).value = fp.cohesionDist.toString();
     (this.querySelector('#separationWeight') as HTMLInputElement).value = fp.separationWeight.toString();
     (this.querySelector('#alignmentWeight') as HTMLInputElement).value = fp.alignmentWeight.toString();
     (this.querySelector('#cohesionWeight') as HTMLInputElement).value = fp.cohesionWeight.toString();
-    (this.querySelector('#BOID_COUNT') as HTMLInputElement).value = config.BOID_COUNT.toString();
-    (this.querySelector('#WOIM_LENGTH') as HTMLInputElement).value = config.WOIM_LENGTH.toString();
-    (this.querySelector('#BACKGROUND_COLOR') as HTMLInputElement).value = config.BACKGROUND_COLOR;
-    (this.querySelector('#BOID_COLOR') as HTMLInputElement).value = config.BOID_COLOR;
-    (this.querySelector('#FLOCK_LIFETIME_FRAMES') as HTMLInputElement).value = config.FLOCK_LIFETIME_FRAMES.toString();
+    (this.querySelector('#BOID_COUNT') as HTMLInputElement).value = params.BOID_COUNT.toString();
+    (this.querySelector('#WOIM_LENGTH') as HTMLInputElement).value = params.WOIM_LENGTH.toString();
+    (this.querySelector('#BACKGROUND_COLOR') as HTMLInputElement).value = params.BACKGROUND_COLOR;
+    (this.querySelector('#BOID_COLOR') as HTMLInputElement).value = params.BOID_COLOR;
+    (this.querySelector('#FLOCK_LIFETIME_FRAMES') as HTMLInputElement).value = params.FLOCK_LIFETIME_FRAMES.toString();
     (this.querySelector('#FLOCK_SPAWN_INTERVAL_FRAMES') as HTMLInputElement).value =
-      config.FLOCK_SPAWN_INTERVAL_FRAMES.toString();
-    (this.querySelector('#FLOCK_SPAWN_DISTANCE') as HTMLInputElement).value = config.FLOCK_SPAWN_DISTANCE.toString();
+      params.FLOCK_SPAWN_INTERVAL_FRAMES.toString();
+    (this.querySelector('#FLOCK_SPAWN_DISTANCE') as HTMLInputElement).value = params.FLOCK_SPAWN_DISTANCE.toString();
   }
 
-  private async saveParams(config: BoidsParams) {
+  private async saveParams(sketchParams: BoidsParams) {
     try {
       const response = await fetch('/api/sketches/boid-fuzz/params', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ params: config }),
+        body: JSON.stringify({ params: sketchParams }),
       });
 
       if (!response.ok) throw new Error('Failed to save parameters');

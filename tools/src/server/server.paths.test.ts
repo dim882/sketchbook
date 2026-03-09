@@ -10,7 +10,7 @@ it('paths.sketch returns chained path object', () => {
   expect(sketch.dist).toBe(`${sketchesPath}/my-sketch/dist`);
   expect(sketch.src).toBe(`${sketchesPath}/my-sketch/src`);
   expect(sketch.html).toBe(`${sketchesPath}/my-sketch/dist/my-sketch.html`);
-  expect(sketch.config).toBe(`${sketchesPath}/my-sketch/src/my-sketch.params.json`);
+  expect(sketch.paramsJson).toBe(`${sketchesPath}/my-sketch/src/my-sketch.params.json`);
   expect(sketch.schema).toBe(`${sketchesPath}/my-sketch/dist/my-sketch.params.js`);
 });
 
@@ -20,6 +20,6 @@ it('paths.sketch handles nested paths using leaf name for files', () => {
   expect(sketch.dist).toBe(`${sketchesPath}/experiments/cool-thing/dist`);
   expect(sketch.src).toBe(`${sketchesPath}/experiments/cool-thing/src`);
   expect(sketch.html).toBe(`${sketchesPath}/experiments/cool-thing/dist/cool-thing.html`);
-  expect(sketch.config).toBe(`${sketchesPath}/experiments/cool-thing/src/cool-thing.params.json`);
+  expect(sketch.paramsJson).toBe(`${sketchesPath}/experiments/cool-thing/src/cool-thing.params.json`);
   expect(sketch.schema).toBe(`${sketchesPath}/experiments/cool-thing/dist/cool-thing.params.js`);
 });

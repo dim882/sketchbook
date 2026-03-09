@@ -115,17 +115,17 @@ fetchData().tap((result) =>
 
 ## Type Safety
 
-### Config Values
+### Param Values
 
-Sketch configuration uses JSON-serializable types with nested object support:
+Sketch parameters use JSON-serializable types with nested object support:
 
 ```typescript
-type ConfigValue = string | number | boolean | null;
-type ConfigRecord = { [key: string]: ConfigValue | ConfigRecord };
+type ParamValue = string | number | boolean | null;
+type ParamRecord = { [key: string]: ParamValue | ParamRecord };
 ```
 
-Configuration is validated at the server boundary using zod schemas exported
-by each sketch's `*.params.ts` file. See `SKETCH_CONFIG.md` for details.
+Parameters are validated at the server boundary using zod schemas exported
+by each sketch's `*.params.ts` file. See `SKETCH_PARAMS.md` for details.
 
 ### Type Guards
 

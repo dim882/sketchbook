@@ -33,7 +33,7 @@ export const handleError = (res: Response) => (err: ServerError) => {
   res.status(err.status).json({ error: err.message });
 };
 
-const jsonValue: z.ZodType<import('../lib/types').ConfigValue | import('../lib/types').ConfigRecord> = z.lazy(() =>
+const jsonValue: z.ZodType<import('../lib/types').ParamValue | import('../lib/types').ParamRecord> = z.lazy(() =>
   z.union([z.string(), z.number(), z.boolean(), z.null(), z.record(z.string(), jsonValue)])
 );
 

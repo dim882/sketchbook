@@ -25,8 +25,8 @@ export class ParamsUI {
     }
   }
 
-  private populateForm(config: BoidsParams) {
-    const fp = config.FLOCK_PARAMS;
+  private populateForm(params: BoidsParams) {
+    const fp = params.FLOCK_PARAMS;
     (document.getElementById('separationDist') as HTMLInputElement).value = fp.separationDist.toString();
     (document.getElementById('alignDist') as HTMLInputElement).value = fp.alignDist.toString();
     (document.getElementById('cohesionDist') as HTMLInputElement).value = fp.cohesionDist.toString();
@@ -35,14 +35,14 @@ export class ParamsUI {
     (document.getElementById('cohesionWeight') as HTMLInputElement).value = fp.cohesionWeight.toString();
   }
 
-  private async saveParams(config: BoidsParams) {
+  private async saveParams(sketchParams: BoidsParams) {
     try {
       const response = await fetch('/api/sketches/boids/params', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ params: config }),
+        body: JSON.stringify({ params: sketchParams }),
       });
 
       if (!response.ok) throw new Error('Failed to save parameters');

@@ -14,7 +14,7 @@ vi.mock('../server.paths', () => {
         dist: join(tempDir, name, 'dist'),
         src: join(tempDir, name, 'src'),
         html: join(tempDir, name, 'dist', `${name}.html`),
-        config: join(tempDir, name, 'src', `${name}.params.json`),
+        paramsJson: join(tempDir, name, 'src', `${name}.params.json`),
         schema: join(tempDir, name, 'dist', `${name}.params.js`),
       }),
     },
@@ -79,36 +79,36 @@ describe('validateParamsBody', () => {
 });
 
 describe('schema validation integration', () => {
-  it('boids config.json is valid against its schema', async () => {
-    const { configSchema } = await import(
+  it('boids params.json is valid against its schema', async () => {
+    const { paramsSchema } = await import(
       '../../../../sketches/boids/src/boids.params'
     );
-    const configJson = JSON.parse(
+    const paramsJson = JSON.parse(
       readFileSync(
         join(__dirname, '../../../../sketches/boids/src/boids.params.json'),
         'utf-8'
       )
     );
-    const result = configSchema.safeParse(configJson);
+    const result = paramsSchema.safeParse(paramsJson);
     expect(result.success).toBe(true);
   });
 
-  it('boid-fuzz config.json is valid against its schema', async () => {
-    const { configSchema } = await import(
+  it('boid-fuzz params.json is valid against its schema', async () => {
+    const { paramsSchema } = await import(
       '../../../../sketches/boid-fuzz/src/boid-fuzz.params'
     );
-    const configJson = JSON.parse(
+    const paramsJson = JSON.parse(
       readFileSync(
         join(__dirname, '../../../../sketches/boid-fuzz/src/boid-fuzz.params.json'),
         'utf-8'
       )
     );
-    const result = configSchema.safeParse(configJson);
+    const result = paramsSchema.safeParse(paramsJson);
     expect(result.success).toBe(true);
   });
 
   it('boids schema rejects wrong types', async () => {
-    const { configSchema } = await import(
+    const { paramsSchema } = await import(
       '../../../../sketches/boids/src/boids.params'
     );
     const invalid = {
@@ -124,12 +124,12 @@ describe('schema validation integration', () => {
       WOIM_LENGTH: 20,
       BACKGROUND_COLOR: '#fcfaf7',
     };
-    const result = configSchema.safeParse(invalid);
+    const result = paramsSchema.safeParse(invalid);
     expect(result.success).toBe(false);
   });
 
   it('boids schema rejects missing required fields', async () => {
-    const { configSchema } = await import(
+    const { paramsSchema } = await import(
       '../../../../sketches/boids/src/boids.params'
     );
     const incomplete = {
@@ -138,22 +138,22 @@ describe('schema validation integration', () => {
       },
       BOID_COUNT: 500,
     };
-    const result = configSchema.safeParse(incomplete);
+    const result = paramsSchema.safeParse(incomplete);
     expect(result.success).toBe(false);
   });
 
   it('boid-fuzz schema rejects negative BOID_COUNT', async () => {
-    const { configSchema } = await import(
+    const { paramsSchema } = await import(
       '../../../../sketches/boid-fuzz/src/boid-fuzz.params'
     );
-    const configJson = JSON.parse(
+    const paramsJson = JSON.parse(
       readFileSync(
         join(__dirname, '../../../../sketches/boid-fuzz/src/boid-fuzz.params.json'),
         'utf-8'
       )
     );
-    const invalid = { ...configJson, BOID_COUNT: -5 };
-    const result = configSchema.safeParse(invalid);
+    const invalid = { ...paramsJson, BOID_COUNT: -5 };
+    const result = paramsSchema.safeParse(invalid);
     expect(result.success).toBe(false);
   });
 });

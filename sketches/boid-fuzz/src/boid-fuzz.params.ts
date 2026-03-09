@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import paramsJson from './boid-fuzz.params.json';
 
-export const configSchema = z.object({
+export const paramsSchema = z.object({
   FLOCK_PARAMS: z.object({
     separationDist: z.number(),
     alignDist: z.number(),
@@ -19,7 +19,7 @@ export const configSchema = z.object({
   FLOCK_SPAWN_DISTANCE: z.number().positive(),
 });
 
-export type BoidsParams = z.infer<typeof configSchema>;
+export type BoidsParams = z.infer<typeof paramsSchema>;
 export type IFlockParams = BoidsParams['FLOCK_PARAMS'];
 
-export const params = configSchema.parse(paramsJson);
+export const params = paramsSchema.parse(paramsJson);

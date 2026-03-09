@@ -1,13 +1,13 @@
 /**
- * JSON-serializable config value types.
+ * JSON-serializable param value types.
  */
-export type ConfigValue = string | number | boolean | null;
+export type ParamValue = string | number | boolean | null;
 
 /**
- * Recursive JSON-serializable config record.
- * Supports nested objects for structured config (e.g., FLOCK_PARAMS).
+ * Recursive JSON-serializable param record.
+ * Supports nested objects for structured params (e.g., FLOCK_PARAMS).
  */
-export type ConfigRecord = { [key: string]: ConfigValue | ConfigRecord };
+export type ParamRecord = { [key: string]: ParamValue | ParamRecord };
 
 /**
  * Directory entry with name and last modified timestamp.

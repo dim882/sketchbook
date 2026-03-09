@@ -6,7 +6,7 @@ export interface SketchPaths {
   dist: string;
   src: string;
   html: string;
-  config: string;
+  paramsJson: string;
   schema: string;
 }
 
@@ -22,7 +22,7 @@ function createSketchPaths(name: string): SketchPaths {
     dist,
     src,
     html: path.join(dist, `${leafName}.html`),
-    config: path.join(src, `${leafName}.params.json`),
+    paramsJson: path.join(src, `${leafName}.params.json`),
     schema: path.join(dist, `${leafName}.params.js`),
   };
 }
