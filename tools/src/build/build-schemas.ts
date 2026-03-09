@@ -133,18 +133,3 @@ export const buildAllSchemas = async (
 
   return { total: schemaFiles.length, failures };
 };
-
-// CLI entry point
-if (process.argv[1] && path.basename(process.argv[1]).startsWith('build-schemas')) {
-  const main = async () => {
-    const sketchesDir = LibPaths.getSketchesDir();
-    const result = await buildAllSchemas(sketchesDir);
-    log.info(`Schema compilation complete: ${result.total} total, ${result.failures} failures`);
-
-    if (result.failures > 0) {
-      process.exit(1);
-    }
-  };
-
-  main();
-}
