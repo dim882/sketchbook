@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import paramsJson from './boids.params.json';
 
 export const paramsSchema = z.object({
   FLOCK_PARAMS: z.object({
@@ -16,5 +15,3 @@ export const paramsSchema = z.object({
 });
 
 export type IBoidsParams = z.infer<typeof paramsSchema>;
-
-export const params = paramsSchema.parse(paramsJson);
