@@ -3,7 +3,6 @@ import { mkdir, copyFile } from 'fs/promises';
 import * as path from 'path';
 import fg from 'fast-glob';
 import { Future, Result } from '@swan-io/boxed';
-import * as LibPaths from '../lib/paths';
 import { createLogger } from '../lib/logger';
 
 const log = createLogger('build-schemas');
@@ -11,21 +10,43 @@ const log = createLogger('build-schemas');
 export const SCHEMA_GLOB = '**/src/*.params.ts';
 export const SCHEMA_GLOB_IGNORE = ['**/node_modules/**', '**/dist/**'];
 
-export const findSchemaFiles = (sketchesDir: string): string[] => {
-  return fg.sync(SCHEMA_GLOB, {
-    cwd: sketchesDir,
+const schemaCompilerFlags = [
+  '--declaration',
+  '--emitDeclarationOnly', 'false',
+  '--module', 'ESNext',
+  '--target', 'ES2022',
+  '--moduleResolution', 'bundler',
+  '--resolveJsonModule',
+  '--skipLibCheck',
+];
+
+export const findSchemaFiles = (sketchesDirectory: string): string[] =>
+  fg.sync(SCHEMA_GLOB, {
+    cwd: sketchesDirectory,
     ignore: SCHEMA_GLOB_IGNORE,
     absolute: false,
   });
+
+const copyCompanionJson = async (
+  sourceDirectory: string,
+  distDirectory: string,
+  relativeSchemaPath: string,
+): Promise<string> => {
+  const jsonFileName = path.basename(relativeSchemaPath).replace('.ts', '.json');
+  const jsonSource = path.join(sourceDirectory, jsonFileName);
+  await mkdir(distDirectory, { recursive: true });
+  await copyFile(jsonSource, path.join(distDirectory, jsonFileName));
+  return path.join(distDirectory, path.basename(relativeSchemaPath).replace('.ts', '.js'));
 };
 
 export const compileSchema = (
-  sketchesDir: string,
-  relativeSchemaPath: string
+  sketchesDirectory: string,
+  relativeSchemaPath: string,
 ): Future<Result<string, Error>> => {
-  const absoluteSchemaPath = path.join(sketchesDir, relativeSchemaPath);
-  const sketchDir = path.resolve(path.join(sketchesDir, relativeSchemaPath, '../..'));
-  const distDir = path.join(sketchDir, 'dist');
+  const absoluteSchemaPath = path.join(sketchesDirectory, relativeSchemaPath);
+  const sketchDirectory = path.resolve(path.join(sketchesDirectory, relativeSchemaPath, '../..'));
+  const sourceDirectory = path.join(sketchDirectory, 'src');
+  const distDirectory = path.join(sketchDirectory, 'dist');
 
   log.info(`Compiling schema: ${relativeSchemaPath}`);
 
@@ -36,21 +57,15 @@ export const compileSchema = (
         [
           'tsc',
           absoluteSchemaPath,
-          '--declaration',
-          '--emitDeclarationOnly', 'false',
-          '--module', 'ESNext',
-          '--target', 'ES2022',
-          '--moduleResolution', 'bundler',
-          '--resolveJsonModule',
-          '--outDir', distDir,
-          '--rootDir', path.join(sketchDir, 'src'),
-          '--skipLibCheck',
+          ...schemaCompilerFlags,
+          '--outDir', distDirectory,
+          '--rootDir', sourceDirectory,
         ],
         {
-          cwd: sketchDir,
+          cwd: sketchDirectory,
           shell: true,
           stdio: ['ignore', 'pipe', 'pipe'],
-        }
+        },
       );
 
       let stderr = '';
@@ -59,23 +74,20 @@ export const compileSchema = (
       });
 
       child.on('close', async (code) => {
-        if (code === 0) {
-          try {
-            const jsonFileName = path.basename(relativeSchemaPath).replace('.ts', '.json');
-            const jsonSource = path.join(sketchDir, 'src', jsonFileName);
-            await mkdir(distDir, { recursive: true });
-            await copyFile(jsonSource, path.join(distDir, jsonFileName));
-            resolve(path.join(distDir, path.basename(relativeSchemaPath).replace('.ts', '.js')));
-          } catch (error) {
-            reject(error instanceof Error ? error : new Error(String(error)));
-          }
-        } else {
+        if (code !== 0) {
           reject(new Error(stderr || `tsc exited with code ${code}`));
+          return;
+        }
+
+        try {
+          resolve(await copyCompanionJson(sourceDirectory, distDirectory, relativeSchemaPath));
+        } catch (error) {
+          reject(error instanceof Error ? error : new Error(String(error)));
         }
       });
 
       child.on('error', reject);
-    })
+    }),
   ).mapError((err): Error => (err instanceof Error ? err : new Error(String(err))));
 };
 
