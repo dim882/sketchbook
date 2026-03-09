@@ -56,7 +56,7 @@ function fetchSketchParams(sketchName: string): Future<Result<Record<string, unk
 
 function loadSchemaModule(schemaPath: string): Future<Result<ZodType, Errors.ServerError>> {
   // Bust Node's module cache so recompiled schemas are picked up without a server restart
-  return Future.fromPromise(import(`${schemaPath}?t=${Date.now()}`))
+  return Future.fromPromise(import(schemaPath))
     .tapOk((module) =>
       log.debug(`Loaded schema module`, { hasDefault: 'default' in module })
     )
