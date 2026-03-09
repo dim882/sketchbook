@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync } from 'fs';
 import { join } from 'path';
 import os from 'os';
-import { findSchemaFiles, compileSchema } from './build-schemas';
+import { findSchemaFiles, findSchemaFilesForSketch, compileSchema } from './build-schemas';
 
 describe('findSchemaFiles', () => {
   let tempDir: string;
@@ -65,6 +65,48 @@ describe('findSchemaFiles', () => {
     expect(result).toHaveLength(2);
     expect(result).toContain('sketch-a/src/sketch-a.params.ts');
     expect(result).toContain('sketch-b/src/sketch-b.params.ts');
+  });
+});
+
+describe('findSchemaFilesForSketch', () => {
+  let tempDir: string;
+
+  beforeEach(() => {
+    tempDir = mkdtempSync(join(os.tmpdir(), 'schema-filter-test-'));
+  });
+
+  afterEach(() => {
+    rmSync(tempDir, { recursive: true });
+  });
+
+  it('filters schema files to the specified sketch', () => {
+    mkdirSync(join(tempDir, 'sketch-a', 'src'), { recursive: true });
+    writeFileSync(join(tempDir, 'sketch-a', 'src', 'sketch-a.params.ts'), '');
+    mkdirSync(join(tempDir, 'sketch-b', 'src'), { recursive: true });
+    writeFileSync(join(tempDir, 'sketch-b', 'src', 'sketch-b.params.ts'), '');
+
+    const result = findSchemaFilesForSketch(tempDir, join(tempDir, 'sketch-a'));
+    expect(result).toEqual(['sketch-a/src/sketch-a.params.ts']);
+  });
+
+  it('returns empty array for a sketch with no schemas', () => {
+    mkdirSync(join(tempDir, 'has-schema', 'src'), { recursive: true });
+    writeFileSync(join(tempDir, 'has-schema', 'src', 'has-schema.params.ts'), '');
+    mkdirSync(join(tempDir, 'no-schema', 'src'), { recursive: true });
+    writeFileSync(join(tempDir, 'no-schema', 'src', 'main.ts'), '');
+
+    const result = findSchemaFilesForSketch(tempDir, join(tempDir, 'no-schema'));
+    expect(result).toEqual([]);
+  });
+
+  it('works with nested sketch directories', () => {
+    mkdirSync(join(tempDir, 'experiments', 'cool', 'src'), { recursive: true });
+    writeFileSync(join(tempDir, 'experiments', 'cool', 'src', 'cool.params.ts'), '');
+    mkdirSync(join(tempDir, 'other', 'src'), { recursive: true });
+    writeFileSync(join(tempDir, 'other', 'src', 'other.params.ts'), '');
+
+    const result = findSchemaFilesForSketch(tempDir, join(tempDir, 'experiments', 'cool'));
+    expect(result).toEqual(['experiments/cool/src/cool.params.ts']);
   });
 });
 
