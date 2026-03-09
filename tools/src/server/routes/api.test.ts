@@ -15,7 +15,9 @@ vi.mock('../server.paths', () => {
         src: join(tempDir, name, 'src'),
         html: join(tempDir, name, 'dist', `${name}.html`),
         paramsJson: join(tempDir, name, 'src', `${name}.params.json`),
-        schema: join(tempDir, name, 'dist', `${name}.params.js`),
+        get schema() {
+          return `${join(tempDir, name, 'dist', `${name}.schema.js`)}?t=${Date.now()}`;
+        },
       }),
     },
   };
@@ -81,7 +83,7 @@ describe('validateParamsBody', () => {
 describe('schema validation integration', () => {
   it('boids params.json is valid against its schema', async () => {
     const { paramsSchema } = await import(
-      '../../../../sketches/boids/src/boids.params'
+      '../../../../sketches/boids/src/boids.schema'
     );
     const paramsJson = JSON.parse(
       readFileSync(
@@ -95,7 +97,7 @@ describe('schema validation integration', () => {
 
   it('boid-fuzz params.json is valid against its schema', async () => {
     const { paramsSchema } = await import(
-      '../../../../sketches/boid-fuzz/src/boid-fuzz.params'
+      '../../../../sketches/boid-fuzz/src/boid-fuzz.schema'
     );
     const paramsJson = JSON.parse(
       readFileSync(
@@ -109,7 +111,7 @@ describe('schema validation integration', () => {
 
   it('boids schema rejects wrong types', async () => {
     const { paramsSchema } = await import(
-      '../../../../sketches/boids/src/boids.params'
+      '../../../../sketches/boids/src/boids.schema'
     );
     const invalid = {
       FLOCK_PARAMS: {
@@ -130,7 +132,7 @@ describe('schema validation integration', () => {
 
   it('boids schema rejects missing required fields', async () => {
     const { paramsSchema } = await import(
-      '../../../../sketches/boids/src/boids.params'
+      '../../../../sketches/boids/src/boids.schema'
     );
     const incomplete = {
       FLOCK_PARAMS: {
@@ -144,7 +146,7 @@ describe('schema validation integration', () => {
 
   it('boid-fuzz schema rejects negative BOID_COUNT', async () => {
     const { paramsSchema } = await import(
-      '../../../../sketches/boid-fuzz/src/boid-fuzz.params'
+      '../../../../sketches/boid-fuzz/src/boid-fuzz.schema'
     );
     const paramsJson = JSON.parse(
       readFileSync(

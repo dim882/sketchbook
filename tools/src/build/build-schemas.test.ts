@@ -15,20 +15,20 @@ describe('findSchemaFiles', () => {
     rmSync(tempDir, { recursive: true });
   });
 
-  it('finds *.params.ts files in sketch src directories', () => {
+  it('finds *.schema.ts files in sketch src directories', () => {
     mkdirSync(join(tempDir, 'my-sketch', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'my-sketch', 'src', 'my-sketch.params.ts'), '');
+    writeFileSync(join(tempDir, 'my-sketch', 'src', 'my-sketch.schema.ts'), '');
 
     const result = findSchemaFiles(tempDir);
-    expect(result).toEqual(['my-sketch/src/my-sketch.params.ts']);
+    expect(result).toEqual(['my-sketch/src/my-sketch.schema.ts']);
   });
 
   it('finds schema files in nested sketch directories', () => {
     mkdirSync(join(tempDir, 'experiments', 'cool', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'experiments', 'cool', 'src', 'cool.params.ts'), '');
+    writeFileSync(join(tempDir, 'experiments', 'cool', 'src', 'cool.schema.ts'), '');
 
     const result = findSchemaFiles(tempDir);
-    expect(result).toEqual(['experiments/cool/src/cool.params.ts']);
+    expect(result).toEqual(['experiments/cool/src/cool.schema.ts']);
   });
 
   it('returns empty array when no schema files exist', () => {
@@ -41,7 +41,7 @@ describe('findSchemaFiles', () => {
 
   it('ignores schema files in node_modules', () => {
     mkdirSync(join(tempDir, 'node_modules', 'pkg', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'node_modules', 'pkg', 'src', 'pkg.params.ts'), '');
+    writeFileSync(join(tempDir, 'node_modules', 'pkg', 'src', 'pkg.schema.ts'), '');
 
     const result = findSchemaFiles(tempDir);
     expect(result).toEqual([]);
@@ -49,7 +49,7 @@ describe('findSchemaFiles', () => {
 
   it('ignores schema files in dist', () => {
     mkdirSync(join(tempDir, 'my-sketch', 'dist'), { recursive: true });
-    writeFileSync(join(tempDir, 'my-sketch', 'dist', 'my-sketch.params.ts'), '');
+    writeFileSync(join(tempDir, 'my-sketch', 'dist', 'my-sketch.schema.ts'), '');
 
     const result = findSchemaFiles(tempDir);
     expect(result).toEqual([]);
@@ -57,14 +57,14 @@ describe('findSchemaFiles', () => {
 
   it('finds multiple schema files across different sketches', () => {
     mkdirSync(join(tempDir, 'sketch-a', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'sketch-a', 'src', 'sketch-a.params.ts'), '');
+    writeFileSync(join(tempDir, 'sketch-a', 'src', 'sketch-a.schema.ts'), '');
     mkdirSync(join(tempDir, 'sketch-b', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'sketch-b', 'src', 'sketch-b.params.ts'), '');
+    writeFileSync(join(tempDir, 'sketch-b', 'src', 'sketch-b.schema.ts'), '');
 
     const result = findSchemaFiles(tempDir);
     expect(result).toHaveLength(2);
-    expect(result).toContain('sketch-a/src/sketch-a.params.ts');
-    expect(result).toContain('sketch-b/src/sketch-b.params.ts');
+    expect(result).toContain('sketch-a/src/sketch-a.schema.ts');
+    expect(result).toContain('sketch-b/src/sketch-b.schema.ts');
   });
 });
 
@@ -81,17 +81,17 @@ describe('findSchemaFilesForSketch', () => {
 
   it('filters schema files to the specified sketch', () => {
     mkdirSync(join(tempDir, 'sketch-a', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'sketch-a', 'src', 'sketch-a.params.ts'), '');
+    writeFileSync(join(tempDir, 'sketch-a', 'src', 'sketch-a.schema.ts'), '');
     mkdirSync(join(tempDir, 'sketch-b', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'sketch-b', 'src', 'sketch-b.params.ts'), '');
+    writeFileSync(join(tempDir, 'sketch-b', 'src', 'sketch-b.schema.ts'), '');
 
     const result = findSchemaFilesForSketch(tempDir, join(tempDir, 'sketch-a'));
-    expect(result).toEqual(['sketch-a/src/sketch-a.params.ts']);
+    expect(result).toEqual(['sketch-a/src/sketch-a.schema.ts']);
   });
 
   it('returns empty array for a sketch with no schemas', () => {
     mkdirSync(join(tempDir, 'has-schema', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'has-schema', 'src', 'has-schema.params.ts'), '');
+    writeFileSync(join(tempDir, 'has-schema', 'src', 'has-schema.schema.ts'), '');
     mkdirSync(join(tempDir, 'no-schema', 'src'), { recursive: true });
     writeFileSync(join(tempDir, 'no-schema', 'src', 'main.ts'), '');
 
@@ -101,12 +101,12 @@ describe('findSchemaFilesForSketch', () => {
 
   it('works with nested sketch directories', () => {
     mkdirSync(join(tempDir, 'experiments', 'cool', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'experiments', 'cool', 'src', 'cool.params.ts'), '');
+    writeFileSync(join(tempDir, 'experiments', 'cool', 'src', 'cool.schema.ts'), '');
     mkdirSync(join(tempDir, 'other', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'other', 'src', 'other.params.ts'), '');
+    writeFileSync(join(tempDir, 'other', 'src', 'other.schema.ts'), '');
 
     const result = findSchemaFilesForSketch(tempDir, join(tempDir, 'experiments', 'cool'));
-    expect(result).toEqual(['experiments/cool/src/cool.params.ts']);
+    expect(result).toEqual(['experiments/cool/src/cool.schema.ts']);
   });
 });
 
@@ -121,22 +121,15 @@ describe('compileSchema', () => {
     rmSync(tempDir, { recursive: true });
   });
 
-  it('compiles a valid params file to .js and .d.ts and copies JSON', async () => {
+  it('compiles a valid schema file to .js and .d.ts', async () => {
     const sketchDir = join(tempDir, 'test-sketch');
     mkdirSync(join(sketchDir, 'src'), { recursive: true });
 
     writeFileSync(
-      join(sketchDir, 'src', 'test-sketch.params.json'),
-      JSON.stringify({ x: 42 })
-    );
-
-    writeFileSync(
-      join(sketchDir, 'src', 'test-sketch.params.ts'),
+      join(sketchDir, 'src', 'test-sketch.schema.ts'),
       `import { z } from 'zod';
-import paramsJson from './test-sketch.params.json';
 export const paramsSchema = z.object({ x: z.number() });
-export type SketchParams = z.infer<typeof paramsSchema>;
-export const params = paramsSchema.parse(paramsJson);
+export type ISketchParams = z.infer<typeof paramsSchema>;
 `
     );
 
@@ -151,11 +144,10 @@ export const params = paramsSchema.parse(paramsJson);
       return;
     }
 
-    const result = await compileSchema(tempDir, 'test-sketch/src/test-sketch.params.ts').toPromise();
+    const result = await compileSchema(tempDir, 'test-sketch/src/test-sketch.schema.ts').toPromise();
 
     expect(result.isOk()).toBe(true);
-    expect(existsSync(join(sketchDir, 'dist', 'test-sketch.params.js'))).toBe(true);
-    expect(existsSync(join(sketchDir, 'dist', 'test-sketch.params.d.ts'))).toBe(true);
-    expect(existsSync(join(sketchDir, 'dist', 'test-sketch.params.json'))).toBe(true);
+    expect(existsSync(join(sketchDir, 'dist', 'test-sketch.schema.js'))).toBe(true);
+    expect(existsSync(join(sketchDir, 'dist', 'test-sketch.schema.d.ts'))).toBe(true);
   }, 30000);
 });
