@@ -11,25 +11,24 @@ Sketches can expose browser-editable parameters using zod schemas and plain JSON
 └─────────────────┘     └──────┬───────┘     └──────────────────┘
                                │                      ▲
                       validates with                   │
-                               │              read at build time
+                               │              read at runtime
                                ▼                      │
                       ┌──────────────────┐    ┌───────┴──────────┐
-                      │ *.params.js      │    │ *.params.ts      │
-                      │ (compiled)       │    │ (schema + parse) │
+                      │ *.schema.js      │    │ *.schema.ts      │
+                      │ (compiled)       │    │ (zod schema)     │
                       └──────────────────┘    └──────────────────┘
 ```
 
-1. **Params** (`*.params.ts`) — Defines the parameter shape using zod, imports the JSON, and exports the parsed params. Compiled to JS + d.ts for the server.
-2. **Values** (`*.params.json`) — Plain JSON file with current values. Source of truth at runtime.
+1. **Schema** (`*.schema.ts`) — Defines the parameter shape using zod. Compiled to JS + d.ts for server-side validation. Not imported at runtime by client code.
+2. **Values** (`*.params.json`) — Plain JSON file with current values. Source of truth at runtime. Sketches import this directly for parameter values.
 3. **Server** — Generic: GET reads JSON, POST validates against the compiled schema then writes JSON.
 
 ## Adding Parameters to a New Sketch
 
-### 1. Create the params file (`src/{name}.params.ts`)
+### 1. Create the schema file (`src/{name}.schema.ts`)
 
 ```typescript
 import { z } from 'zod';
-import paramsJson from './{name}.params.json';
 
 export const paramsSchema = z.object({
   speed: z.number().positive(),
@@ -37,9 +36,7 @@ export const paramsSchema = z.object({
   count: z.number().int().positive(),
 });
 
-export type SketchParams = z.infer<typeof paramsSchema>;
-
-export const params = paramsSchema.parse(paramsJson);
+export type ISketchParams = z.infer<typeof paramsSchema>;
 ```
 
 ### 2. Create the params file (`src/{name}.params.json`)
@@ -52,7 +49,18 @@ export const params = paramsSchema.parse(paramsJson);
 }
 ```
 
-### 3. Update `package.json`
+### 3. Import params in the sketch
+
+Sketches import the JSON file directly and use `import type` for the schema type. This keeps Zod out of client bundles while providing full type safety via TypeScript's structural checking:
+
+```typescript
+import type { ISketchParams } from './{name}.schema';
+import paramsJson from './{name}.params.json';
+
+const params: ISketchParams = paramsJson;
+```
+
+### 4. Update `package.json`
 
 Add `zod` and `@rollup/plugin-json` as dev dependencies:
 
@@ -60,7 +68,7 @@ Add `zod` and `@rollup/plugin-json` as dev dependencies:
 pnpm add -D zod @rollup/plugin-json
 ```
 
-### 4. Update `rollup.config.js`
+### 5. Update `rollup.config.js`
 
 Add the JSON plugin:
 
@@ -78,7 +86,7 @@ export default {
 };
 ```
 
-### 5. Add `tsconfig.json` (if not present)
+### 6. Add `tsconfig.json` (if not present)
 
 Must include `resolveJsonModule`:
 
@@ -114,13 +122,12 @@ Request body for POST:
 
 ## Schema Compilation
 
-Params files are compiled from TypeScript to JavaScript + type declarations so the server can import the schema without depending on the sketch's TypeScript context. This is separate from the Rollup bundle build -- Rollup builds the sketch bundle for the browser, while tsc compiles the params schema so the server can import it for validation.
+Schema files are compiled from TypeScript to JavaScript + type declarations so the server can import the schema without depending on the sketch's TypeScript context. This is separate from the Rollup bundle build -- Rollup builds the sketch bundle for the browser, while tsc compiles the schema so the server can import it for validation.
 
 The build pipeline:
 
-1. `findSchemaFiles` discovers all `*.params.ts` files under `sketches/`
+1. `findSchemaFiles` discovers all `*.schema.ts` files under `sketches/`
 2. `compileSchema` runs tsc on each one to produce `.js` + `.d.ts` in the sketch's `dist/` directory
-3. The companion `.params.json` is copied alongside the compiled output so the module can resolve its JSON import
 
 Build all schemas:
 ```bash
@@ -129,10 +136,10 @@ pnpm build
 
 This runs `build.ts`, which calls `buildAllSchemas`. The watch server (`pnpm dev`) also compiles schemas automatically on file changes.
 
-Output goes to `dist/{name}.params.js` + `dist/{name}.params.d.ts` in each sketch directory.
+Output goes to `dist/{name}.schema.js` + `dist/{name}.schema.d.ts` in each sketch directory.
 
 ## Key Constraints
 
-- **No zod in client bundles**: The `paramsSchema` should not be imported at runtime by client code. Use `import type` for types, and import `params` for the parsed values.
+- **No zod in client bundles**: Sketches must not import the schema file at runtime. Use `import type` for types, and import the JSON file directly for parameter values.
 - **Schema must export `paramsSchema`**: The server does `const { paramsSchema } = await import(path)`.
 - **JSON must match schema**: The `*.params.json` file must be valid according to the schema. The server validates on write, but manual edits bypass this.
