@@ -114,14 +114,20 @@ Request body for POST:
 
 ## Schema Compilation
 
-Params files are compiled from TypeScript to JavaScript + type declarations so the server can import the schema without depending on the sketch's TypeScript context. The adjacent `.params.json` is also copied to `dist/` so the compiled module can resolve its JSON import.
+Params files are compiled from TypeScript to JavaScript + type declarations so the server can import the schema without depending on the sketch's TypeScript context. This is separate from the Rollup bundle build -- Rollup builds the sketch bundle for the browser, while tsc compiles the params schema so the server can import it for validation.
+
+The build pipeline:
+
+1. `findSchemaFiles` discovers all `*.params.ts` files under `sketches/`
+2. `compileSchema` runs tsc on each one to produce `.js` + `.d.ts` in the sketch's `dist/` directory
+3. The companion `.params.json` is copied alongside the compiled output so the module can resolve its JSON import
 
 Build all schemas:
 ```bash
-bun tools/src/build/build-schemas.ts
+pnpm build
 ```
 
-This is also run automatically as part of `pnpm build`.
+This runs `build.ts`, which calls `buildAllSchemas`. The watch server (`pnpm dev`) also compiles schemas automatically on file changes.
 
 Output goes to `dist/{name}.params.js` + `dist/{name}.params.d.ts` in each sketch directory.
 
