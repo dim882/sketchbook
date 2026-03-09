@@ -14,22 +14,22 @@ Sketches can expose browser-editable configuration using zod schemas and plain J
                                │              read at build time
                                ▼                      │
                       ┌──────────────────┐    ┌───────┴──────────┐
-                      │ *.schema.js      │    │ *.params.ts      │
-                      │ (compiled zod)   │    │ (thin wrapper)   │
+                      │ *.params.js      │    │ *.params.ts      │
+                      │ (compiled)       │    │ (schema + parse) │
                       └──────────────────┘    └──────────────────┘
 ```
 
-1. **Schema** (`*.schema.ts`) — Defines the config shape using zod. Compiled to JS + d.ts for the server.
+1. **Params** (`*.params.ts`) — Defines the config shape using zod, imports the JSON, and exports the parsed config. Compiled to JS + d.ts for the server.
 2. **Config** (`*.params.json`) — Plain JSON file with current values. Source of truth at runtime.
-3. **Wrapper** (`*.params.ts`) — Thin module that imports JSON and re-exports typed constants, preserving the existing import API for sketch code.
-4. **Server** — Generic: GET reads JSON, POST validates against the compiled schema then writes JSON.
+3. **Server** — Generic: GET reads JSON, POST validates against the compiled schema then writes JSON.
 
 ## Adding Config to a New Sketch
 
-### 1. Create the schema file (`src/{name}.schema.ts`)
+### 1. Create the params file (`src/{name}.params.ts`)
 
 ```typescript
 import { z } from 'zod';
+import configJson from './{name}.params.json';
 
 export const configSchema = z.object({
   speed: z.number().positive(),
@@ -39,8 +39,7 @@ export const configSchema = z.object({
 
 export type Config = z.infer<typeof configSchema>;
 
-// Default export is required — the server imports this for validation
-export default configSchema;
+export const config = configSchema.parse(configJson);
 ```
 
 ### 2. Create the config file (`src/{name}.params.json`)
@@ -53,20 +52,7 @@ export default configSchema;
 }
 ```
 
-### 3. Create the params wrapper (`src/{name}.params.ts`)
-
-```typescript
-import type { Config } from './{name}.schema';
-import configJson from './{name}.params.json';
-
-const config: Config = configJson as Config;
-
-export const speed: number = config.speed;
-export const color: string = config.color;
-export const count: number = config.count;
-```
-
-### 4. Update `package.json`
+### 3. Update `package.json`
 
 Add `zod` and `@rollup/plugin-json` as dev dependencies:
 
@@ -74,7 +60,7 @@ Add `zod` and `@rollup/plugin-json` as dev dependencies:
 pnpm add -D zod @rollup/plugin-json
 ```
 
-### 5. Update `rollup.config.js`
+### 4. Update `rollup.config.js`
 
 Add the JSON plugin:
 
@@ -92,7 +78,7 @@ export default {
 };
 ```
 
-### 6. Add `tsconfig.json` (if not present)
+### 5. Add `tsconfig.json` (if not present)
 
 Must include `resolveJsonModule`:
 
@@ -128,7 +114,7 @@ Request body for POST:
 
 ## Schema Compilation
 
-Schemas are compiled from TypeScript to JavaScript + type declarations so the server can import them without depending on the sketch's TypeScript context.
+Params files are compiled from TypeScript to JavaScript + type declarations so the server can import the schema without depending on the sketch's TypeScript context. The adjacent `.params.json` is also copied to `dist/` so the compiled module can resolve its JSON import.
 
 Build all schemas:
 ```bash
@@ -137,10 +123,10 @@ bun tools/src/build/build-schemas.ts
 
 This is also run automatically as part of `pnpm build`.
 
-Output goes to `dist/{name}.schema.js` + `dist/{name}.schema.d.ts` in each sketch directory.
+Output goes to `dist/{name}.params.js` + `dist/{name}.params.d.ts` in each sketch directory.
 
 ## Key Constraints
 
-- **No zod in client bundles**: Schema files must never be imported at runtime by client code. Use `import type` only.
-- **Schema must have a default export**: The server does `const { default: schema } = await import(path)`.
+- **No zod in client bundles**: The `configSchema` should not be imported at runtime by client code. Use `import type` for types, and import `config` for the parsed values.
+- **Schema must export `configSchema`**: The server does `const { configSchema } = await import(path)`.
 - **JSON must match schema**: The `*.params.json` file must be valid according to the schema. The server validates on write, but manual edits bypass this.

@@ -23,7 +23,7 @@ function createSketchPaths(name: string): SketchPaths {
     src,
     html: path.join(dist, `${leafName}.html`),
     config: path.join(src, `${leafName}.params.json`),
-    schema: path.join(dist, `${leafName}.schema.js`),
+    schema: path.join(dist, `${leafName}.params.js`),
   };
 }
 

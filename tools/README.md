@@ -125,7 +125,7 @@ type ConfigRecord = { [key: string]: ConfigValue | ConfigRecord };
 ```
 
 Configuration is validated at the server boundary using zod schemas exported
-by each sketch's `*.schema.ts` file. See `SKETCH_CONFIG.md` for details.
+by each sketch's `*.params.ts` file. See `SKETCH_CONFIG.md` for details.
 
 ### Type Guards
 

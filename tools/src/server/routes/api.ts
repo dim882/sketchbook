@@ -62,11 +62,11 @@ function loadSchemaModule(schemaPath: string): Future<Result<ZodType, Errors.Ser
         : Errors.serverError('Failed to load schema module', err)
     )
     .mapOkToResult((module) => {
-      const schema = module.default ?? module.configSchema;
+      const schema = module.configSchema;
       if (!schema || typeof schema.parse !== 'function') {
         return Result.Error(
           Errors.serverError(
-            `Schema module is invalid: must export a zod schema as default or configSchema`
+            `Schema module is invalid: must export a zod schema as configSchema`
           )
         );
       }

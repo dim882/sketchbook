@@ -1,4 +1,5 @@
 import { spawn } from 'child_process';
+import { copyFileSync, mkdirSync } from 'fs';
 import * as path from 'path';
 import fg from 'fast-glob';
 import { Future, Result } from '@swan-io/boxed';
@@ -7,7 +8,7 @@ import { createLogger } from '../lib/logger';
 
 const log = createLogger('build-schemas');
 
-export const SCHEMA_GLOB = '**/src/*.schema.ts';
+export const SCHEMA_GLOB = '**/src/*.params.ts';
 export const SCHEMA_GLOB_IGNORE = ['**/node_modules/**', '**/dist/**'];
 
 export const findSchemaFiles = (sketchesDir: string): string[] => {
@@ -40,6 +41,7 @@ export const compileSchema = (
           '--module', 'ESNext',
           '--target', 'ES2022',
           '--moduleResolution', 'bundler',
+          '--resolveJsonModule',
           '--outDir', distDir,
           '--rootDir', path.join(sketchDir, 'src'),
           '--skipLibCheck',
@@ -58,6 +60,10 @@ export const compileSchema = (
 
       child.on('close', (code) => {
         if (code === 0) {
+          const jsonFileName = path.basename(relativeSchemaPath).replace('.ts', '.json');
+          const jsonSource = path.join(sketchDir, 'src', jsonFileName);
+          mkdirSync(distDir, { recursive: true });
+          copyFileSync(jsonSource, path.join(distDir, jsonFileName));
           resolve(path.join(distDir, path.basename(relativeSchemaPath).replace('.ts', '.js')));
         } else {
           reject(new Error(stderr || `tsc exited with code ${code}`));

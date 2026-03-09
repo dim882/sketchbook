@@ -1,4 +1,4 @@
-import type { Config } from '../boid-fuzz.schema';
+import type { Config } from '../boid-fuzz.params';
 import configJson from '../boid-fuzz.params.json';
 
 const DEFAULT_CONFIG: Config = configJson as Config;

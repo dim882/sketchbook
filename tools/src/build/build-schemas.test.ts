@@ -15,20 +15,20 @@ describe('findSchemaFiles', () => {
     rmSync(tempDir, { recursive: true });
   });
 
-  it('finds *.schema.ts files in sketch src directories', () => {
+  it('finds *.params.ts files in sketch src directories', () => {
     mkdirSync(join(tempDir, 'my-sketch', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'my-sketch', 'src', 'my-sketch.schema.ts'), '');
+    writeFileSync(join(tempDir, 'my-sketch', 'src', 'my-sketch.params.ts'), '');
 
     const result = findSchemaFiles(tempDir);
-    expect(result).toEqual(['my-sketch/src/my-sketch.schema.ts']);
+    expect(result).toEqual(['my-sketch/src/my-sketch.params.ts']);
   });
 
   it('finds schema files in nested sketch directories', () => {
     mkdirSync(join(tempDir, 'experiments', 'cool', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'experiments', 'cool', 'src', 'cool.schema.ts'), '');
+    writeFileSync(join(tempDir, 'experiments', 'cool', 'src', 'cool.params.ts'), '');
 
     const result = findSchemaFiles(tempDir);
-    expect(result).toEqual(['experiments/cool/src/cool.schema.ts']);
+    expect(result).toEqual(['experiments/cool/src/cool.params.ts']);
   });
 
   it('returns empty array when no schema files exist', () => {
@@ -41,7 +41,7 @@ describe('findSchemaFiles', () => {
 
   it('ignores schema files in node_modules', () => {
     mkdirSync(join(tempDir, 'node_modules', 'pkg', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'node_modules', 'pkg', 'src', 'pkg.schema.ts'), '');
+    writeFileSync(join(tempDir, 'node_modules', 'pkg', 'src', 'pkg.params.ts'), '');
 
     const result = findSchemaFiles(tempDir);
     expect(result).toEqual([]);
@@ -49,7 +49,7 @@ describe('findSchemaFiles', () => {
 
   it('ignores schema files in dist', () => {
     mkdirSync(join(tempDir, 'my-sketch', 'dist'), { recursive: true });
-    writeFileSync(join(tempDir, 'my-sketch', 'dist', 'my-sketch.schema.ts'), '');
+    writeFileSync(join(tempDir, 'my-sketch', 'dist', 'my-sketch.params.ts'), '');
 
     const result = findSchemaFiles(tempDir);
     expect(result).toEqual([]);
@@ -57,14 +57,14 @@ describe('findSchemaFiles', () => {
 
   it('finds multiple schema files across different sketches', () => {
     mkdirSync(join(tempDir, 'sketch-a', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'sketch-a', 'src', 'sketch-a.schema.ts'), '');
+    writeFileSync(join(tempDir, 'sketch-a', 'src', 'sketch-a.params.ts'), '');
     mkdirSync(join(tempDir, 'sketch-b', 'src'), { recursive: true });
-    writeFileSync(join(tempDir, 'sketch-b', 'src', 'sketch-b.schema.ts'), '');
+    writeFileSync(join(tempDir, 'sketch-b', 'src', 'sketch-b.params.ts'), '');
 
     const result = findSchemaFiles(tempDir);
     expect(result).toHaveLength(2);
-    expect(result).toContain('sketch-a/src/sketch-a.schema.ts');
-    expect(result).toContain('sketch-b/src/sketch-b.schema.ts');
+    expect(result).toContain('sketch-a/src/sketch-a.params.ts');
+    expect(result).toContain('sketch-b/src/sketch-b.params.ts');
   });
 });
 
@@ -79,21 +79,26 @@ describe('compileSchema', () => {
     rmSync(tempDir, { recursive: true });
   });
 
-  it('compiles a valid schema file to .js and .d.ts', async () => {
+  it('compiles a valid params file to .js and .d.ts and copies JSON', async () => {
     const sketchDir = join(tempDir, 'test-sketch');
     mkdirSync(join(sketchDir, 'src'), { recursive: true });
-    mkdirSync(join(sketchDir, 'dist'), { recursive: true });
 
     writeFileSync(
-      join(sketchDir, 'src', 'test-sketch.schema.ts'),
+      join(sketchDir, 'src', 'test-sketch.params.json'),
+      JSON.stringify({ x: 42 })
+    );
+
+    writeFileSync(
+      join(sketchDir, 'src', 'test-sketch.params.ts'),
       `import { z } from 'zod';
+import configJson from './test-sketch.params.json';
 export const configSchema = z.object({ x: z.number() });
 export type Config = z.infer<typeof configSchema>;
-export default configSchema;
+export const config = configSchema.parse(configJson);
 `
     );
 
-    // Need zod available — symlink from the main project
+    // Need zod available -- symlink from the main project
     mkdirSync(join(sketchDir, 'node_modules'), { recursive: true });
     const zodSource = join(__dirname, '../../node_modules/zod');
     if (existsSync(zodSource)) {
@@ -104,10 +109,11 @@ export default configSchema;
       return;
     }
 
-    const result = await compileSchema(tempDir, 'test-sketch/src/test-sketch.schema.ts').toPromise();
+    const result = await compileSchema(tempDir, 'test-sketch/src/test-sketch.params.ts').toPromise();
 
     expect(result.isOk()).toBe(true);
-    expect(existsSync(join(sketchDir, 'dist', 'test-sketch.schema.js'))).toBe(true);
-    expect(existsSync(join(sketchDir, 'dist', 'test-sketch.schema.d.ts'))).toBe(true);
+    expect(existsSync(join(sketchDir, 'dist', 'test-sketch.params.js'))).toBe(true);
+    expect(existsSync(join(sketchDir, 'dist', 'test-sketch.params.d.ts'))).toBe(true);
+    expect(existsSync(join(sketchDir, 'dist', 'test-sketch.params.json'))).toBe(true);
   }, 30000);
 });

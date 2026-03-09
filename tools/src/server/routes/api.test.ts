@@ -15,7 +15,7 @@ vi.mock('../server.paths', () => {
         src: join(tempDir, name, 'src'),
         html: join(tempDir, name, 'dist', `${name}.html`),
         config: join(tempDir, name, 'src', `${name}.params.json`),
-        schema: join(tempDir, name, 'dist', `${name}.schema.js`),
+        schema: join(tempDir, name, 'dist', `${name}.params.js`),
       }),
     },
   };
@@ -80,8 +80,8 @@ describe('validateParamsBody', () => {
 
 describe('schema validation integration', () => {
   it('boids config.json is valid against its schema', async () => {
-    const { default: schema } = await import(
-      '../../../../sketches/boids/src/boids.schema'
+    const { configSchema } = await import(
+      '../../../../sketches/boids/src/boids.params'
     );
     const configJson = JSON.parse(
       readFileSync(
@@ -89,13 +89,13 @@ describe('schema validation integration', () => {
         'utf-8'
       )
     );
-    const result = schema.safeParse(configJson);
+    const result = configSchema.safeParse(configJson);
     expect(result.success).toBe(true);
   });
 
   it('boid-fuzz config.json is valid against its schema', async () => {
-    const { default: schema } = await import(
-      '../../../../sketches/boid-fuzz/src/boid-fuzz.schema'
+    const { configSchema } = await import(
+      '../../../../sketches/boid-fuzz/src/boid-fuzz.params'
     );
     const configJson = JSON.parse(
       readFileSync(
@@ -103,13 +103,13 @@ describe('schema validation integration', () => {
         'utf-8'
       )
     );
-    const result = schema.safeParse(configJson);
+    const result = configSchema.safeParse(configJson);
     expect(result.success).toBe(true);
   });
 
   it('boids schema rejects wrong types', async () => {
-    const { default: schema } = await import(
-      '../../../../sketches/boids/src/boids.schema'
+    const { configSchema } = await import(
+      '../../../../sketches/boids/src/boids.params'
     );
     const invalid = {
       FLOCK_PARAMS: {
@@ -124,13 +124,13 @@ describe('schema validation integration', () => {
       WOIM_LENGTH: 20,
       BACKGROUND_COLOR: '#fcfaf7',
     };
-    const result = schema.safeParse(invalid);
+    const result = configSchema.safeParse(invalid);
     expect(result.success).toBe(false);
   });
 
   it('boids schema rejects missing required fields', async () => {
-    const { default: schema } = await import(
-      '../../../../sketches/boids/src/boids.schema'
+    const { configSchema } = await import(
+      '../../../../sketches/boids/src/boids.params'
     );
     const incomplete = {
       FLOCK_PARAMS: {
@@ -138,13 +138,13 @@ describe('schema validation integration', () => {
       },
       BOID_COUNT: 500,
     };
-    const result = schema.safeParse(incomplete);
+    const result = configSchema.safeParse(incomplete);
     expect(result.success).toBe(false);
   });
 
   it('boid-fuzz schema rejects negative BOID_COUNT', async () => {
-    const { default: schema } = await import(
-      '../../../../sketches/boid-fuzz/src/boid-fuzz.schema'
+    const { configSchema } = await import(
+      '../../../../sketches/boid-fuzz/src/boid-fuzz.params'
     );
     const configJson = JSON.parse(
       readFileSync(
@@ -153,7 +153,7 @@ describe('schema validation integration', () => {
       )
     );
     const invalid = { ...configJson, BOID_COUNT: -5 };
-    const result = schema.safeParse(invalid);
+    const result = configSchema.safeParse(invalid);
     expect(result.success).toBe(false);
   });
 });
