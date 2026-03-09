@@ -112,21 +112,24 @@ export const compileSchemasForSketch = (
 };
 
 export const buildAllSchemas = async (
-  sketchesDir: string
+  sketchesDirectory: string,
 ): Promise<{ total: number; failures: number }> => {
-  const schemaFiles = findSchemaFiles(sketchesDir);
-  let failures = 0;
+  const schemaFiles = findSchemaFiles(sketchesDirectory);
 
-  for (const schemaFile of schemaFiles) {
-    const result = await compileSchema(sketchesDir, schemaFile).toPromise();
-    result.match({
-      Ok: (outputPath) => log.info(`Compiled: ${schemaFile} → ${outputPath}`),
-      Error: (err) => {
-        log.error(`Failed to compile ${schemaFile}`, { error: err.message });
-        failures++;
+  const failures = await schemaFiles.reduce(async (previousFailures, schemaFile) => {
+    const count = await previousFailures;
+    const result = await compileSchema(sketchesDirectory, schemaFile).toPromise();
+    return result.match({
+      Ok: (outputPath) => {
+        log.info(`Compiled: ${schemaFile} -> ${outputPath}`);
+        return count;
+      },
+      Error: (error) => {
+        log.error(`Failed to compile ${schemaFile}`, { error: error.message });
+        return count + 1;
       },
     });
-  }
+  }, Promise.resolve(0));
 
   return { total: schemaFiles.length, failures };
 };
