@@ -4,6 +4,7 @@ import * as path from 'path';
 import fg from 'fast-glob';
 import { Future, Result } from '@swan-io/boxed';
 import { createLogger } from '../lib/logger';
+import { logFutureResult } from '../lib/result-logging';
 
 const log = createLogger('build-schemas');
 
@@ -89,6 +90,25 @@ export const compileSchema = (
       child.on('error', reject);
     }),
   ).mapError((err): Error => (err instanceof Error ? err : new Error(String(err))));
+};
+
+export const findSchemaFilesForSketch = (
+  sketchesDirectory: string,
+  sketchDirectory: string,
+): string[] => {
+  const sketchName = path.relative(sketchesDirectory, sketchDirectory);
+  return findSchemaFiles(sketchesDirectory).filter(
+    (file) => file.startsWith(sketchName + '/'),
+  );
+};
+
+export const compileSchemasForSketch = (
+  sketchesDirectory: string,
+  sketchDirectory: string,
+): void => {
+  findSchemaFilesForSketch(sketchesDirectory, sketchDirectory).forEach((schemaFile) =>
+    logFutureResult(log, `compile ${schemaFile}`)(compileSchema(sketchesDirectory, schemaFile)),
+  );
 };
 
 export const buildAllSchemas = async (
