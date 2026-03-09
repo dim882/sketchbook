@@ -91,10 +91,10 @@ describe('compileSchema', () => {
     writeFileSync(
       join(sketchDir, 'src', 'test-sketch.params.ts'),
       `import { z } from 'zod';
-import configJson from './test-sketch.params.json';
+import paramsJson from './test-sketch.params.json';
 export const configSchema = z.object({ x: z.number() });
-export type Config = z.infer<typeof configSchema>;
-export const config = configSchema.parse(configJson);
+export type BoidsParams = z.infer<typeof configSchema>;
+export const params = configSchema.parse(paramsJson);
 `
     );
 

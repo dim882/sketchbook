@@ -1,23 +1,20 @@
 import { z } from 'zod';
-import configJson from './boids.params.json';
-
-export const flockParamsSchema = z.object({
-  separationDist: z.number(),
-  alignDist: z.number(),
-  cohesionDist: z.number(),
-  separationWeight: z.number(),
-  alignmentWeight: z.number(),
-  cohesionWeight: z.number(),
-});
+import paramsJson from './boids.params.json';
 
 export const configSchema = z.object({
-  FLOCK_PARAMS: flockParamsSchema,
+  FLOCK_PARAMS: z.object({
+    separationDist: z.number(),
+    alignDist: z.number(),
+    cohesionDist: z.number(),
+    separationWeight: z.number(),
+    alignmentWeight: z.number(),
+    cohesionWeight: z.number(),
+  }),
   BOID_COUNT: z.number().int().positive(),
   WOIM_LENGTH: z.number().int().positive(),
   BACKGROUND_COLOR: z.string(),
 });
 
-export type Config = z.infer<typeof configSchema>;
-export type FlockParams = z.infer<typeof flockParamsSchema>;
+export type BoidsParams = z.infer<typeof configSchema>;
 
-export const config = configSchema.parse(configJson);
+export const params = configSchema.parse(paramsJson);

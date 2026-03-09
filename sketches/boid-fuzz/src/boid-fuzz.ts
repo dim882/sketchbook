@@ -2,7 +2,7 @@ import { getCanvas } from '@dim882/sketchlib';
 import * as utils from './utils/boid-fuzz.utils';
 import * as flockUtils from './utils/flock';
 import { createSeedState } from './utils/seed';
-import { config } from './boid-fuzz.params';
+import { params } from './boid-fuzz.params';
 import { createParamsUI } from './ui/boid-fuzz.ui.params';
 import './ui/boid-fuzz.ui.fps';
 import { FPSDisplay } from './ui/boid-fuzz.ui.fps';
@@ -39,9 +39,9 @@ window.addEventListener('DOMContentLoaded', () => {
   let flocks: IFlockWithFrame[] = [
     {
       flock: flockUtils.createFlock({
-        boidCount: config.BOID_COUNT,
+        boidCount: params.BOID_COUNT,
         center,
-        distance: config.FLOCK_SPAWN_DISTANCE,
+        distance: params.FLOCK_SPAWN_DISTANCE,
         prng: seedState.prng,
       }),
       createdAtFrame: 0,
@@ -60,12 +60,12 @@ window.addEventListener('DOMContentLoaded', () => {
     frameCount++;
 
     // Create a new flock every spawn interval
-    if (frameCount - lastSpawnFrame >= config.FLOCK_SPAWN_INTERVAL_FRAMES) {
+    if (frameCount - lastSpawnFrame >= params.FLOCK_SPAWN_INTERVAL_FRAMES) {
       flocks.push({
         flock: flockUtils.createFlock({
-          boidCount: config.BOID_COUNT,
+          boidCount: params.BOID_COUNT,
           center,
-          distance: config.FLOCK_SPAWN_DISTANCE,
+          distance: params.FLOCK_SPAWN_DISTANCE,
           prng: seedState.prng,
         }),
         createdAtFrame: frameCount,
@@ -74,9 +74,9 @@ window.addEventListener('DOMContentLoaded', () => {
       lastSpawnFrame = frameCount;
     }
 
-    flocks = flocks.filter((flock) => frameCount - flock.createdAtFrame < config.FLOCK_LIFETIME_FRAMES);
+    flocks = flocks.filter((flock) => frameCount - flock.createdAtFrame < params.FLOCK_LIFETIME_FRAMES);
 
-    context.fillStyle = config.BACKGROUND_COLOR;
+    context.fillStyle = params.BACKGROUND_COLOR;
     context.fillRect(0, 0, width, height);
 
     flocks = flocks.map(({ flock, createdAtFrame }) => {
@@ -85,14 +85,14 @@ window.addEventListener('DOMContentLoaded', () => {
           flockUtils.flock({
             boid,
             boids: flock,
-            params: config.FLOCK_PARAMS,
+            params: params.FLOCK_PARAMS,
             width,
             height,
           })
         )
         .map((boid) => {
           const newPath = [...boid.path, Vector.clone(boid.position)];
-          const path = newPath.length > config.WOIM_LENGTH ? newPath.slice(1) : newPath;
+          const path = newPath.length > params.WOIM_LENGTH ? newPath.slice(1) : newPath;
 
           return {
             ...boid,
@@ -101,9 +101,9 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
       context.save();
-      context.globalAlpha = 1 - (frameCount - createdAtFrame) / config.FLOCK_LIFETIME_FRAMES;
+      context.globalAlpha = 1 - (frameCount - createdAtFrame) / params.FLOCK_LIFETIME_FRAMES;
       updatedFlock.forEach((boid) => {
-        utils.drawPath(context, config.BOID_COLOR, boid.path);
+        utils.drawPath(context, params.BOID_COLOR, boid.path);
       });
       context.restore();
 

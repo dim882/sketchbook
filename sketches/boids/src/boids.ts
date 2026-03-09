@@ -1,5 +1,5 @@
 import * as utils from './boids.utils';
-import { config } from './boids.params';
+import { params } from './boids.params';
 import { ParamsUI } from './boids.params.ui';
 
 const prng = Math.random;
@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   new ParamsUI();
 
-  let flock = utils.createFlock(config.BOID_COUNT, canvas.width, canvas.height, prng);
+  let flock = utils.createFlock(params.BOID_COUNT, canvas.width, canvas.height, prng);
   let boidPaths: utils.IPath[] = flock.map(() => []);
 
   function animate() {
@@ -22,13 +22,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const { width, height } = canvas;
 
-    context.fillStyle = config.BACKGROUND_COLOR;
+    context.fillStyle = params.BACKGROUND_COLOR;
     context.clearRect(0, 0, width, height);
 
     flock = flock.map((boid, index) => {
-      const newBoid = utils.flock(boid, flock, config.FLOCK_PARAMS, width, height);
+      const newBoid = utils.flock(boid, flock, params.FLOCK_PARAMS, width, height);
 
-      boidPaths = utils.appendPositionToPath(boidPaths, index, newBoid.position, config.WOIM_LENGTH);
+      boidPaths = utils.appendPositionToPath(boidPaths, index, newBoid.position, params.WOIM_LENGTH);
 
       utils.drawPath(context, '#000', boidPaths[index]);
 

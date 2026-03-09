@@ -29,7 +29,7 @@ Sketches can expose browser-editable configuration using zod schemas and plain J
 
 ```typescript
 import { z } from 'zod';
-import configJson from './{name}.params.json';
+import paramsJson from './{name}.params.json';
 
 export const configSchema = z.object({
   speed: z.number().positive(),
@@ -37,9 +37,9 @@ export const configSchema = z.object({
   count: z.number().int().positive(),
 });
 
-export type Config = z.infer<typeof configSchema>;
+export type SketchParams = z.infer<typeof configSchema>;
 
-export const config = configSchema.parse(configJson);
+export const params = configSchema.parse(paramsJson);
 ```
 
 ### 2. Create the config file (`src/{name}.params.json`)
@@ -127,6 +127,6 @@ Output goes to `dist/{name}.params.js` + `dist/{name}.params.d.ts` in each sketc
 
 ## Key Constraints
 
-- **No zod in client bundles**: The `configSchema` should not be imported at runtime by client code. Use `import type` for types, and import `config` for the parsed values.
+- **No zod in client bundles**: The `configSchema` should not be imported at runtime by client code. Use `import type` for types, and import `params` for the parsed values.
 - **Schema must export `configSchema`**: The server does `const { configSchema } = await import(path)`.
 - **JSON must match schema**: The `*.params.json` file must be valid according to the schema. The server validates on write, but manual edits bypass this.

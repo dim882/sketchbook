@@ -1,7 +1,7 @@
-import type { Config } from '../boid-fuzz.params';
+import type { BoidsParams } from '../boid-fuzz.params';
 import configJson from '../boid-fuzz.params.json';
 
-const DEFAULT_CONFIG: Config = configJson as Config;
+const DEFAULT_CONFIG: BoidsParams = configJson as BoidsParams;
 
 const getTemplate = () => {
   const template = document.createElement('template');
@@ -114,7 +114,7 @@ export class ParamsUI extends HTMLElement {
     }
   }
 
-  private populateForm(config: Config) {
+  private populateForm(config: BoidsParams) {
     const fp = config.FLOCK_PARAMS;
     (this.querySelector('#separationDist') as HTMLInputElement).value = fp.separationDist.toString();
     (this.querySelector('#alignDist') as HTMLInputElement).value = fp.alignDist.toString();
@@ -132,7 +132,7 @@ export class ParamsUI extends HTMLElement {
     (this.querySelector('#FLOCK_SPAWN_DISTANCE') as HTMLInputElement).value = config.FLOCK_SPAWN_DISTANCE.toString();
   }
 
-  private async saveParams(config: Config) {
+  private async saveParams(config: BoidsParams) {
     try {
       const response = await fetch('/api/sketches/boid-fuzz/params', {
         method: 'POST',

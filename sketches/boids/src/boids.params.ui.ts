@@ -1,4 +1,4 @@
-import type { Config } from './boids.params';
+import type { BoidsParams } from './boids.params';
 
 export class ParamsUI {
   private form: HTMLFormElement;
@@ -25,7 +25,7 @@ export class ParamsUI {
     }
   }
 
-  private populateForm(config: Config) {
+  private populateForm(config: BoidsParams) {
     const fp = config.FLOCK_PARAMS;
     (document.getElementById('separationDist') as HTMLInputElement).value = fp.separationDist.toString();
     (document.getElementById('alignDist') as HTMLInputElement).value = fp.alignDist.toString();
@@ -35,7 +35,7 @@ export class ParamsUI {
     (document.getElementById('cohesionWeight') as HTMLInputElement).value = fp.cohesionWeight.toString();
   }
 
-  private async saveParams(config: Config) {
+  private async saveParams(config: BoidsParams) {
     try {
       const response = await fetch('/api/sketches/boids/params', {
         method: 'POST',
