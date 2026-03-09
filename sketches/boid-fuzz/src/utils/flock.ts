@@ -2,7 +2,7 @@ import * as Vector from './Vector';
 import * as Boid from './Boid';
 import { IBoid } from './Boid';
 import { IVector } from './Vector';
-import type { IFlockParams } from '../boid-fuzz.params';
+import type { IFlockParams } from '../boid-fuzz.schema';
 
 export interface IPseudoRandomNumberGenerator {
   (): number;

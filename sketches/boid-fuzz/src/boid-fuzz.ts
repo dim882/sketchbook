@@ -2,7 +2,10 @@ import { getCanvas } from '@dim882/sketchlib';
 import * as utils from './utils/boid-fuzz.utils';
 import * as flockUtils from './utils/flock';
 import { createSeedState } from './utils/seed';
-import { params } from './boid-fuzz.params';
+import type { IBoidFuzzParams } from './boid-fuzz.schema';
+import paramsJson from './boid-fuzz.params.json';
+
+const params: IBoidFuzzParams = paramsJson;
 import { createParamsUI } from './ui/boid-fuzz.ui.params';
 import './ui/boid-fuzz.ui.fps';
 import { FPSDisplay } from './ui/boid-fuzz.ui.fps';

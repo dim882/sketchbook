@@ -1,5 +1,7 @@
-import type { IBoidFuzzParams } from '../boid-fuzz.params';
-import { params as DEFAULT_PARAMS } from '../boid-fuzz.params';
+import type { IBoidFuzzParams } from '../boid-fuzz.schema';
+import paramsJson from '../boid-fuzz.params.json';
+
+const DEFAULT_PARAMS: IBoidFuzzParams = paramsJson;
 
 const getTemplate = () => {
   const template = document.createElement('template');

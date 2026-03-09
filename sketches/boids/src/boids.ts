@@ -1,6 +1,9 @@
 import * as utils from './boids.utils';
-import { params } from './boids.params';
+import type { IBoidsParams } from './boids.schema';
+import paramsJson from './boids.params.json';
 import { createParamsUI } from './boids.params.ui';
+
+const params: IBoidsParams = paramsJson;
 
 const prng = Math.random;
 

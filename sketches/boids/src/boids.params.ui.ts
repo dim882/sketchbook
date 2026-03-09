@@ -1,5 +1,7 @@
-import { params as defaultParams } from './boids.params';
-import type { IBoidsParams } from './boids.params';
+import type { IBoidsParams } from './boids.schema';
+import paramsJson from './boids.params.json';
+
+const defaultParams: IBoidsParams = paramsJson;
 
 const showStatus = (statusDiv: HTMLDivElement, message: string, type: 'success' | 'error') => {
   statusDiv.textContent = message;
