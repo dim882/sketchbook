@@ -23,7 +23,9 @@ function createSketchPaths(name: string): SketchPaths {
     src,
     html: path.join(dist, `${leafName}.html`),
     paramsJson: path.join(src, `${leafName}.params.json`),
-    schema: path.join(dist, `${leafName}.params.js`),
+    get schema() {
+      return `${path.join(dist, `${leafName}.schema.js`)}?t=${Date.now()}`;
+    },
   };
 }
 
