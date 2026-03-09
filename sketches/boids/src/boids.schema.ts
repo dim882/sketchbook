@@ -18,5 +18,3 @@ export const configSchema = z.object({
 
 export type Config = z.infer<typeof configSchema>;
 export type FlockParams = z.infer<typeof flockParamsSchema>;
-
-export default configSchema;
