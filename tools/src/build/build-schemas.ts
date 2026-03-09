@@ -1,5 +1,4 @@
 import { spawn } from 'child_process';
-import { mkdir, copyFile } from 'fs/promises';
 import * as path from 'path';
 import fg from 'fast-glob';
 import { Future, Result } from '@swan-io/boxed';
@@ -8,7 +7,7 @@ import { logFutureResult } from '../lib/result-logging';
 
 const log = createLogger('build-schemas');
 
-export const SCHEMA_GLOB = '**/src/*.params.ts';
+export const SCHEMA_GLOB = '**/src/*.schema.ts';
 export const SCHEMA_GLOB_IGNORE = ['**/node_modules/**', '**/dist/**'];
 
 const schemaCompilerFlags = [
@@ -17,7 +16,6 @@ const schemaCompilerFlags = [
   '--module', 'ESNext',
   '--target', 'ES2022',
   '--moduleResolution', 'bundler',
-  '--resolveJsonModule',
   '--skipLibCheck',
 ];
 
@@ -27,18 +25,6 @@ export const findSchemaFiles = (sketchesDirectory: string): string[] =>
     ignore: SCHEMA_GLOB_IGNORE,
     absolute: false,
   });
-
-const copyCompanionJson = async (
-  sourceDirectory: string,
-  distDirectory: string,
-  relativeSchemaPath: string,
-): Promise<string> => {
-  const jsonFileName = path.basename(relativeSchemaPath).replace('.ts', '.json');
-  const jsonSource = path.join(sourceDirectory, jsonFileName);
-  await mkdir(distDirectory, { recursive: true });
-  await copyFile(jsonSource, path.join(distDirectory, jsonFileName));
-  return path.join(distDirectory, path.basename(relativeSchemaPath).replace('.ts', '.js'));
-};
 
 export const compileSchema = (
   sketchesDirectory: string,
@@ -74,17 +60,13 @@ export const compileSchema = (
         stderr += data.toString();
       });
 
-      child.on('close', async (code) => {
+      child.on('close', (code) => {
         if (code !== 0) {
           reject(new Error(stderr || `tsc exited with code ${code}`));
           return;
         }
 
-        try {
-          resolve(await copyCompanionJson(sourceDirectory, distDirectory, relativeSchemaPath));
-        } catch (error) {
-          reject(error instanceof Error ? error : new Error(String(error)));
-        }
+        resolve(path.join(distDirectory, path.basename(relativeSchemaPath).replace('.ts', '.js')));
       });
 
       child.on('error', reject);
