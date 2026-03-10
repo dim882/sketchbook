@@ -1,94 +1,89 @@
-interface FlockParams {
-  separationDist: number;
-  alignDist: number;
-  cohesionDist: number;
-  separationWeight: number;
-  alignmentWeight: number;
-  cohesionWeight: number;
-}
+import type { IBoidsParams } from './boids.schema';
+import paramsJson from './boids.params.json';
 
-export class ParamsUI {
-  private form: HTMLFormElement;
-  private statusDiv: HTMLDivElement;
+const defaultParams: IBoidsParams = paramsJson;
 
-  constructor() {
-    this.form = document.getElementById('params-form') as HTMLFormElement;
-    this.statusDiv = document.getElementById('status') as HTMLDivElement;
+const showStatus = (statusDiv: HTMLDivElement, message: string, type: 'success' | 'error') => {
+  statusDiv.textContent = message;
+  statusDiv.className = `status ${type}`;
+  statusDiv.style.display = 'block';
 
-    this.initializeForm();
-    this.loadCurrentParams();
-  }
+  setTimeout(() => {
+    statusDiv.style.display = 'none';
+  }, 3000);
+};
 
-  private async loadCurrentParams() {
-    try {
-      const response = await fetch('/api/sketches/boids/params');
-      if (!response.ok) throw new Error('Failed to load parameters');
+const populateForm = (params: IBoidsParams) => {
+  const fp = params.FLOCK_PARAMS;
+  (document.getElementById('separationDist') as HTMLInputElement).value = fp.separationDist.toString();
+  (document.getElementById('alignDist') as HTMLInputElement).value = fp.alignDist.toString();
+  (document.getElementById('cohesionDist') as HTMLInputElement).value = fp.cohesionDist.toString();
+  (document.getElementById('separationWeight') as HTMLInputElement).value = fp.separationWeight.toString();
+  (document.getElementById('alignmentWeight') as HTMLInputElement).value = fp.alignmentWeight.toString();
+  (document.getElementById('cohesionWeight') as HTMLInputElement).value = fp.cohesionWeight.toString();
+};
 
-      const data = await response.json();
-      this.populateForm(data.params);
-    } catch (error) {
-      console.error('Error loading parameters:', error);
-      this.showStatus('Error loading parameters', 'error');
-    }
-  }
+const saveParams = async (statusDiv: HTMLDivElement, sketchParams: IBoidsParams) => {
+  try {
+    const response = await fetch('/api/sketches/boids/params', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ params: sketchParams }),
+    });
 
-  private populateForm(params: FlockParams) {
-    (document.getElementById('separationDist') as HTMLInputElement).value = params.separationDist.toString();
-    (document.getElementById('alignDist') as HTMLInputElement).value = params.alignDist.toString();
-    (document.getElementById('cohesionDist') as HTMLInputElement).value = params.cohesionDist.toString();
-    (document.getElementById('separationWeight') as HTMLInputElement).value = params.separationWeight.toString();
-    (document.getElementById('alignmentWeight') as HTMLInputElement).value = params.alignmentWeight.toString();
-    (document.getElementById('cohesionWeight') as HTMLInputElement).value = params.cohesionWeight.toString();
-  }
+    if (!response.ok) throw new Error('Failed to save parameters');
 
-  private async saveParams(params: FlockParams) {
-    try {
-      const response = await fetch('/api/sketches/boids/params', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ params }),
-      });
-
-      if (!response.ok) throw new Error('Failed to save parameters');
-
-      this.showStatus('Parameters saved successfully!', 'success');
-
-      // Reload the page to apply new parameters
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    } catch (error) {
-      console.error('Error saving parameters:', error);
-      this.showStatus('Error saving parameters', 'error');
-    }
-  }
-
-  private showStatus(message: string, type: 'success' | 'error') {
-    this.statusDiv.textContent = message;
-    this.statusDiv.className = `status ${type}`;
-    this.statusDiv.style.display = 'block';
+    showStatus(statusDiv, 'Parameters saved successfully!', 'success');
 
     setTimeout(() => {
-      this.statusDiv.style.display = 'none';
-    }, 3000);
+      window.location.reload();
+    }, 1000);
+  } catch (error) {
+    console.error('Error saving parameters:', error);
+    showStatus(statusDiv, 'Error saving parameters', 'error');
   }
+};
 
-  private initializeForm() {
-    this.form.addEventListener('submit', (e) => {
-      e.preventDefault();
+const loadCurrentParams = async (statusDiv: HTMLDivElement): Promise<IBoidsParams> => {
+  try {
+    const response = await fetch('/api/sketches/boids/params');
+    if (!response.ok) throw new Error('Failed to load parameters');
 
-      const formData = new FormData(this.form);
+    const data = await response.json();
+    populateForm(data.params);
+    return data.params;
+  } catch (error) {
+    console.error('Error loading parameters:', error);
+    showStatus(statusDiv, 'Error loading parameters', 'error');
+    return defaultParams;
+  }
+};
 
-      this.saveParams({
-        separationDist: parseFloat(formData.get('separationDist') as string),
-        alignDist: parseFloat(formData.get('alignDist') as string),
-        cohesionDist: parseFloat(formData.get('cohesionDist') as string),
-        separationWeight: parseFloat(formData.get('separationWeight') as string),
-        alignmentWeight: parseFloat(formData.get('alignmentWeight') as string),
-        cohesionWeight: parseFloat(formData.get('cohesionWeight') as string),
-      });
+const readFormFlockParams = (form: HTMLFormElement) => {
+  const formData = new FormData(form);
+  return {
+    separationDist: parseFloat(formData.get('separationDist') as string),
+    alignDist: parseFloat(formData.get('alignDist') as string),
+    cohesionDist: parseFloat(formData.get('cohesionDist') as string),
+    separationWeight: parseFloat(formData.get('separationWeight') as string),
+    alignmentWeight: parseFloat(formData.get('alignmentWeight') as string),
+    cohesionWeight: parseFloat(formData.get('cohesionWeight') as string),
+  };
+};
+
+export const createParamsUI = async () => {
+  const form = document.getElementById('params-form') as HTMLFormElement;
+  const statusDiv = document.getElementById('status') as HTMLDivElement;
+
+  let currentParams = await loadCurrentParams(statusDiv);
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    saveParams(statusDiv, {
+      ...currentParams,
+      FLOCK_PARAMS: readFormFlockParams(form),
     });
-  }
-}
+  });
+};

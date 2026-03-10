@@ -58,12 +58,5 @@ pnpm lib:pull               # Update shared lib in sketches
 
 ## Parameter Editing (Experimental)
 
-Some sketches support editable parameters that persist to disk. Requires:
-
-1. `<sketch>.params.ts` — default values
-2. `<sketch>.params.tpl` — template with `{{placeholders}}`
-3. `<sketch>.server.ts` — `getParams()` parser
-4. Form UI in HTML
-
-Server handles `/api/sketches/<sketch>/params` automatically. See `boids` for a working example.
+Some sketches support browser-editable parameters using zod schemas and plain JSON files. See [Sketch_Params.md](Sketch_Params.md) for full documentation.
 

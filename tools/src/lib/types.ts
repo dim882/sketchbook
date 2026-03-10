@@ -1,21 +1,13 @@
 /**
- * Valid types for sketch parameter values.
- * Constrained to JSON-serializable primitives.
+ * JSON-serializable param value types.
  */
 export type ParamValue = string | number | boolean | null;
 
 /**
- * Record of sketch parameters with typed values.
+ * Recursive JSON-serializable param record.
+ * Supports nested objects for structured params (e.g., FLOCK_PARAMS).
  */
-export type SketchParams = Record<string, ParamValue>;
-
-/**
- * Handler interface for sketch server modules.
- * Each sketch can export a default object implementing this interface.
- */
-export interface SketchServerHandler {
-  getParams(fileContent: string): SketchParams;
-}
+export type ParamRecord = { [key: string]: ParamValue | ParamRecord };
 
 /**
  * Directory entry with name and last modified timestamp.

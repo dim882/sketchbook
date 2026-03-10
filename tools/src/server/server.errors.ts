@@ -1,6 +1,7 @@
 import { Result } from '@swan-io/boxed';
 import { z } from 'zod';
 import type { Response } from 'express';
+import type { ParamValue, ParamRecord } from '../lib/types';
 import { createLogger } from '../lib/logger';
 
 const log = createLogger('server/errors');
@@ -33,11 +34,15 @@ export const handleError = (res: Response) => (err: ServerError) => {
   res.status(err.status).json({ error: err.message });
 };
 
+const jsonValue: z.ZodType<ParamValue | ParamRecord> = z.lazy(() =>
+  z.union([z.string(), z.number(), z.boolean(), z.null(), z.record(z.string(), jsonValue)])
+);
+
 const ParamsBody = z.object({
-  params: z.record(z.string(), z.union([z.string(), z.number()]).transform(String)),
+  params: z.record(z.string(), jsonValue),
 });
 
-export const validateParamsBody = (body: unknown): Result<Record<string, string>, ServerError> =>
+export const validateParamsBody = (body: unknown): Result<Record<string, unknown>, ServerError> =>
   Result.fromExecution(() => ParamsBody.parse(body))
     .map(({ params }) => params)
     .mapError(() => badRequest('Invalid parameters: expected object with params record'));

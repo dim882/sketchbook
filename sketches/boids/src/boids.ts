@@ -1,6 +1,9 @@
 import * as utils from './boids.utils';
-import { FLOCK_PARAMS, BOID_COUNT, WOIM_LENGTH as PATH_MAX_LENGTH, BACKGROUND_COLOR } from './boids.params';
-import { ParamsUI } from './boids.params.ui';
+import type { IBoidsParams } from './boids.schema';
+import paramsJson from './boids.params.json';
+import { createParamsUI } from './boids.params.ui';
+
+const params: IBoidsParams = paramsJson;
 
 const prng = Math.random;
 
@@ -12,9 +15,9 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  new ParamsUI();
+  createParamsUI();
 
-  let flock = utils.createFlock(BOID_COUNT, canvas.width, canvas.height, prng);
+  let flock = utils.createFlock(params.BOID_COUNT, canvas.width, canvas.height, prng);
   let boidPaths: utils.IPath[] = flock.map(() => []);
 
   function animate() {
@@ -22,13 +25,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const { width, height } = canvas;
 
-    context.fillStyle = BACKGROUND_COLOR;
+    context.fillStyle = params.BACKGROUND_COLOR;
     context.clearRect(0, 0, width, height);
 
     flock = flock.map((boid, index) => {
-      const newBoid = utils.flock(boid, flock, FLOCK_PARAMS, width, height);
+      const newBoid = utils.flock(boid, flock, params.FLOCK_PARAMS, width, height);
 
-      boidPaths = utils.appendPositionToPath(boidPaths, index, newBoid.position, PATH_MAX_LENGTH);
+      boidPaths = utils.appendPositionToPath(boidPaths, index, newBoid.position, params.WOIM_LENGTH);
 
       utils.drawPath(context, '#000', boidPaths[index]);
 

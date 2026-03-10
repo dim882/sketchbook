@@ -1,0 +1,17 @@
+{
+  "FLOCK_PARAMS": {
+    "separationDist": 100,
+    "alignDist": 50,
+    "cohesionDist": 500,
+    "separationWeight": 2.4,
+    "alignmentWeight": 1,
+    "cohesionWeight": 1
+  },
+  "BOID_COUNT": 200,
+  "WOIM_LENGTH": 20,
+  "BACKGROUND_COLOR": "#121212",
+  "BOID_COLOR": "#e8c9c9",
+  "FLOCK_LIFETIME_FRAMES": 200,
+  "FLOCK_SPAWN_INTERVAL_FRAMES": 40,
+  "FLOCK_SPAWN_DISTANCE": 60
+}

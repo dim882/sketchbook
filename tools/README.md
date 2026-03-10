@@ -117,12 +117,15 @@ fetchData().tap((result) =>
 
 ### Param Values
 
-Sketch parameters use constrained types:
+Sketch parameters use JSON-serializable types with nested object support:
 
 ```typescript
 type ParamValue = string | number | boolean | null;
-type Params = Record<string, ParamValue>;
+type ParamRecord = { [key: string]: ParamValue | ParamRecord };
 ```
+
+Parameters are validated at the server boundary using zod schemas exported
+by each sketch's `*.params.ts` file. See `SKETCH_PARAMS.md` for details.
 
 ### Type Guards
 
