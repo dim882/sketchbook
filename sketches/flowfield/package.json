@@ -10,6 +10,7 @@
     "clean": "rm -rf dist/*"
   },
   "devDependencies": {
+    "@dim882/sketchlib": "link:../../lib",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
@@ -17,10 +18,10 @@
     "@types/ramda": "^0.29.12",
     "jest": "^29.7.0",
     "rollup": "^4.14.3",
+    "rollup-plugin-copy": "^3.5.0",
     "ts-jest": "^29.2.5",
     "tslib": "^2.6.2",
-    "typescript": "^5.4.5",
-    "rollup-plugin-copy": "^3.5.0"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "alea": "^1.0.1",

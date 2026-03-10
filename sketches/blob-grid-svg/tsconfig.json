@@ -1,12 +1,13 @@
 {
+  "extends": "@dim882/sketchlib/presets/preact/tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "dist"
+  ],
   "compilerOptions": {
-    "target": "ES2015",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact",
-    "strict": true,
-    "esModuleInterop": true
-  },
-  "include": ["**/*.ts", "**/*.tsx"]
+    "outDir": "./dist"
+  }
 }

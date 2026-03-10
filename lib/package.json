@@ -1,6 +1,6 @@
 {
   "name": "@dim882/sketchlib",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A TypeScript library of utilities for creative coding sketches",
   "license": "MIT",
   "type": "module",
@@ -8,7 +8,8 @@
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "presets"
   ],
   "exports": {
     ".": {
@@ -42,7 +43,22 @@
     "./types": {
       "types": "./dist/types.d.ts",
       "default": "./dist/types.js"
-    }
+    },
+    "./presets/*": "./presets/*"
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.24.7",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.5"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

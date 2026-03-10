@@ -1,12 +1,17 @@
 {
+  "extends": "@dim882/sketchlib/presets/default/tsconfig.json",
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "dist"
+  ],
   "compilerOptions": {
+    "outDir": "./dist",
     "target": "ES2022",
-    "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": false
-  },
-  "include": ["src/**/*.ts"]
+  }
 }
