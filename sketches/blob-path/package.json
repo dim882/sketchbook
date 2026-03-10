@@ -24,6 +24,5 @@
     "build": "rollup -c",
     "clean": "rm -rf dist/*",
     "test": "node --test --import tsx"
-  },
-  "sketchPreset": "default"
+  }
 }

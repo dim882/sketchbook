@@ -21,6 +21,5 @@
   },
   "dependencies": {
     "ramda": "^0.29.1"
-  },
-  "sketchPreset": "default"
+  }
 }

@@ -20,6 +20,5 @@
   "scripts": {
     "build": "rollup -c",
     "clean": "rm -rf dist/*"
-  },
-  "sketchPreset": "default"
+  }
 }

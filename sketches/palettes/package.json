@@ -1,6 +1,5 @@
 {
   "name": "palettes",
-  "sketchPreset": "functron",
   "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",

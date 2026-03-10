@@ -23,6 +23,5 @@
     "@types/culori": "^2.1.1",
     "culori": "^4.0.1",
     "ramda": "^0.29.1"
-  },
-  "sketchPreset": "default"
+  }
 }

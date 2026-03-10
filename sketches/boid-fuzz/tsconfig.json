@@ -4,8 +4,7 @@
     "src/**/*.ts"
   ],
   "exclude": [
-    "dist",
-    "node_modules"
+    "dist"
   ],
   "compilerOptions": {
     "outDir": "./dist",
